@@ -65,8 +65,11 @@ public class Tests {
   // of monochromatic, dichromatic and trichromatic images
   // repeatedly made sepia
 
+
+// A combination of the previous methods
+
 //  Save an image to an ASCII PPM, JPG or PNG file (see below).
-  // src image is create directly from this program
+  //src image is create directly from this program
   //src image read from local and directly saved without modification
   //src image read from local and saved with modification
   //src format same as saved format

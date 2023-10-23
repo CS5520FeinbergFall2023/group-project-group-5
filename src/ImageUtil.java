@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
@@ -8,7 +9,6 @@ import java.io.FileInputStream;
  *  as required.
  */
 public class ImageUtil {
-
   /**
    * Read an image file in the PPM format and print the colors.
    *
