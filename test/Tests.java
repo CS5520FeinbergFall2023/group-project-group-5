@@ -3,16 +3,20 @@ import org.junit.Test;
 public class Tests {
 
 //  -------------------Load an image from an ASCII PPM, JPG or PNG file.----------------------------
-// test malformed path
+  // remember to test both JPEG & JPG extension
+  // test malformed path
   // well-formed path, but the img does not exist
-  //img exist but not PPM,JPG or PNG extension
-  //is PPM,JPG or PNG extension but actually content not PPM, JPG, PNG
-  //PPM, JPG & PNG, monochromatic(black,white,red,green,blue), dichromatic or trichromatic. With
-  // each value 0,(a number in between 0-255),255
-  //
-  
+  // img exist but not PPM,JPG or PNG extension and is not PPM,JPG or PNG
+  // is PPM,JPG or PNG extension but actually the content is not PPM, JPG, PNG formatted
+  // is actually PPM,JPG or PNG format but with different/no extension.
+  // PPM, JPG & PNG, monochromatic(black,white,red,green,blue), dichromatic or trichromatic. With
+  // each value 0,(a number in between 0-255),255. For trichromatic test a picture with all 256
+  // colors.
+
 //  -------------------Create images that visualize individual R,G,B components of an image.--------
-//
+  //create PPM, JPG or PNG given reasonable data
+  //create PPM, JPG or PNG given illegal input ()
+
 //  -------------Create images that visualize the value, intensity or luma of an image.-------------
 //
 //  Flip an image horizontally or vertically.
