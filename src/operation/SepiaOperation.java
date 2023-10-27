@@ -1,12 +1,11 @@
-package concreteoperation;
+package operation;
 
-import abstractoperation.LinearTransformOperation;
 import model.Image;
 
 /**
  * A class that represents sepia operations on images.
  */
-public class SepiaOperation extends LinearTransformOperation {
+public class SepiaOperation implements Operation {
   private Image image;
 
   /** Construct a sepia operation on a given image.

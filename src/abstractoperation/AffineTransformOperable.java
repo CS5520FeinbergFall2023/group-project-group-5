@@ -5,6 +5,6 @@ package abstractoperation;
  * Includes flipping.
  */
 
-public abstract class AffineTransformOperation implements Operation{
+public interface AffineTransformOperable extends Operable{
   //deliberately left blank
 }

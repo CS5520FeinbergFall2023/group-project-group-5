@@ -37,4 +37,19 @@ public interface Pixel {
    */
   Pixel multiplyNumber(float number) throws IllegalArgumentException;
 
+  /** Checks if the pixel has the given channel.
+   *
+   * @param channel the channel to check.
+   * @return if the pixel has the given channel
+   */
+  boolean containsChannel(Channel channel);
+
+
+  /** Get certain channel component of the pixel.
+   *
+   * @param channel the channel to split
+   * @return the component pixel
+   */
+  Pixel getChannelComponent(Channel channel);
+
 }

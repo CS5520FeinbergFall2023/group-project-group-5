@@ -1,12 +1,11 @@
-package concreteoperation;
+package operation;
 
-import abstractoperation.LinearTransformOperation;
 import model.Image;
 
 /**
  * A class that represents getting luma on images.
  */
-public class LumaOperation extends LinearTransformOperation {
+public class LumaOperation implements Operation {
   private Image image;
 
   /** Construct a getting luma operation on a given image.

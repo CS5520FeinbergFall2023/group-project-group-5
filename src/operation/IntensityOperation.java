@@ -1,12 +1,11 @@
-package concreteoperation;
+package operation;
 
-import abstractoperation.LinearTransformOperation;
 import model.Image;
 
 /**
  * A class that represents getting intensity on images.
  */
-public class IntensityOperation extends LinearTransformOperation {
+public class IntensityOperation implements Operation {
   private Image image;
 
   /** Construct a getting intensity operation on a given image.

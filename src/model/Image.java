@@ -2,9 +2,15 @@ package model;
 
 import java.io.IOException;
 
-import abstractoperation.Operation;
+import abstractoperation.AffineTransformOperable;
+import abstractoperation.ChannelSplitOperable;
+import abstractoperation.ComposeOperable;
+import abstractoperation.FilterOperable;
+import abstractoperation.LinearTransformOperable;
+import operation.Operation;
 
-public interface Image {
+public interface Image extends AffineTransformOperable, ComposeOperable, FilterOperable,
+    LinearTransformOperable, ChannelSplitOperable {
   /**
    *
    * @param operation

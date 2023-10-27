@@ -1,4 +1,6 @@
-package abstractoperation;
+package operation;
+
+import abstractoperation.Operable;
 
 /**
  * This interface represents operations.
@@ -7,5 +9,5 @@ public interface Operation {
   /**
    * Perform the operation.
    */
-  void perform();
+  Operable perform();
 }

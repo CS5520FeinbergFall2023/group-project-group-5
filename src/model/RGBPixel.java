@@ -6,11 +6,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 public class RGBPixel implements Pixel {
-//  private int red;
-//  private int green;
-//  private int blue;
-
-  private Map<Channel,Integer> channels;
+  private final Map<Channel,Integer> channels;
 
   private final int bitDepth=8;
 
@@ -34,6 +30,49 @@ public class RGBPixel implements Pixel {
     channels.put(Channel.RED,red);
     channels.put(Channel.GREEN,green);
     channels.put(Channel.BLUE,blue);
+  }
+
+  private RGBPixel(Map<Channel,Integer> channels)
+  {
+    this.channels=channels;
+  }
+
+  /**
+   * Checks if the pixel has the given channel.
+   *
+   * @param channel the channel to check.
+   * @return if the pixel has the given channel
+   */
+  @Override
+  public boolean containsChannel(Channel channel) {
+    return channels.containsKey(channel);
+  }
+
+  /**
+   * Get certain channel component of the pixel.
+   *
+   * @param channel the channel to split
+   * @return the component pixel
+   * @throws IllegalArgumentException when the given channel is not in the pixel
+   */
+  @Override
+  public Pixel getChannelComponent(Channel channel) throws IllegalArgumentException {
+    if(!containsChannel(channel))
+    {
+      throw new IllegalArgumentException("The pixel does not contain the channel");
+    }
+    Map<Channel,Integer> channels=new HashMap<>();
+    for (Channel key:this.channels.keySet())
+    {
+      if(key==channel)
+      {
+        channels.put(channel,this.channels.get(channel));
+      }
+      else {
+        channels.put(key,0);
+      }
+    }
+    return new RGBPixel(channels);
   }
 
   /**
