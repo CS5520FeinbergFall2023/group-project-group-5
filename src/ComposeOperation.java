@@ -1,6 +1,0 @@
-// operations implemented by [r1,g1,b1]+[r2,g2,b2]+....
-// including compose image from the 3 channel images, lighten and darken
-// actually theoretically still belongs to linear operations but...
-
-public abstract class ComposeOperation implements Operation{
-}

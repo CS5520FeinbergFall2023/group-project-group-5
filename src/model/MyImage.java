@@ -1,8 +1,10 @@
+package model;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import image.Image;
+import abstractoperation.Operation;
 
 public class MyImage implements Image {
   private List<Operation> operationList;
@@ -101,9 +103,7 @@ public class MyImage implements Image {
     if (x < 0 || x > this.width || y < 0 || y > this.height) {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
-    Pixel pixel = pixels[x][y];
-    return new RGBPixel(pixel.getColorChannel(Channel.Red), pixel.getColorChannel(Channel.Green),
-          pixel.getColorChannel(Channel.Blue));
+    return pixels[x][y];
 
   }
 

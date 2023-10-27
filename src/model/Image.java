@@ -1,6 +1,8 @@
-package image;
+package model;
 
 import java.io.IOException;
+
+import abstractoperation.Operation;
 
 public interface Image {
   /**
