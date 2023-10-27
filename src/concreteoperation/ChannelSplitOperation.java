@@ -2,19 +2,29 @@ package concreteoperation;
 
 import abstractoperation.LinearTransformOperation;
 import model.Channel;
+import model.Image;
 
-public class ChannelSplitOperation implements LinearTransformOperation {
-  // 还没realize，等接口和parent class注释写好了再用intellij自动implement就不需要手动复制doc了
-  public void getColorChannel(Channel channel) {
-    switch (channel) {
-      case RED:
-        break;
-      case GREEN:
-        break;
-      case BLUE:
-        break;
-      default:
-        throw new IllegalArgumentException("Invalid color");
-    }
+/**
+ * A class that represents channel splitting operations on images.
+ */
+public class ChannelSplitOperation extends LinearTransformOperation {
+  private Image image;
+  private Channel channel;
+
+  /** Construct a channel splitting operation on a given image.
+   * @param image the image to operate
+   * @param channel the channel to split
+   */
+  public ChannelSplitOperation(Image image, Channel channel) {
+    this.image = image;
+    this.channel = channel;
+  }
+
+  /**
+   * Perform the operation.
+   */
+  @Override
+  public void perform() {
+
   }
 }
