@@ -18,16 +18,16 @@ public abstract class ComposeOperation implements Operation {
    * @param image the image to work on
    * @return the new image after modification
    */
-  public MyImage imgArrayAddition(float[] matrix, Image image)
+  public Image imgArrayAddition(float[] matrix, Image image)
   {
     String newName= image.getName()+"-new";
-    Pixel[][] newPixels=new Pixel[image.getWidth()][image.getHeight()];
     for (int i=0;i< image.getWidth();i++){
       for(int j=0;j< image.getHeight();j++)
       {
-        newPixels[i][j]= image.getPixel(i,j).addition(matrix);
+        image.setPixel(i,j,image.getPixel(i,j).addition(matrix));
       }
     }
-    return new MyImage(image.getHeight(), image.getWidth(), newName,newPixels);
+    image.setName(newName);
+    return image;
   }
 }

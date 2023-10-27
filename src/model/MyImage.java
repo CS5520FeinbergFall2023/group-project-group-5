@@ -91,11 +91,18 @@ public class MyImage implements Image {
   /**
    * Get the image's name.
    *
-   * @return
+   * @return the image's name.
    */
   @Override
   public String getName() {
     return this.name;
+  }
+
+  /**
+   * Set the image's name.
+   */
+  public void setName(String name) {
+    this.name = name;
   }
 
   @Override

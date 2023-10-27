@@ -18,9 +18,14 @@ public interface Image {
 
   /**
    * Get the image's name.
-   * @return
+   * @return the name of the image
    */
   String getName();
+
+  /**
+   * Set the image's name.
+   */
+  void setName(String name);
 
   /**
    *
