@@ -1,9 +1,16 @@
 package model;
 
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+
 public class RGBPixel implements Pixel {
-  private int red;
-  private int green;
-  private int blue;
+//  private int red;
+//  private int green;
+//  private int blue;
+
+  private Map<Channel,Integer> channels;
 
   private final int bitDepth=8;
 
@@ -23,9 +30,10 @@ public class RGBPixel implements Pixel {
     red=Math.min(red,2<<bitDepth-1);
     green=Math.min(green,2<<bitDepth-1);
     blue=Math.min(blue,2<<bitDepth-1);
-    this.red = red;
-    this.green = green;
-    this.blue = blue;
+    channels=new HashMap<>();
+    channels.put(Channel.RED,red);
+    channels.put(Channel.GREEN,green);
+    channels.put(Channel.BLUE,blue);
   }
 
   /**
@@ -41,6 +49,9 @@ public class RGBPixel implements Pixel {
 //      red=red * matrix[0][0] + green * matrix[0][1] + blue * matrix[0][2];
 //      green=red * matrix[1][0] + green * matrix[1][1] + blue * matrix[1][2];
 //      blue=red * matrix[2][0] + green * matrix[2][1] + blue * matrix[2][2];
+      int red=channels.get(Channel.RED);
+      int green=channels.get(Channel.GREEN);
+      int blue=channels.get(Channel.BLUE);
       return new RGBPixel(
           Math.round(red * matrix[0][0] + green * matrix[0][1] + blue * matrix[0][2]),
           Math.round(red * matrix[1][0] + green * matrix[1][1] + blue * matrix[1][2]),
@@ -62,6 +73,9 @@ public class RGBPixel implements Pixel {
 //      red+=matrix[0];
 //      green+=matrix[1];
 //      blue+=matrix[2];
+      int red=channels.get(Channel.RED);
+      int green=channels.get(Channel.GREEN);
+      int blue=channels.get(Channel.BLUE);
       return new RGBPixel(Math.round(red + matrix[0]), Math.round(green + matrix[1]),
           Math.round(blue + matrix[2]));
     } else {
@@ -80,8 +94,14 @@ public class RGBPixel implements Pixel {
     if (!(pixel instanceof RGBPixel)) {
       throw new IllegalArgumentException("Addition between pixels require them to be of same type");
     }
-    return new RGBPixel(red + ((RGBPixel) pixel).red, green + ((RGBPixel) pixel).green,
-        blue + ((RGBPixel) pixel).blue);
+    int red=channels.get(Channel.RED);
+    int green=channels.get(Channel.GREEN);
+    int blue=channels.get(Channel.BLUE);
+    int thatRed=((RGBPixel) pixel).channels.get(Channel.RED);
+    int thatGreen=((RGBPixel) pixel).channels.get(Channel.GREEN);
+    int thatBlue=((RGBPixel) pixel).channels.get(Channel.BLUE);
+    return new RGBPixel(red + thatRed, green + thatGreen,
+        blue+thatBlue);
   }
 
   /**
@@ -96,6 +116,9 @@ public class RGBPixel implements Pixel {
     if (number < 0) {
       throw new IllegalArgumentException("Can't multiply negative number with a pixel.");
     }
+    int red=channels.get(Channel.RED);
+    int green=channels.get(Channel.GREEN);
+    int blue=channels.get(Channel.BLUE);
     return new RGBPixel(Math.round((red * number > 1) ? 1 : red * number),
         Math.round((green * number > 1) ? 1 : green * number),
         Math.round((blue * number > 1) ? 1 : blue * number));
