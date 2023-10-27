@@ -6,4 +6,5 @@ package abstractoperation;
  */
 
 public class AffineTransformOperation {
+  //deliberately left blank
 }

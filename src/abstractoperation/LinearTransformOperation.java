@@ -11,7 +11,7 @@ import model.Pixel;
  * result).
  */
 public abstract class LinearTransformOperation implements Operation {
-  /** Perform linear transformation on an image with given matrix.
+  /** Perform linear transformation on an image with given matrix. Modification is made in-place.
    *
    * @param matrix the given matrix
    * @param image the image to work on

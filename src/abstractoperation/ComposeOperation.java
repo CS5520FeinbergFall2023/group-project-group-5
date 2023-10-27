@@ -12,13 +12,12 @@ import model.Pixel;
  */
 public abstract class ComposeOperation implements Operation {
 
-  /** Perform array addition an image with given matrix.
+  /** Perform array addition an image with given matrix. Modification is made in-place.
    *
    * @param matrix the given matrix
    * @param image the image to work on
-   * @return the new image after modification
    */
-  public Image imgArrayAddition(float[] matrix, Image image)
+  public void imgArrayAddition(float[] matrix, Image image)
   {
     String newName= image.getName()+"-new";
     for (int i=0;i< image.getWidth();i++){
@@ -28,6 +27,5 @@ public abstract class ComposeOperation implements Operation {
       }
     }
     image.setName(newName);
-    return image;
   }
 }
