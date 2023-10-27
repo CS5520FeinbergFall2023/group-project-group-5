@@ -1,22 +1,28 @@
 package model;
 
 public class RGBPixel implements Pixel {
-  private float red;
-  private float green;
-  private float blue;
+  private int red;
+  private int green;
+  private int blue;
 
-  //channel num
+  private final int bitDepth=8;
 
-  /** Construct an RGB pixel. Every value of the channel is in the range of [0,1]
+  /**
+   * Construct an RGB pixel. Every value of the channel is in the range of [0,1]
    *
-   * @param red the value of the red channel
+   * @param red   the value of the red channel
    * @param green the value of the green channel
-   * @param blue the value of the blue channel
+   * @param blue  the value of the blue channel
    */
-  public RGBPixel(float red, float green, float blue) {
-    if (red < 0 || green < 0 || blue < 0 || red > 1 || green > 1 || blue > 1) {
-      throw new IllegalArgumentException("Invalid color range");
-    }
+  public RGBPixel(int red, int green, int blue) {
+    //todo:or throw exception?
+    //0-255
+    red= Math.max(red, 0);
+    green= Math.max(green, 0);
+    blue= Math.max(blue, 0);
+    red=Math.min(red,2<<bitDepth-1);
+    green=Math.min(green,2<<bitDepth-1);
+    blue=Math.min(blue,2<<bitDepth-1);
     this.red = red;
     this.green = green;
     this.blue = blue;
@@ -35,9 +41,10 @@ public class RGBPixel implements Pixel {
 //      red=red * matrix[0][0] + green * matrix[0][1] + blue * matrix[0][2];
 //      green=red * matrix[1][0] + green * matrix[1][1] + blue * matrix[1][2];
 //      blue=red * matrix[2][0] + green * matrix[2][1] + blue * matrix[2][2];
-      return new RGBPixel(red * matrix[0][0] + green * matrix[0][1] + blue * matrix[0][2],
-          red * matrix[1][0] + green * matrix[1][1] + blue * matrix[1][2],
-          red * matrix[2][0] + green * matrix[2][1] + blue * matrix[2][2]);
+      return new RGBPixel(
+          Math.round(red * matrix[0][0] + green * matrix[0][1] + blue * matrix[0][2]),
+          Math.round(red * matrix[1][0] + green * matrix[1][1] + blue * matrix[1][2]),
+          Math.round(red * matrix[2][0] + green * matrix[2][1] + blue * matrix[2][2]));
     } else {
       throw new IllegalArgumentException("The multiplying array should be 3*3 in size.");
     }
@@ -51,11 +58,12 @@ public class RGBPixel implements Pixel {
    */
   @Override
   public RGBPixel addition(float[] matrix) {
-    if (matrix.length == 3 ) {
+    if (matrix.length == 3) {
 //      red+=matrix[0];
 //      green+=matrix[1];
 //      blue+=matrix[2];
-      return new RGBPixel(red+matrix[0],green+matrix[1],blue+matrix[2]);
+      return new RGBPixel(Math.round(red + matrix[0]), Math.round(green + matrix[1]),
+          Math.round(blue + matrix[2]));
     } else {
       throw new IllegalArgumentException("The multiplying array should be 3*3 in size.");
     }
@@ -69,12 +77,11 @@ public class RGBPixel implements Pixel {
    */
   @Override
   public RGBPixel addition(Pixel pixel) throws IllegalArgumentException {
-    if(!(pixel instanceof RGBPixel))
-    {
+    if (!(pixel instanceof RGBPixel)) {
       throw new IllegalArgumentException("Addition between pixels require them to be of same type");
     }
-    return new RGBPixel(red+((RGBPixel) pixel).red,green+ ((RGBPixel) pixel).green,
-        blue+ ((RGBPixel) pixel).blue);
+    return new RGBPixel(red + ((RGBPixel) pixel).red, green + ((RGBPixel) pixel).green,
+        blue + ((RGBPixel) pixel).blue);
   }
 
   /**
@@ -86,11 +93,11 @@ public class RGBPixel implements Pixel {
    */
   @Override
   public RGBPixel multiplyNumber(float number) throws IllegalArgumentException {
-    if(number<0)
-    {
+    if (number < 0) {
       throw new IllegalArgumentException("Can't multiply negative number with a pixel.");
     }
-    return new RGBPixel((red*number>1)?1:red*number,(green*number>1)?1:green*number,
-        (blue*number>1)?1:blue*number);
+    return new RGBPixel(Math.round((red * number > 1) ? 1 : red * number),
+        Math.round((green * number > 1) ? 1 : green * number),
+        Math.round((blue * number > 1) ? 1 : blue * number));
   }
 }

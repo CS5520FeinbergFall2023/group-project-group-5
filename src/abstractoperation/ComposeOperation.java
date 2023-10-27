@@ -14,7 +14,7 @@ public abstract class ComposeOperation implements Operation {
 
   /** Perform array addition an image with given matrix. Modification is made in-place.
    *
-   * @param matrix the given matrix
+   * @param matrix the given matrix (1x3)
    * @param image the image to work on
    */
   public void imgArrayAddition(float[] matrix, Image image)
