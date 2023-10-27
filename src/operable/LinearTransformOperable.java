@@ -1,6 +1,4 @@
-package abstractoperation;
-
-import model.Image;
+package operable;
 
 /**
  * This abstract class represents all operations that are perform by array X image
@@ -14,5 +12,5 @@ public interface LinearTransformOperable extends Operable{
    * @param matrix the given matrix
    * @return the new LinearTransformOperable after modification
    */
-  LinearTransformOperable arrayImageMultiplication(float[][] matrix);
+  LinearTransformOperable arrayMultiplication(float[][] matrix);
 }

@@ -1,9 +1,7 @@
 package operation;
 
-import abstractoperation.ChannelSplitOperable;
-import abstractoperation.LinearTransformOperable;
+import operable.ChannelSplitOperable;
 import model.Channel;
-import model.Image;
 
 /**
  * A class that represents channel splitting operations on images.

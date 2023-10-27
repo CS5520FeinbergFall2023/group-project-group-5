@@ -1,6 +1,6 @@
 package operation;
 
-import abstractoperation.ComposeOperable;
+import operable.ComposeOperable;
 
 /**
  * A class that represents brightening or darkening operations on images.

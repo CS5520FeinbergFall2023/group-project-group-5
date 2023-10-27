@@ -1,6 +1,6 @@
 package operation;
 
-import abstractoperation.FilterOperable;
+import operable.FilterOperable;
 
 /**
  * A class that represents blurring operations on images.

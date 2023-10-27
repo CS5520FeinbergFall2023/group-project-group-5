@@ -1,4 +1,4 @@
-package abstractoperation;
+package operable;
 
 import model.Channel;
 

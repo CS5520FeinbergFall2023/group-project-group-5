@@ -1,6 +1,6 @@
 package operation;
 
-import abstractoperation.Operable;
+import operable.Operable;
 
 /**
  * This interface represents operations.

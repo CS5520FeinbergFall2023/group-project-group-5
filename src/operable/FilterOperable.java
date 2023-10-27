@@ -1,7 +1,4 @@
-package abstractoperation;
-
-import model.Image;
-import model.Pixel;
+package operable;
 
 /**
  * This abstract class represents all operations perform with filtering.
