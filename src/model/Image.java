@@ -3,27 +3,8 @@ package model;
 import java.io.IOException;
 import java.util.function.Function;
 
-import operable.AffineTransformOperable;
-import operable.ChannelSplitOperable;
-import operable.ComposeOperable;
-import operable.FilterOperable;
-import operable.LinearTransformOperable;
-import operable.MapElementOperable;
-import operation.Operation;
+public interface Image {
 
-public interface Image<T> extends AffineTransformOperable, ComposeOperable, FilterOperable,
-    LinearTransformOperable<T>, ChannelSplitOperable<T>,MapElementOperable<T> {
-
-  /**
-   *
-   * @param operation
-   */
-  void takeOperation(Operation operation);
-
-  /**
-   *
-   */
-  void performOperations();
 
   /**
    * Get the image's name.
@@ -77,5 +58,7 @@ public interface Image<T> extends AffineTransformOperable, ComposeOperable, Filt
    * @param pixel
    */
   void setPixel(int x, int y, Pixel pixel);
+
+  Image arrayMultiplication(float[][] matrix);
 
 }
