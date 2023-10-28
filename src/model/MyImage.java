@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import operable.ComposeOperable;
+import operable.MapElementOperable;
+import operation.Operation;
 
-
-public class MyImage implements Image{
+public class MyImage implements Image<Pixel>{
+  private List<Operation> operationList;
   private Pixel[][] pixels;
   private int height;
   private int width;
@@ -23,6 +26,7 @@ public class MyImage implements Image{
     this.height = height;
     this.width = width;
     this.name = name;
+    operationList = new ArrayList<>();
     pixels = new RGBPixel[height][width];
     for (int row = 0; row < this.height; row++) {
       for (int col = 0; col < this.width; col++) {
@@ -74,6 +78,17 @@ public class MyImage implements Image{
   @Override
   public int getWidth() {
     return this.width;
+  }
+
+  public void takeOperation(Operation operation) {
+    operationList.add(operation);
+  }
+
+  public void performOperations() {
+    for (Operation operation : operationList) {
+      operation.perform();
+    }
+    operationList.clear();
   }
 
   /**
