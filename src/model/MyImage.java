@@ -3,11 +3,13 @@ package model;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import operable.ComposeOperable;
+import operable.MapElementOperable;
 import operation.Operation;
 
-public class MyImage implements Image {
+public class MyImage implements Image<Pixel>{
   private List<Operation> operationList;
   private Pixel[][] pixels;
   private int height;
@@ -112,7 +114,6 @@ public class MyImage implements Image {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
     return pixels[x][y];
-
   }
 
   @Override
@@ -296,4 +297,24 @@ public class MyImage implements Image {
     }
     return new MyImage(newName, resultPixels);
   }
+
+  /**
+   * Map all elements in the object.
+   *
+   * @param function the mapping function
+   * @return the mapped result
+   */
+  @Override
+  public MapElementOperable<Pixel> mapElement(Function<Pixel,Pixel> function) {
+    MyImage result = new MyImage(this.height, this.width, this.name);
+    for (int i = 0; i < this.height; i++) {
+      for (int j = 0; j < this.width; j++) {
+        Pixel originalPixel = this.getPixel(i, j);
+        Pixel transformedPixel = function.apply(originalPixel);
+        result.setPixel(i, j, transformedPixel);
+      }
+    }
+    return result;
+  }
+
 }

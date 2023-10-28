@@ -1,6 +1,7 @@
 package operation;
 
 import operable.FilterOperable;
+import operable.Operable;
 
 /**
  * A class that represents sharpening operations on images.
@@ -20,7 +21,7 @@ public class SharpenOperation implements Operation {
    * Perform the operation.
    */
   @Override
-  public void perform() {
-
+  public Operable perform() {
+    return null;
   }
 }

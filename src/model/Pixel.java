@@ -52,4 +52,5 @@ public interface Pixel {
    */
   Pixel getChannelComponent(Channel channel);
 
+
 }

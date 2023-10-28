@@ -1,26 +1,40 @@
 package operation;
 
+import java.util.function.Function;
+
 import model.Image;
+import operable.LinearTransformOperable;
+import operable.Operable;
 
 /**
  * A class that represents getting luma on images.
  */
-public class LumaOperation implements Operation {
-  private Image image;
+public class LumaOperation<T> implements Operation {
+  private LinearTransformOperable<T> linearTransformOperable;
+  private Function<T,T> lumaFunc;
 
-  /** Construct a getting luma operation on a given image.
+  /** Construct a lumaOperation on given LinearTransformOperable.
    *
-   * @param image the image to operate
+   * @param linearTransformOperable the given LinearTransformOperable
+   * @param lumaFunc the function to calculate luma on the LinearTransformOperable
    */
-  public LumaOperation(Image image) {
-    this.image = image;
+  public LumaOperation(LinearTransformOperable<T> linearTransformOperable,
+                       Function<T, T> lumaFunc) {
+    this.linearTransformOperable = linearTransformOperable;
+    this.lumaFunc = lumaFunc;
   }
 
   /**
    * Perform the operation.
    */
   @Override
-  public void perform() {
-
+  public Operable perform() {
+    LinearTransformOperable<T> max=
+        (LinearTransformOperable<T>) linearTransformOperable.mapElement(lumaFunc);
+    return max.arrayMultiplication(new float[][]{
+        {0.2126f,0.7152f,0.722f},
+        {0.2126f,0.7152f,0.722f},
+        {0.2126f,0.7152f,0.722f}
+    });
   }
 }
