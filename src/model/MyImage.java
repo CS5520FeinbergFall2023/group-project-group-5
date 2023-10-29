@@ -232,7 +232,7 @@ public class MyImage implements Image {
         int rowStart = Math.max(0, i - kernelCenterRow);
         int rowEnd = Math.min(this.width - 1, i + kernelCenterRow);
         int colStart = Math.max(0, j - kernelCenterCol);
-        int colEnd = Math.min(this.height - 1, i + kernelCenterCol);
+        int colEnd = Math.min(this.height - 1, j + kernelCenterCol);
         //traver all pixels on the image in this area
         for (int x = rowStart; x <= rowEnd; x++) {
           for (int y = colStart; y <= colEnd; y++) {
