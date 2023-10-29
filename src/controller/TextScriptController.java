@@ -17,3 +17,4 @@ public interface TextScriptController {
   void executeCommand(String command) throws IOException;
 
 }
+
