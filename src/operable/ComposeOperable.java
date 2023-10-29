@@ -21,9 +21,10 @@ public interface ComposeOperable extends Operable{
 //   */
 //  ComposeOperable addition(ComposeOperable composeOperable);
 
-  /** Perform addition with a few other ComposeOperables.
-   * @param composeOperables the other ComposeOperables to be added
+  /** Perform addition with a few other ComposeOperable.
+   * @param composeOperable the other ComposeOperable to be added
    * @return the add result
+   * @throws IllegalArgumentException when argument is illegal
    */
-  ComposeOperable addition(Iterable<ComposeOperable> composeOperables);
+  ComposeOperable addition(ComposeOperable composeOperable) throws IllegalArgumentException;
 }

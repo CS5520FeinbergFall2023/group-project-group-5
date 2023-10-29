@@ -52,5 +52,17 @@ public interface Pixel {
    */
   Pixel getChannelComponent(Channel channel);
 
+  /** Calculate the max value among all channels of the pixel and get a pixel with all channels this
+   * value.
+   * @return a pixel with all channels the max value among all channels
+   */
+  Pixel max();
+
+  /** Calculate the average value among all channels of the pixel and get a pixel with all channels
+   * this value.
+   * @return a pixel with all channels the average value among all channels
+   */
+  Pixel avg();
+
 
 }

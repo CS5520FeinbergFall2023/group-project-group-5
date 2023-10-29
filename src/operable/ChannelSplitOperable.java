@@ -2,7 +2,7 @@ package operable;
 
 import model.Channel;
 
-public interface ChannelSplitOperable<T> extends MapElementOperable<T> {
+public interface ChannelSplitOperable<T> extends MapElementOperable<T>,ComposeOperable {
   /** Split channels of the given ChannelSplitOperable
    *
    * @param channel the channel to split

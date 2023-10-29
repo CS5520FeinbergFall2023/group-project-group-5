@@ -212,22 +212,24 @@ public class MyImage implements Image<Pixel>{
   }
 
   /**
-   * Perform addition with a few other ComposeOperables.
+   * Perform addition with a few other ComposeOperable.
    *
-   * @param composeOperables the other ComposeOperables to be added
+   * @param that the other ComposeOperable to be added
    * @return the add result
    */
   @Override
-  public ComposeOperable addition(Iterable<ComposeOperable> composeOperables) {
+  public MyImage addition(ComposeOperable that) throws IllegalArgumentException {
+    if(!(that instanceof MyImage))
+    {
+      throw  new IllegalArgumentException("MyImage adds only with MyImage");
+    }
     Pixel[][] resultPixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
       System.arraycopy(this.pixels[i], 0, resultPixels[i], 0, width);
     }
-    for (ComposeOperable that : composeOperables) {
-      for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-          resultPixels[i][j] = resultPixels[i][j].addition(((MyImage) that).pixels[i][j]);
-        }
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        resultPixels[i][j] = resultPixels[i][j].addition(((MyImage) that).pixels[i][j]);
       }
     }
     return new MyImage(resultPixels);

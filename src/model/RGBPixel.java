@@ -181,6 +181,7 @@ public class RGBPixel implements Pixel {
     return new RGBPixel(newRed,newGreen,newBlue);
   }
 
+  @Override
   public RGBPixel max() {
     int max=0;
     for (Channel channel : channels.keySet()) {
@@ -193,6 +194,7 @@ public class RGBPixel implements Pixel {
     return new RGBPixel(max,max,max);
   }
 
+  @Override
   public RGBPixel avg() {
     int sum=0;
     for (Channel channel : channels.keySet()) {
@@ -209,7 +211,6 @@ public class RGBPixel implements Pixel {
   private int getBlue(){
     return channels.get(Channel.BLUE);
   }
-
 
   private int getGreen(){
     return channels.get(Channel.GREEN);

@@ -1,6 +1,8 @@
 import org.junit.Test;
 
 import model.MyImage;
+import model.Pixel;
+import operation.LumaOperation;
 
 public class Tests {
 
@@ -93,5 +95,6 @@ public class Tests {
         //- no comment, multiple lines
         //- with comment, multiple lines
 
-  MyImage image=new MyImage(5,5,"name");
+  MyImage image=new MyImage(5,5);
+  LumaOperation<Pixel> lumaOperation=new LumaOperation<Pixel>(image, Pixel::max);
 }

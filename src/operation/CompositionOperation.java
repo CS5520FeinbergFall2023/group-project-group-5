@@ -3,18 +3,20 @@ package operation;
 import operable.ComposeOperable;
 
 /**
- * A class that represents channel composing operations on images.
+ * A class that represents composing operations on images.
  */
 public class CompositionOperation implements Operation {
-  private ComposeOperable composeOperable;
-  private Iterable<ComposeOperable> toBeComposed;
+  private ComposeOperable[] toBeComposed;
 
-  /** Construct a channel composing operation on a given ComposeOperable.
+  /** Construct a composing operation on given ComposeOperables.
    *
-   * @param composeOperable the ComposeOperable to operate
+   * @param toBeComposed the ComposeOperables to operate
    */
-  public CompositionOperation(ComposeOperable composeOperable,Iterable<ComposeOperable> toBeComposed) {
-    this.composeOperable = composeOperable;
+  public CompositionOperation(ComposeOperable[] toBeComposed) {
+    if(toBeComposed.length==0)
+    {
+      throw new IllegalArgumentException("Given list is empty.");
+    }
     this.toBeComposed = toBeComposed;
   }
   /**
@@ -22,6 +24,11 @@ public class CompositionOperation implements Operation {
    */
   @Override
   public ComposeOperable perform() {
-    return composeOperable.addition(toBeComposed);
+    ComposeOperable result=toBeComposed[0];
+    for(int i=1;i< toBeComposed.length;i++)
+    {
+      result=result.addition(toBeComposed[i]);
+    }
+    return result;
   }
 }
