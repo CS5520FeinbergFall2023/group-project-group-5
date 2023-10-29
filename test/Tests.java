@@ -1,5 +1,7 @@
 import org.junit.Test;
 
+import model.MyImage;
+
 public class Tests {
 
 //  -------------------Load an image from an ASCII PPM, JPG or PNG file.----------------------------
@@ -90,4 +92,6 @@ public class Tests {
         //- with comment, single line
         //- no comment, multiple lines
         //- with comment, multiple lines
+
+  MyImage image=new MyImage(5,5,"name");
 }

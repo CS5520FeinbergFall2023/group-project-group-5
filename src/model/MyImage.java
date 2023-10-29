@@ -14,18 +14,15 @@ public class MyImage implements Image<Pixel>{
   private Pixel[][] pixels;
   private int height;
   private int width;
-  private String name;
 
-  public MyImage(int height, int width, String name) {
+
+  public MyImage(int height, int width) {
     if (width <= 0 || height <= 0) {
       throw new IllegalArgumentException("Invalid width and height.");
     }
-    if (name == null) {
-      throw new IllegalArgumentException("The name cannot be null");
-    }
+
     this.height = height;
     this.width = width;
-    this.name = name;
     operationList = new ArrayList<>();
     pixels = new RGBPixel[height][width];
     for (int row = 0; row < this.height; row++) {
@@ -35,7 +32,7 @@ public class MyImage implements Image<Pixel>{
     }
   }
 
-  private MyImage(String name, Pixel[][] pixels) {
+  private MyImage(Pixel[][] pixels) {
     int height = pixels.length;
     if (height == 0) {
       throw new IllegalArgumentException("Invalid pixels size.");
@@ -48,7 +45,6 @@ public class MyImage implements Image<Pixel>{
     }
     this.height = height;
     this.width = width;
-    this.name = name;
     this.pixels = pixels;
   }
 
@@ -91,23 +87,6 @@ public class MyImage implements Image<Pixel>{
     operationList.clear();
   }
 
-  /**
-   * Get the image's name.
-   *
-   * @return the image's name.
-   */
-  @Override
-  public String getName() {
-    return this.name;
-  }
-
-  /**
-   * Set the image's name.
-   */
-  public void setName(String name) {
-    this.name = name;
-  }
-
   @Override
   public Pixel getPixel(int x, int y) {
     if (x < 0 || x > this.width || y < 0 || y > this.height) {
@@ -134,8 +113,7 @@ public class MyImage implements Image<Pixel>{
    */
   @Override
   public MyImage imgArrayAddition(float[] matrix) {
-    String newName = this.getName() + "-new";
-    MyImage result = new MyImage(this.height, this.width, newName);
+    MyImage result = new MyImage(this.height, this.width);
     for (int i = 0; i < this.height; i++) {
       for (int j = 0; j < this.width; j++) {
         result.setPixel(i, j, this.getPixel(i, j).addition(matrix));
@@ -169,8 +147,7 @@ public class MyImage implements Image<Pixel>{
     int kernelCenterRow = kernelHeight / 2;
     int kernelCenterCol = kernelWidth / 2;
 
-    String newName = this.getName() + "-new";
-    MyImage result = new MyImage(this.height, this.width, newName);
+    MyImage result = new MyImage(this.height, this.width);
 
     for (int i = 0; i < this.height; i++) {
       for (int j = 0; j < this.width; j++) {
@@ -203,8 +180,7 @@ public class MyImage implements Image<Pixel>{
    */
   @Override
   public MyImage arrayMultiplication(float[][] matrix) {
-    String newName = this.getName() + "-new";
-    MyImage result = new MyImage(this.height, this.width, newName);
+    MyImage result = new MyImage(this.height, this.width);
     for (int i = 0; i < this.height; i++) {
       for (int j = 0; j < this.width; j++) {
         result.setPixel(i, j, this.getPixel(i, j).linearTransformation(matrix));
@@ -222,8 +198,7 @@ public class MyImage implements Image<Pixel>{
    */
   @Override
   public MyImage channelSplit(Channel channel) throws IllegalArgumentException {
-    String newName = this.getName() + "-new";
-    MyImage result = new MyImage(this.height, this.width, newName);
+    MyImage result = new MyImage(this.height, this.width);
     for (int i = 0; i < this.height; i++) {
       for (int j = 0; j < this.width; j++) {
         Pixel pixel = this.getPixel(i, j);
@@ -244,7 +219,6 @@ public class MyImage implements Image<Pixel>{
    */
   @Override
   public ComposeOperable addition(Iterable<ComposeOperable> composeOperables) {
-    String newName = this.getName() + "-new";
     Pixel[][] resultPixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
       System.arraycopy(this.pixels[i], 0, resultPixels[i], 0, width);
@@ -256,7 +230,7 @@ public class MyImage implements Image<Pixel>{
         }
       }
     }
-    return new MyImage(newName, resultPixels);
+    return new MyImage(resultPixels);
   }
 
   /**
@@ -286,7 +260,6 @@ public class MyImage implements Image<Pixel>{
             projectMatrix[1][0]*i+projectMatrix[1][1]*j+projectMatrix[1][2]};
       }
     }
-    String newName = this.getName() + "-new";
     Pixel[][] resultPixels = new RGBPixel[height][width];
     for (int row=0;row<height;row++)
     {
@@ -295,7 +268,7 @@ public class MyImage implements Image<Pixel>{
         resultPixels[projected[row][col][0]][projected[row][col][1]]=pixels[row][col];
       }
     }
-    return new MyImage(newName, resultPixels);
+    return new MyImage(resultPixels);
   }
 
   /**
@@ -306,7 +279,7 @@ public class MyImage implements Image<Pixel>{
    */
   @Override
   public MapElementOperable<Pixel> mapElement(Function<Pixel,Pixel> function) {
-    MyImage result = new MyImage(this.height, this.width, this.name);
+    MyImage result = new MyImage(this.height, this.width);
     for (int i = 0; i < this.height; i++) {
       for (int j = 0; j < this.width; j++) {
         Pixel originalPixel = this.getPixel(i, j);

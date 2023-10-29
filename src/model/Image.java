@@ -26,17 +26,6 @@ public interface Image<T> extends AffineTransformOperable, ComposeOperable, Filt
   void performOperations();
 
   /**
-   * Get the image's name.
-   * @return the name of the image
-   */
-  String getName();
-
-  /**
-   * Set the image's name.
-   */
-  void setName(String name);
-
-  /**
    *
    * @param fileName
    * @throws IOException
