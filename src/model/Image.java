@@ -3,28 +3,7 @@ package model;
 import java.io.IOException;
 import java.util.function.Function;
 
-import operable.AffineTransformOperable;
-import operable.ChannelSplitOperable;
-import operable.ComposeOperable;
-import operable.FilterOperable;
-import operable.LinearTransformOperable;
-import operable.MapElementOperable;
-import operation.Operation;
-
-public interface Image<T> extends AffineTransformOperable, ComposeOperable, FilterOperable,
-    LinearTransformOperable<T>, ChannelSplitOperable<T>,MapElementOperable<T> {
-
-  /**
-   *
-   * @param operation
-   */
-  void takeOperation(Operation operation);
-
-  /**
-   *
-   */
-  void performOperations();
-
+public interface Image {
   /**
    *
    * @param fileName
@@ -67,4 +46,17 @@ public interface Image<T> extends AffineTransformOperable, ComposeOperable, Filt
    */
   void setPixel(int x, int y, Pixel pixel);
 
+  Image arrayMultiplication(float[][] matrix);
+
+  Image channelSplit(Channel channel) throws IllegalArgumentException;
+  Image filtering(float[][] kernel);
+  Image mapElement(Function<Pixel,Pixel> function);
+  Image projectCoordinate(int[][] projectMatrix);
+  Image addition(Image that);
+  Image imgArrayAddition(float[] matrix);
+
+  /** Get channels of pixels in the image.
+   * @return channels of pixels in the image
+   */
+  Channel[] getChannels();
 }

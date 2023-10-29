@@ -5,16 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import operable.ComposeOperable;
-import operable.MapElementOperable;
-import operation.Operation;
 
-public class MyImage implements Image<Pixel>{
-  private List<Operation> operationList;
+
+public class MyImage implements Image{
   private Pixel[][] pixels;
   private int height;
   private int width;
-
 
   public MyImage(int height, int width) {
     if (width <= 0 || height <= 0) {
@@ -23,7 +19,6 @@ public class MyImage implements Image<Pixel>{
 
     this.height = height;
     this.width = width;
-    operationList = new ArrayList<>();
     pixels = new RGBPixel[height][width];
     for (int row = 0; row < this.height; row++) {
       for (int col = 0; col < this.width; col++) {
@@ -76,16 +71,6 @@ public class MyImage implements Image<Pixel>{
     return this.width;
   }
 
-  public void takeOperation(Operation operation) {
-    operationList.add(operation);
-  }
-
-  public void performOperations() {
-    for (Operation operation : operationList) {
-      operation.perform();
-    }
-    operationList.clear();
-  }
 
   @Override
   public Pixel getPixel(int x, int y) {
@@ -113,13 +98,14 @@ public class MyImage implements Image<Pixel>{
    */
   @Override
   public MyImage imgArrayAddition(float[] matrix) {
-    MyImage result = new MyImage(this.height, this.width);
-    for (int i = 0; i < this.height; i++) {
-      for (int j = 0; j < this.width; j++) {
-        result.setPixel(i, j, this.getPixel(i, j).addition(matrix));
-      }
-    }
-    return result;
+//    MyImage result = new MyImage(this.height, this.width);
+//    for (int i = 0; i < this.height; i++) {
+//      for (int j = 0; j < this.width; j++) {
+//        result.setPixel(i, j, this.getPixel(i, j).addition(matrix));
+//      }
+//    }
+//    return result;
+    return mapElement(pixel->pixel.addition(matrix));
   }
 
   /**
@@ -129,7 +115,7 @@ public class MyImage implements Image<Pixel>{
    * @throws IllegalArgumentException when the given argument is not legal
    */
   @Override
-  public MyImage imgFiltering(float[][] kernel) {
+  public MyImage filtering(float[][] kernel) {
     int kernelHeight = kernel.length;
     int kernelWidth = kernel[0].length;
     if (kernel.length % 2 == 0) {
@@ -212,17 +198,13 @@ public class MyImage implements Image<Pixel>{
   }
 
   /**
-   * Perform addition with a few other ComposeOperable.
+   * Perform addition with another image.
    *
-   * @param that the other ComposeOperable to be added
+   * @param that the other image to be added
    * @return the add result
    */
   @Override
-  public MyImage addition(ComposeOperable that) throws IllegalArgumentException {
-    if(!(that instanceof MyImage))
-    {
-      throw  new IllegalArgumentException("MyImage adds only with MyImage");
-    }
+  public MyImage addition(Image that) {
     Pixel[][] resultPixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
       System.arraycopy(this.pixels[i], 0, resultPixels[i], 0, width);
@@ -232,6 +214,7 @@ public class MyImage implements Image<Pixel>{
         resultPixels[i][j] = resultPixels[i][j].addition(((MyImage) that).pixels[i][j]);
       }
     }
+
     return new MyImage(resultPixels);
   }
 
@@ -280,7 +263,7 @@ public class MyImage implements Image<Pixel>{
    * @return the mapped result
    */
   @Override
-  public MapElementOperable<Pixel> mapElement(Function<Pixel,Pixel> function) {
+  public MyImage mapElement(Function<Pixel,Pixel> function) {
     MyImage result = new MyImage(this.height, this.width);
     for (int i = 0; i < this.height; i++) {
       for (int j = 0; j < this.width; j++) {
@@ -292,4 +275,13 @@ public class MyImage implements Image<Pixel>{
     return result;
   }
 
+  /**
+   * Get channels of pixels in the image.
+   *
+   * @return channels of pixels in the image
+   */
+  @Override
+  public Channel[] getChannels() {
+    return new Channel[]{Channel.RED,Channel.GREEN,Channel.BLUE};
+  }
 }
