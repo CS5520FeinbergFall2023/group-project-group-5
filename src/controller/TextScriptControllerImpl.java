@@ -200,7 +200,8 @@ public class TextScriptControllerImpl implements TextScriptController {
           System.out.println("One or more of the images are not loaded");
           break;
         }
-        Image combinedImage = imageService.combineChannels(redImage, greenImage, blueImage);
+        Image combinedImage = imageService.combineChannels(new Channel[]{Channel.RED,
+            Channel.GREEN,Channel.BLUE},new Image[]{redImage,greenImage,blueImage});
         break;
       case "sharpen":
         if(myImage == null) {

@@ -215,5 +215,23 @@ public class RGBPixel implements Pixel {
     return channels.get(Channel.GREEN);
   }
 
+  @Override
+  public boolean isMonochromeOfChannel(Channel channel){
+    if(containsChannel(channel))
+    {
+      for (Channel c:channels.keySet())
+      {
+        if (c==channel)
+        {
+          continue;
+        }
+        if(channels.get(c)!=0){
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
 
 }

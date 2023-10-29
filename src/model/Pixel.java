@@ -66,4 +66,7 @@ public interface Pixel {
 
 //  Pixel luma();
 
+  boolean isMonochromeOfChannel(Channel channel);
+
+
 }

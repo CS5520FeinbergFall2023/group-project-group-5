@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 
 public class MyImage implements Image{
-  private Pixel[][] pixels;
+  private RGBPixel[][] pixels;
   private int height;
   private int width;
 
@@ -27,7 +27,7 @@ public class MyImage implements Image{
     }
   }
 
-  private MyImage(Pixel[][] pixels) {
+  private MyImage(RGBPixel[][] pixels) {
     int height = pixels.length;
     if (height == 0) {
       throw new IllegalArgumentException("Invalid pixels size.");
@@ -73,7 +73,7 @@ public class MyImage implements Image{
 
 
   @Override
-  public Pixel getPixel(int x, int y) {
+  public RGBPixel getPixel(int x, int y) {
     if (x < 0 || x > this.width || y < 0 || y > this.height) {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
@@ -88,7 +88,11 @@ public class MyImage implements Image{
     if (x < 0 || x > this.width || y < 0 || y > this.height) {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
-    pixels[x][y] = pixel;
+    if(!(pixel instanceof RGBPixel))
+    {
+      throw new IllegalArgumentException("MyImage should only contain RGB pixels");
+    }
+    pixels[x][y] = (RGBPixel) pixel;
   }
 
   /**
@@ -205,7 +209,7 @@ public class MyImage implements Image{
    */
   @Override
   public MyImage addition(Image that) {
-    Pixel[][] resultPixels = new RGBPixel[height][width];
+    RGBPixel[][] resultPixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
       System.arraycopy(this.pixels[i], 0, resultPixels[i], 0, width);
     }
@@ -245,7 +249,7 @@ public class MyImage implements Image{
             projectMatrix[1][0]*i+projectMatrix[1][1]*j+projectMatrix[1][2]};
       }
     }
-    Pixel[][] resultPixels = new RGBPixel[height][width];
+    RGBPixel[][] resultPixels = new RGBPixel[height][width];
     for (int row=0;row<height;row++)
     {
       for(int col=0;col<width;col++)
@@ -283,5 +287,20 @@ public class MyImage implements Image{
   @Override
   public Channel[] getChannels() {
     return new Channel[]{Channel.RED,Channel.GREEN,Channel.BLUE};
+  }
+
+  @Override
+  public boolean isMonochromeOfChannel(Channel channel)
+  {
+    for (int i = 0; i < this.height; i++) {
+      for (int j = 0; j < this.width; j++) {
+        RGBPixel pixel = this.getPixel(i, j);
+        if(!pixel.containsChannel(channel) || !pixel.isMonochromeOfChannel(channel))
+        {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }

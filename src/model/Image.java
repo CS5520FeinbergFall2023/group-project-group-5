@@ -59,4 +59,5 @@ public interface Image {
    * @return channels of pixels in the image
    */
   Channel[] getChannels();
+  boolean isMonochromeOfChannel(Channel channel);
 }

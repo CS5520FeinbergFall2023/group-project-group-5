@@ -7,17 +7,27 @@ import model.Channel;
 import model.Image;
 import model.Pixel;
 
+/**
+ * This class performs image operations.
+ */
 public class ImageService {
-  /** Result in one colored image.
+
+  /** Get one certain channel of the image (result in one colored image).
    *
-   * @param image
-   * @param channel
-   * @return
+   * @param image the image to operate on
+   * @param channel the given channel
+   * @return the split colored image
    */
   public Image splitComponent(Image image, Channel channel)
   {
     return image.channelSplit(channel);
   }
+
+  /** Blur an image.
+   *
+   * @param image the image to operate on
+   * @return the result image
+   */
   public Image blur(Image image)
   {
     float[][] blurFilter=new float[][]{
@@ -27,15 +37,30 @@ public class ImageService {
     };
     return image.filtering(blurFilter);
   }
-  public Image value(Image image)
+
+  /**
+   * @param image the image to operate on
+   * @return the result image
+   */
+  public Image getValue(Image image)
   {
     return image.mapElement(Pixel::avg);
   }
-  public Image intensity(Image image)
+
+  /**
+   * @param image the image to operate on
+   * @return the result image
+   */
+  public Image getIntensity(Image image)
   {
     return image.mapElement(Pixel::max);
   }
-  public Image luma(Image image)
+
+  /**
+   * @param image the image to operate on
+   * @return the result image
+   */
+  public Image getLuma(Image image)
   {
     float[][] luma=new float[][]{
         {0.2126f,0.7152f,0.722f},
@@ -45,6 +70,11 @@ public class ImageService {
     return image.arrayMultiplication(luma);
   }
 
+  /**
+   * @param image the image to operate on
+   * @param axis the axis to flip on
+   * @return the result image
+   */
   public Image flip(Image image,Axis axis)
   {
     int[][] matrix;
@@ -63,6 +93,11 @@ public class ImageService {
     return image.projectCoordinate(matrix);
   }
 
+  /**
+   * @param image the image to operate on
+   * @param delta the amount to brighten
+   * @return the result image
+   */
   public Image brighten(Image image, float delta)
   {
     if(delta<0)
@@ -73,6 +108,11 @@ public class ImageService {
     return image.imgArrayAddition(matrix);
   }
 
+  /**
+   * @param image the image to operate on
+   * @param delta the amount to darken
+   * @return the result image
+   */
   public Image darken(Image image, float delta)
   {
     if(delta>0)
@@ -83,6 +123,10 @@ public class ImageService {
     return image.imgArrayAddition(matrix);
   }
 
+  /**
+   * @param image the image to operate on
+   * @return the result image
+   */
   private Image greyscale(Image image)
   {
     //todo:same as luma?
@@ -96,8 +140,8 @@ public class ImageService {
 
   /** Result in $channelCount greyscale images.
    *
-   * @param image
-   * @return
+   * @param image the image to operate on
+   * @return the result images
    */
   public Image[] splitChannel(Image image)
   {
@@ -109,11 +153,41 @@ public class ImageService {
     return result;
   }
 
-  public Image combineChannels(Image red,Image green,Image blue)
+  /** Combine images each representing one monochrome channel to one multicolor image.
+   *
+   * @param channels the channels to combine
+   * @param images the images to combine, corresponding to channels
+   * @return the result image
+   */
+  public Image combineChannels(Channel[] channels,Image[] images)
   {
-    return red.addition(green).addition(blue);
+    if(images.length==0)
+    {
+      throw new IllegalArgumentException("There has to at least one image.");
+    }
+    if(images[0].isMonochromeOfChannel(channels[0])) {
+      Image result = images[0];
+      for(int i=1;i< images.length;i++)
+      {
+        if(images[i].isMonochromeOfChannel(channels[i])) {
+          result = result.addition(images[i]);
+        }
+        else{
+          throw new IllegalArgumentException("Input image should be monochrome of corresponding "
+                                             + "channel.");
+        }
+      }
+      return result;
+    }
+    throw new IllegalArgumentException("Input image should be monochrome of corresponding channel"
+                                       + ".");
   }
 
+  /** Sharpen an image.
+   *
+   * @param image the image to operate on
+   * @return the result image
+   */
   public Image sharpen(Image image)
   {
     float[][] sharpen=new float[][]{
@@ -127,7 +201,12 @@ public class ImageService {
   }
 
 
-  public Image sepia(Image image)
+  /** Get sepia version of an image
+   *
+   * @param image the image to operate on
+   * @return the result image
+   */
+  public Image getSepia(Image image)
   {
     float[][] sepia=new float[][]
         {
