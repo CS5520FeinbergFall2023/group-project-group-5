@@ -11,7 +11,6 @@ import model.Channel;
 import model.Image;
 import model.MyImage;
 import service.ImageService;
-import util.ImageUtil;
 import view.ImageView;
 
 /**

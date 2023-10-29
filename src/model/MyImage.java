@@ -1,9 +1,11 @@
 package model;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.function.Function;
@@ -127,12 +129,48 @@ public class MyImage implements Image {
 
   @Override
   // 实现保存图像的代码
-  public void save(String path) throws IOException {
+  public void save(String path) throws IllegalArgumentException {
+    try {
+      if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
+        saveJPG(path);
+      }
+      else if(path.endsWith(".png"))
+      {
+        savePNG(path);
 
+      }
+      else if (path.endsWith(".ppm")) {
+        loadPPM(path);
+      } else {
+        throw new IllegalArgumentException("Extension not supported.");
+      }
+    } catch (IllegalArgumentException | IOException e) {
+      throw new IllegalArgumentException("Path does not exist or something wrong with file format"
+                                         + ".");
+    }
   }
 
   private void savePPM(String path) {
+    try {
+      BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+      // PPM header
+      writer.write("P3\n");
+      writer.write(width + " " + height + "\n");
+      writer.write("255\n");
 
+      for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+          RGBPixel pixel = pixels[y][x];
+          writer.write(pixel.getRed() + " " + pixel.getGreen() + " " + pixel.getBlue() + " ");
+        }
+        writer.write("\n");
+      }
+
+      writer.close();
+      System.out.println("Image saved successfully.");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   private void saveJPG(String path) {
@@ -326,19 +364,17 @@ public class MyImage implements Image {
     if (projectMatrix.length != 2 || projectMatrix[0].length != 3 || projectMatrix[1].length != 3) {
       throw new IllegalArgumentException("Project matrix should be 2x3 for MyImage");
     }
-    //traverse row
-    for (int i = 0; i < height; i++) {
-      //traverse column
-      for (int j = 0; j < width; j++) {
-        projected[i][j] =
-            new int[]{projectMatrix[0][0] * i + projectMatrix[0][1] * j + projectMatrix[0][2],
-                projectMatrix[1][0] * i + projectMatrix[1][1] * j + projectMatrix[1][2]};
-      }
-    }
     RGBPixel[][] resultPixels = new RGBPixel[height][width];
-    for (int row = 0; row < height; row++) {
-      for (int col = 0; col < width; col++) {
-        resultPixels[projected[row][col][0]][projected[row][col][1]] = pixels[row][col];
+    //coordinate is reverse of row/column
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        int x=j;
+        int y=i;
+        int newX=projectMatrix[0][0] * x + projectMatrix[0][1] * y + projectMatrix[0][2];
+        int newY=projectMatrix[1][0] * x + projectMatrix[1][1] * y + projectMatrix[1][2];
+        if(newY<height && newX<width) {
+          resultPixels[newY][newX] = pixels[y][x];
+        }
       }
     }
     return new MyImage(resultPixels);
@@ -389,6 +425,41 @@ public class MyImage implements Image {
         }
       }
     }
+    return true;
+  }
+
+  // =====================Please double check======================
+  // do we need to compare channels?
+  /**
+   * Check if two images are identical.
+   *
+   * @param o the other object to compare with
+   * @return true if two image have the same size and every pixel are identical
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+
+    if (!(o instanceof MyImage)) {
+      return false;
+    }
+
+    MyImage otherImage = (MyImage) o;
+
+    if (this.width != otherImage.getWidth() || this.height != otherImage.getHeight()) {
+      return false;
+    }
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        if (!pixels[y][x].equals(otherImage.pixels[y][x])) {
+          return false;
+        }
+      }
+    }
+
     return true;
   }
 }

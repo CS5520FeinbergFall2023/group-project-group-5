@@ -190,16 +190,16 @@ public class RGBPixel implements Pixel {
     return new RGBPixel(Math.round(sum / 3f), Math.round(sum / 3f), Math.round(sum / 3f));
   }
 
-  private int getRed() {
+  int getRed() {
     return channels.get(Channel.RED);
   }
 
-  private int getBlue() {
+  int getBlue() {
     return channels.get(Channel.BLUE);
   }
 
 
-  private int getGreen() {
+  int getGreen() {
     return channels.get(Channel.GREEN);
   }
 

@@ -74,12 +74,14 @@ public class ImageService {
    */
   public Image flip(Image image, Axis axis) {
     int[][] matrix;
-    if (axis == Axis.X) {
+    if (axis == Axis.Y) {
+      //vertical flip
       matrix = new int[][]{
           {-1, 0, image.getWidth() - 1},
           {0, 1, 0}
       };
     } else {
+      //horizontal flip
       matrix = new int[][]{
           {1, 0, 0},
           {0, -1, image.getHeight() - 1}
