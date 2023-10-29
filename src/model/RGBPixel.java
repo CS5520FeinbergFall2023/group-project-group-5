@@ -1,7 +1,8 @@
 package model;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * This class represents 8 bit depth RGB pixel.
@@ -27,7 +28,7 @@ public class RGBPixel implements Pixel {
     red = Math.min(red, 2 << bitDepth - 1);
     green = Math.min(green, 2 << bitDepth - 1);
     blue = Math.min(blue, 2 << bitDepth - 1);
-    channels = new HashMap<>();
+    channels = new EnumMap<>(Channel.class);
     channels.put(Channel.RED, red);
     channels.put(Channel.GREEN, green);
     channels.put(Channel.BLUE, blue);
@@ -60,7 +61,7 @@ public class RGBPixel implements Pixel {
     if (!containsChannel(channel)) {
       throw new IllegalArgumentException("The pixel does not contain the channel");
     }
-    Map<Channel, Integer> channels = new HashMap<>();
+    Map<Channel, Integer> channels = new EnumMap<>(Channel.class);
     for (Channel key : this.channels.keySet()) {
       if (key == channel) {
         channels.put(channel, this.channels.get(channel));
@@ -224,4 +225,23 @@ public class RGBPixel implements Pixel {
     return false;
   }
 
+  /** Compare if two objects are equal.
+   * @param o the othe object to compare to
+   * @return if the objects are equal
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {return true;}
+    if (o == null || getClass() != o.getClass()) {return false;}
+    RGBPixel rgbPixel = (RGBPixel) o;
+    return Objects.equals(channels, rgbPixel.channels);
+  }
+
+  /** Get the hashcode of the object.
+   * @return the hashcode of the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(channels);
+  }
 }

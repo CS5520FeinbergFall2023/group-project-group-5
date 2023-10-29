@@ -9,14 +9,6 @@ import java.util.function.Function;
 public interface Image {
 
   /**
-   * Load image from local file.
-   *
-   * @param fileName the file path
-   * @throws IOException if there's problem with IO
-   */
-  void load(String fileName) throws IOException;
-
-  /**
    * Save image to local file.
    *
    * @param fileName the file path

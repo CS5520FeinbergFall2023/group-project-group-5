@@ -16,4 +16,6 @@ public enum Channel {
    * The blue channel.
    */
   BLUE
+
+
 }

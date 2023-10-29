@@ -1,20 +1,45 @@
 package model;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.function.Function;
+
+import javax.imageio.ImageIO;
 
 
 /**
- *
+ * This class represents 8 bit depth RGB image.
  */
 public class MyImage implements Image {
   private RGBPixel[][] pixels;
   private int height;
   private int width;
 
-  public MyImage() {
+  public MyImage(String path) throws IllegalArgumentException {
+    try {
+      if (path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")) {
+        loadJPGPNG(path);
+      } else if (path.endsWith(".ppm")) {
+        loadPPM(path);
+      } else {
+        throw new IllegalArgumentException("Extension not supported.");
+      }
+    } catch (IllegalArgumentException | IOException e) {
+      throw new IllegalArgumentException("Path does not exist or something wrong with file format"
+                                         + ".");
+    }
   }
 
+  /**
+   * Construct all white image with given height and width
+   *
+   * @param height height of the image
+   * @param width  weight of the image
+   */
   public MyImage(int height, int width) {
     if (width <= 0 || height <= 0) {
       throw new IllegalArgumentException("Invalid width and height.");
@@ -46,17 +71,78 @@ public class MyImage implements Image {
     this.pixels = pixels;
   }
 
-  @Override
-  // 实现加载图像的代码
-  public void load(String fileName) throws IOException {
 
+  private void loadPPM(String path) throws IOException, IllegalArgumentException {
+    Scanner sc;
+    try {
+      sc = new Scanner(new FileInputStream(path));
+    } catch (FileNotFoundException e) {
+      throw new IOException("File " + path + " not found!");
+    }
+    StringBuilder builder = new StringBuilder();
+    //read the file line by line, and populate a string. This will throw away any comment lines
+    while (sc.hasNextLine()) {
+      String s = sc.nextLine();
+      if (s.charAt(0) != '#') {
+        builder.append(s + System.lineSeparator());
+      }
+    }
+    //now set up the scanner to read from the string we just built
+    sc = new Scanner(builder.toString());
+    String token;
+    token = sc.next();
+    if (!token.equals("P3")) {
+      throw new IllegalArgumentException("Invalid PPM file: plain RAW file should begin with P3");
+    }
+    this.width = sc.nextInt();
+    this.height = sc.nextInt();
+    pixels = new RGBPixel[height][width];
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        int r = sc.nextInt();
+        int g = sc.nextInt();
+        int b = sc.nextInt();
+        pixels[i][j] = new RGBPixel(r, g, b);
+      }
+    }
   }
+
+  private void loadJPGPNG(String path) throws IOException {
+    BufferedImage image;
+    image = ImageIO.read(new File(path));
+    width = image.getWidth();
+    height = image.getHeight();
+    pixels = new RGBPixel[height][width];
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        int pixel = image.getRGB(x, y);
+        int red = (pixel >> 16) & 0xFF;
+        int green = (pixel >> 8) & 0xFF;
+        int blue = pixel & 0xFF;
+        pixels[y][x] = new RGBPixel(red, green, blue);
+      }
+    }
+  }
+
 
   @Override
   // 实现保存图像的代码
-  public void save(String fileName) throws IOException {
+  public void save(String path) throws IOException {
 
   }
+
+  private void savePPM(String path) {
+
+  }
+
+  private void saveJPG(String path) {
+
+  }
+
+  private void savePNG(String path) {
+
+  }
+
 
   /**
    * @return
