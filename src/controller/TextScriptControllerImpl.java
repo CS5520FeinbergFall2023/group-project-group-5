@@ -36,7 +36,7 @@ public class TextScriptControllerImpl implements TextScriptController {
     while (true) {
       String command = imageView.getUserCommand();
 
-      if("exit".equalsIgnoreCase(command.trim())) {
+      if ("exit".equalsIgnoreCase(command.trim())) {
         break;
       }
       executeCommand(command);
@@ -44,10 +44,10 @@ public class TextScriptControllerImpl implements TextScriptController {
   }
 
   public void startFromFile(String filePath) throws IOException {
-    try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
       String command;
-      while((command = reader.readLine())!= null) {
-        if("exit".equalsIgnoreCase(command.trim())) {
+      while ((command = reader.readLine()) != null) {
+        if ("exit".equalsIgnoreCase(command.trim())) {
           break;
         }
         executeCommand(command);
@@ -57,7 +57,7 @@ public class TextScriptControllerImpl implements TextScriptController {
 
   public void executeCommand(String command) throws IOException {
 
-    if( command == null ) {
+    if (command == null) {
       throw new IllegalArgumentException("Invalid command");
     }
     StringTokenizer tokenizer = new StringTokenizer(command);
@@ -78,14 +78,13 @@ public class TextScriptControllerImpl implements TextScriptController {
         //PNG format
 //        File file = new File(filePath);
 //        BufferedImage loadedImage = ImageIO.read(file);
-        if(loadedImage == null) {
+        if (loadedImage == null) {
           imageView.displayMessage("Failed to load the image from " + filePath);
           break;
         }
-        if(loadedImages.containsKey(imageAlias)) {
+        if (loadedImages.containsKey(imageAlias)) {
           imageView.displayMessage("Overwriting existing image " + imageAlias);
-        }
-        else {
+        } else {
           imageView.displayMessage("Loading new image: " + imageAlias);
         }
         loadedImages.put(imageAlias, loadedImage);
@@ -96,132 +95,151 @@ public class TextScriptControllerImpl implements TextScriptController {
         String outputPath = tokenizer.nextToken();
         String imageNameSave = tokenizer.nextToken();
         MyImage imageToSave = (MyImage) loadedImages.get(imageNameSave);
-        if(imageToSave == null) {
+        if (imageToSave == null) {
           imageView.displayMessage("Image " + imageNameSave + "not found.");
           break;
         }
         imageToSave.save(outputPath);
         break;
       case "blur":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Image blurred");
         imageService.blur(myImage);
         break;
       case "value-component":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Get the value-component");
-        imageService.value(myImage);
+        imageService.getValue(myImage);
         break;
       case "intensity-component":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Get the intensity-component");
-        imageService.intensity(myImage);
+        imageService.getIntensity(myImage);
         break;
       case "luma-component":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Get the luma-component");
-        imageService.luma(myImage);
+        imageService.getLuma(myImage);
         break;
       case "vertical-flip":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Flip the image vertically");
         imageService.flip(myImage, Axis.Y);
         break;
       case "horizontal-flip":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Flip the image horizontally");
         imageService.flip(myImage, Axis.X);
         break;
       case "brighten":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Change the brightness of the image");
         float amount = Float.parseFloat(tokenizer.nextToken());
-        if(amount > 0){
-          imageService.brighten(myImage,amount);
+        if (amount > 0) {
+          imageService.brighten(myImage, amount);
         }
-        if(amount < 0){
-          imageService.darken(myImage,amount);
+        if (amount < 0) {
+          imageService.darken(myImage, amount);
         }
         break;
       case "red-component":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Split image in red component");
         imageService.splitComponent(myImage, Channel.RED);
         break;
       case "green-component":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Split image in green component");
-        imageService.splitComponent(myImage,Channel.GREEN);
+        imageService.splitComponent(myImage, Channel.GREEN);
         break;
       case "blue-component":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Split image in blue component");
-        imageService.splitComponent(myImage,Channel.BLUE);
+        imageService.splitComponent(myImage, Channel.BLUE);
         break;
       case "rgb-split":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Split image");
         imageService.splitChannel(myImage);
         break;
       case "rgb-combine":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
-        imageView.displayMessage("Combine image");
-        String redName = tokenizer.nextToken();
-        Image redImage = loadedImages.get(redName);
-        String greenName = tokenizer.nextToken();
-        Image greenImage = loadedImages.get(greenName);
-        String blueName = tokenizer.nextToken();
-        Image blueImage = loadedImages.get(blueName);
-        if(redImage == null || greenImage == null || greenImage == null) {
-          System.out.println("One or more of the images are not loaded");
-          break;
+//        imageView.displayMessage("Combine image");
+//        String redName = tokenizer.nextToken();
+//        Image redImage = loadedImages.get(redName);
+//        String greenName = tokenizer.nextToken();
+//        Image greenImage = loadedImages.get(greenName);
+//        String blueName = tokenizer.nextToken();
+//        Image blueImage = loadedImages.get(blueName);
+//        if (redImage == null || greenImage == null || greenImage == null) {
+//          System.out.println("One or more of the images are not loaded");
+//          break;
+//        }
+//        Image combinedImage = imageService.combineChannels(redImage, greenImage, blueImage);
+//        break;
+        Channel[] channels = new Channel[3];
+        Image[] imagesToCombine = new Image[3];
+        channels[0] = Channel.RED;
+        channels[1] = Channel.GREEN;
+        channels[2] = Channel.BLUE;
+        for(int i =0; i< 3 ; i++) {
+          String imageName = tokenizer.nextToken();
+          if(!loadedImages.containsKey(imageName)) {
+            imageView.displayMessage("Image named " + imageName + "not loaded.");
+            return;
+          }
+          imagesToCombine[i] = loadedImages.get(imageName);
         }
-        Image combinedImage = imageService.combineChannels(redImage, greenImage, blueImage);
+        try{
+          Image combinedImage = imageService.combineChannels(channels, imagesToCombine);
+          loadedImages.put("combinedImage", combinedImage);
+          imageView.displayMessage("Images combined successfully");
+        }
+        catch (IllegalArgumentException e ) {
+          imageView.displayMessage(e.getMessage());
+        }
         break;
       case "sharpen":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Sharpen image");
         imageService.sharpen(myImage);
         break;
       case "sepia":
-        if(myImage == null) {
+        if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
         imageView.displayMessage("Sepia image");
-        imageService.sepia(myImage);
+        imageService.getSepia(myImage);
         break;
       default:
         System.out.println("Invalid command " + operation);
 
     }
   }
-
-
-
 }
