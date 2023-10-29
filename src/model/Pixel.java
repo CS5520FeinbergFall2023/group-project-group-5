@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * This interface represents a pixel.
+ */
 public interface Pixel {
   /**
    * Calculate matrix * [r,g,b]
@@ -37,7 +40,8 @@ public interface Pixel {
    */
   Pixel multiplyNumber(float number) throws IllegalArgumentException;
 
-  /** Checks if the pixel has the given channel.
+  /**
+   * Checks if the pixel has the given channel.
    *
    * @param channel the channel to check.
    * @return if the pixel has the given channel
@@ -45,27 +49,36 @@ public interface Pixel {
   boolean containsChannel(Channel channel);
 
 
-  /** Get certain channel component of the pixel.
+  /**
+   * Get certain channel component of the pixel.
    *
    * @param channel the channel to split
    * @return the component pixel
    */
   Pixel getChannelComponent(Channel channel);
 
-  /** Calculate the max value among all channels of the pixel and get a pixel with all channels this
+  /**
+   * Calculate the max value among all channels of the pixel and get a pixel with all channels this
    * value.
+   *
    * @return a pixel with all channels the max value among all channels
    */
   Pixel max();
 
-  /** Calculate the average value among all channels of the pixel and get a pixel with all channels
+  /**
+   * Calculate the average value among all channels of the pixel and get a pixel with all channels
    * this value.
+   *
    * @return a pixel with all channels the average value among all channels
    */
   Pixel avg();
 
-//  Pixel luma();
-
+  /**
+   * Check if the pixel is monochrome of the given channel.
+   *
+   * @param channel the channel to check
+   * @return if the pixel is monochrome of the given channel
+   */
   boolean isMonochromeOfChannel(Channel channel);
 
 

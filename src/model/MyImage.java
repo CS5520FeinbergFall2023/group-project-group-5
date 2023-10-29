@@ -1,16 +1,19 @@
 package model;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Function;
 
 
-
-public class MyImage implements Image{
+/**
+ *
+ */
+public class MyImage implements Image {
   private RGBPixel[][] pixels;
   private int height;
   private int width;
+
+  public MyImage() {
+  }
 
   public MyImage(int height, int width) {
     if (width <= 0 || height <= 0) {
@@ -72,31 +75,28 @@ public class MyImage implements Image{
   }
 
 
-  @Override
-  public RGBPixel getPixel(int x, int y) {
+  private RGBPixel getPixel(int x, int y) {
     if (x < 0 || x > this.width || y < 0 || y > this.height) {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
     return pixels[x][y];
   }
 
-  @Override
-  public void setPixel(int x, int y, Pixel pixel) {
+  private void setPixel(int x, int y, Pixel pixel) {
     if (pixel == null) {
       throw new IllegalArgumentException("The pixel cannot be null.");
     }
     if (x < 0 || x > this.width || y < 0 || y > this.height) {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
-    if(!(pixel instanceof RGBPixel))
-    {
+    if (!(pixel instanceof RGBPixel)) {
       throw new IllegalArgumentException("MyImage should only contain RGB pixels");
     }
     pixels[x][y] = (RGBPixel) pixel;
   }
 
   /**
-   * Perform array addition an image with given matrix. Modification is made in-place.
+   * Perform array addition an image with given matrix.
    *
    * @param matrix the given matrix (1x3)
    */
@@ -109,11 +109,11 @@ public class MyImage implements Image{
 //      }
 //    }
 //    return result;
-    return mapElement(pixel->pixel.addition(matrix));
+    return mapElement(pixel -> pixel.addition(matrix));
   }
 
   /**
-   * Perform filtering an image with given matrix. Modification is made in-place.
+   * Perform filtering an image with given matrix.
    *
    * @param kernel the given kernel
    * @throws IllegalArgumentException when the given argument is not legal
@@ -163,7 +163,8 @@ public class MyImage implements Image{
   }
 
   /**
-   * Perform linear transformation on an image with given matrix. Modification is made in-place.
+   * Perform linear transformation on an image with given matrix, which means multiplying every
+   * pixel with the given matrix.
    *
    * @param matrix the given matrix
    * @return the new image after modification
@@ -180,7 +181,7 @@ public class MyImage implements Image{
   }
 
   /**
-   * Split channels of the given ChannelSplitOperable
+   * Split channels of the given image
    *
    * @param channel the channel to split
    * @return the split result
@@ -228,46 +229,43 @@ public class MyImage implements Image{
    * to (0,1), so the result[1][0] will be [0][1]. Those pixels that fall outside the image area
    * will be said to be project to (-1,-1)
    *
-   * @param projectMatrix      the matrix to be used to perform the projection
+   * @param projectMatrix the matrix to be used to perform the projection
    * @return the project result
    * @throws IllegalArgumentException when the given argument is illegal
    */
   @Override
   public MyImage projectCoordinate(int[][] projectMatrix)
       throws IllegalArgumentException {
-    int[][][] projected=new int[height][width][2];
-    if (projectMatrix.length != 2 || projectMatrix[0].length != 3 || projectMatrix[1].length != 3)
-    {
+    int[][][] projected = new int[height][width][2];
+    if (projectMatrix.length != 2 || projectMatrix[0].length != 3 || projectMatrix[1].length != 3) {
       throw new IllegalArgumentException("Project matrix should be 2x3 for MyImage");
     }
     //traverse row
-    for (int i=0;i<height;i++){
+    for (int i = 0; i < height; i++) {
       //traverse column
-      for(int j=0;j<width;j++)
-      {
-        projected[i][j]=new int[]{projectMatrix[0][0]*i+projectMatrix[0][1]*j+projectMatrix[0][2],
-            projectMatrix[1][0]*i+projectMatrix[1][1]*j+projectMatrix[1][2]};
+      for (int j = 0; j < width; j++) {
+        projected[i][j] =
+            new int[]{projectMatrix[0][0] * i + projectMatrix[0][1] * j + projectMatrix[0][2],
+                projectMatrix[1][0] * i + projectMatrix[1][1] * j + projectMatrix[1][2]};
       }
     }
     RGBPixel[][] resultPixels = new RGBPixel[height][width];
-    for (int row=0;row<height;row++)
-    {
-      for(int col=0;col<width;col++)
-      {
-        resultPixels[projected[row][col][0]][projected[row][col][1]]=pixels[row][col];
+    for (int row = 0; row < height; row++) {
+      for (int col = 0; col < width; col++) {
+        resultPixels[projected[row][col][0]][projected[row][col][1]] = pixels[row][col];
       }
     }
     return new MyImage(resultPixels);
   }
 
   /**
-   * Map all elements in the object.
+   * Map all pixels in the image with given pixel function.
    *
    * @param function the mapping function
    * @return the mapped result
    */
   @Override
-  public MyImage mapElement(Function<Pixel,Pixel> function) {
+  public MyImage mapElement(Function<Pixel, Pixel> function) {
     MyImage result = new MyImage(this.height, this.width);
     for (int i = 0; i < this.height; i++) {
       for (int j = 0; j < this.width; j++) {
@@ -286,17 +284,21 @@ public class MyImage implements Image{
    */
   @Override
   public Channel[] getChannels() {
-    return new Channel[]{Channel.RED,Channel.GREEN,Channel.BLUE};
+    return new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE};
   }
 
+  /**
+   * Check if the image is monochrome of the given channel.
+   *
+   * @param channel the channel to check
+   * @return if the image is monochrome of the given channel
+   */
   @Override
-  public boolean isMonochromeOfChannel(Channel channel)
-  {
+  public boolean isMonochromeOfChannel(Channel channel) {
     for (int i = 0; i < this.height; i++) {
       for (int j = 0; j < this.width; j++) {
         RGBPixel pixel = this.getPixel(i, j);
-        if(!pixel.containsChannel(channel) || !pixel.isMonochromeOfChannel(channel))
-        {
+        if (!pixel.containsChannel(channel) || !pixel.isMonochromeOfChannel(channel)) {
           return false;
         }
       }
