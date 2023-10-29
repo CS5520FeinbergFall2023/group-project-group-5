@@ -1,5 +1,4 @@
 package controller;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,21 +11,21 @@ import model.Channel;
 import model.Image;
 import model.MyImage;
 import service.ImageService;
+import util.ImageUtil;
 import view.ImageView;
-
 
 /**
  * This is a controller that based on the user's input commands or controller.command-file to execute
  * corresponding operations on the specific image.
  */
-public class TextScriptControllerImpl implements TextScriptController {
+public class ImageController {
   private final ImageService imageService;
   private final ImageView imageView;
   private MyImage myImage = null;
   private Map<String, Image> loadedImages = new HashMap<>();
 
 
-  public TextScriptControllerImpl(ImageService imageService, ImageView imageView) {
+  public ImageController(ImageService imageService, ImageView imageView) {
     this.imageService = imageService;
     this.imageView = imageView;
   }
@@ -73,10 +72,11 @@ public class TextScriptControllerImpl implements TextScriptController {
         System.out.println(filePath);
         System.out.println(imageAlias);
         //PPM format
-        MyImage loadedImage = new MyImage(filePath);
+        //MyImage loadedImage = ImageUtil.readPPM(filePath);
         //PNG format
 //        File file = new File(filePath);
 //        BufferedImage loadedImage = ImageIO.read(file);
+        MyImage loadedImage = new MyImage(filePath);
         if (loadedImage == null) {
           imageView.displayMessage("Failed to load the image from " + filePath);
           break;
