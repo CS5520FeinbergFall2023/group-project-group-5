@@ -7,9 +7,7 @@ import java.util.Objects;
 /**
  * This class represents 8 bit depth RGB pixel.
  */
-public class RGBPixel implements Pixel {
-  private final Map<Channel, Integer> channels;
-
+public class RGBPixel extends Pixel {
   private final int bitDepth = 8;
 
   /**
@@ -22,6 +20,7 @@ public class RGBPixel implements Pixel {
   public RGBPixel(int red, int green, int blue) {
     //todo:or throw exception?
     //0-255
+    super();
     red = Math.max(red, 0);
     green = Math.max(green, 0);
     blue = Math.max(blue, 0);
@@ -35,19 +34,10 @@ public class RGBPixel implements Pixel {
   }
 
   private RGBPixel(Map<Channel, Integer> channels) {
-    this.channels = channels;
+    super(channels);
   }
 
-  /**
-   * Checks if the pixel has the given channel.
-   *
-   * @param channel the channel to check.
-   * @return if the pixel has the given channel
-   */
-  @Override
-  public boolean containsChannel(Channel channel) {
-    return channels.containsKey(channel);
-  }
+
 
   /**
    * Get certain channel component of the pixel.
@@ -81,12 +71,9 @@ public class RGBPixel implements Pixel {
    * @throws IllegalArgumentException when the given matrix is not legal
    */
   @Override
-  public RGBPixel linearTransformation(float[][] matrix) {
+  public RGBPixel linearTransformation(float[][] matrix) throws IllegalArgumentException{
     if (matrix.length == 3 && matrix[0].length == 3 && matrix[1].length == 3
         && matrix[2].length == 3) {
-//      red=red * matrix[0][0] + green * matrix[0][1] + blue * matrix[0][2];
-//      green=red * matrix[1][0] + green * matrix[1][1] + blue * matrix[1][2];
-//      blue=red * matrix[2][0] + green * matrix[2][1] + blue * matrix[2][2];
       int red = channels.get(Channel.RED);
       int green = channels.get(Channel.GREEN);
       int blue = channels.get(Channel.BLUE);
@@ -132,13 +119,12 @@ public class RGBPixel implements Pixel {
     int red = channels.get(Channel.RED);
     int green = channels.get(Channel.GREEN);
     int blue = channels.get(Channel.BLUE);
-    int thatRed = ((RGBPixel) pixel).channels.get(Channel.RED);
-    int thatGreen = ((RGBPixel) pixel).channels.get(Channel.GREEN);
-    int thatBlue = ((RGBPixel) pixel).channels.get(Channel.BLUE);
+    int thatRed = pixel.channels.get(Channel.RED);
+    int thatGreen = pixel.channels.get(Channel.GREEN);
+    int thatBlue = pixel.channels.get(Channel.BLUE);
     return new RGBPixel(red + thatRed, green + thatGreen,
         blue + thatBlue);
   }
-
 
   /**
    * Multiply the pixel with a number.
@@ -201,28 +187,6 @@ public class RGBPixel implements Pixel {
     return channels.get(Channel.GREEN);
   }
 
-  /**
-   * Check if the pixel is monochrome of the given channel.
-   *
-   * @param channel the channel to check
-   * @return if the pixel is monochrome of the given channel
-   */
-  @Override
-  public boolean isMonochromeOfChannel(Channel channel) {
-    if (containsChannel(channel)) {
-      for (Channel c : channels.keySet()) {
-        if (c == channel) {
-          continue;
-        }
-        if (channels.get(c) != 0) {
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-
   /** Compare if two objects are equal.
    * @param o the othe object to compare to
    * @return if the objects are equal
@@ -235,24 +199,4 @@ public class RGBPixel implements Pixel {
     return Objects.equals(channels, rgbPixel.channels);
   }
 
-  /** Get the hashcode of the object.
-   * @return the hashcode of the object.
-   */
-  @Override
-  public int hashCode() {
-    return Objects.hash(channels);
-  }
-
-  // Used for debugging, can remove or keep
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    for (Channel channel : channels.keySet()) {
-      sb.append(channel);
-      sb.append(":");
-      sb.append(channels.get(channel));
-      sb.append(" ");
-    }
-    return sb.toString();
-  }
 }

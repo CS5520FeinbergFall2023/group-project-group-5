@@ -1,26 +1,48 @@
 package model;
 
+import java.util.Map;
+import java.util.Objects;
+
 /**
  * This interface represents a pixel.
  */
-public interface Pixel {
+public abstract class Pixel {
+  Map<Channel, Integer> channels;
+
+  public Pixel() {
+  }
+
+  protected Pixel(Map<Channel, Integer> channels) {
+    this.channels = channels;
+  }
+
   /**
-   * Calculate matrix * [r,g,b]
+   * Checks if the pixel has the given channel.
+   *
+   * @param channel the channel to check.
+   * @return if the pixel has the given channel
+   */
+  public boolean containsChannel(Channel channel) {
+    return channels.containsKey(channel);
+  }
+
+  /**
+   * Calculate matrix * [r,g,b,otherChanel...]
    *
    * @param matrix the matrix to multiply
    * @return the result pixel
    * @throws IllegalArgumentException when the given matrix is not legal
    */
-  Pixel linearTransformation(float[][] matrix) throws IllegalArgumentException;
+  public abstract Pixel linearTransformation(float[][] matrix) throws IllegalArgumentException;
 
   /**
-   * Calculate matrix + [r,g,b]
+   * Calculate matrix + [r,g,b,otherChanel...]
    *
    * @param matrix the matrix to add
    * @return the result pixel
    * @throws IllegalArgumentException when the given matrix is not legal
    */
-  Pixel addition(float[] matrix) throws IllegalArgumentException;
+  public abstract Pixel addition(float[] matrix) throws IllegalArgumentException;
 
   /**
    * Calculate [r,g,b] + [r',g',b']
@@ -29,7 +51,7 @@ public interface Pixel {
    * @return the result pixel
    * @throws IllegalArgumentException when the given pixel is not legal
    */
-  Pixel addition(Pixel pixel) throws IllegalArgumentException;
+  public abstract Pixel addition(Pixel pixel) throws IllegalArgumentException;
 
   /**
    * Multiply the pixel with a number.
@@ -38,16 +60,7 @@ public interface Pixel {
    * @return the new pixel after the operation
    * @throws IllegalArgumentException when the given number is not legal
    */
-  Pixel multiplyNumber(float number) throws IllegalArgumentException;
-
-  /**
-   * Checks if the pixel has the given channel.
-   *
-   * @param channel the channel to check.
-   * @return if the pixel has the given channel
-   */
-  boolean containsChannel(Channel channel);
-
+  public abstract Pixel multiplyNumber(float number) throws IllegalArgumentException;
 
   /**
    * Get certain channel component of the pixel.
@@ -55,7 +68,7 @@ public interface Pixel {
    * @param channel the channel to split
    * @return the component pixel
    */
-  Pixel getChannelComponent(Channel channel);
+  public abstract Pixel getChannelComponent(Channel channel);
 
   /**
    * Calculate the max value among all channels of the pixel and get a pixel with all channels this
@@ -63,7 +76,7 @@ public interface Pixel {
    *
    * @return a pixel with all channels the max value among all channels
    */
-  Pixel max();
+  public abstract Pixel max();
 
   /**
    * Calculate the average value among all channels of the pixel and get a pixel with all channels
@@ -71,7 +84,7 @@ public interface Pixel {
    *
    * @return a pixel with all channels the average value among all channels
    */
-  Pixel avg();
+  public abstract Pixel avg();
 
   /**
    * Check if the pixel is monochrome of the given channel.
@@ -79,7 +92,41 @@ public interface Pixel {
    * @param channel the channel to check
    * @return if the pixel is monochrome of the given channel
    */
-  boolean isMonochromeOfChannel(Channel channel);
+  public boolean isMonochromeOfChannel(Channel channel)
+  {
+    if (containsChannel(channel)) {
+      for (Channel c : channels.keySet()) {
+        if (c == channel) {
+          continue;
+        }
+        if (channels.get(c) != 0) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
 
+  /** Get the hashcode of the object.
+   * @return the hashcode of the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(channels);
+  }
+
+  // Used for debugging, can remove or keep
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    for (Channel channel : channels.keySet()) {
+      sb.append(channel);
+      sb.append(":");
+      sb.append(channels.get(channel));
+      sb.append(" ");
+    }
+    return sb.toString();
+  }
 
 }

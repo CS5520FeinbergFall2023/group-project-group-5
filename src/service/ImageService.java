@@ -70,7 +70,7 @@ public class ImageService implements ImageServiceInterface {
         {0.2126f, 0.7152f, 0.722f},
         {0.2126f, 0.7152f, 0.722f}
     };
-    return image.arrayMultiplication(luma);
+    return image.matrixMultiplication(luma);
   }
 
   /**
@@ -143,7 +143,7 @@ public class ImageService implements ImageServiceInterface {
         {0.2126f, 0.7152f, 0.0722f},
         {0.2126f, 0.7152f, 0.0722f}
     };
-    return image.arrayMultiplication(greyscale);
+    return image.matrixMultiplication(greyscale);
   }
 
   /**
@@ -218,7 +218,7 @@ public class ImageService implements ImageServiceInterface {
             {0.349f, 0.686f, 0.168f},
             {0.272f, 0.534f, 0.131f}
         };
-    return image.arrayMultiplication(sepia);
+    return image.matrixMultiplication(sepia);
   }
 
 }
