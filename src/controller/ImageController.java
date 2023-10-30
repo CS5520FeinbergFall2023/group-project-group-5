@@ -53,11 +53,15 @@ public class ImageController {
   }
 
   public void executeCommand(String command) throws IOException {
-
-    if (command == null) {
+    if (command == null || command.isEmpty()) {
       throw new IllegalArgumentException("Invalid command");
     }
+
     StringTokenizer tokenizer = new StringTokenizer(command);
+    if (!tokenizer.hasMoreTokens()) {
+      imageView.displayMessage("Empty command received. Please provide a valid command.");
+      return;
+    }
     String operation = tokenizer.nextToken();
 
     switch (operation) {
@@ -67,14 +71,8 @@ public class ImageController {
         String filePath = tokenizer.nextToken();
         // the alias of the image
         String imageAlias = tokenizer.nextToken();
-        //call the readPPM() function to get a MyImage object.
         System.out.println(filePath);
         System.out.println(imageAlias);
-        //PPM format
-        //MyImage loadedImage = ImageUtil.readPPM(filePath);
-        //PNG format
-//        File file = new File(filePath);
-//        BufferedImage loadedImage = ImageIO.read(file);
         MyImage loadedImage = new MyImage(filePath);
         if (loadedImage == null) {
           imageView.displayMessage("Failed to load the image from " + filePath);
@@ -186,19 +184,6 @@ public class ImageController {
         if (myImage == null) {
           imageView.displayMessage("No image loaded");
         }
-//        imageView.displayMessage("Combine image");
-//        String redName = tokenizer.nextToken();
-//        Image redImage = loadedImages.get(redName);
-//        String greenName = tokenizer.nextToken();
-//        Image greenImage = loadedImages.get(greenName);
-//        String blueName = tokenizer.nextToken();
-//        Image blueImage = loadedImages.get(blueName);
-//        if (redImage == null || greenImage == null || greenImage == null) {
-//          System.out.println("One or more of the images are not loaded");
-//          break;
-//        }
-//        Image combinedImage = imageService.combineChannels(redImage, greenImage, blueImage);
-//        break;
         Channel[] channels = new Channel[3];
         Image[] imagesToCombine = new Image[3];
         channels[0] = Channel.RED;
