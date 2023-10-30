@@ -8,7 +8,7 @@ import model.Pixel;
 /**
  * This class performs image operations.
  */
-public class ImageService implements imageServiceInterface{
+public class ImageService implements ImageServiceInterface {
   public ImageService() {
   }
 
@@ -39,6 +39,8 @@ public class ImageService implements imageServiceInterface{
   }
 
   /**
+   * Get value of the image.
+   *
    * @param image the image to operate on
    * @return the result image
    */
@@ -47,6 +49,8 @@ public class ImageService implements imageServiceInterface{
   }
 
   /**
+   * Get intensity of the image.
+   *
    * @param image the image to operate on
    * @return the result image
    */
@@ -55,6 +59,8 @@ public class ImageService implements imageServiceInterface{
   }
 
   /**
+   * Get luma of an image.
+   *
    * @param image the image to operate on
    * @return the result image
    */
@@ -68,6 +74,8 @@ public class ImageService implements imageServiceInterface{
   }
 
   /**
+   * Flip an image.
+   *
    * @param image the image to operate on
    * @param axis  the axis to flip on
    * @return the result image
@@ -91,6 +99,8 @@ public class ImageService implements imageServiceInterface{
   }
 
   /**
+   * Brighten an image with given delta.
+   *
    * @param image the image to operate on
    * @param delta the amount to brighten
    * @return the result image
@@ -104,6 +114,8 @@ public class ImageService implements imageServiceInterface{
   }
 
   /**
+   * Darken an image with given delta.
+   *
    * @param image the image to operate on
    * @param delta the amount to darken
    * @return the result image
@@ -117,11 +129,15 @@ public class ImageService implements imageServiceInterface{
   }
 
   /**
+   * Greyscale an image.
+   *
    * @param image the image to operate on
    * @return the result image
    */
   private Image greyscale(Image image) {
     //todo:same as luma?
+    //todo:
+    //todo: need greyscale after intensity and value?
     float[][] greyscale = new float[][]{
         {0.2126f, 0.7152f, 0.0722f},
         {0.2126f, 0.7152f, 0.0722f},
@@ -190,7 +206,7 @@ public class ImageService implements imageServiceInterface{
 
 
   /**
-   * Get sepia version of an image
+   * Get sepia version of an image.
    *
    * @param image the image to operate on
    * @return the result image
