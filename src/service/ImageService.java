@@ -43,7 +43,7 @@ public class ImageService {
    * @return the result image
    */
   public Image getValue(Image image) {
-    return image.mapElement(Pixel::avg);
+    return image.mapElement(Pixel::max);
   }
 
   /**
@@ -51,7 +51,7 @@ public class ImageService {
    * @return the result image
    */
   public Image getIntensity(Image image) {
-    return image.mapElement(Pixel::max);
+    return image.mapElement(Pixel::avg);
   }
 
   /**
@@ -75,13 +75,13 @@ public class ImageService {
   public Image flip(Image image, Axis axis) {
     int[][] matrix;
     if (axis == Axis.Y) {
-      //vertical flip
+      //horizontal flip
       matrix = new int[][]{
           {-1, 0, image.getWidth() - 1},
           {0, 1, 0}
       };
     } else {
-      //horizontal flip
+      //vertical flip
       matrix = new int[][]{
           {1, 0, 0},
           {0, -1, image.getHeight() - 1}
@@ -123,15 +123,15 @@ public class ImageService {
   private Image greyscale(Image image) {
     //todo:same as luma?
     float[][] greyscale = new float[][]{
-        {0.2126f, 0.7152f, 0.722f},
-        {0.2126f, 0.7152f, 0.722f},
-        {0.2126f, 0.7152f, 0.722f}
+        {0.2126f, 0.7152f, 0.0722f},
+        {0.2126f, 0.7152f, 0.0722f},
+        {0.2126f, 0.7152f, 0.0722f}
     };
     return image.arrayMultiplication(greyscale);
   }
 
   /**
-   * Result in $channelCount greyscale images.
+   * Result in channelCount greyscale images.
    *
    * @param image the image to operate on
    * @return the result images

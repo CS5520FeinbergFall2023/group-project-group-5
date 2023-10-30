@@ -77,7 +77,11 @@ public class MyImage implements Image {
   private void loadPPM(String path) throws IOException, IllegalArgumentException {
     Scanner sc;
     try {
-      sc = new Scanner(new FileInputStream(path));
+      File file = new File(path);
+      if (!file.isAbsolute()) {
+        file = new File(System.getProperty("user.dir"), path);
+      }
+      sc = new Scanner(new FileInputStream(file));
     } catch (FileNotFoundException e) {
       throw new IOException("File " + path + " not found!");
     }
@@ -98,6 +102,8 @@ public class MyImage implements Image {
     }
     this.width = sc.nextInt();
     this.height = sc.nextInt();
+    sc.nextInt();
+
     pixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
@@ -109,9 +115,17 @@ public class MyImage implements Image {
     }
   }
 
-  private void loadJPGPNG(String path) throws IOException {
+  private void loadJPGPNG(String path) throws IOException,IllegalArgumentException {
     BufferedImage image;
-    image = ImageIO.read(new File(path));
+    File file=new File(path);
+    if (!file.isAbsolute()) {
+      file = new File(System.getProperty("user.dir"), path);
+    }
+    image = ImageIO.read(file);
+    if (image==null)
+    {
+      throw new IllegalArgumentException("The image format is not correct");
+    }
     width = image.getWidth();
     height = image.getHeight();
     pixels = new RGBPixel[height][width];
@@ -132,15 +146,14 @@ public class MyImage implements Image {
   public void save(String path) throws IllegalArgumentException {
     try {
       if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
-        saveJPG(path);
+        saveJPGPNG(path,"jpg");
       }
       else if(path.endsWith(".png"))
       {
-        savePNG(path);
-
+        saveJPGPNG(path,"png");
       }
       else if (path.endsWith(".ppm")) {
-        loadPPM(path);
+        savePPM(path);
       } else {
         throw new IllegalArgumentException("Extension not supported.");
       }
@@ -152,7 +165,15 @@ public class MyImage implements Image {
 
   private void savePPM(String path) {
     try {
-      BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+      File file = new File(path);
+      if (!file.isAbsolute()) {
+        file = new File(System.getProperty("user.dir"), path);
+      }
+      if (!file.exists()) {
+        file.getParentFile().mkdirs();
+        file.createNewFile();
+      }
+      BufferedWriter writer = new BufferedWriter(new FileWriter(file));
       // PPM header
       writer.write("P3\n");
       writer.write(width + " " + height + "\n");
@@ -165,21 +186,34 @@ public class MyImage implements Image {
         }
         writer.write("\n");
       }
-
       writer.close();
-      System.out.println("Image saved successfully.");
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  private void saveJPG(String path) {
-
+  private void saveJPGPNG(String path,String format) throws IOException {
+    BufferedImage bufferedImage = new BufferedImage(width, height,
+        BufferedImage.TYPE_INT_RGB);
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        int rgb = (pixels[y][x].getRed() << 16) |
+                  (pixels[y][x].getGreen() << 8) |
+                  pixels[y][x].getBlue();
+        bufferedImage.setRGB(x, y, rgb);
+      }
+    }
+    File file = new File(path);
+    if (!file.isAbsolute()) {
+      file = new File(System.getProperty("user.dir"), path);
+    }
+    if (!file.exists()) {
+      file.getParentFile().mkdirs();
+      file.createNewFile();
+    }
+    ImageIO.write(bufferedImage, format, file);
   }
 
-  private void savePNG(String path) {
-
-  }
 
 
   /**
@@ -223,16 +257,10 @@ public class MyImage implements Image {
    * Perform array addition an image with given matrix.
    *
    * @param matrix the given matrix (1x3)
+   * @throws IllegalArgumentException when the given matrix does not match
    */
   @Override
-  public MyImage imgArrayAddition(float[] matrix) {
-//    MyImage result = new MyImage(this.height, this.width);
-//    for (int i = 0; i < this.height; i++) {
-//      for (int j = 0; j < this.width; j++) {
-//        result.setPixel(i, j, this.getPixel(i, j).addition(matrix));
-//      }
-//    }
-//    return result;
+  public MyImage imgArrayAddition(float[] matrix) throws IllegalArgumentException{
     return mapElement(pixel -> pixel.addition(matrix));
   }
 
@@ -268,17 +296,18 @@ public class MyImage implements Image {
         //i,j is where the current kernel center lies relative to the coordinate of the image
         //row start and end are the area the kernel covers relative to the coordinate of the image
         int rowStart = Math.max(0, i - kernelCenterRow);
-        int rowEnd = Math.min(this.width - 1, i + kernelCenterRow);
+        int rowEnd = Math.min(this.height - 1, i + kernelCenterRow);
         int colStart = Math.max(0, j - kernelCenterCol);
-        int colEnd = Math.min(this.height - 1, j + kernelCenterCol);
+        int colEnd = Math.min(this.width - 1, j + kernelCenterCol);
         //traver all pixels on the image in this area
         for (int x = rowStart; x <= rowEnd; x++) {
           for (int y = colStart; y <= colEnd; y++) {
             Pixel tmp =
                 this.getPixel(x, y)
                     .multiplyNumber(kernel[x - (i - kernelCenterRow)][y - (j - kernelCenterCol)]);
-            result.setPixel(i, j,
-                result.getPixel(i, j).addition(this.getPixel(i, j).addition(tmp)));
+            result.setPixel(i, j, result.getPixel(i, j).addition(tmp));
+//                result.setPixel(i, j, this.getPixel(i, j).addition(tmp));
+
           }
         }
       }
@@ -295,13 +324,13 @@ public class MyImage implements Image {
    */
   @Override
   public MyImage arrayMultiplication(float[][] matrix) {
-    MyImage result = new MyImage(this.height, this.width);
-    for (int i = 0; i < this.height; i++) {
-      for (int j = 0; j < this.width; j++) {
-        result.setPixel(i, j, this.getPixel(i, j).linearTransformation(matrix));
-      }
-    }
-    return result;
+//    MyImage result = new MyImage(this.height, this.width);
+//    for (int i = 0; i < this.height; i++) {
+//      for (int j = 0; j < this.width; j++) {
+//        result.setPixel(i, j, this.getPixel(i, j).linearTransformation(matrix));
+//      }
+//    }
+    return mapElement(pixel -> pixel.linearTransformation(matrix));
   }
 
   /**
@@ -320,9 +349,10 @@ public class MyImage implements Image {
         if (!pixel.containsChannel(channel)) {
           throw new IllegalArgumentException("The RGB image does not have the given channel.");
         }
-        result.setPixel(i, j, result.getPixel(i, j).getChannelComponent(channel));
+        result.setPixel(i, j, this.getPixel(i, j).getChannelComponent(channel));
       }
     }
+
     return result;
   }
 
@@ -455,11 +485,26 @@ public class MyImage implements Image {
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         if (!pixels[y][x].equals(otherImage.pixels[y][x])) {
+          System.out.println("here");
           return false;
         }
       }
     }
 
     return true;
+  }
+
+  // Used for debugging, can remove or keep
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        sb.append(pixels[y][x].toString());
+        sb.append("   ");
+      }
+      sb.append("\n");
+    }
+    return sb.toString();
   }
 }

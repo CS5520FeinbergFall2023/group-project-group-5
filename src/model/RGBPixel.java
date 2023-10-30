@@ -25,9 +25,9 @@ public class RGBPixel implements Pixel {
     red = Math.max(red, 0);
     green = Math.max(green, 0);
     blue = Math.max(blue, 0);
-    red = Math.min(red, 2 << bitDepth - 1);
-    green = Math.min(green, 2 << bitDepth - 1);
-    blue = Math.min(blue, 2 << bitDepth - 1);
+    red = Math.min(red, (1 << bitDepth) - 1);
+    green = Math.min(green, (1 << bitDepth) - 1);
+    blue = Math.min(blue, (1 << bitDepth) - 1);
     channels = new EnumMap<>(Channel.class);
     channels.put(Channel.RED, red);
     channels.put(Channel.GREEN, green);
@@ -61,6 +61,7 @@ public class RGBPixel implements Pixel {
     if (!containsChannel(channel)) {
       throw new IllegalArgumentException("The pixel does not contain the channel");
     }
+
     Map<Channel, Integer> channels = new EnumMap<>(Channel.class);
     for (Channel key : this.channels.keySet()) {
       if (key == channel) {
@@ -69,11 +70,12 @@ public class RGBPixel implements Pixel {
         channels.put(key, 0);
       }
     }
+
     return new RGBPixel(channels);
   }
 
   /**
-   * Calculate matrix * [r,g,b].
+   * Calculate 3x3 matrix * [r,g,b].
    *
    * @param matrix the matrix to multiply
    * @throws IllegalArgumentException when the given matrix is not legal
@@ -143,19 +145,15 @@ public class RGBPixel implements Pixel {
    *
    * @param number the number to multiply
    * @return the new pixel after the operation
-   * @throws IllegalArgumentException when the given number is not legal
    */
   @Override
-  public RGBPixel multiplyNumber(float number) throws IllegalArgumentException {
-    if (number < 0) {
-      throw new IllegalArgumentException("Can't multiply negative number with a pixel.");
-    }
+  public RGBPixel multiplyNumber(float number){
     int red = channels.get(Channel.RED);
     int green = channels.get(Channel.GREEN);
     int blue = channels.get(Channel.BLUE);
-    return new RGBPixel(Math.round((red * number > 1) ? 1 : red * number),
-        Math.round((green * number > 1) ? 1 : green * number),
-        Math.round((blue * number > 1) ? 1 : blue * number));
+    return new RGBPixel(Math.round( red * number),
+        Math.round(green * number),
+        Math.round(blue * number));
   }
 
   /**
@@ -243,5 +241,18 @@ public class RGBPixel implements Pixel {
   @Override
   public int hashCode() {
     return Objects.hash(channels);
+  }
+
+  // Used for debugging, can remove or keep
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    for (Channel channel : channels.keySet()) {
+      sb.append(channel);
+      sb.append(":");
+      sb.append(channels.get(channel));
+      sb.append(" ");
+    }
+    return sb.toString();
   }
 }
