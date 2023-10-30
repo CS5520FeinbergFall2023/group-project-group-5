@@ -21,7 +21,7 @@ public class ImageController {
   private final ImageService imageService;
   private final ImageView imageView;
   private MyImage myImage = null;
-  private Map<String, Image> loadedImages = new HashMap<>();
+  public Map<String, Image> loadedImages = new HashMap<>();
 
 
   public ImageController(ImageService imageService, ImageView imageView) {
@@ -66,7 +66,6 @@ public class ImageController {
 
     switch (operation) {
       case "load":
-        imageView.displayMessage("Load image");
         //the file path of the image
         String filePath = tokenizer.nextToken();
         // the alias of the image
@@ -85,140 +84,186 @@ public class ImageController {
         }
         loadedImages.put(imageAlias, loadedImage);
         myImage = loadedImage;
+        System.out.println(myImage.getHeight());
+        System.out.println(myImage.getWidth());
+        imageView.displayMessage("Load image");
         break;
       case "save":
-        imageView.displayMessage("Save image");
         String outputPath = tokenizer.nextToken();
         String imageNameSave = tokenizer.nextToken();
         MyImage imageToSave = (MyImage) loadedImages.get(imageNameSave);
         if (imageToSave == null) {
-          imageView.displayMessage("Image " + imageNameSave + "not found.");
+          imageView.displayMessage("Image " + imageNameSave + " not found.");
           break;
         }
         imageToSave.save(outputPath);
+        imageView.displayMessage("Save image");
         break;
       case "blur":
-        if (myImage == null) {
+        String imageAliasBlur = tokenizer.nextToken();
+        Image imageBlur = loadedImages.get(imageAliasBlur);
+        if (imageBlur == null) {
           imageView.displayMessage("No image loaded");
         }
+        imageService.blur(imageBlur);
+        loadedImages.put(imageAliasBlur, imageBlur);
         imageView.displayMessage("Image blurred");
-        imageService.blur(myImage);
         break;
       case "value-component":
-        if (myImage == null) {
+        String imageAliasValue = tokenizer.nextToken();
+        Image imageValueComponent = loadedImages.get(imageAliasValue);
+        if (imageValueComponent == null) {
           imageView.displayMessage("No image loaded");
         }
+        imageService.getValue(imageValueComponent);
+        loadedImages.put(imageAliasValue, imageValueComponent);
         imageView.displayMessage("Get the value-component");
-        imageService.getValue(myImage);
         break;
       case "intensity-component":
-        if (myImage == null) {
+        String imageAliasIntensity = tokenizer.nextToken();
+        Image imageIntensityComponent = loadedImages.get(imageAliasIntensity);
+        if (imageIntensityComponent == null) {
           imageView.displayMessage("No image loaded");
         }
+        imageService.getIntensity(imageIntensityComponent);
+        loadedImages.put(imageAliasIntensity, imageIntensityComponent);
         imageView.displayMessage("Get the intensity-component");
-        imageService.getIntensity(myImage);
         break;
       case "luma-component":
-        if (myImage == null) {
+        String imageAliasLuma = tokenizer.nextToken();
+        Image imageLumaComponent = loadedImages.get(imageAliasLuma);
+        if (imageLumaComponent == null) {
           imageView.displayMessage("No image loaded");
         }
+        imageService.getLuma(imageLumaComponent);
+        loadedImages.put(imageAliasLuma, imageLumaComponent);
         imageView.displayMessage("Get the luma-component");
-        imageService.getLuma(myImage);
         break;
       case "vertical-flip":
-        if (myImage == null) {
+        String imageAliasFlipVertical = tokenizer.nextToken();
+        Image imageFlipVertical = loadedImages.get(imageAliasFlipVertical);
+        if (imageFlipVertical == null) {
           imageView.displayMessage("No image loaded");
         }
+        imageService.flip(imageFlipVertical, Axis.X);
+        loadedImages.put(imageAliasFlipVertical, imageFlipVertical);
         imageView.displayMessage("Flip the image vertically");
-        imageService.flip(myImage, Axis.Y);
         break;
       case "horizontal-flip":
-        if (myImage == null) {
+        String imageAliasFlipHorizontal = tokenizer.nextToken();
+        Image imageFlipHorizontal = loadedImages.get(imageAliasFlipHorizontal);
+        if (imageFlipHorizontal == null) {
           imageView.displayMessage("No image loaded");
         }
+        imageService.flip(imageFlipHorizontal, Axis.Y);
+        loadedImages.put(imageAliasFlipHorizontal, imageFlipHorizontal);
         imageView.displayMessage("Flip the image horizontally");
-        imageService.flip(myImage, Axis.X);
         break;
       case "brighten":
-        if (myImage == null) {
+        String imageAliasBrighten = tokenizer.nextToken();
+        Image imageFlipBrighten = loadedImages.get(imageAliasBrighten);
+        if (imageFlipBrighten == null) {
           imageView.displayMessage("No image loaded");
         }
-        imageView.displayMessage("Change the brightness of the image");
         float amount = Float.parseFloat(tokenizer.nextToken());
         if (amount > 0) {
-          imageService.brighten(myImage, amount);
+          imageService.brighten(imageFlipBrighten, amount);
+          loadedImages.put(imageAliasBrighten, imageFlipBrighten);
+          imageView.displayMessage("Increase the brightness of the image");
         }
         if (amount < 0) {
-          imageService.darken(myImage, amount);
+          imageService.darken(imageFlipBrighten, amount);
+          loadedImages.put(imageAliasBrighten, imageFlipBrighten);
+          imageView.displayMessage("Decrease the brightness of the image");
         }
         break;
       case "red-component":
-        if (myImage == null) {
+        String imageAliasRedComponent = tokenizer.nextToken();
+        Image imageRedComponent = loadedImages.get(imageAliasRedComponent);
+        if (imageRedComponent == null) {
           imageView.displayMessage("No image loaded");
         }
+        imageService.splitComponent(imageRedComponent, Channel.RED);
+        loadedImages.put(imageAliasRedComponent, imageRedComponent);
         imageView.displayMessage("Split image in red component");
-        imageService.splitComponent(myImage, Channel.RED);
         break;
       case "green-component":
-        if (myImage == null) {
+        String imageAliasGreenComponent = tokenizer.nextToken();
+        Image imageGreenComponent = loadedImages.get(imageAliasGreenComponent);
+        if (imageGreenComponent == null) {
           imageView.displayMessage("No image loaded");
         }
+        imageService.splitComponent(imageGreenComponent, Channel.GREEN);
+        loadedImages.put(imageAliasGreenComponent, imageGreenComponent);
         imageView.displayMessage("Split image in green component");
-        imageService.splitComponent(myImage, Channel.GREEN);
         break;
       case "blue-component":
-        if (myImage == null) {
+        String imageAliasBlueComponent = tokenizer.nextToken();
+        Image imageBlueComponent = loadedImages.get(imageAliasBlueComponent);
+        if (imageBlueComponent == null) {
           imageView.displayMessage("No image loaded");
         }
+        imageService.splitComponent(imageBlueComponent, Channel.BLUE);
+        loadedImages.put(imageAliasBlueComponent, imageBlueComponent);
         imageView.displayMessage("Split image in blue component");
-        imageService.splitComponent(myImage, Channel.BLUE);
         break;
       case "rgb-split":
-        if (myImage == null) {
+        String imageAliasSplit = tokenizer.nextToken();
+        String imageAliasSplitR = tokenizer.nextToken();
+        String imageAliasSplitG = tokenizer.nextToken();
+        String imageAliasSplitB = tokenizer.nextToken();
+        Image imageSplit = loadedImages.get(imageAliasSplit);
+        if (imageSplit == null) {
           imageView.displayMessage("No image loaded");
         }
-        imageView.displayMessage("Split image");
-        imageService.splitChannel(myImage);
+        Image[] result = imageService.splitChannel(imageSplit);
+        loadedImages.put(imageAliasSplitR, result[0]);
+        loadedImages.put(imageAliasSplitG, result[1]);
+        loadedImages.put(imageAliasSplitB, result[2]);
+        imageView.displayMessage("Split the image.");
         break;
       case "rgb-combine":
-        if (myImage == null) {
-          imageView.displayMessage("No image loaded");
-        }
         Channel[] channels = new Channel[3];
         Image[] imagesToCombine = new Image[3];
         channels[0] = Channel.RED;
         channels[1] = Channel.GREEN;
         channels[2] = Channel.BLUE;
-        for(int i =0; i< 3 ; i++) {
+        String combineName = tokenizer.nextToken();
+        for (int i = 0; i < 3; i++) {
           String imageName = tokenizer.nextToken();
-          if(!loadedImages.containsKey(imageName)) {
+          if (!loadedImages.containsKey(imageName)) {
             imageView.displayMessage("Image named " + imageName + "not loaded.");
             return;
           }
           imagesToCombine[i] = loadedImages.get(imageName);
-        }
-        try{
+
+        }try {
           Image combinedImage = imageService.combineChannels(channels, imagesToCombine);
-          loadedImages.put("combinedImage", combinedImage);
+          loadedImages.put(combineName, combinedImage);
           imageView.displayMessage("Images combined successfully");
-        }
-        catch (IllegalArgumentException e ) {
+        } catch (IllegalArgumentException e) {
           imageView.displayMessage(e.getMessage());
         }
         break;
       case "sharpen":
-        if (myImage == null) {
+        String imageAliasSharpen = tokenizer.nextToken();
+        Image imageSharpen = loadedImages.get(imageAliasSharpen);
+        if (imageSharpen == null) {
           imageView.displayMessage("No image loaded");
         }
+        imageService.sharpen(imageSharpen);
+        loadedImages.put(imageAliasSharpen, imageSharpen);
         imageView.displayMessage("Sharpen image");
-        imageService.sharpen(myImage);
         break;
       case "sepia":
-        if (myImage == null) {
+        String imageAliasSepia = tokenizer.nextToken();
+        Image imageSepia = loadedImages.get(imageAliasSepia);
+        if (imageSepia == null) {
           imageView.displayMessage("No image loaded");
         }
+        imageService.getSepia(imageSepia);
+        loadedImages.put(imageAliasSepia, imageSepia);
         imageView.displayMessage("Sepia image");
-        imageService.getSepia(myImage);
         break;
       default:
         System.out.println("Invalid command " + operation);

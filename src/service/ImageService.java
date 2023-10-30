@@ -155,16 +155,22 @@ public class ImageService {
     if (images.length == 0) {
       throw new IllegalArgumentException("There has to at least one image.");
     }
+    System.out.println(channels[0]);
+    System.out.println(images[0].isMonochromeOfChannel(channels[0]));
+
     if (images[0].isMonochromeOfChannel(channels[0])) {
       Image result = images[0];
+
       for (int i = 1; i < images.length; i++) {
         if (images[i].isMonochromeOfChannel(channels[i])) {
           result = result.addition(images[i]);
+
         } else {
           throw new IllegalArgumentException("Input image should be monochrome of corresponding "
                                              + "channel.");
         }
       }
+
       return result;
     }
     throw new IllegalArgumentException("Input image should be monochrome of corresponding channel"
