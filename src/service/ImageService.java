@@ -8,7 +8,7 @@ import model.Pixel;
 /**
  * This class performs image operations.
  */
-public class ImageService {
+public class ImageService implements imageServiceInterface{
   public ImageService() {
   }
 

@@ -1,13 +1,41 @@
 package model;
 
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class MyImageTest {
   private Image testImage;
+  private Image[] testImages;
+  private MyImage whiteImage;
+  private MyImage blackImage;
+  private MyImage redImage;
+  private MyImage greenImage;
+  private MyImage blueImage;
+  private MyImage woGreenImage;
+  private MyImage woRedImage;
+  private MyImage woBlueImage;
+  private MyImage triImage;
+  @Before
+  public void setUp() {
+    whiteImage = new MyImage("test/img/monochromatic/white.ppm");
+     blackImage = new MyImage("test/img/monochromatic/black.ppm");
+     redImage = new MyImage("test/img/monochromatic/red.ppm");
+     greenImage = new MyImage("test/img/monochromatic/green.ppm");
+     blueImage = new MyImage("test/img/monochromatic/blue.ppm");
+     woGreenImage = new MyImage("test/img/dichromatic/woGreen.ppm");
+     woRedImage = new MyImage("test/img/dichromatic/woRed.ppm");
+     woBlueImage = new MyImage("test/img/dichromatic/woBlue.ppm");
+     triImage = new MyImage("test/img/trichromatic/simple.ppm");
+    testImages=new Image[]{whiteImage,blackImage,redImage,greenImage,blueImage,woGreenImage,
+        woRedImage,woBlueImage,triImage};
+
+  }
 
 //  -------------------Constructor Tests----------------------------
   //MyImage constructor with path
@@ -291,6 +319,101 @@ public class MyImageTest {
         + "RED:25 GREEN:50 BLUE:75    RED:36 GREEN:72 BLUE:108    "
         + "RED:36 GREEN:72 BLUE:108    RED:23 GREEN:46 BLUE:69    \n";
     assertEquals(expected, testImage.filtering(kernel).toString());
+  }
+
+  @Test
+  public void testArrayMultiplication()
+  {
+    
+  }
+
+  @Test
+  public void testChannelSplit()
+  {
+
+  }
+
+  @Test
+  public void testAddition()
+  {
+
+  }
+
+  @Test
+  public void testProjectCoordinateNoTranslation()
+  {
+
+  }
+
+  @Test
+  public void testMapElement()
+  {
+
+  }
+
+  @Test
+  public void testGetChannels()
+  {
+    for (Image img:testImages) {
+      assertEquals(new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE},
+          img.getChannels());
+    }
+  }
+
+  @Test
+  public void testIsMonochromeOfChannelRed()
+  {
+    assertFalse(whiteImage.isMonochromeOfChannel(Channel.RED));
+    assertTrue(blackImage.isMonochromeOfChannel(Channel.RED));
+    assertTrue(redImage.isMonochromeOfChannel(Channel.RED));
+    assertFalse(greenImage.isMonochromeOfChannel(Channel.RED));
+    assertFalse(blueImage.isMonochromeOfChannel(Channel.RED));
+    assertFalse(woRedImage.isMonochromeOfChannel(Channel.RED));
+    assertFalse(woGreenImage.isMonochromeOfChannel(Channel.RED));
+    assertFalse(woBlueImage.isMonochromeOfChannel(Channel.RED));
+    assertFalse(triImage.isMonochromeOfChannel(Channel.RED));
+  }
+
+  @Test
+  public void testIsMonochromeOfChannelGreen()
+  {
+    assertFalse(whiteImage.isMonochromeOfChannel(Channel.GREEN));
+    assertTrue(blackImage.isMonochromeOfChannel(Channel.GREEN));
+    assertFalse(redImage.isMonochromeOfChannel(Channel.GREEN));
+    assertTrue(greenImage.isMonochromeOfChannel(Channel.GREEN));
+    assertFalse(blueImage.isMonochromeOfChannel(Channel.GREEN));
+    assertFalse(woRedImage.isMonochromeOfChannel(Channel.GREEN));
+    assertFalse(woGreenImage.isMonochromeOfChannel(Channel.GREEN));
+    assertFalse(woBlueImage.isMonochromeOfChannel(Channel.GREEN));
+    assertFalse(triImage.isMonochromeOfChannel(Channel.GREEN));
+  }
+
+  @Test
+  public void testIsMonochromeOfChannelBlue()
+  {
+    assertFalse(whiteImage.isMonochromeOfChannel(Channel.BLUE));
+    assertTrue(blackImage.isMonochromeOfChannel(Channel.BLUE));
+    assertFalse(redImage.isMonochromeOfChannel(Channel.BLUE));
+    assertFalse(greenImage.isMonochromeOfChannel(Channel.BLUE));
+    assertTrue(blueImage.isMonochromeOfChannel(Channel.BLUE));
+    assertFalse(woRedImage.isMonochromeOfChannel(Channel.BLUE));
+    assertFalse(woGreenImage.isMonochromeOfChannel(Channel.BLUE));
+    assertFalse(woBlueImage.isMonochromeOfChannel(Channel.BLUE));
+    assertFalse(triImage.isMonochromeOfChannel(Channel.BLUE));
+  }
+  @Test
+  public void testEquals()
+  {
+    MyImage image1=new MyImage("test/img/trichromatic/simple.ppm");
+    MyImage image2=new MyImage("test/img/trichromatic/simple.ppm");
+    assertEquals(image1,image2);
+    image1 = new MyImage(3,3);
+    image2 = new MyImage(3,3);
+    assertEquals(image1,image2);
+    image1.imgArrayAddition(new float[]{255,0,0});
+    image1.imgArrayAddition(new float[]{255,0,0});
+    assertEquals(image1,image2);
+
   }
 
 

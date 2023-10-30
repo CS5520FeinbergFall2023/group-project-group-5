@@ -500,6 +500,24 @@ public void testBlurSimple() {
 }
 
   @Test
+  public void testBlurOnce() {
+    Image testImage = new MyImage("test/img/cupcake.png");
+    Image resultImages = imageService.blur(testImage);
+    Image expectedImage = new MyImage("test/img/cupcake_blurOnce.png");
+    assertEquals(resultImages, expectedImage);
+    System.out.println(resultImages);
+  }
+
+  @Test
+  public void testSharpenOnce() {
+    Image testImage = new MyImage("test/img/cupcake.png");
+    Image resultImages = imageService.blur(testImage);
+    Image expectedImage = new MyImage("test/img/cupcake_sharpenOnce.png");
+    assertEquals(resultImages, expectedImage);
+    System.out.println(resultImages);
+  }
+
+  @Test
   public void testSharpenSimple() {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
     Image resultImages = imageService.sharpen(testImage);

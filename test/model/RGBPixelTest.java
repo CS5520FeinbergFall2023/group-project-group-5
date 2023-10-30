@@ -26,7 +26,7 @@ public class RGBPixelTest {
   RGBPixel[] allTestPixels;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     whitePixel=new RGBPixel(0,0,0);
     blackPixel=new RGBPixel(255,255,255);
     redPixel=new RGBPixel(255,0,0);
