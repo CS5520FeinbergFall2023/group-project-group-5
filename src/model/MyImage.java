@@ -234,7 +234,7 @@ public class MyImage implements Image {
 
 
   private RGBPixel getPixel(int x, int y) {
-    if (x < 0 || x > this.width || y < 0 || y > this.height) {
+    if (x < 0 || x > this.height || y < 0 || y > this.width) {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
     return pixels[x][y];
@@ -244,7 +244,7 @@ public class MyImage implements Image {
     if (pixel == null) {
       throw new IllegalArgumentException("The pixel cannot be null.");
     }
-    if (x < 0 || x > this.width || y < 0 || y > this.height) {
+    if (x < 0 || x > this.height || y < 0 || y > this.width) {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
     if (!(pixel instanceof RGBPixel)) {
@@ -306,8 +306,6 @@ public class MyImage implements Image {
                 this.getPixel(x, y)
                     .multiplyNumber(kernel[x - (i - kernelCenterRow)][y - (j - kernelCenterCol)]);
             result.setPixel(i, j, result.getPixel(i, j).addition(tmp));
-//                result.setPixel(i, j, this.getPixel(i, j).addition(tmp));
-
           }
         }
       }
