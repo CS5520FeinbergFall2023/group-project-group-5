@@ -30,12 +30,12 @@ public class ImageService implements ImageServiceInterface {
    * @return the result image
    */
   public Image blur(Image image) {
-    float[][] blurFilter = new float[][]{
+    float[][] blur = new float[][]{
         {0.0625f, 0.125f, 0.0625f},
         {0.125f, 0.25f, 0.125f},
         {0.0625f, 0.125f, 0.0625f}
     };
-    return image.filtering(blurFilter);
+    return image.filtering(blur);
   }
 
   /**
@@ -66,9 +66,9 @@ public class ImageService implements ImageServiceInterface {
    */
   public Image getLuma(Image image) {
     float[][] luma = new float[][]{
-        {0.2126f, 0.7152f, 0.722f},
-        {0.2126f, 0.7152f, 0.722f},
-        {0.2126f, 0.7152f, 0.722f}
+        {0.2126f, 0.7152f, 0.0722f},
+        {0.2126f, 0.7152f, 0.0722f},
+        {0.2126f, 0.7152f, 0.0722f}
     };
     return image.matrixMultiplication(luma);
   }
@@ -202,9 +202,9 @@ public class ImageService implements ImageServiceInterface {
   public Image sharpen(Image image) {
     float[][] sharpen = new float[][]{
         {-0.125f, -0.125f, -0.125f, -0.125f, -0.125f},
-        {-0.125f, 0.25f, 0.25f, 0.25f, 0.25f},
+        {-0.125f, 0.25f, 0.25f, 0.25f, -0.125f},
         {-0.125f, 0.25f, 1f, 0.25f, -0.125f},
-        {-0.125f, -0.25f, 0.25f, 0.25f, -0.125f},
+        {-0.125f, 0.25f, 0.25f, 0.25f, -0.125f},
         {-0.125f, -0.125f, -0.125f, -0.125f, -0.125f},
     };
     return image.filtering(sharpen);

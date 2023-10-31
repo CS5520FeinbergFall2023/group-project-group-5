@@ -1,2 +1,0 @@
-# try to get the value component of the cupcake
-value-component test/img/cupcake.png cupcake-value-greyscale

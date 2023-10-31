@@ -12,7 +12,7 @@ public abstract class Pixel {
   public Pixel() {
   }
 
-  protected Pixel(Map<Channel, Integer> channels) {
+  Pixel(Map<Channel, Integer> channels) {
     this.channels = channels;
   }
 
@@ -27,7 +27,7 @@ public abstract class Pixel {
   }
 
   /**
-   * Calculate matrix * [r,g,b,otherChanel...]
+   * Calculate 3x3 matrix * [r,g,b].
    *
    * @param matrix the matrix to multiply
    * @return the result pixel
@@ -36,7 +36,7 @@ public abstract class Pixel {
   public abstract Pixel linearTransformation(float[][] matrix) throws IllegalArgumentException;
 
   /**
-   * Calculate matrix + [r,g,b,otherChanel...]
+   * Calculate pixel[r',g',b'] = matrix[x,y,z] + pixel[r,g,b].
    *
    * @param matrix the matrix to add
    * @return the result pixel
@@ -45,7 +45,7 @@ public abstract class Pixel {
   public abstract Pixel addition(float[] matrix) throws IllegalArgumentException;
 
   /**
-   * Calculate [r,g,b] + [r',g',b']
+   * Calculate [r,g,b] + [r',g',b'].
    *
    * @param pixel the pixel to add
    * @return the result pixel
@@ -54,21 +54,12 @@ public abstract class Pixel {
   public abstract Pixel addition(Pixel pixel) throws IllegalArgumentException;
 
   /**
-   * Multiply the pixel with a number.
-   *
-   * @param number the number to multiply
-   * @return the new pixel after the operation
-   * @throws IllegalArgumentException when the given number is not legal
-   */
-  public abstract Pixel multiplyNumber(float number) throws IllegalArgumentException;
-
-  /**
    * Get certain channel component of the pixel.
    *
    * @param channel the channel to split
    * @return the component pixel
    */
-  public abstract Pixel getChannelComponent(Channel channel);
+  abstract Pixel getChannelComponent(Channel channel);
 
   /**
    * Calculate the max value among all channels of the pixel and get a pixel with all channels this
@@ -92,8 +83,7 @@ public abstract class Pixel {
    * @param channel the channel to check
    * @return if the pixel is monochrome of the given channel
    */
-  public boolean isMonochromeOfChannel(Channel channel)
-  {
+  public boolean isMonochromeOfChannel(Channel channel) {
     if (containsChannel(channel)) {
       for (Channel c : channels.keySet()) {
         if (c == channel) {
@@ -108,7 +98,9 @@ public abstract class Pixel {
     return false;
   }
 
-  /** Get the hashcode of the object.
+  /**
+   * Get the hashcode of the object.
+   *
    * @return the hashcode of the object.
    */
   @Override
@@ -116,7 +108,11 @@ public abstract class Pixel {
     return Objects.hash(channels);
   }
 
-  // Used for debugging, can remove or keep
+  /**
+   * Returns a string representation of the object.
+   *
+   * @return a string representation of the object.
+   */
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

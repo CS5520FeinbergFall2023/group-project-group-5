@@ -11,14 +11,15 @@ public class RGBPixel extends Pixel {
   private final int bitDepth = 8;
 
   /**
-   * Construct an RGB pixel. Every value of the channel is in the range of [0,1]
+   * Construct an RGB pixel. Every value of the channel is in the range of [0,1]. If the input is
+   * larger than 2^bitDepth-1, the corresponding channel will be automatically set to 2^bitDepth-1;
+   * if the input is  smaller than 0, the corresponding channel will be automatically set to 0
    *
    * @param red   the value of the red channel
    * @param green the value of the green channel
    * @param blue  the value of the blue channel
    */
   public RGBPixel(int red, int green, int blue) {
-    //todo:or throw exception?
     //0-255
     super();
     red = Math.max(red, 0);
@@ -37,8 +38,6 @@ public class RGBPixel extends Pixel {
     super(channels);
   }
 
-
-
   /**
    * Get certain channel component of the pixel.
    *
@@ -47,7 +46,7 @@ public class RGBPixel extends Pixel {
    * @throws IllegalArgumentException when the given channel is not in the pixel
    */
   @Override
-  public Pixel getChannelComponent(Channel channel) throws IllegalArgumentException {
+  Pixel getChannelComponent(Channel channel) throws IllegalArgumentException {
     if (!containsChannel(channel)) {
       throw new IllegalArgumentException("The pixel does not contain the channel");
     }
@@ -60,7 +59,6 @@ public class RGBPixel extends Pixel {
         channels.put(key, 0);
       }
     }
-
     return new RGBPixel(channels);
   }
 
@@ -71,7 +69,7 @@ public class RGBPixel extends Pixel {
    * @throws IllegalArgumentException when the given matrix is not legal
    */
   @Override
-  public RGBPixel linearTransformation(float[][] matrix) throws IllegalArgumentException{
+  public RGBPixel linearTransformation(float[][] matrix) throws IllegalArgumentException {
     if (matrix.length == 3 && matrix[0].length == 3 && matrix[1].length == 3
         && matrix[2].length == 3) {
       int red = channels.get(Channel.RED);
@@ -87,9 +85,10 @@ public class RGBPixel extends Pixel {
   }
 
   /**
-   * Calculate pixel[r',g',b'] = floatMatrix + pixel[r,g,b].
+   * Calculate pixel[r',g',b'] = matrix[x,y,z] + pixel[r,g,b].
    *
    * @param matrix the matrix to add
+   * @return the result pixel
    * @throws IllegalArgumentException when the given matrix is not legal
    */
   @Override
@@ -127,22 +126,6 @@ public class RGBPixel extends Pixel {
   }
 
   /**
-   * Multiply the pixel with a number.
-   *
-   * @param number the number to multiply
-   * @return the new pixel after the operation
-   */
-  @Override
-  public RGBPixel multiplyNumber(float number){
-    int red = channels.get(Channel.RED);
-    int green = channels.get(Channel.GREEN);
-    int blue = channels.get(Channel.BLUE);
-    return new RGBPixel(Math.round( red * number),
-        Math.round(green * number),
-        Math.round(blue * number));
-  }
-
-  /**
    * Calculate the max value among all channels of the pixel and get a pixel with all channels this
    * value.
    *
@@ -174,27 +157,47 @@ public class RGBPixel extends Pixel {
     return new RGBPixel(Math.round(sum / 3f), Math.round(sum / 3f), Math.round(sum / 3f));
   }
 
+  /**
+   * Get the value of the red channel of the image.
+   *
+   * @return the value of the red channel of the image
+   */
   int getRed() {
     return channels.get(Channel.RED);
   }
 
+  /**
+   * Get the value of the blue channel of the image.
+   *
+   * @return the value of the blue channel of the image
+   */
   int getBlue() {
     return channels.get(Channel.BLUE);
   }
 
-
+  /**
+   * Get the value of the green channel of the image.
+   *
+   * @return the value of the green channel of the image
+   */
   int getGreen() {
     return channels.get(Channel.GREEN);
   }
 
-  /** Compare if two objects are equal.
+  /**
+   * Compare if two objects are equal.
+   *
    * @param o the othe object to compare to
    * @return if the objects are equal
    */
   @Override
   public boolean equals(Object o) {
-    if (this == o) {return true;}
-    if (o == null || getClass() != o.getClass()) {return false;}
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     RGBPixel rgbPixel = (RGBPixel) o;
     return Objects.equals(channels, rgbPixel.channels);
   }

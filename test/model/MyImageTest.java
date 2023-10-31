@@ -93,7 +93,7 @@ public class MyImageTest extends ImageTest {
       testImage = new MyImage("test/img/monochromatic/white.png");
       testImage = new MyImage("test/img/monochromatic/white.ppm");
     } catch (IllegalArgumentException e) {
-      fail("Load supported monochromatic file should throw exception");
+      fail("Load supported monochromatic file should not throw exception");
     }
   }
 
@@ -110,7 +110,7 @@ public class MyImageTest extends ImageTest {
       testImage = new MyImage("test/img/dichromatic/woRed.png");
       testImage = new MyImage("test/img/dichromatic/woRed.ppm");
     } catch (IllegalArgumentException e) {
-      fail("Load supported dichromatic file should throw exception");
+      fail("Load supported dichromatic file should not throw exception");
     }
   }
 
@@ -121,7 +121,7 @@ public class MyImageTest extends ImageTest {
       testImage = new MyImage("test/img/trichromatic/all_colors_inter16.png");
       testImage = new MyImage("test/img/trichromatic/all_colors_inter16.ppm");
     } catch (IllegalArgumentException e) {
-      fail("Load supported trichromatic file should throw exception");
+      fail("Load supported trichromatic file should not throw exception");
     }
   }
 
@@ -251,12 +251,19 @@ public class MyImageTest extends ImageTest {
     float[] array = new float[]{-1, 100, 256};
     String expected = "RED:0 GREEN:100 BLUE:255    RED:0 GREEN:100 BLUE:255    \n"
                       + "RED:0 GREEN:100 BLUE:255    RED:0 GREEN:100 BLUE:255    \n";
-    assertEquals(expected, testImage.imgArrayAddition(array).toString());
+    assertTrue(super.testImgArrayAddition(testImage,array,expected));
+
+    testImage= (MyImage) testImage.imgArrayAddition(array);
+    array = new float[]{2, 5, -50};
+    expected = "RED:2 GREEN:105 BLUE:205    RED:2 GREEN:105 BLUE:205    \n"
+                      + "RED:2 GREEN:105 BLUE:205    RED:2 GREEN:105 BLUE:205    \n";
+    assertTrue(super.testImgArrayAddition(testImage,array,expected));
+
     testImage = new MyImage(2, 2);
     array = new float[]{0, 0, 0};
     expected = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
                + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
-    assertEquals(expected, testImage.imgArrayAddition(array).toString());
+    assertTrue(super.testImgArrayAddition(testImage,array,expected));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -278,10 +285,9 @@ public class MyImageTest extends ImageTest {
     testImage = new MyImage(2, 2);
     testImage = (MyImage) testImage.imgArrayAddition(new float[]{10, 20, 30});
     float[][] kernel = new float[][]{{0.1f}};
-    System.out.println(testImage.filtering(kernel));
     String expected = "RED:1 GREEN:2 BLUE:3    RED:1 GREEN:2 BLUE:3    \n"
                       + "RED:1 GREEN:2 BLUE:3    RED:1 GREEN:2 BLUE:3    \n";
-    assertEquals(expected, testImage.filtering(kernel).toString());
+    assertTrue(super.testFiltering(testImage,kernel,expected));
   }
 
   @Test
@@ -294,7 +300,7 @@ public class MyImageTest extends ImageTest {
         + "RED:25 GREEN:50 BLUE:75    RED:36 GREEN:72 BLUE:108    RED:23 GREEN:46 BLUE:69    \n"
         + "RED:25 GREEN:50 BLUE:75    RED:36 GREEN:72 BLUE:108    RED:23 GREEN:46 "
         + "BLUE:69    \n";
-    assertEquals(expected, testImage.filtering(kernel).toString());
+    assertTrue(super.testFiltering(testImage,kernel,expected));
 
   }
 
@@ -305,7 +311,7 @@ public class MyImageTest extends ImageTest {
     float[][] kernel = new float[][]{{0.1f, 0.2f, 0.3f}, {1, 1, 1}, {0, 0, 0}};
     String expected = "RED:20 GREEN:40 BLUE:60    RED:20 GREEN:40 BLUE:60    \n"
                       + "RED:25 GREEN:50 BLUE:75    RED:23 GREEN:46 BLUE:69    \n";
-    assertEquals(expected, testImage.filtering(kernel).toString());
+    assertTrue(super.testFiltering(testImage,kernel,expected));
   }
 
   @Test
@@ -319,7 +325,7 @@ public class MyImageTest extends ImageTest {
         + "RED:30 GREEN:60 BLUE:90    RED:20 GREEN:40 BLUE:60    \n"
         + "RED:25 GREEN:50 BLUE:75    RED:36 GREEN:72 BLUE:108    "
         + "RED:36 GREEN:72 BLUE:108    RED:23 GREEN:46 BLUE:69    \n";
-    assertEquals(expected, testImage.filtering(kernel).toString());
+    assertTrue(super.testFiltering(testImage,kernel,expected));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -340,17 +346,19 @@ public class MyImageTest extends ImageTest {
   }
 
   @Test
-  public void testArrayMultiplication() {
+  public void testMatrixMultiplicationIdentity() {
     float[][] identityMatrix = new float[][]{
         {1, 0, 0},
         {0, 1, 0},
         {0, 0, 1}
     };
     for (MyImage img : testImages) {
-      MyImage result = (MyImage) img.matrixMultiplication(identityMatrix);
-      assertEquals(img, result);
+      String expectedString = img.toString();
+      assertTrue(super.testMatrixMultiplication(img, identityMatrix, expectedString));
     }
-
+  }
+  @Test
+  public void testMatrixMultiplication() {
     float[][] testMatrix = new float[][]{
         {0, 0, 0},
         {-1, 1.1f, 2},
@@ -359,29 +367,34 @@ public class MyImageTest extends ImageTest {
     String expected = "RED:0 GREEN:174 BLUE:58    RED:0 GREEN:255 BLUE:0    \n"
                       + "RED:0 GREEN:10 BLUE:220    RED:0 GREEN:117 BLUE:73    \n"
                       + "RED:0 GREEN:255 BLUE:0    RED:0 GREEN:221 BLUE:113    \n";
-    assertEquals(expected, triImage.matrixMultiplication(testMatrix).toString());
+    assertTrue(super.testMatrixMultiplication(triImage, testMatrix, expected));
+
     expected =
         "RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    \n"
         + "RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    \n"
         + "RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    \n"
         + "RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128 "
         + "   RED:0 GREEN:255 BLUE:128    \n";
-    assertEquals(expected, whiteImage.matrixMultiplication(testMatrix).toString());
+    assertTrue(super.testMatrixMultiplication(whiteImage, testMatrix, expected));
+
     expected =
         "RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    \n"
         + "RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    \n"
         + "RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    \n"
         + "RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    "
         + "RED:0 GREEN:0 BLUE:255    \n";
-    assertEquals(expected, redImage.matrixMultiplication(testMatrix).toString());
+    assertTrue(super.testMatrixMultiplication(redImage, testMatrix, expected));
+
     expected =
         "RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    \n"
         + "RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    \n"
         + "RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    \n"
         + "RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    "
         + "RED:0 GREEN:20 BLUE:100    \n";
-    assertEquals(expected, woBlueImage.matrixMultiplication(testMatrix).toString());
-    assertEquals(blackImage, blackImage.matrixMultiplication(testMatrix));
+    assertTrue(super.testMatrixMultiplication(woBlueImage, testMatrix, expected));
+
+    assertTrue(super.testMatrixMultiplication(blackImage, testMatrix, blackImage.toString()));
+
 
   }
 
@@ -424,19 +437,18 @@ public class MyImageTest extends ImageTest {
   public void testChannelSplitBlue() {
     assertEquals(blueImage, whiteImage.channelSplit(Channel.BLUE));
     assertEquals(blackImage, blackImage.channelSplit(Channel.BLUE));
-    assertEquals(redImage, redImage.channelSplit(Channel.BLUE));
+    assertEquals(blackImage, redImage.channelSplit(Channel.BLUE));
     assertEquals(blackImage, greenImage.channelSplit(Channel.BLUE));
-    assertEquals(blackImage, blueImage.channelSplit(Channel.BLUE));
-    assertEquals(blackImage, woRedImage.channelSplit(Channel.BLUE));
-    MyImage expected = (MyImage) new MyImage(4, 4).imgArrayAddition(new float[]{200, 0, 0});
+    assertEquals(blueImage, blueImage.channelSplit(Channel.BLUE));
+    MyImage expected = (MyImage) new MyImage(4, 4).imgArrayAddition(new float[]{0,0,200});
+    assertEquals(expected, woRedImage.channelSplit(Channel.BLUE));
     assertEquals(expected, woGreenImage.channelSplit(Channel.BLUE));
-    assertEquals(expected, woBlueImage.channelSplit(Channel.BLUE));
-    assertEquals("RED:100 GREEN:0 BLUE:0    RED:30 GREEN:0 BLUE:0    \n"
-                 + "RED:245 GREEN:0 BLUE:0    RED:105 GREEN:0 BLUE:0    \n"
-                 + "RED:95 GREEN:0 BLUE:0    RED:215 GREEN:0 BLUE:0    \n",
+    assertEquals(blackImage, woBlueImage.channelSplit(Channel.BLUE));
+    assertEquals("RED:0 GREEN:0 BLUE:90    RED:0 GREEN:0 BLUE:150    \n"
+                 + "RED:0 GREEN:0 BLUE:100    RED:0 GREEN:0 BLUE:75    \n"
+                 + "RED:0 GREEN:0 BLUE:85    RED:0 GREEN:0 BLUE:105    \n",
         triImage.channelSplit(Channel.BLUE).toString());
-    System.out.println(triImage.channelSplit(Channel.GREEN).toString());
-
+    System.out.println(triImage.channelSplit(Channel.BLUE).toString());
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -538,18 +550,75 @@ public class MyImageTest extends ImageTest {
 
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testProjectCoordinateSizeNotMatch()
+  {
+    testImage=new MyImage(3,3);
+    int[][] matrix=new int[][]{{2},{3}};
+    testImage.projectCoordinate(matrix);
+  }
+
   @Test
   public void testProjectCoordinateNoTranslation() {
+    int[][] matrix=new int[][]{{1,0,0},{0,1,0}};
+    String expected=triImage.toString();
+    assertTrue(super.testProjectCoordinate(triImage,matrix,expected));
+
+    matrix=new int[][]{{1,0,0},{0,-1,0}};
+    expected="RED:100 GREEN:85 BLUE:90    RED:30 GREEN:200 BLUE:150    \n"
+             + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+             + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
+    assertTrue(super.testProjectCoordinate(triImage,matrix,expected));
+
+    matrix=new int[][]{{-1,0,0},{0,1,0}};
+    expected="RED:100 GREEN:85 BLUE:90    RED:0 GREEN:0 BLUE:0    \n"
+             + "RED:245 GREEN:50 BLUE:100    RED:0 GREEN:0 BLUE:0    \n"
+             + "RED:95 GREEN:205 BLUE:85    RED:0 GREEN:0 BLUE:0    \n";
+    assertTrue(super.testProjectCoordinate(triImage,matrix,expected));
+
+    matrix=new int[][]{{2,0,0},{0,1,0}};
+    expected="RED:215 GREEN:205 BLUE:105    RED:0 GREEN:0 BLUE:0    \n"
+             + "RED:245 GREEN:50 BLUE:100    RED:0 GREEN:0 BLUE:0    \n"
+             + "RED:95 GREEN:205 BLUE:85    RED:0 GREEN:0 BLUE:0    \n";
+    assertTrue(super.testProjectCoordinate(triImage,matrix,expected));
 
   }
 
   @Test
   public void testProjectCoordinateOnlyTranslation() {
+    int[][] matrix=new int[][]{{1,1,1},{1,1,-1}};
+    String expected="RED:215 GREEN:205 BLUE:105    RED:0 GREEN:0 BLUE:0    \n"
+                    + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+                    + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
+    assertTrue(super.testProjectCoordinate(triImage,matrix,expected));
 
   }
 
   @Test
   public void testProjectCoordinate() {
+    int[][] matrix=new int[][]{{1,0,1},{0,-1,-1}};
+    String expected="RED:215 GREEN:205 BLUE:105    RED:0 GREEN:0 BLUE:0    \n"
+                    + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+                    + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
+    assertTrue(super.testProjectCoordinate(triImage,matrix,expected));
+
+    matrix=new int[][]{{-1,0,-1},{0,1,2}};
+    expected="RED:215 GREEN:205 BLUE:105    RED:0 GREEN:0 BLUE:0    \n"
+             + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+             + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
+    assertTrue(super.testProjectCoordinate(triImage,matrix,expected));
+
+    matrix=new int[][]{{1,0,2},{0,-1,0}};
+    expected="RED:215 GREEN:205 BLUE:105    RED:0 GREEN:0 BLUE:0    \n"
+             + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+             + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
+    assertTrue(super.testProjectCoordinate(triImage,matrix,expected));
+
+    matrix=new int[][]{{-1,0,0},{0,-1,1}};
+    expected="RED:245 GREEN:50 BLUE:100    RED:0 GREEN:0 BLUE:0    \n"
+             + "RED:100 GREEN:85 BLUE:90    RED:0 GREEN:0 BLUE:0    \n"
+             + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
+    assertTrue(super.testProjectCoordinate(triImage,matrix,expected));
 
   }
 
@@ -568,7 +637,6 @@ public class MyImageTest extends ImageTest {
       String originalString = image.toString();
       testImage = image.mapElement(pixel -> pixel);
       assertEquals(image, testImage);
-      //todo:check did not change original
       assertEquals(originalString, image.toString());
     }
   }

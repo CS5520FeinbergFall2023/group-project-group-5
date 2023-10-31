@@ -469,8 +469,10 @@ public class ImageControllerTest {
 
     controller.startFromFile(filePath);
     String outputFile = output.toString();
-
-    assertTrue(outputFile.contains("Invalid file path. Please enter a valid file path."));
+    
+    assertTrue(outputFile.contains("Loading new image: car"));
+    assertTrue(outputFile.contains("Image blurred"));
+    assertTrue(outputFile.contains("Increase the brightness of the image"));
   }
 
   /**

@@ -17,13 +17,9 @@ import javax.imageio.ImageIO;
  * This class represents 8 bit depth RGB image.
  */
 public class MyImage extends Image {
-//  private RGBPixel[][] pixels;
-//  private int height;
-//  private int width;
-
-  public MyImage(String path) throws IllegalArgumentException {
-    super(path);
-  }
+//  public MyImage(String path) throws IllegalArgumentException {
+//    super(path);
+//  }
 
   /**
    * Construct all white image with given height and width
@@ -32,7 +28,11 @@ public class MyImage extends Image {
    * @param width  weight of the image
    */
   public MyImage(int height, int width) {
-    super(height, width);
+    if (width <= 0 || height <= 0) {
+      throw new IllegalArgumentException("Invalid width and height.");
+    }
+    this.height = height;
+    this.width = width;
     pixels = new RGBPixel[height][width];
     for (int row = 0; row < this.height; row++) {
       for (int col = 0; col < this.width; col++) {
@@ -63,8 +63,22 @@ public class MyImage extends Image {
     this.pixels = pixels;
   }
 
-  @Override
-  protected void loadPPM(String path) throws IOException, IllegalArgumentException {
+  public MyImage(String path) throws IllegalArgumentException {
+    try {
+      if (path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")) {
+        loadJPGPNG(path);
+      } else if (path.endsWith(".ppm")) {
+        loadPPM(path);
+      } else {
+        throw new IllegalArgumentException("Extension not supported.");
+      }
+    } catch (IllegalArgumentException | IOException e) {
+      throw new IllegalArgumentException("Path does not exist or something wrong with file format"
+                                         + ".");
+    }
+  }
+
+  private void loadPPM(String path) throws IOException, IllegalArgumentException {
     Scanner sc;
     try {
       File file = new File(path);
@@ -105,8 +119,7 @@ public class MyImage extends Image {
     }
   }
 
-  @Override
-  protected void loadJPGPNG(String path) throws IOException, IllegalArgumentException {
+  private void loadJPGPNG(String path) throws IOException, IllegalArgumentException {
     BufferedImage image;
     File file = new File(path);
     if (!file.isAbsolute()) {
@@ -130,8 +143,30 @@ public class MyImage extends Image {
     }
   }
 
-  @Override
-  protected void savePPM(String path) throws IOException, IllegalArgumentException {
+  /**
+   * Save image to local file.
+   *
+   * @param path the file path
+   * @throws IOException if there's problem with IO
+   */
+  public void save(String path) throws IOException {
+    try {
+      if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
+        saveJPGPNG(path, "jpg");
+      } else if (path.endsWith(".png")) {
+        saveJPGPNG(path, "png");
+      } else if (path.endsWith(".ppm")) {
+        savePPM(path);
+      } else {
+        throw new IllegalArgumentException("Extension not supported.");
+      }
+    } catch (IllegalArgumentException | IOException e) {
+      throw new IllegalArgumentException("Path does not exist or something wrong with file format"
+                                         + ".");
+    }
+  }
+
+  private void savePPM(String path) throws IOException, IllegalArgumentException {
     if (!path.endsWith(".ppm")) {
       throw new IllegalArgumentException("The path does not have ppm extension");
     }
@@ -159,8 +194,7 @@ public class MyImage extends Image {
     writer.close();
   }
 
-  @Override
-  protected void saveJPGPNG(String path, String format)
+  private void saveJPGPNG(String path, String format)
       throws IOException, IllegalArgumentException {
     if (!path.endsWith(".jpg") && !path.endsWith(".jpeg") && !path.endsWith(".png")) {
       throw new IllegalArgumentException("The path does not have ppm extension");
@@ -186,15 +220,16 @@ public class MyImage extends Image {
     ImageIO.write(bufferedImage, format, file);
   }
 
-//  protected RGBPixel getPixel(int x, int y) {
-//    if (x < 0 || x > this.height || y < 0 || y > this.width) {
-//      throw new IllegalArgumentException("The x or y is out of bound.");
-//    }
-//    return pixels[x][y];
-//  }
+  @Override
+  RGBPixel getPixel(int x, int y) {
+    if (x < 0 || x > this.height || y < 0 || y > this.width) {
+      throw new IllegalArgumentException("The x or y is out of bound.");
+    }
+    return (RGBPixel) pixels[x][y];
+  }
 
   @Override
-  protected void setPixel(int x, int y, Pixel pixel) {
+  void setPixel(int x, int y, Pixel pixel) {
     if (pixel == null) {
       throw new IllegalArgumentException("The pixel cannot be null.");
     }
@@ -224,9 +259,52 @@ public class MyImage extends Image {
    * @param kernel the given kernel
    * @throws IllegalArgumentException when the given argument is not legal
    */
+  @Override
   public MyImage filtering(float[][] kernel) {
     MyImage result = new MyImage(this.height, this.width);
-    return (MyImage) super.filtering(kernel, result);
+    int kernelHeight = kernel.length;
+    int kernelWidth = kernel[0].length;
+    if (kernel.length % 2 == 0) {
+      throw new IllegalArgumentException("The kernel should have odd dimensions.");
+    }
+    for (float[] k : kernel) {
+      if (k.length % 2 == 0) {
+        throw new IllegalArgumentException("The kernel should have odd dimensions.");
+      }
+      if (k.length != kernelWidth) {
+        throw new IllegalArgumentException("The kernel should be rectangle.");
+      }
+    }
+    //x, y coordinate of the center of the kernel relative to the coordinate of the kernel
+    int kernelCenterRow = kernelHeight / 2;
+    int kernelCenterCol = kernelWidth / 2;
+    for (int i = 0; i < this.height; i++) {
+      for (int j = 0; j < this.width; j++) {
+        //i,j is where the current kernel center lies relative to the coordinate of the image
+        //row start and end are the area the kernel covers relative to the coordinate of the image
+        int rowStart = Math.max(0, i - kernelCenterRow);
+        int rowEnd = Math.min(this.height - 1, i + kernelCenterRow);
+        int colStart = Math.max(0, j - kernelCenterCol);
+        int colEnd = Math.min(this.width - 1, j + kernelCenterCol);
+        float r = 0;
+        float g = 0;
+        float b = 0;
+        //traver all pixels on the image in this area
+        for (int x = rowStart; x <= rowEnd; x++) {
+          for (int y = colStart; y <= colEnd; y++) {
+            RGBPixel tmp = this.getPixel(x, y);
+//                    .multiplyNumber(kernel[x - (i - kernelCenterRow)][y - (j - kernelCenterCol)]);
+            r += tmp.getRed() * kernel[x - (i - kernelCenterRow)][y - (j - kernelCenterCol)];
+            g += tmp.getGreen() * kernel[x - (i - kernelCenterRow)][y - (j - kernelCenterCol)];
+            b += tmp.getBlue() * kernel[x - (i - kernelCenterRow)][y - (j - kernelCenterCol)];
+//            result.setPixel(i, j, result.getPixel(i, j).addition(tmp));
+//            result.setPixel(i, j, function.apply(result.getPixel(i, j),tmp));
+          }
+        }
+        result.setPixel(i, j, new RGBPixel(Math.round(r), Math.round(g), Math.round(b)));
+      }
+    }
+    return result;
   }
 
 
@@ -246,7 +324,7 @@ public class MyImage extends Image {
         if (!pixel.containsChannel(channel)) {
           throw new IllegalArgumentException("The image does not have the given channel.");
         }
-        result.setPixel(i, j, this.getPixel(i, j).getChannelComponent(channel));
+        result.setPixel(i, j, pixel.getChannelComponent(channel));
       }
     }
 
@@ -262,8 +340,7 @@ public class MyImage extends Image {
    */
   @Override
   public MyImage addition(Image that) {
-    if(this.width!=that.width ||this.height!=that.height)
-    {
+    if (this.width != that.width || this.height != that.height) {
       throw new IllegalArgumentException("Image size not match");
     }
     RGBPixel[][] resultPixels = new RGBPixel[height][width];
@@ -280,10 +357,8 @@ public class MyImage extends Image {
   }
 
   /**
-   * Project coordinate of the original component element. For example, for a 2d image with height 5
-   * and width 3, the originalDimensions are [5,3], and projectMatrix project pixel coordinate (1,0)
-   * to (0,1), so the result[1][0] will be [0][1]. Those pixels that fall outside the image area
-   * will be said to be project to (-1,-1)
+   * Project coordinate of the original component element. For example, 1 0 w 0 -1 h projects (x,y)
+   * to (x+w,-y+h), and project accordingly pixels in the old image to the new one.
    *
    * @param projectMatrix the matrix to be used to perform the projection
    * @return the project result
@@ -291,36 +366,27 @@ public class MyImage extends Image {
    */
   public MyImage projectCoordinate(int[][] projectMatrix)
       throws IllegalArgumentException {
-
-//    if (projectMatrix.length != 2 || projectMatrix[0].length != 3 || projectMatrix[1].length != 3) {
-//      throw new IllegalArgumentException("Project matrix should be 2x3 for MyImage");
-//    }
+    if (projectMatrix.length != 2 || projectMatrix[0].length != 3 || projectMatrix[1].length != 3) {
+      throw new IllegalArgumentException("Project matrix should be 2x3 for MyImage");
+    }
     int[][][] projectResult = projectCoordinateCal(projectMatrix);
     RGBPixel[][] resultPixels = new RGBPixel[height][width];
-//    //coordinate is reverse of row/column
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-//        int x=j;
-//        int y=i;
-//        int newX=projectMatrix[0][0] * x + projectMatrix[0][1] * y + projectMatrix[0][2];
-//        int newY=projectMatrix[1][0] * x + projectMatrix[1][1] * y + projectMatrix[1][2];
-//        if(newY<height && newX<width) {
-//          resultPixels[newY][newX] = pixels[y][x];
-//        }
-//      }
-//        projectResult[i][j]=new int[]{newY,newX};
+        resultPixels[i][j] = new RGBPixel(0, 0, 0);
+      }
+    }
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
         int newX = projectResult[i][j][1];
         int newY = projectResult[i][j][0];
-        resultPixels[newY][newX] = (RGBPixel) pixels[i][j];
+        if (newY < height && newX < width && newY >= 0 && newX >= 0) {
+          resultPixels[newY][newX] = (RGBPixel) pixels[i][j];
+        }
       }
     }
     return new MyImage(resultPixels);
   }
-//
-//  public MyImage arrayMultiplication(float[][] matrix)
-//  {
-//    return (MyImage) super.arrayMultiplication(matrix);
-//  }
 
   /**
    * Map all pixels in the image with given pixel function.
@@ -360,7 +426,7 @@ public class MyImage extends Image {
   public boolean isMonochromeOfChannel(Channel channel) {
     for (int i = 0; i < this.height; i++) {
       for (int j = 0; j < this.width; j++) {
-        RGBPixel pixel = (RGBPixel) this.getPixel(i, j);
+        RGBPixel pixel = this.getPixel(i, j);
         if (!pixel.containsChannel(channel) || !pixel.isMonochromeOfChannel(channel)) {
           return false;
         }
@@ -368,9 +434,6 @@ public class MyImage extends Image {
     }
     return true;
   }
-
-  // =====================Please double check======================
-  // do we need to compare channels?
 
   /**
    * Check if two images are identical.
@@ -383,26 +446,20 @@ public class MyImage extends Image {
     if (o == this) {
       return true;
     }
-
     if (!(o instanceof MyImage)) {
       return false;
     }
-
     MyImage otherImage = (MyImage) o;
-
     if (this.width != otherImage.getWidth() || this.height != otherImage.getHeight()) {
       return false;
     }
-
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         if (!pixels[y][x].equals(otherImage.pixels[y][x])) {
-          System.out.println("here");
           return false;
         }
       }
     }
-
     return true;
   }
 
