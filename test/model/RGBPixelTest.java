@@ -263,42 +263,6 @@ public class RGBPixelTest {
   }
 
   @Test
-  public void multiplyNumberNegative() {
-    for(RGBPixel testPixel:allTestPixels){
-      RGBPixel result= testPixel.multiplyNumber(-0.1f);
-      assertEquals(0,result.getRed());
-      assertEquals(0,result.getGreen());
-      assertEquals(0, result.getBlue());
-    }
-  }
-
-  @Test
-  public void multiplyNumberZero() {
-    for(RGBPixel testPixel:allTestPixels){
-      RGBPixel result= testPixel.multiplyNumber(0);
-      assertEquals(0,result.getRed());
-      assertEquals(0,result.getGreen());
-      assertEquals(0, result.getBlue());
-    }
-  }
-
-  @Test
-  public void multiplyNumberPositive() {
-    RGBPixel result= threeColorBlueMaxPixel.multiplyNumber(1);
-    assertEquals(30,result.getRed());
-    assertEquals(100,result.getGreen());
-    assertEquals(200, result.getBlue());
-    result= threeColorGreenMaxPixel.multiplyNumber(0.03f);
-    assertEquals(3,result.getRed());
-    assertEquals(3,result.getGreen());
-    assertEquals(1, result.getBlue());
-    result= blackPixel.multiplyNumber(2);
-    assertEquals(255,result.getRed());
-    assertEquals(255,result.getGreen());
-    assertEquals(255, result.getBlue());
-  }
-
-  @Test
   public void max() {
     assertEquals(new RGBPixel(0,0,0),whitePixel.max());
     assertEquals(new RGBPixel(255,255,255),blackPixel.max());

@@ -1,15 +1,13 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import model.Axis;
+import model.Channel;
 import model.Image;
 import model.MyImage;
-import model.Channel;
-import model.Axis;
 import service.ImageService;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ImageServiceTest {
   private ImageService imageService;
@@ -19,7 +17,7 @@ public class ImageServiceTest {
     imageService = new ImageService();
   }
 
-//  -------------------Create images that visualize individual R,G,B components of an image.--------
+  //  -------------------Create images that visualize individual R,G,B components of an image.--------
   @Test
   public void testSplitComponentRed() {
     Image testImage = new MyImage("test/img/split/rose.ppm");
@@ -44,7 +42,7 @@ public class ImageServiceTest {
     assertEquals(testImageBlue, expectedBlue);
   }
 
-//  -------------Create images that visualize the value, intensity or luma of an image.-------------
+  //  -------------Create images that visualize the value, intensity or luma of an image.-------------
   //different formats
   // gets the value
   // intensity
@@ -88,9 +86,9 @@ public class ImageServiceTest {
     Image resultImageWoRed = imageService.getValue(testImageWoRed);
     Image resultImageWoGreen = imageService.getValue(testImageWoGreen);
 
-    Image expectedImageWoBlue = new MyImage("test/img/monochromatic/woBlue_value.ppm");
-    Image expectedImageWoRed = new MyImage("test/img/monochromatic/woRed_value.ppm");
-    Image expectedImageWoGreen = new MyImage("test/img/monochromatic/woGreen_value.ppm");
+    Image expectedImageWoBlue = new MyImage("test/img/dichromatic/woBlue_value.ppm");
+    Image expectedImageWoRed = new MyImage("test/img/dichromatic/woRed_value.ppm");
+    Image expectedImageWoGreen = new MyImage("test/img/dichromatic/woGreen_value.ppm");
 
     assertEquals(resultImageWoBlue, expectedImageWoBlue);
     assertEquals(resultImageWoRed, expectedImageWoRed);
@@ -143,9 +141,9 @@ public class ImageServiceTest {
     Image resultImageWoRed = imageService.getIntensity(testImageWoRed);
     Image resultImageWoGreen = imageService.getIntensity(testImageWoGreen);
 
-    Image expectedImageWoBlue = new MyImage("test/img/monochromatic/woBlue_intensity.ppm");
-    Image expectedImageWoRed = new MyImage("test/img/monochromatic/woRed_intensity.ppm");
-    Image expectedImageWoGreen = new MyImage("test/img/monochromatic/woGreen_intensity.ppm");
+    Image expectedImageWoBlue = new MyImage("test/img/dichromatic/woBlue_intensity.ppm");
+    Image expectedImageWoRed = new MyImage("test/img/dichromatic/woRed_intensity.ppm");
+    Image expectedImageWoGreen = new MyImage("test/img/dichromatic/woGreen_intensity.ppm");
 
     assertEquals(resultImageWoBlue, expectedImageWoBlue);
     assertEquals(resultImageWoRed, expectedImageWoRed);
@@ -199,9 +197,9 @@ public class ImageServiceTest {
     Image resultImageWoRed = imageService.getLuma(testImageWoRed);
     Image resultImageWoGreen = imageService.getLuma(testImageWoGreen);
 
-    Image expectedImageWoBlue = new MyImage("test/img/monochromatic/woBlue_luma.ppm");
-    Image expectedImageWoRed = new MyImage("test/img/monochromatic/woRed_luma.ppm");
-    Image expectedImageWoGreen = new MyImage("test/img/monochromatic/woGreen_luma.ppm");
+    Image expectedImageWoBlue = new MyImage("test/img/dichromatic/woBlue_luma.ppm");
+    Image expectedImageWoRed = new MyImage("test/img/dichromatic/woRed_luma.ppm");
+    Image expectedImageWoGreen = new MyImage("test/img/dichromatic/woGreen_luma.ppm");
 
     assertEquals(resultImageWoBlue, expectedImageWoBlue);
     assertEquals(resultImageWoRed, expectedImageWoRed);
@@ -211,7 +209,7 @@ public class ImageServiceTest {
   @Test
   public void testGetLumaTrichromatic() {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-    Image resultImage = imageService.getIntensity(testImage);
+    Image resultImage = imageService.getLuma(testImage);
     Image expectedImage = new MyImage("test/img/trichromatic/simple_luma.ppm");
 
     assertEquals(resultImage, expectedImage);
@@ -226,185 +224,185 @@ public class ImageServiceTest {
   //flip for multiple times (more than 2)
   @Test
   public void testFlipHorizontally() {
-    Image testImagePPM = new MyImage("test/img/flip/car.ppm");
+    Image testImagePPM = new MyImage("test/img/car.png");
     Image flippedImagePPM = imageService.flip(testImagePPM, Axis.Y);
-    Image expectedImagePPM = new MyImage("test/img/flip/car_horizontallyFlipped.ppm");
+    Image expectedImagePPM = new MyImage("test/img/car_horizontallyFlipped.png");
     assertEquals(flippedImagePPM, expectedImagePPM);
   }
 
   @Test
   public void testFlipVertically() {
-    Image testImagePPM = new MyImage("test/img/flip/car.ppm");
+    Image testImagePPM = new MyImage("test/img/car.png");
     Image flippedImagePPM = imageService.flip(testImagePPM, Axis.X);
-    Image expectedImagePPM = new MyImage("test/img/flip/car_verticallyFlipped.ppm");
+    Image expectedImagePPM = new MyImage("test/img/car_verticallyFlipped.png");
     assertEquals(flippedImagePPM, expectedImagePPM);
   }
 
   @Test
   public void testFlipBoth() {
-    Image testImagePPM = new MyImage("test/img/flip/car.ppm");
+    Image testImagePPM = new MyImage("test/img/car.png");
     Image flippedImagePPM = imageService.flip(testImagePPM, Axis.X);
     Image doubleFlippedImagePPM = imageService.flip(flippedImagePPM, Axis.Y);
-    Image expectedImagePPM = new MyImage("test/img/flip/car_doubleFlipped.ppm");
+    Image expectedImagePPM = new MyImage("test/img/car_doubleFlipped.png");
     assertEquals(doubleFlippedImagePPM, expectedImagePPM);
   }
 
   @Test
   public void testFlipHorizontallyTwice() {
-    Image testImagePPM = new MyImage("test/img/flip/car.ppm");
+    Image testImagePPM = new MyImage("test/img/car.png");
     Image flippedImagePPM = imageService.flip(testImagePPM, Axis.Y);
     Image doubleFlippedImagePPM = imageService.flip(flippedImagePPM, Axis.Y);
-    Image expectedImagePPM = new MyImage("test/img/flip/car.ppm");
+    Image expectedImagePPM = new MyImage("test/img/car.png");
     assertEquals(doubleFlippedImagePPM, expectedImagePPM);
   }
 
   @Test
   public void testFlipVerticallyTwice() {
-    Image testImagePPM = new MyImage("test/img/flip/car.ppm");
+    Image testImagePPM = new MyImage("test/img/car.png");
     Image flippedImagePPM = imageService.flip(testImagePPM, Axis.X);
     Image doubleFlippedImagePPM = imageService.flip(flippedImagePPM, Axis.X);
-    Image expectedImagePPM = new MyImage("test/img/flip/car.ppm");
+    Image expectedImagePPM = new MyImage("test/img/car.png");
     assertEquals(doubleFlippedImagePPM, expectedImagePPM);
   }
 
   @Test
   public void testFlipMultipleTimes() {
-    Image testImagePPM = new MyImage("test/img/flip/car.ppm");
+    Image testImagePPM = new MyImage("test/img/car.png");
     Image flippedImagePPM = imageService.flip(testImagePPM, Axis.Y);
     Image doubleFlippedImagePPM = imageService.flip(flippedImagePPM, Axis.Y);
     Image tripleFlippedImagePPM = imageService.flip(doubleFlippedImagePPM, Axis.Y);
-    Image expectedImagePPM = new MyImage("test/img/flip/car_horizontallyFlipped.ppm");
+    Image expectedImagePPM = new MyImage("test/img/car_horizontallyFlipped.png");
     assertEquals(tripleFlippedImagePPM, expectedImagePPM);
   }
 
 
-//  Brighten or darken an image.
+  //  Brighten or darken an image.
   //different formats
   //brighten
   //darken
   //pixel that's already the darkest
   //pixel that's already the lightest
   //brighten or darken an image for multiple times & in combinations
-@Test(expected = IllegalArgumentException.class)
-public void testBrightenInvalidDelta() {
-  Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-  Image resultImage = imageService.brighten(testImage, -2);
-}
+  @Test(expected = IllegalArgumentException.class)
+  public void testBrightenInvalidDelta() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.brighten(testImage, -2);
+  }
 
-@Test
-public void testBrightenOnce() {
-  Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-  Image resultImage = imageService.brighten(testImage, 2);
-  Image expectedImage = new MyImage("test/img/trichromatic/simple+2.ppm");
-  assertEquals(resultImage, expectedImage);
-}
+  @Test
+  public void testBrightenOnce() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.brighten(testImage, 2);
+    Image expectedImage = new MyImage("test/img/trichromatic/simple+2.ppm");
+    assertEquals(resultImage, expectedImage);
+  }
 
-@Test
-public void testBrightenTwice() {
-  Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-  Image resultImage = imageService.brighten(testImage, 2);
-  resultImage = imageService.brighten(resultImage, 2);
-  Image expectedImage = new MyImage("test/img/trichromatic/simple+4.ppm");
-  assertEquals(resultImage, expectedImage);
-}
+  @Test
+  public void testBrightenTwice() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.brighten(testImage, 2);
+    resultImage = imageService.brighten(resultImage, 2);
+    Image expectedImage = new MyImage("test/img/trichromatic/simple+4.ppm");
+    assertEquals(resultImage, expectedImage);
+  }
 
-@Test
-public void testBrightenWhite() {
-  Image testImage = new MyImage("test/img/monochromatic/white.ppm");
-  Image resultImage = imageService.brighten(testImage, 2);
-  Image expectedImage = new MyImage("test/img/monochromatic/white.ppm");
-  assertEquals(resultImage, expectedImage);
-}
+  @Test
+  public void testBrightenWhite() {
+    Image testImage = new MyImage("test/img/monochromatic/white.ppm");
+    Image resultImage = imageService.brighten(testImage, 2);
+    Image expectedImage = new MyImage("test/img/monochromatic/white.ppm");
+    assertEquals(resultImage, expectedImage);
+  }
 
-@Test(expected = IllegalArgumentException.class)
-public void testDarkenInvalidDelta() {
-Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-Image resultImage = imageService.darken(testImage, 2);
-}
+  @Test(expected = IllegalArgumentException.class)
+  public void testDarkenInvalidDelta() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.darken(testImage, 2);
+  }
 
-@Test
-public void testDarkenOnce() {
-  Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-  Image resultImage = imageService.darken(testImage, -2);
-  Image expectedImage = new MyImage("test/img/trichromatic/simple-2.ppm");
-  assertEquals(resultImage, expectedImage);
-}
+  @Test
+  public void testDarkenOnce() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.darken(testImage, -2);
+    Image expectedImage = new MyImage("test/img/trichromatic/simple-2.ppm");
+    assertEquals(resultImage, expectedImage);
+  }
 
-@Test
-public void testDarkenTwice() {
-  Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-  Image resultImage = imageService.darken(testImage, -2);
-  resultImage = imageService.darken(resultImage, -2);
-  Image expectedImage = new MyImage("test/img/trichromatic/simple-4.ppm");
-  assertEquals(resultImage, expectedImage);
-}
+  @Test
+  public void testDarkenTwice() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.darken(testImage, -2);
+    resultImage = imageService.darken(resultImage, -2);
+    Image expectedImage = new MyImage("test/img/trichromatic/simple-4.ppm");
+    assertEquals(resultImage, expectedImage);
+  }
 
-@Test
-public void testDarkenBlack() {
-  Image testImage = new MyImage("test/img/monochromatic/black.ppm");
-  Image resultImage = imageService.darken(testImage, -2);
-  Image expectedImage = new MyImage("test/img/monochromatic/black.ppm");
-  assertEquals(resultImage, expectedImage);
-}
+  @Test
+  public void testDarkenBlack() {
+    Image testImage = new MyImage("test/img/monochromatic/black.ppm");
+    Image resultImage = imageService.darken(testImage, -2);
+    Image expectedImage = new MyImage("test/img/monochromatic/black.ppm");
+    assertEquals(resultImage, expectedImage);
+  }
 
-@Test
-public void testDarkenThenBrighten() {
-  Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-  Image resultImage = imageService.darken(testImage, -2);
-  resultImage = imageService.brighten(resultImage, 2);
-  Image expectedImage = new MyImage("test/img/trichromatic/simple.ppm");
-  assertEquals(resultImage, expectedImage);
-}
+  @Test
+  public void testDarkenThenBrighten() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.darken(testImage, -2);
+    resultImage = imageService.brighten(resultImage, 2);
+    Image expectedImage = new MyImage("test/img/trichromatic/simple.ppm");
+    assertEquals(resultImage, expectedImage);
+  }
 
-@Test
-public void testBrightenTwiceThenDarken() {
-  Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-  Image resultImage = imageService.brighten(testImage, 2);
-  resultImage = imageService.brighten(resultImage, 2);
-  resultImage = imageService.darken(resultImage, -2);
-  Image expectedImage = new MyImage("test/img/trichromatic/simple+2.ppm");
-  assertEquals(resultImage, expectedImage);
-}
+  @Test
+  public void testBrightenTwiceThenDarken() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.brighten(testImage, 2);
+    resultImage = imageService.brighten(resultImage, 2);
+    resultImage = imageService.darken(resultImage, -2);
+    Image expectedImage = new MyImage("test/img/trichromatic/simple+2.ppm");
+    assertEquals(resultImage, expectedImage);
+  }
 
-//
+  //
 //  Split a single image into 3 images representing each of the three channels.
   // different formats
   // of monochromatic, dichromatic and trichromatic images
   // repeatedly split
-@Test
-public void testSplitChannelMonochromatic() {
-  Image testImage = new MyImage("test/img/monochromatic/red.ppm");
-  Image[] resultImages = imageService.splitChannel(testImage);
-  Image expectedImage_r = new MyImage("test/img/monochromatic/red_grayScale_r.ppm");
-  Image expectedImage_g = new MyImage("test/img/monochromatic/red_grayScale_g.ppm");
-  Image expectedImage_b = new MyImage("test/img/monochromatic/red_grayScale_b.ppm");
-  assertEquals(resultImages[0], expectedImage_r);
-  assertEquals(resultImages[1], expectedImage_g);
-  assertEquals(resultImages[2], expectedImage_b);
-}
+  @Test
+  public void testSplitChannelMonochromatic() {
+    Image testImage = new MyImage("test/img/monochromatic/red.ppm");
+    Image[] resultImages = imageService.splitChannel(testImage);
+    Image expectedimageR = new MyImage("test/img/monochromatic/red_grayScale_r.ppm");
+    Image expectedimageG = new MyImage("test/img/monochromatic/red_grayScale_g.ppm");
+    Image expectedimageB = new MyImage("test/img/monochromatic/red_grayScale_b.ppm");
+    assertEquals(resultImages[0], expectedimageR);
+    assertEquals(resultImages[1], expectedimageG);
+    assertEquals(resultImages[2], expectedimageB);
+  }
 
-@Test
-public void testSplitChannelDichromatic() {
-  Image testImage = new MyImage("test/img/dichromatic/woBlue.ppm");
-  Image[] resultImages = imageService.splitChannel(testImage);
-  Image expectedImage_r = new MyImage("test/img/dichromatic/woBlue_r.ppm");
-  Image expectedImage_g = new MyImage("test/img/dichromatic/woBlue_g.ppm");
-  Image expectedImage_b = new MyImage("test/img/dichromatic/woBlue_b.ppm");
-  assertEquals(resultImages[0], expectedImage_r);
-  assertEquals(resultImages[1], expectedImage_g);
-  assertEquals(resultImages[2], expectedImage_b);
-}
+  @Test
+  public void testSplitChannelDichromatic() {
+    Image testImage = new MyImage("test/img/dichromatic/woBlue.ppm");
+    Image[] resultImages = imageService.splitChannel(testImage);
+    Image expectedimageR = new MyImage("test/img/dichromatic/woBlue_r.ppm");
+    Image expectedimageG = new MyImage("test/img/dichromatic/woBlue_g.ppm");
+    Image expectedimageB = new MyImage("test/img/dichromatic/woBlue_b.ppm");
+    assertEquals(resultImages[0], expectedimageR);
+    assertEquals(resultImages[1], expectedimageG);
+    assertEquals(resultImages[2], expectedimageB);
+  }
 
   @Test
   public void testSplitChannelTrichromatic() {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
     Image[] resultImages = imageService.splitChannel(testImage);
-    Image expectedImage_r = new MyImage("test/img/trichromatic/simple_greyScale_r.ppm");
-    Image expectedImage_g = new MyImage("test/img/trichromatic/simple_greyScale_g.ppm");
-    Image expectedImage_b = new MyImage("test/img/trichromatic/simple_greyScale_b.ppm");
-    assertEquals(resultImages[0], expectedImage_r);
-    assertEquals(resultImages[1], expectedImage_g);
-    assertEquals(resultImages[2], expectedImage_b);
+    Image expectedimageR = new MyImage("test/img/trichromatic/simple_greyScale_r.ppm");
+    Image expectedimageG = new MyImage("test/img/trichromatic/simple_greyScale_g.ppm");
+    Image expectedimageB = new MyImage("test/img/trichromatic/simple_greyScale_b.ppm");
+    assertEquals(resultImages[0], expectedimageR);
+    assertEquals(resultImages[1], expectedimageG);
+    assertEquals(resultImages[2], expectedimageB);
   }
 
   @Test
@@ -412,75 +410,75 @@ public void testSplitChannelDichromatic() {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
     Image[] resultImages = imageService.splitChannel(testImage);
     resultImages = imageService.splitChannel(resultImages[0]);
-    Image expectedImage_r = new MyImage("test/img/trichromatic/simple_greyScale_r_r.ppm");
-    Image expectedImage_g = new MyImage("test/img/trichromatic/simple_greyScale_r_g.ppm");
-    Image expectedImage_b = new MyImage("test/img/trichromatic/simple_greyScale_r_b.ppm");
-    assertEquals(resultImages[0], expectedImage_r);
-    assertEquals(resultImages[1], expectedImage_g);
-    assertEquals(resultImages[2], expectedImage_b);
+    Image expectedimageR = new MyImage("test/img/trichromatic/simple_greyScale_r_r.ppm");
+    Image expectedimageG = new MyImage("test/img/trichromatic/simple_greyScale_r_g.ppm");
+    Image expectedimageB = new MyImage("test/img/trichromatic/simple_greyScale_r_b.ppm");
+    assertEquals(resultImages[0], expectedimageR);
+    assertEquals(resultImages[1], expectedimageG);
+    assertEquals(resultImages[2], expectedimageB);
   }
 
-//  Combine three greyscale image into a single color image whose R,G,B values come from the three images.
+  //  Combine three greyscale image into a single color image whose R,G,B values come from the three images.
   // (at least one of the)input is not legal greyscale image.
   // different formats
   // result color is black/white/red/green/blue/mixed color
-@Test
-public void testcombineChannelsMonochromaticTwoColor() {
-  Image image_r = new MyImage("test/img/monochromatic/red.ppm");
-  Image image_g = new MyImage("test/img/monochromatic/green.ppm");
-  Image image_b = new MyImage("test/img/monochromatic/black.ppm");
+  @Test
+  public void testcombineChannelsMonochromaticTwoColor() {
+    Image imageR = new MyImage("test/img/monochromatic/red.ppm");
+    Image imageG = new MyImage("test/img/monochromatic/green.ppm");
+    Image imageB = new MyImage("test/img/monochromatic/black.ppm");
 
-  Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED,Channel.GREEN,
-      Channel.BLUE}, new Image[]{image_r,image_g, image_b});
-  Image expectedImage = new MyImage("test/img/dichromatic/RedAndGreen.ppm");
+    Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN,
+        Channel.BLUE}, new Image[]{imageR, imageG, imageB});
+    Image expectedImage = new MyImage("test/img/dichromatic/RedAndGreen.ppm");
 
-  assertEquals(resultImages, expectedImage);
-}
+    assertEquals(resultImages, expectedImage);
+  }
 
   @Test
   public void testcombineChannelsMonochromaticThreeColor() {
-    Image image_r = new MyImage("test/img/monochromatic/red.ppm");
-    Image image_g = new MyImage("test/img/monochromatic/green.ppm");
-    Image image_b = new MyImage("test/img/monochromatic/blue.ppm");
+    Image imageR = new MyImage("test/img/monochromatic/red.ppm");
+    Image imageG = new MyImage("test/img/monochromatic/green.ppm");
+    Image imageB = new MyImage("test/img/monochromatic/blue.ppm");
 
-    Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED,Channel.GREEN,
-        Channel.BLUE}, new Image[]{image_r,image_g, image_b});
+    Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN,
+        Channel.BLUE}, new Image[]{imageR, imageG, imageB});
     Image expectedImage = new MyImage("test/img/monochromatic/white.ppm");
 
     assertEquals(resultImages, expectedImage);
   }
 
-@Test
-public void testcombineChannelsRose() {
-  Image image_r = new MyImage("test/img/split/rose_onlyRed.ppm");
-  Image image_g = new MyImage("test/img/split/rose_onlyGreen.ppm");
-  Image image_b = new MyImage("test/img/split/rose_onlyBlue.ppm");
+  @Test
+  public void testcombineChannelsRose() {
+    Image imageR = new MyImage("test/img/split/rose_onlyRed.ppm");
+    Image imageG = new MyImage("test/img/split/rose_onlyGreen.ppm");
+    Image imageB = new MyImage("test/img/split/rose_onlyBlue.ppm");
 
-  Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED,Channel.GREEN,
-      Channel.BLUE}, new Image[]{image_r,image_g, image_b});
-  Image expectedImage = new MyImage("test/img/split/rose.ppm");
+    Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN,
+        Channel.BLUE}, new Image[]{imageR, imageG, imageB});
+    Image expectedImage = new MyImage("test/img/split/rose.ppm");
 
-  assertEquals(resultImages, expectedImage);
-}
+    assertEquals(resultImages, expectedImage);
+  }
 
   @Test(expected = IllegalArgumentException.class)
   public void testcombineChannelsIllegalInputFirstChannel() {
-    Image image_r = new MyImage("test/img/monochromatic/white.ppm");
-    Image image_g = new MyImage("test/img/monochromatic/green.ppm");
-    Image image_b = new MyImage("test/img/monochromatic/blue.ppm");
+    Image imageR = new MyImage("test/img/monochromatic/white.ppm");
+    Image imageG = new MyImage("test/img/monochromatic/green.ppm");
+    Image imageB = new MyImage("test/img/monochromatic/blue.ppm");
 
-    Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED,Channel.GREEN,
-        Channel.BLUE}, new Image[]{image_r,image_g, image_b});
+    Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN,
+        Channel.BLUE}, new Image[]{imageR, imageG, imageB});
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testcombineChannelsIllegalInputSecondChannel() {
-    Image image_r = new MyImage("test/img/monochromatic/red.ppm");
-    Image image_g = new MyImage("test/img/monochromatic/white.ppm");
-    Image image_b = new MyImage("test/img/monochromatic/blue.ppm");
+    Image imageR = new MyImage("test/img/monochromatic/red.ppm");
+    Image imageG = new MyImage("test/img/monochromatic/white.ppm");
+    Image imageB = new MyImage("test/img/monochromatic/blue.ppm");
 
-    Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED,Channel.GREEN,
-        Channel.BLUE}, new Image[]{image_r,image_g, image_b});
+    Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN,
+        Channel.BLUE}, new Image[]{imageR, imageG, imageB});
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -488,47 +486,99 @@ public void testcombineChannelsRose() {
     Image resultImages = imageService.combineChannels(new Channel[]{}, new Image[]{});
   }
 
-//  Blur or sharpen an image as defined above.
+  //  Blur or sharpen an image as defined above.
   // different formats
   // of monochromatic, dichromatic and trichromatic images
   // repeatedly sharpen
-@Test
-public void testBlurSimple() {
-  Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-  Image resultImages = imageService.blur(testImage);
-  System.out.println(resultImages);
-}
+  @Test
+  public void testBlurSimple() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImages = imageService.blur(testImage);
+    Image expectedImage = new MyImage("test/img/trichromatic/simple_blur.ppm");
+    assertEquals(resultImages, expectedImage);
+  }
 
   @Test
   public void testBlurOnce() {
     Image testImage = new MyImage("test/img/cupcake.png");
     Image resultImages = imageService.blur(testImage);
     Image expectedImage = new MyImage("test/img/cupcake_blurOnce.png");
+
     assertEquals(resultImages, expectedImage);
-    System.out.println(resultImages);
   }
 
   @Test
-  public void testSharpenOnce() {
+  public void testBlurTwice() {
     Image testImage = new MyImage("test/img/cupcake.png");
     Image resultImages = imageService.blur(testImage);
-    Image expectedImage = new MyImage("test/img/cupcake_sharpenOnce.png");
+    resultImages = imageService.blur(resultImages);
+    Image expectedImage = new MyImage("test/img/cupcake_blurTwice.png");
+
     assertEquals(resultImages, expectedImage);
-    System.out.println(resultImages);
   }
 
   @Test
   public void testSharpenSimple() {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
     Image resultImages = imageService.sharpen(testImage);
-    System.out.println(resultImages);
+    Image expectedImage = new MyImage("test/img/trichromatic/simple_sharpen.ppm");
+    assertEquals(resultImages, expectedImage);
   }
 
-//  Convert an image into sepia as defined above.
+  @Test
+  public void testSharpenOnce() {
+    Image testImage = new MyImage("test/img/cupcake.png");
+    Image resultImages = imageService.sharpen(testImage);
+    Image expectedImage = new MyImage("test/img/cupcake_sharpenOnce.png");
+    assertEquals(resultImages, expectedImage);
+  }
+
+  @Test
+  public void testSharpenTwice() {
+    Image testImage = new MyImage("test/img/cupcake.png");
+    Image resultImages = imageService.sharpen(testImage);
+    resultImages = imageService.sharpen(resultImages);
+    Image expectedImage = new MyImage("test/img/cupcake_sharpenTwice.png");
+    assertEquals(resultImages, expectedImage);
+  }
+
+  @Test
+  public void testBlurThenSharp() {
+    Image testImage = new MyImage("test/img/cupcake.png");
+    Image resultImages = imageService.blur(testImage);
+    resultImages = imageService.sharpen(resultImages);
+    Image expectedImage = new MyImage("test/img/cupcake_blurThenSharp.png");
+    assertEquals(resultImages, expectedImage);
+  }
+
+  //  Convert an image into sepia as defined above.
   // different formats
   // of monochromatic, dichromatic and trichromatic images
   // repeatedly made sepia
+  @Test
+  public void testGetSepiaSimple() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImages = imageService.getSepia(testImage);
+    Image expectedImage = new MyImage("test/img/trichromatic/simple_sepia.ppm");
+    assertEquals(resultImages, expectedImage);
+  }
 
+  @Test
+  public void testGetSepiaCity() {
+    Image testImage = new MyImage("test/img/city_small.png");
+    Image resultImages = imageService.getSepia(testImage);
+    Image expectedImage = new MyImage("test/img/city_small_sepia.png");
+    assertEquals(resultImages, expectedImage);
+  }
+
+  @Test
+  public void testGetSepiaCityTwice() {
+    Image testImage = new MyImage("test/img/city_small.png");
+    Image resultImages = imageService.getSepia(testImage);
+    resultImages = imageService.getSepia(resultImages);
+    Image expectedImage = new MyImage("test/img/city_small_sepia_sepia.png");
+    assertEquals(resultImages, expectedImage);
+  }
 
 // A combination of the previous methods
 
@@ -548,11 +598,11 @@ public void testBlurSimple() {
   //with comment, multiple lines
   //perform same tests as above for every function provided here
   // Load and run the script commands in the specified file.
-        //- ill path
-        //- ill command format
-        //- no comment, single line on command line
-        //- with comment, single line
-        //- no comment, multiple lines
-        //- with comment, multiple lines
+  //- ill path
+  //- ill command format
+  //- no comment, single line on command line
+  //- with comment, single line
+  //- no comment, multiple lines
+  //- with comment, multiple lines
 
 }
