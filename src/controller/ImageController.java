@@ -193,6 +193,7 @@ public class ImageController {
           Image imageBlur = loadedImages.get(imageAliasBlur);
           if (imageBlur == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image blurImage = imageService.blur(imageBlur);
           String imageAliasBlurred = tokenizer.nextToken();
@@ -206,6 +207,7 @@ public class ImageController {
           Image imageValueComponent = loadedImages.get(imageAliasValue);
           if (imageValueComponent == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image valueImage = imageService.getValue(imageValueComponent);
           String imageAliasGetValue = tokenizer.nextToken();
@@ -219,6 +221,7 @@ public class ImageController {
           Image imageIntensityComponent = loadedImages.get(imageAliasIntensity);
           if (imageIntensityComponent == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image intensityImage = imageService.getIntensity(imageIntensityComponent);
           String imageAliasGetIntensity = tokenizer.nextToken();
@@ -232,6 +235,7 @@ public class ImageController {
           Image imageLumaComponent = loadedImages.get(imageAliasLuma);
           if (imageLumaComponent == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image lumaImage = imageService.getLuma(imageLumaComponent);
           String imageAliasGetLuma = tokenizer.nextToken();
@@ -245,6 +249,7 @@ public class ImageController {
           Image imageFlipVertical = loadedImages.get(imageAliasFlipVertical);
           if (imageFlipVertical == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image vertialImage = imageService.flip(imageFlipVertical, Axis.X);
           String imageAliasVertical = tokenizer.nextToken();
@@ -258,6 +263,7 @@ public class ImageController {
           Image imageFlipHorizontal = loadedImages.get(imageAliasFlipHorizontal);
           if (imageFlipHorizontal == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image hoizontalImage = imageService.flip(imageFlipHorizontal, Axis.Y);
           String imageAliasHorizontal = tokenizer.nextToken();
@@ -269,13 +275,14 @@ public class ImageController {
         case "brighten":
           float amount = Float.parseFloat(tokenizer.nextToken());
           String imageAliasBrighten = tokenizer.nextToken();
-          Image imageFlipBrighten = loadedImages.get(imageAliasBrighten);
-          if (imageFlipBrighten == null) {
+          Image imageBrighten = loadedImages.get(imageAliasBrighten);
+          if (imageBrighten == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           // Increase brightness.
           if (amount > 0) {
-            Image brightenImage = imageService.brighten(imageFlipBrighten, amount);
+            Image brightenImage = imageService.brighten(imageBrighten, amount);
             String imageAliasIncrease = tokenizer.nextToken();
             // Store the image in the map.
             loadedImages.put(imageAliasIncrease, brightenImage);
@@ -283,7 +290,7 @@ public class ImageController {
           }
           // Decrease brightness.
           if (amount < 0) {
-            Image darkenImage = imageService.darken(imageFlipBrighten, amount);
+            Image darkenImage = imageService.darken(imageBrighten, amount);
             String imageAliasDecrease = tokenizer.nextToken();
             // Store the image in the map.
             loadedImages.put(imageAliasDecrease, darkenImage);
@@ -296,6 +303,7 @@ public class ImageController {
           Image imageRedComponent = loadedImages.get(imageAliasRedComponent);
           if (imageRedComponent == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image redComponentImage = imageService.splitComponent(imageRedComponent, Channel.RED);
           String imageAliasGetRed = tokenizer.nextToken();
@@ -309,6 +317,7 @@ public class ImageController {
           Image imageGreenComponent = loadedImages.get(imageAliasGreenComponent);
           if (imageGreenComponent == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image greenComponentImage = imageService.splitComponent(imageGreenComponent, Channel.GREEN);
           String imageAliasGetGreen = tokenizer.nextToken();
@@ -322,6 +331,7 @@ public class ImageController {
           Image imageBlueComponent = loadedImages.get(imageAliasBlueComponent);
           if (imageBlueComponent == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image blueComponentImage = imageService.splitComponent(imageBlueComponent, Channel.BLUE);
           String imageAliasGetBlue = tokenizer.nextToken();
@@ -338,6 +348,7 @@ public class ImageController {
           Image imageSplit = loadedImages.get(imageAliasSplit);
           if (imageSplit == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image[] result = imageService.splitChannel(imageSplit);
           // Store the image in the map.
@@ -376,6 +387,7 @@ public class ImageController {
           Image imageSharpen = loadedImages.get(imageAliasSharpen);
           if (imageSharpen == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image sharpenImage = imageService.sharpen(imageSharpen);
           String imageAliasSharpened = tokenizer.nextToken();
@@ -389,6 +401,7 @@ public class ImageController {
           Image imageSepia = loadedImages.get(imageAliasSepia);
           if (imageSepia == null) {
             imageView.displayMessage("No image loaded");
+            break;
           }
           Image getSepiaImage = imageService.getSepia(imageSepia);
           String imageAliasGetSepia = tokenizer.nextToken();

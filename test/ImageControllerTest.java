@@ -1,3 +1,4 @@
+import org.junit.Before;
 import org.junit.Test;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -7,6 +8,7 @@ import java.io.StringWriter;
 import controller.ImageController;
 import model.Image;
 import model.MyImage;
+import service.ImageService;
 import view.ImageView;
 
 import static org.junit.Assert.assertEquals;
@@ -24,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 public class ImageControllerTest {
 
   /**
-   * Test the blur command.
+   * Test the blur command when there is no image loaded.
    *
    * @throws IOException if there's an error related to I/O operations.
    */
@@ -41,15 +43,48 @@ public class ImageControllerTest {
     ImageController blurController = new ImageController(mockService, blurImageView);
     blurController.executeCommand(blurCommand);
 
-    Image executeBlur = blurController.loadedImages.get("manhattan-small-blur");
-    Image expectBlur = new MyImage("test/img/manhattan-small-blur.png");
-    assertEquals(expectBlur, executeBlur);
-
+    String output = blurWriter.toString();
+    assertTrue(output.contains("No image loaded"));
 
   }
 
   /**
-   * Test the value-component command.
+   * Test the blur command when there exist a image.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testLoadAndBlurCommand() throws IOException {
+//    String inCommand = "load test/img/manhattan-small.png manhattan-small";
+//    StringReader stringReader = new StringReader(inCommand);
+//    StringWriter stringWriter = new StringWriter();
+//    PrintWriter printWriter = new PrintWriter(stringWriter);
+//
+//    ImageView imageView = new ImageView(stringReader,printWriter);
+//    ImageService imageService = new ImageService();
+//    ImageController loadController = new ImageController(imageService, imageView);
+//    loadController.executeCommand(inCommand);
+//    String output = stringWriter.toString();
+//    assertTrue(output.contains("Loading new image: manhattan-small"));
+
+    String blurCommand = "load test/img/manhattan-small.png manhattan-small\n " +
+          "blur manhattan-small manhattan-small-blur\n exit";
+    StringReader blurReader = new StringReader(blurCommand);
+    StringWriter blurWriter = new StringWriter();
+    PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
+
+    ImageView blurImageView = new ImageView(blurReader, blurPrintWriter);
+    MockImageService mockService = new MockImageService();
+    ImageController blurController = new ImageController(mockService, blurImageView);
+    blurController.start();
+
+    Image executeBlur = blurController.loadedImages.get("manhattan-small-blur");
+    Image expectBlur = new MyImage("test/img/manhattan-small-blur.png");
+    assertEquals(expectBlur, executeBlur);
+  }
+
+  /**
+   * Test the value-component command when there is no image loaded.
    *
    * @throws IOException if there's an error related to I/O operations.
    */
@@ -64,6 +99,26 @@ public class ImageControllerTest {
     MockImageService mockImageService = new MockImageService();
     ImageController valueController = new ImageController(mockImageService, valueImageView);
     valueController.executeCommand(valueCommand);
+    String output = valueWriter.toString();
+    assertTrue(output.contains("No image loaded"));
+
+  }
+
+  @Test
+  public void testLoadAndValueComponent() throws IOException {
+
+    String valueCommand = "load test/img/Koala.ppm koala\n " +
+          "value-component koala koala-value-greyscale\n exit";
+    StringReader valueReader = new StringReader(valueCommand);
+    StringWriter valueWriter = new StringWriter();
+    PrintWriter valuePrintWriter = new PrintWriter(valueWriter);
+    ImageView valueImageView = new ImageView(valueReader, valuePrintWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController valueController = new ImageController(mockImageService, valueImageView);
+    //valueController.executeCommand(valueCommand);
+    valueController.start();
+    //String output = valueWriter.toString();
+    //assertTrue(output.contains("No image loaded"));
 
     Image executeValue =valueController.loadedImages.get("koala-value-greyscale");
     Image expectValue = new MyImage("test/img/koala-value-greyscale.png");
