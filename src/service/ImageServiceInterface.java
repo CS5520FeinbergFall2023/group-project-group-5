@@ -4,6 +4,9 @@ import model.Axis;
 import model.Channel;
 import model.Image;
 
+/**
+ * The interface that conclude image operations.
+ */
 public interface ImageServiceInterface {
   /**
    * Get one certain channel of the image (result in one colored image).
