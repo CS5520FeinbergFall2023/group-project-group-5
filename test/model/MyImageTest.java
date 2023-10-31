@@ -266,6 +266,15 @@ public class MyImageTest extends ImageTest {
     assertTrue(super.testImgArrayAddition(testImage,array,expected));
   }
 
+  //add/minus multiple times so that part of img is brightened/dimmed to max/min while others are
+  // not yet
+  @Test
+  public void testImgArrayAdditionMultipleTimes()
+  {
+
+    System.out.println(triImage);
+  }
+
   @Test(expected = IllegalArgumentException.class)
   public void testFilteringKernelRowEven() {
     testImage = new MyImage(2, 2);

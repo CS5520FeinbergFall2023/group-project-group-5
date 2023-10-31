@@ -583,6 +583,8 @@ public class ImageServiceTest {
 // A combination of the previous methods
 
 //  Save an image to an ASCII PPM, JPG or PNG file (see below).
+  //save with absolute path
+  //save with relative
   //src image is create directly from this program
   //src image read from local and directly saved without modification
   //src image read from local and saved with modification
