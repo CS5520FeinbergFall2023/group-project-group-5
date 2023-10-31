@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class ServiceTest {
+public class ImageServiceTest {
   private ImageService imageService;
 
   @Before
@@ -498,6 +498,24 @@ public void testBlurSimple() {
   Image resultImages = imageService.blur(testImage);
   System.out.println(resultImages);
 }
+
+  @Test
+  public void testBlurOnce() {
+    Image testImage = new MyImage("test/img/cupcake.png");
+    Image resultImages = imageService.blur(testImage);
+    Image expectedImage = new MyImage("test/img/cupcake_blurOnce.png");
+    assertEquals(resultImages, expectedImage);
+    System.out.println(resultImages);
+  }
+
+  @Test
+  public void testSharpenOnce() {
+    Image testImage = new MyImage("test/img/cupcake.png");
+    Image resultImages = imageService.blur(testImage);
+    Image expectedImage = new MyImage("test/img/cupcake_sharpenOnce.png");
+    assertEquals(resultImages, expectedImage);
+    System.out.println(resultImages);
+  }
 
   @Test
   public void testSharpenSimple() {
