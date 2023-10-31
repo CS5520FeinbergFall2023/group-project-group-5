@@ -400,7 +400,7 @@ public class ImageController {
           System.out.println("Please enter valid command, " + operation + "is invalid.");
       }
       imageView.displayMessage("Please enter command:");
-    } catch (RuntimeException e) {
+    } catch (RuntimeException | IOException e) {
       errorMessages.add("An error occurred while processing the command: " + e.getMessage());
     }
   }
