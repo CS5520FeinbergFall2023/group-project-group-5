@@ -144,6 +144,7 @@ public abstract class Image {
    * Perform array addition an image with given matrix.
    *
    * @param matrix the given matrix (1x3)
+   * @return the added result
    */
   public Image imgArrayAddition(float[] matrix) {
     return mapElement(pixel -> pixel.addition(matrix));

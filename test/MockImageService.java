@@ -108,20 +108,6 @@ public class MockImageService extends ImageService {
   }
 
   /**
-   * Darken an image with given delta.
-   *
-   * @param image the image to operate on.
-   * @param delta the amount to darken.
-   * @return the result image.
-   */
-  @Override
-  public Image darken(Image image, float delta) {
-    System.out.println("Receive the image need to be darkened, now start to darken.");
-    Image myImage = new MyImage("test/img/manhattan-small-darker-by-50.png");
-    return myImage;
-  }
-
-  /**
    * Result in channelCount greyscale images.
    *
    * @param image the image to operate on.

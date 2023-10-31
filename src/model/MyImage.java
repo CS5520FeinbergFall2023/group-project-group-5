@@ -332,6 +332,18 @@ public class MyImage extends Image {
   }
 
   /**
+   * Perform array addition an image with given matrix.
+   *
+   * @param matrix the given matrix (1x3)
+   * @return the added result
+   */
+  @Override
+  public MyImage imgArrayAddition(float[] matrix) {
+    return (MyImage) super.imgArrayAddition(matrix);
+  }
+
+
+  /**
    * Perform addition with another image.
    *
    * @param that the other image to be added

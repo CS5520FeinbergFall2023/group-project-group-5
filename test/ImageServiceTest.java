@@ -283,11 +283,6 @@ public class ImageServiceTest {
   //pixel that's already the darkest
   //pixel that's already the lightest
   //brighten or darken an image for multiple times & in combinations
-  @Test(expected = IllegalArgumentException.class)
-  public void testBrightenInvalidDelta() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-    Image resultImage = imageService.brighten(testImage, -2);
-  }
 
   @Test
   public void testBrightenOnce() {
@@ -314,16 +309,12 @@ public class ImageServiceTest {
     assertEquals(resultImage, expectedImage);
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testDarkenInvalidDelta() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-    Image resultImage = imageService.darken(testImage, 2);
-  }
+
 
   @Test
   public void testDarkenOnce() {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-    Image resultImage = imageService.darken(testImage, -2);
+    Image resultImage = imageService.brighten(testImage, -2);
     Image expectedImage = new MyImage("test/img/trichromatic/simple-2.ppm");
     assertEquals(resultImage, expectedImage);
   }
@@ -331,8 +322,8 @@ public class ImageServiceTest {
   @Test
   public void testDarkenTwice() {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-    Image resultImage = imageService.darken(testImage, -2);
-    resultImage = imageService.darken(resultImage, -2);
+    Image resultImage = imageService.brighten(testImage, -2);
+    resultImage = imageService.brighten(resultImage, -2);
     Image expectedImage = new MyImage("test/img/trichromatic/simple-4.ppm");
     assertEquals(resultImage, expectedImage);
   }
@@ -340,7 +331,7 @@ public class ImageServiceTest {
   @Test
   public void testDarkenBlack() {
     Image testImage = new MyImage("test/img/monochromatic/black.ppm");
-    Image resultImage = imageService.darken(testImage, -2);
+    Image resultImage = imageService.brighten(testImage, -2);
     Image expectedImage = new MyImage("test/img/monochromatic/black.ppm");
     assertEquals(resultImage, expectedImage);
   }
@@ -348,7 +339,7 @@ public class ImageServiceTest {
   @Test
   public void testDarkenThenBrighten() {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-    Image resultImage = imageService.darken(testImage, -2);
+    Image resultImage = imageService.brighten(testImage, -2);
     resultImage = imageService.brighten(resultImage, 2);
     Image expectedImage = new MyImage("test/img/trichromatic/simple.ppm");
     assertEquals(resultImage, expectedImage);
@@ -359,7 +350,7 @@ public class ImageServiceTest {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
     Image resultImage = imageService.brighten(testImage, 2);
     resultImage = imageService.brighten(resultImage, 2);
-    resultImage = imageService.darken(resultImage, -2);
+    resultImage = imageService.brighten(resultImage, -2);
     Image expectedImage = new MyImage("test/img/trichromatic/simple+2.ppm");
     assertEquals(resultImage, expectedImage);
   }
@@ -423,7 +414,7 @@ public class ImageServiceTest {
   // different formats
   // result color is black/white/red/green/blue/mixed color
   @Test
-  public void testcombineChannelsMonochromaticTwoColor() {
+  public void testCombineChannelsMonochromaticTwoColor() {
     Image imageR = new MyImage("test/img/monochromatic/red.ppm");
     Image imageG = new MyImage("test/img/monochromatic/green.ppm");
     Image imageB = new MyImage("test/img/monochromatic/black.ppm");
@@ -436,7 +427,7 @@ public class ImageServiceTest {
   }
 
   @Test
-  public void testcombineChannelsMonochromaticThreeColor() {
+  public void testCombineChannelsMonochromaticThreeColor() {
     Image imageR = new MyImage("test/img/monochromatic/red.ppm");
     Image imageG = new MyImage("test/img/monochromatic/green.ppm");
     Image imageB = new MyImage("test/img/monochromatic/blue.ppm");
@@ -449,7 +440,7 @@ public class ImageServiceTest {
   }
 
   @Test
-  public void testcombineChannelsRose() {
+  public void testCombineChannelsRose() {
     Image imageR = new MyImage("test/img/split/rose_onlyRed.ppm");
     Image imageG = new MyImage("test/img/split/rose_onlyGreen.ppm");
     Image imageB = new MyImage("test/img/split/rose_onlyBlue.ppm");
@@ -462,7 +453,7 @@ public class ImageServiceTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testcombineChannelsIllegalInputFirstChannel() {
+  public void testCombineChannelsIllegalInputFirstChannel() {
     Image imageR = new MyImage("test/img/monochromatic/white.ppm");
     Image imageG = new MyImage("test/img/monochromatic/green.ppm");
     Image imageB = new MyImage("test/img/monochromatic/blue.ppm");
@@ -472,7 +463,7 @@ public class ImageServiceTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testcombineChannelsIllegalInputSecondChannel() {
+  public void testCombineChannelsIllegalInputSecondChannel() {
     Image imageR = new MyImage("test/img/monochromatic/red.ppm");
     Image imageG = new MyImage("test/img/monochromatic/white.ppm");
     Image imageB = new MyImage("test/img/monochromatic/blue.ppm");
@@ -482,7 +473,7 @@ public class ImageServiceTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testcombineChannelsIllegalInputNoChannel() {
+  public void testCombineChannelsIllegalInputNoChannel() {
     Image resultImages = imageService.combineChannels(new Channel[]{}, new Image[]{});
   }
 
@@ -583,26 +574,13 @@ public class ImageServiceTest {
 // A combination of the previous methods
 
 //  Save an image to an ASCII PPM, JPG or PNG file (see below).
+  //save with absolute path
+  //save with relative
   //src image is create directly from this program
   //src image read from local and directly saved without modification
   //src image read from local and saved with modification
   //src format same as saved format
   //src format different as saved format
   //different color and size
-
-//  Allow a user to interact with your program to use these operations, using text-based scripting (see below).
-  // problematic input
-  // no comment, single line on command line
-  //with comment, single line
-  //no comment, multiple lines
-  //with comment, multiple lines
-  //perform same tests as above for every function provided here
-  // Load and run the script commands in the specified file.
-  //- ill path
-  //- ill command format
-  //- no comment, single line on command line
-  //- with comment, single line
-  //- no comment, multiple lines
-  //- with comment, multiple lines
 
 }

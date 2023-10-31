@@ -272,31 +272,7 @@ public class ImageController {
           imageView.displayMessage("Flip the image horizontally");
           break;
         // Change the images' brightness command.
-        case "brighten":
-          float amount = Float.parseFloat(tokenizer.nextToken());
-          String imageAliasBrighten = tokenizer.nextToken();
-          Image imageBrighten = loadedImages.get(imageAliasBrighten);
-          if (imageBrighten == null) {
-            imageView.displayMessage("No image loaded");
-            break;
-          }
-          // Increase brightness.
-          if (amount > 0) {
-            Image brightenImage = imageService.brighten(imageBrighten, amount);
-            String imageAliasIncrease = tokenizer.nextToken();
-            // Store the image in the map.
-            loadedImages.put(imageAliasIncrease, brightenImage);
-            imageView.displayMessage("Increase the brightness of the image");
-          }
-          // Decrease brightness.
-          if (amount < 0) {
-            Image darkenImage = imageService.darken(imageBrighten, amount);
-            String imageAliasDecrease = tokenizer.nextToken();
-            // Store the image in the map.
-            loadedImages.put(imageAliasDecrease, darkenImage);
-            imageView.displayMessage("Decrease the brightness of the image");
-          }
-          break;
+
         // Red component command.
         case "red-component":
           String imageAliasRedComponent = tokenizer.nextToken();

@@ -59,22 +59,14 @@ public interface ImageServiceInterface {
   Image flip(Image image, Axis axis);
 
   /**
-   * Brighten an image with given delta.
+   * Brighten/darken an image with given delta. If delta is negative, then it's darken; if delta
+   * is positive, it's brighten.
    *
    * @param image the image to operate on
-   * @param delta the amount to brighten
+   * @param delta the amount to brighten/darken
    * @return the result image
    */
   Image brighten(Image image, float delta);
-
-  /**
-   * Darken an image with given delta.
-   *
-   * @param image the image to operate on
-   * @param delta the amount to darken
-   * @return the result image
-   */
-  Image darken(Image image, float delta);
 
   /**
    * Result in channelCount greyscale images.

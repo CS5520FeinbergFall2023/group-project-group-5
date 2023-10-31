@@ -99,34 +99,21 @@ public class ImageService implements ImageServiceInterface {
   }
 
   /**
-   * Brighten an image with given delta.
+   * Brighten/darken an image with given delta. If delta is negative, then it's darken; if delta
+   * is positive, it's brighten.
    *
    * @param image the image to operate on
-   * @param delta the amount to brighten
+   * @param delta the amount to brighten/darken
    * @return the result image
    */
   public Image brighten(Image image, float delta) {
-    if (delta < 0) {
-      throw new IllegalArgumentException("delta should not be negative for brightening");
-    }
+//    if (delta < 0) {
+//      throw new IllegalArgumentException("delta should not be negative for brightening");
+//    }
     float[] matrix = new float[]{delta, delta, delta};
     return image.imgArrayAddition(matrix);
   }
 
-  /**
-   * Darken an image with given delta.
-   *
-   * @param image the image to operate on
-   * @param delta the amount to darken
-   * @return the result image
-   */
-  public Image darken(Image image, float delta) {
-    if (delta > 0) {
-      throw new IllegalArgumentException("delta should not be positive for darkening");
-    }
-    float[] matrix = new float[]{delta, delta, delta};
-    return image.imgArrayAddition(matrix);
-  }
 
   /**
    * Greyscale an image.
