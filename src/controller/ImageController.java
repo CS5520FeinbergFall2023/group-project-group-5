@@ -273,20 +273,16 @@ public class ImageController {
           if (imageFlipBrighten == null) {
             imageView.displayMessage("No image loaded");
           }
+          Image brightenImage = imageService.brighten(imageFlipBrighten, amount);
+          String imageAliasIncrease = tokenizer.nextToken();
+          // Store the image in the map.
+          loadedImages.put(imageAliasIncrease, brightenImage);
           // Increase brightness.
           if (amount > 0) {
-            Image brightenImage = imageService.brighten(imageFlipBrighten, amount);
-            String imageAliasIncrease = tokenizer.nextToken();
-            // Store the image in the map.
-            loadedImages.put(imageAliasIncrease, brightenImage);
             imageView.displayMessage("Increase the brightness of the image");
           }
           // Decrease brightness.
           if (amount < 0) {
-            Image darkenImage = imageService.darken(imageFlipBrighten, amount);
-            String imageAliasDecrease = tokenizer.nextToken();
-            // Store the image in the map.
-            loadedImages.put(imageAliasDecrease, darkenImage);
             imageView.displayMessage("Decrease the brightness of the image");
           }
           break;
