@@ -350,7 +350,7 @@ public class ImageServiceTest {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
     Image resultImage = imageService.brighten(testImage, 2);
     resultImage = imageService.brighten(resultImage, 2);
-    resultImage = imageService.brightengit(resultImage, -2);
+    resultImage = imageService.brighten(resultImage, -2);
     Image expectedImage = new MyImage("test/img/trichromatic/simple+2.ppm");
     assertEquals(resultImage, expectedImage);
   }
