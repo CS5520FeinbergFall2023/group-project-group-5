@@ -50,7 +50,6 @@ public class RGBPixel extends Pixel {
     if (!containsChannel(channel)) {
       throw new IllegalArgumentException("The pixel does not contain the channel");
     }
-
     Map<Channel, Integer> channels = new EnumMap<>(Channel.class);
     for (Channel key : this.channels.keySet()) {
       if (key == channel) {
