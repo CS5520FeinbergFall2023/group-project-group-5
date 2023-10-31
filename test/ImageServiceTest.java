@@ -592,19 +592,4 @@ public class ImageServiceTest {
   //src format different as saved format
   //different color and size
 
-//  Allow a user to interact with your program to use these operations, using text-based scripting (see below).
-  // problematic input
-  // no comment, single line on command line
-  //with comment, single line
-  //no comment, multiple lines
-  //with comment, multiple lines
-  //perform same tests as above for every function provided here
-  // Load and run the script commands in the specified file.
-  //- ill path
-  //- ill command format
-  //- no comment, single line on command line
-  //- with comment, single line
-  //- no comment, multiple lines
-  //- with comment, multiple lines
-
 }
