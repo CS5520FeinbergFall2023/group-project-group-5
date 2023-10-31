@@ -31,7 +31,7 @@ public class ImageControllerTest {
   @Test
   public void testNullBlurCommand() throws IOException {
 
-    String blurCommand = "blur manhattan-small manhattan-small-blur\n exit";
+    String blurCommand = "blur cupcake cupcake_blurOnce\n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
     PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
@@ -53,8 +53,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testBlurCommand() throws IOException {
-    String blurCommand = "load test/img/manhattan-small.png manhattan-small\n " +
-          "blur manhattan-small manhattan-small-blur\n exit";
+    String blurCommand = "load test/img/cupcake.png cupcake\n " +
+          "blur cupcake cupcake_blurOnce\n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
     PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
@@ -66,8 +66,8 @@ public class ImageControllerTest {
     String output = blurWriter.toString();
     assertTrue(output.contains("Image blurred"));
 
-    Image executeBlur = blurController.loadedImages.get("manhattan-small-blur");
-    Image expectBlur = new MyImage("test/img/manhattan-small-blur.png");
+    Image executeBlur = blurController.loadedImages.get("cupcake_blurOnce");
+    Image expectBlur = new MyImage("test/img/cupcake_blurOnce.png");
     assertEquals(expectBlur, executeBlur);
   }
 
@@ -79,7 +79,7 @@ public class ImageControllerTest {
   @Test
   public void testNullValueComponent() throws IOException {
 
-    String valueCommand = "value-component Koala koala-value-greyscale\n exit";
+    String valueCommand = "value-component black black_value\n exit";
     StringReader valueReader = new StringReader(valueCommand);
     StringWriter valueWriter = new StringWriter();
     PrintWriter valuePrintWriter = new PrintWriter(valueWriter);
@@ -99,8 +99,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testValueComponent() throws IOException {
-    String valueCommand = "load test/img/Koala.ppm koala\n " +
-          "value-component koala koala-value-greyscale\n exit";
+    String valueCommand = "load test/img/monochromatic/black.ppm black\n " +
+          "value-component black black_value\n exit";
     StringReader valueReader = new StringReader(valueCommand);
     StringWriter valueWriter = new StringWriter();
     PrintWriter valuePrintWriter = new PrintWriter(valueWriter);
@@ -111,8 +111,8 @@ public class ImageControllerTest {
     String output = valueWriter.toString();
     assertTrue(output.contains("Get the value-component"));
 
-    Image executeValue =valueController.loadedImages.get("koala-value-greyscale");
-    Image expectValue = new MyImage("test/img/koala-value-greyscale.png");
+    Image executeValue =valueController.loadedImages.get("black_value");
+    Image expectValue = new MyImage("test/img/monochromatic/black_value.ppm");
 
     assertEquals(expectValue, executeValue);
   }
@@ -124,8 +124,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testNullIntensityComponent() throws IOException {
-    String intensityCommand = "intensity-component manhattan-small " +
-          "manhattan-small-intensity-greyscale\n exit";
+    String intensityCommand = "intensity-component black black_intensity\n exit";
     StringReader intensityReader = new StringReader(intensityCommand);
     StringWriter intensityWriter = new StringWriter();
     PrintWriter intensityPrintWriter = new PrintWriter(intensityWriter);
@@ -145,8 +144,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testIntensityComponent() throws IOException {
-    String intensityCommand = "load test/img/manhattan-small.png manhattan-small\n " +
-          "intensity-component manhattan-small manhattan-small-intensity-greyscale\n exit";
+    String intensityCommand = "load test/img/monochromatic/black.ppm black\n " +
+          "intensity-component black black_intensity\n exit";
     StringReader intensityReader = new StringReader(intensityCommand);
     StringWriter intensityWriter = new StringWriter();
     PrintWriter intensityPrintWriter = new PrintWriter(intensityWriter);
@@ -160,8 +159,8 @@ public class ImageControllerTest {
     assertTrue(output.contains("Get the intensity-component"));
 
     Image executeIntensity =intensityController.loadedImages.get
-          ("manhattan-small-intensity-greyscale");
-    Image expectIntensity = new MyImage("test/img/manhattan-small-intensity-greyscale.png");
+          ("black_intensity");
+    Image expectIntensity = new MyImage("test/img/monochromatic/black_intensity.ppm");
 
     assertEquals(expectIntensity, executeIntensity);
   }
@@ -173,7 +172,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testNullLumaComponent() throws IOException {
-    String lumaCommand = "luma-component manhattan-small manhattan-small-luma-greyscale\n exit";
+    String lumaCommand = "luma-component black black_luma\n exit";
     StringReader lumaReader = new StringReader(lumaCommand);
     StringWriter lumaWriter = new StringWriter();
     PrintWriter lumaPrintWriter = new PrintWriter(lumaWriter);
@@ -192,8 +191,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testLumaComponent() throws IOException {
-    String lumaCommand = "load test/img/manhattan-small.png manhattan-small\n " +
-          "luma-component manhattan-small manhattan-small-luma-greyscale\n exit";
+    String lumaCommand = "load test/img/monochromatic/black.ppm black\n " +
+          "luma-component black black_luma\n exit";
     StringReader lumaReader = new StringReader(lumaCommand);
     StringWriter lumaWriter = new StringWriter();
     PrintWriter lumaPrintWriter = new PrintWriter(lumaWriter);
@@ -205,8 +204,8 @@ public class ImageControllerTest {
     String output = lumaWriter.toString();
     assertTrue(output.contains("Get the luma-component"));
 
-    Image executeLuma = lumaController.loadedImages.get("manhattan-small-luma-greyscale");
-    Image expectLuma = new MyImage("test/img/manhattan-small-luma-greyscale.png");
+    Image executeLuma = lumaController.loadedImages.get("black_luma");
+    Image expectLuma = new MyImage("test/img/monochromatic/black_luma.ppm");
 
     assertEquals(expectLuma, executeLuma);
   }
@@ -218,8 +217,7 @@ public class ImageControllerTest {
   @Test
   public void testNullRGBCombine() throws IOException {
 
-    String combineCommand = "rgb-combine manhattan-small manhattan-small-red " +
-          "manhattan-small-green manhattan-small-blue\n exit";
+    String combineCommand = "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader combineReader = new StringReader(combineCommand);
     StringWriter combineWriter = new StringWriter();
     PrintWriter combinePrintWriter = new PrintWriter(combineWriter);
@@ -240,11 +238,10 @@ public class ImageControllerTest {
   @Test
   public void testRGBCombine() throws IOException {
 
-    String combineCommand = "load test/img/manhattan-small-red.png manhattan-small-red\n " +
-          "load test/img/manhattan-small-green.png manhattan-small-green\n" +
-          "load test/img/manhattan-small-blue.png manhattan-small-blue\n" +
-          "rgb-combine manhattan-small manhattan-small-red manhattan-small-green " +
-          "manhattan-small-blue\n exit";
+    String combineCommand = "load test/img/split/rose_onlyRed.jpg rose_onlyRed\n " +
+          "load test/img/split/rose_onlyGreen.jpg rose_onlyGreen\n" +
+          "load test/img/split/rose_onlyBlue.jpg rose_onlyBlue\n" +
+          "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader combineReader = new StringReader(combineCommand);
     StringWriter combineWriter = new StringWriter();
     PrintWriter combinePrintWriter = new PrintWriter(combineWriter);
@@ -256,8 +253,8 @@ public class ImageControllerTest {
     String output = combineWriter.toString();
     assertTrue(output.contains("Images combined successfully"));
 
-    Image executeCombine = combineController.loadedImages.get("manhattan-small");
-    Image expectCombine = new MyImage("test/img/manhattan-small.png");
+    Image executeCombine = combineController.loadedImages.get("rose");
+    Image expectCombine = new MyImage("test/img/split/rose.jpg");
 
     assertEquals(expectCombine, executeCombine);
 
@@ -271,8 +268,7 @@ public class ImageControllerTest {
   @Test
   public void testNullRGBSplit() throws IOException {
 
-    String splitCommand = "rgb-split manhattan-small manhattan-small-red manhattan-small-green " +
-          "manhattan-small-blue\n exit";
+    String splitCommand = "rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -294,9 +290,8 @@ public class ImageControllerTest {
   @Test
   public void testRGBSplit() throws IOException {
 
-    String splitCommand = "load test/img/manhattan-small.png manhattan-small\n" +
-          "rgb-split manhattan-small manhattan-small-red manhattan-small-green " +
-          "manhattan-small-blue\n exit";
+    String splitCommand = "load test/img/split/rose.jpg rose\n" +
+          "rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -309,13 +304,13 @@ public class ImageControllerTest {
     assertTrue(output.contains("Split the image."));
 
     Image[] splitImages = new Image[3];
-    splitImages[0] = controller.loadedImages.get("manhattan-small-red");
-    splitImages[1] = controller.loadedImages.get("manhattan-small-green");
-    splitImages[2] = controller.loadedImages.get("manhattan-small-blue");
+    splitImages[0] = controller.loadedImages.get("rose_onlyRed");
+    splitImages[1] = controller.loadedImages.get("rose_onlyGreen");
+    splitImages[2] = controller.loadedImages.get("rose_onlyBlue");
 
-    Image myImage1 = new MyImage("test/img/manhattan-small-red.png");
-    Image myImage2 = new MyImage("test/img/manhattan-small-green.png");
-    Image myImage3 = new MyImage("test/img/manhattan-small-blue.png");
+    Image myImage1 = new MyImage("test/img/split/rose_onlyRed.jpg");
+    Image myImage2 = new MyImage("test/img/split/rose_onlyGreen.jpg");
+    Image myImage3 = new MyImage("test/img/split/rose_onlyBlue.jpg");
 
     assertEquals(myImage1, splitImages[0]);
     assertEquals(myImage2, splitImages[1]);
@@ -330,7 +325,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testNullSplitComponent() throws IOException {
-    String splitCommand = "red-component manhattan-small manhattan-small-red\n exit";
+    String splitCommand = "red-component simple simple_greyScale_r\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -350,8 +345,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testSplitComponent() throws IOException {
-    String splitCommand = "load test/img/manhattan-small.png manhattan-small\n " +
-          "red-component manhattan-small manhattan-small-red\n exit";
+    String splitCommand = "load test/img/trichromatic/simple.ppm simple\n " +
+          "red-component simple simple_greyScale_r\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -363,8 +358,8 @@ public class ImageControllerTest {
     String output = splitWriter.toString();
     assertTrue(output.contains("Split image in red component"));
 
-    Image executeSplit =splitController.loadedImages.get("manhattan-small-red");
-    Image expectSplit = new MyImage("test/img/manhattan-small-red.png");
+    Image executeSplit =splitController.loadedImages.get("simple_greyScale_r");
+    Image expectSplit = new MyImage("test/img/trichromatic/simple_greyScale_r.ppm");
 
     assertEquals(expectSplit, executeSplit);
   }
@@ -376,7 +371,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testNullFlip() throws IOException {
-    String flipCommand = "horizontal-flip manhattan-small manhattan-small-horizontal\n exit";
+    String flipCommand = "horizontal-flip car car_horizontallyFlipped\n exit";
     StringReader flipReader = new StringReader(flipCommand);
     StringWriter flipWriter = new StringWriter();
     PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
@@ -396,8 +391,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testFlip() throws IOException {
-    String flipCommand = "load test/img/manhattan-small.png manhattan-small\n " +
-          "horizontal-flip manhattan-small manhattan-small-horizontal\n exit";
+    String flipCommand = "load test/img/flip/car.png car\n " +
+          "horizontal-flip car car_horizontallyFlipped\n exit";
     StringReader flipReader = new StringReader(flipCommand);
     StringWriter flipWriter = new StringWriter();
     PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
@@ -408,8 +403,8 @@ public class ImageControllerTest {
     String output = flipWriter.toString();
     assertTrue(output.contains("Flip the image horizontally"));
 
-    Image execute =flipController.loadedImages.get("manhattan-small-horizontal");
-    Image expect = new MyImage("test/img/manhattan-small-horizontal.png");
+    Image execute =flipController.loadedImages.get("car_horizontallyFlipped");
+    Image expect = new MyImage("test/img/flip/car_horizontallyFlipped.png");
 
     assertEquals(expect, execute);
 
@@ -422,7 +417,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testNullBrighten() throws IOException {
-    String brightenCommand = "brighten 50 manhattan-small manhattan-small-brighter-by-50\n exit";
+    String brightenCommand = "brighten -4 simple simple-4 \n exit";
     StringReader brightenReader = new StringReader(brightenCommand);
     StringWriter brightenWriter = new StringWriter();
     PrintWriter brightenPrintWriter = new PrintWriter(brightenWriter);
@@ -444,8 +439,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testBrighten() throws IOException {
-    String brightenCommand = "load test/img/manhattan-small.png manhattan-small\n " +
-          "brighten 50 manhattan-small manhattan-small-brighter-by-50 \n exit";
+    String brightenCommand = "load test/img/trichromatic/simple.ppm simple\n " +
+          "brighten -4 simple simple-4 \n exit";
     StringReader brightenReader = new StringReader(brightenCommand);
     StringWriter brightenWriter = new StringWriter();
     PrintWriter brightenPrintWriter = new PrintWriter(brightenWriter);
@@ -455,10 +450,10 @@ public class ImageControllerTest {
           brightenImageView);
     brightenController.start();
     String output = brightenWriter.toString();
-    assertTrue(output.contains("Increase the brightness of the image"));
+    assertTrue(output.contains("Decrease the brightness of the image"));
 
-    Image executeIncrease = brightenController.loadedImages.get("manhattan-small-brighter-by-50");
-    Image expectIncrease = new MyImage("test/img/manhattan-small-brighter-by-50.png");
+    Image executeIncrease = brightenController.loadedImages.get("simple-4");
+    Image expectIncrease = new MyImage("test/img/trichromatic/simple-4.ppm");
 
     assertEquals(expectIncrease, executeIncrease);
   }
@@ -470,7 +465,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testNullSharpen() throws IOException {
-    String sharpenCommand = "sharpen manhattan-small manhattan-small-sharpen\n exit";
+    String sharpenCommand = "sharpen cupcake cupcake_sharpenOnce \n exit";
     StringReader sharpenReader = new StringReader(sharpenCommand);
     StringWriter sharpenWriter = new StringWriter();
     PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
@@ -490,8 +485,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testSharpen() throws IOException {
-    String sharpenCommand = "load test/img/manhattan-small.png manhattan-small\n " +
-          "sharpen manhattan-small manhattan-small-sharpen\n exit";
+    String sharpenCommand = "load test/img/cupcake.png cupcake\n " +
+          "sharpen cupcake cupcake_sharpenOnce\n exit";
     StringReader sharpenReader = new StringReader(sharpenCommand);
     StringWriter sharpenWriter = new StringWriter();
     PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
@@ -502,8 +497,8 @@ public class ImageControllerTest {
     String output = sharpenWriter.toString();
     assertTrue(output.contains("Sharpen image"));
 
-    Image executeSharpen =sharpenController.loadedImages.get("manhattan-small-sharpen");
-    Image expectSharpen = new MyImage("test/img/manhattan-small-sharpen.png");
+    Image executeSharpen =sharpenController.loadedImages.get("cupcake_sharpenOnce");
+    Image expectSharpen = new MyImage("test/img/cupcake_sharpenOnce.png");
 
     assertEquals(expectSharpen, executeSharpen);
   }
@@ -515,7 +510,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testNullSepia() throws IOException {
-    String sepiaCommand = "sepia manhattan-small manhattan-small-sepia\n exit";
+    String sepiaCommand = "sepia city-small city-small-sepia\n exit";
     StringReader sepiaReader = new StringReader(sepiaCommand);
     StringWriter sepiaWriter = new StringWriter();
     PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
@@ -534,8 +529,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testSepia() throws IOException {
-    String sepiaCommand = "load test/img/manhattan-small.png manhattan-small\n " +
-          "sepia manhattan-small manhattan-small-sepia\n exit";
+    String sepiaCommand = "load test/img/city_small.png city_small\n " +
+          "sepia city_small city_small_sepia\n exit";
     StringReader sepiaReader = new StringReader(sepiaCommand);
     StringWriter sepiaWriter = new StringWriter();
     PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
@@ -547,8 +542,8 @@ public class ImageControllerTest {
     assertTrue(output.contains("Sepia image"));
 
 
-    Image executeSepia =sepiaController.loadedImages.get("manhattan-small-sepia");
-    Image expectSepia = new MyImage("test/img/manhattan-small-sepia.png");
+    Image executeSepia =sepiaController.loadedImages.get("city_small_sepia");
+    Image expectSepia = new MyImage("test/img/city_small_sepia.png");
 
     assertEquals(expectSepia, executeSepia);
   }
@@ -760,7 +755,8 @@ public class ImageControllerTest {
     controller.startFromFile(filePath);
     String outputFile = output.toString();
 
-    assertTrue(outputFile.contains("Loading new image: koala"));
+    //assertTrue(outputFile.contains("Loading new image: koala"));
+    assertTrue(outputFile.contains("Loading new image: car"));
   }
 
   /**

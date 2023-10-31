@@ -3,6 +3,7 @@ import model.Channel;
 import model.Image;
 import model.MyImage;
 import service.ImageService;
+import service.ImageServiceInterface;
 
 /**
  * This is a "mock" ImageService class which extends the ImageService class. In this class,
@@ -10,6 +11,7 @@ import service.ImageService;
  * correctly receives the command that user inputted or not.
  */
 public class MockImageService extends ImageService {
+
 
   /**
    * Get one certain channel of the image (result in one colored image).
@@ -21,7 +23,7 @@ public class MockImageService extends ImageService {
   @Override
   public Image splitComponent(Image image, Channel channel) {
     System.out.println("Receive the image need to be split and their corresponding channels.");
-    Image myImage = new MyImage("test/img/manhattan-small-red.png");
+    Image myImage = new MyImage("test/img/trichromatic/simple_greyScale_r.ppm");
     return myImage;
   }
 
@@ -34,7 +36,7 @@ public class MockImageService extends ImageService {
   @Override
   public Image blur(Image image) {
      System.out.println("Receive the image need to be blurred, now start to blur.");
-    Image myImage = new MyImage("test/img/manhattan-small-blur.png");
+    Image myImage = new MyImage("test/img/cupcake_blurOnce.png");
     return myImage;
   }
 
@@ -47,7 +49,7 @@ public class MockImageService extends ImageService {
   @Override
   public Image getValue(Image image) {
     System.out.println("Receive the image need to get the value-component, now start to do that.");
-    Image myImage = new MyImage("test/img/koala-value-greyscale.png");
+    Image myImage = new MyImage("test/img/monochromatic/black_value.ppm");
     return myImage;
   }
 
@@ -61,7 +63,7 @@ public class MockImageService extends ImageService {
   public Image getIntensity(Image image) {
     System.out.println("Receive the image need to get the intensity-component, now start to do " +
           "that.");
-    Image myImage = new MyImage("test/img/manhattan-small-intensity-greyscale.png");
+    Image myImage = new MyImage("test/img/monochromatic/black_intensity.ppm");
     return myImage;
   }
 
@@ -74,7 +76,7 @@ public class MockImageService extends ImageService {
   @Override
   public Image getLuma(Image image) {
     System.out.println("Receive the image need to get the luma-component, now start to do that.");
-    Image myImage = new MyImage("test/img/manhattan-small-luma-greyscale.png");
+    Image myImage = new MyImage("test/img/monochromatic/black_luma.ppm");
     return myImage;
   }
 
@@ -88,7 +90,7 @@ public class MockImageService extends ImageService {
   @Override
   public Image flip(Image image, Axis axis) {
     System.out.println("Receive the image need to be flipped, now start to flip.");
-    Image myImage = new MyImage("test/img/manhattan-small-horizontal.png");
+    Image myImage = new MyImage("test/img/flip/car_horizontallyFlipped.png");
     return myImage;
   }
 
@@ -103,7 +105,7 @@ public class MockImageService extends ImageService {
   @Override
   public Image brighten(Image image, float delta) {
     System.out.println("Receive the image need to be brightened, now start to brighten.");
-    Image myImage = new MyImage("test/img/manhattan-small-brighter-by-50.png");
+    Image myImage = new MyImage("test/img/trichromatic/simple-4.ppm");
     return myImage;
   }
 
@@ -116,9 +118,9 @@ public class MockImageService extends ImageService {
   @Override
   public Image[] splitChannel(Image image) {
     System.out.println("Receive the image need to be split, now start to split.");
-    Image myImage1 = new MyImage("test/img/manhattan-small-red.png");
-    Image myImage2 = new MyImage("test/img/manhattan-small-green.png");
-    Image myImage3 = new MyImage("test/img/manhattan-small-blue.png");
+    Image myImage1 = new MyImage("test/img/split/rose_onlyRed.jpg");
+    Image myImage2 = new MyImage("test/img/split/rose_onlyGreen.jpg");
+    Image myImage3 = new MyImage("test/img/split/rose_onlyBlue.jpg");
     Image[] result = new Image[3];
     result[0] = myImage1;
     result[1] = myImage2;
@@ -139,7 +141,7 @@ public class MockImageService extends ImageService {
   public Image combineChannels(Channel[] channels, Image[] images) {
     System.out.println("Receive three images need to combine together, now start to combine.");
 
-    Image myImage = new MyImage("test/img/manhattan-small.png");
+    Image myImage = new MyImage("test/img/split/rose.jpg");
     return myImage;
   }
 
@@ -152,7 +154,7 @@ public class MockImageService extends ImageService {
   @Override
   public Image sharpen(Image image) {
     System.out.println("Receive the image need to be sharpened, now start to sharpen.");
-    Image myImage = new MyImage("test/img/manhattan-small-sharpen.png");
+    Image myImage = new MyImage("test/img/cupcake_sharpenOnce.png");
     return myImage;
   }
 
@@ -165,7 +167,7 @@ public class MockImageService extends ImageService {
   @Override
   public Image getSepia(Image image) {
     System.out.println("Receive the image need to get its sepia, now start to do that.");
-    Image myImage = new MyImage("test/img/manhattan-small-sepia.png");
+    Image myImage = new MyImage("test/img/city_small_sepia.png");
     return myImage;
   }
 }
