@@ -346,29 +346,6 @@ public class ImageController {
           loadedImages.put(imageAliasSplitB, result[2]);
           imageView.displayMessage("Split the image.");
           break;
-//      case "rgb-combine":
-//        Channel[] channels = new Channel[3];
-//        Image[] imagesToCombine = new Image[3];
-//        channels[0] = Channel.RED;
-//        channels[1] = Channel.GREEN;
-//        channels[2] = Channel.BLUE;
-//        String afterCombinedImageName = tokenizer.nextToken();
-//        for (int i = 0; i < 3; i++) {
-//          String imageName = tokenizer.nextToken();
-//          if (!loadedImages.containsKey(imageName)) {
-//            imageView.displayMessage("Image named " + imageName + "not loaded.");
-//            return;
-//          }
-//          imagesToCombine[i] = loadedImages.get(imageName);
-//
-//        }try {
-//          Image combinedImage = imageService.combineChannels(channels, imagesToCombine);
-//          loadedImages.put(afterCombinedImageName, combinedImage);
-//          imageView.displayMessage("Images combined successfully");
-//        } catch (IllegalArgumentException e) {
-//          imageView.displayMessage(e.getMessage());
-//        }
-//        break;
         // RGB combine command.
         case "rgb-combine":
           Channel[] channels = {Channel.RED, Channel.GREEN, Channel.BLUE};
