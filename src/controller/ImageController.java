@@ -23,7 +23,6 @@ import view.ImageView;
 public class ImageController {
   private final ImageService imageService;
   private final ImageView imageView;
-  private MyImage myImage = null;
   public Map<String, Image> loadedImages = new HashMap<>();
   private List<String> errorMessages = new ArrayList<>();
 
@@ -175,7 +174,6 @@ public class ImageController {
           }
           // Store the image in the map.
           loadedImages.put(imageAlias, loadedImage);
-          myImage = loadedImage;
           break;
         // Save command.
         case "save":
