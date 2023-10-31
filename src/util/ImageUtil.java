@@ -40,8 +40,8 @@ public class ImageUtil {
       case 2:
         String filePath = imageView.getFilePath();
         if (filePath != null && !filePath.isEmpty()) {
-          //controller.startFromFile(filePath);
-          controller.startFromFile();
+          controller.startFromFile(filePath);
+          //controller.startFromFile();
         } else {
           imageView.displayMessage("Invalid file path.");
         }

@@ -1,0 +1,1 @@
+load test/img/Koala.ppm koala

@@ -27,8 +27,6 @@ public class ImageController {
   public Map<String, Image> loadedImages = new HashMap<>();
   private List<String> errorMessages = new ArrayList<>();
 
-
-
   /**
    * The constructor of the ImageController in this program with the given image service and view.
    *
@@ -49,6 +47,7 @@ public class ImageController {
   public void start() {
     while (true) {
       String command = imageView.getUserCommand();
+      command = command.trim();
       if (command.isEmpty() || command.startsWith("#")) {
         continue;
       }
@@ -58,62 +57,21 @@ public class ImageController {
       executeCommand(command);
     }
   }
-    // enter the file path only once, if the file path is invalid, directly exit.
-//  /**
-//   * Starts the processing of user commands from a specified file. Each line in the file represents
-//   * a command, which will be executed in order.
-//   * Commands that start with "#" are considered comments and are ignored.
-//   * If the "exit" command is found in the file, then exiting the program.
-//   *
-//   * @param filePath the path to the file containing the list of commands to execute.
-//   * @throws IOException if there's an error reading from the specified file.
-//   */
-//  public void startFromFile(String filePath) throws IOException {
-//    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-//      String command;
-//      while ((command = reader.readLine()) != null) {
-//        if(command.isEmpty() || command.startsWith("#")) {
-//          continue;
-//        }
-//        if ("exit".equalsIgnoreCase(command.trim())) {
-//          break;
-//        }
-//        executeCommand(command);
-//      }
-//    } catch (FileNotFoundException e) {
-//      imageView.displayMessage("Invalid file path. Please enter a valid file path.");
-//    }
-//  }
-
-  // if users input invalid file path, they still have chances to input file path until they input
-  // the correct one or they enter the "exit".
-
+     //enter the file path only once, if the file path is invalid, directly exit.
   /**
-   * Starts the image processing commands from a given file. This method will repeatedly prompt the
-   * user to enter a valid file path until a valid file is provided. Once a valid file is provided,
-   * the method reads commands from the file line by line. Each line in the file should represent a
-   * command to be executed.
+   * Starts the processing of user commands from a specified file. Each line in the file represents
+   * a command, which will be executed in order.
+   * Commands that start with "#" are considered comments and are ignored.
+   * If the "exit" command is found in the file, then exiting the program.
    *
-   * @throws IOException If there's an error reading the commands from the file.
+   * @param filePath the path to the file containing the list of commands to execute.
+   * @throws IOException if there's an error reading from the specified file.
    */
-  public void startFromFile() throws IOException {
-    String filePath;
-    BufferedReader reader = null;
-
-    // Loop until find the valid file path.
-    while (true) {
-      filePath = imageView.getFilePath();
-      try {
-        reader = new BufferedReader(new FileReader(filePath));
-        break;
-      } catch (FileNotFoundException e) {
-        imageView.displayMessage("Invalid file path. Please enter a valid file path.");
-      }
-    }
-    try {
+  public void startFromFile(String filePath) throws IOException {
+    try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
       String command;
       while ((command = reader.readLine()) != null) {
-        if (command.isEmpty() || command.startsWith("#")) {
+        if(command.isEmpty() || command.startsWith("#")) {
           continue;
         }
         if ("exit".equalsIgnoreCase(command.trim())) {
@@ -121,18 +79,62 @@ public class ImageController {
         }
         executeCommand(command);
       }
-    } finally {
-      if (reader != null) {
-        reader.close();
-      }
-    }
-    if (!errorMessages.isEmpty()) {
-      for (String errorMsg : errorMessages) {
-        imageView.displayMessage(errorMsg);
-      }
-      errorMessages.clear();
+    } catch (FileNotFoundException e) {
+      imageView.displayMessage("Invalid file path. Please enter a valid file path.");
     }
   }
+
+  // if users input invalid file path, they still have chances to input file path until they input
+  // the correct one or they enter the "exit".
+
+//  /**
+//   * Starts the image processing commands from a given file. This method will repeatedly prompt the
+//   * user to enter a valid file path until a valid file is provided. Once a valid file is provided,
+//   * the method reads commands from the file line by line. Each line in the file should represent a
+//   * command to be executed.
+//   *
+//   * @throws IOException If there's an error reading the commands from the file.
+//   */
+//  public void startFromFile() throws IOException {
+//    String filePath;
+//    BufferedReader reader = null;
+//
+//    // Loop until find the valid file path.
+//    while (true) {
+//      filePath = imageView.getFilePath();
+//      System.out.println(filePath);
+//      try {
+//        reader = new BufferedReader(new FileReader(filePath));
+//        break;
+//      } catch (FileNotFoundException e) {
+//        imageView.displayMessage("Invalid file path. Please enter a valid file path.");
+//      }
+//    }
+//
+//    try {
+//      String command;
+//      while ((command = reader.readLine()) != null) {
+//        if (command.isEmpty() || command.startsWith("#")) {
+//          continue;
+//        }
+//        if ("exit".equalsIgnoreCase(command.trim())) {
+//          break;
+//        }
+//        executeCommand(command);
+//      }
+//    } finally {
+//      if (reader != null) {
+//        reader.close();
+//      }
+//    }
+//    if (!errorMessages.isEmpty()) {
+//      for (String errorMsg : errorMessages) {
+//        imageView.displayMessage(errorMsg);
+//      }
+//      errorMessages.clear();
+//    }
+//  }
+
 
   /**
    * Executes a given image processing command. Each different kinds of command has a related
@@ -397,7 +399,8 @@ public class ImageController {
           imageView.displayMessage("Sepia image");
           break;
         default:
-          System.out.println("Please enter valid command, " + operation + "is invalid.");
+          //System.out.println("Please enter valid command, " + operation + " is invalid.");
+          imageView.displayMessage("Please enter valid command, " + operation + " is invalid.");
       }
       imageView.displayMessage("Please enter command:");
     } catch (RuntimeException | IOException e) {

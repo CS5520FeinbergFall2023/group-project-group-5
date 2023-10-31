@@ -10,12 +10,16 @@ import model.MyImage;
 import view.ImageView;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 /**
  * This test class is test the controller component. For the controller, need to test whether it
  * correctly gets the command that user inputted, correctly gets the related images and transfers
- * those information to ImageService component correctly or not.
+ * those information to ImageService component correctly or not. Also, this test class tests whether
+ * two ways (console and text file) for users to input their commands work correctly (allow comments
+ * exist) or not.
  */
 public class ImageControllerTest {
 
@@ -307,6 +311,236 @@ public class ImageControllerTest {
     Image expectSepia = new MyImage("test/img/manhattan-small-sepia.png");
 
     assertEquals(expectSepia, executeSepia);
+  }
+
+  /**
+   * Test when user enter invalid command.
+   */
+  @Test
+  public void testInvalidCommand() {
+    StringReader input = new StringReader("loae test/img/mall.jpg mall\n exit");
+    StringWriter output = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(input, printWriter);
+    MockImageService service = new MockImageService();
+    ImageController controller = new ImageController(service, mockView);
+
+    //controller.executeCommand("loae test/img/mall.jpg mall");
+    controller.start();
+    String consoleOutput = output.toString();
+
+    assertTrue(consoleOutput.contains("Please enter valid command, loae is invalid."));
+    assertTrue(consoleOutput.contains("Please enter command:"));
+  }
+
+  /**
+   * Test a input command with a single-line comment.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testSingleCommentSingleCommand() throws IOException {
+    StringReader input = new StringReader
+          ("# This is a comment\n load test\\img\\car.jpg car\n exit");
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(input, printWriter);
+    MockImageService mockService = new MockImageService();
+    ImageController testController = new ImageController(mockService, mockView);
+
+    testController.start();
+    String consoleOutput = output.toString();
+
+    assertFalse(consoleOutput.contains("error"));
+    assertTrue(consoleOutput.contains("Loading new image: car"));
+  }
+
+  /**
+   * Test when user input multiple line of commands.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testMultipleCommands() throws IOException {
+    StringReader input = new StringReader
+          ("load test\\img\\car.jpg car\n blur car car-blurred\n brighten 2 car car-brighten\n "
+                + "exit");
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(input, printWriter);
+    MockImageService mockService = new MockImageService();
+    ImageController testController = new ImageController(mockService, mockView);
+
+    testController.start();
+    String consoleOutput = output.toString();
+
+    assertFalse(consoleOutput.contains("error"));
+    assertTrue(consoleOutput.contains("Loading new image: car"));
+    assertTrue(consoleOutput.contains("Image blurred"));
+    assertTrue(consoleOutput.contains("Increase the brightness of the image"));
+  }
+
+  /**
+   * Test when user input multiple line of commands and their comments.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testMultipleCommentsAndCommands() throws IOException {
+    StringReader input = new StringReader
+          ("load test\\img\\car.jpg car\n # want to blur the car\n blur car car-blurred\n" +
+                " # want to change the image's brightness\n brighten 2 car car-brighten\n "
+                + "exit");
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(input, printWriter);
+    MockImageService mockService = new MockImageService();
+    ImageController testController = new ImageController(mockService, mockView);
+
+    testController.start();
+    String consoleOutput = output.toString();
+
+    assertFalse(consoleOutput.contains("error"));
+    assertTrue(consoleOutput.contains("Loading new image: car"));
+    assertTrue(consoleOutput.contains("Image blurred"));
+    assertTrue(consoleOutput.contains("Increase the brightness of the image"));
+  }
+
+  /**
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testInvalidFilePath() throws IOException {
+
+    String input = "test/file/invalid/not/exist.txt\n";
+    StringReader inputReader = new StringReader(input);
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController controller = new ImageController(mockImageService,mockView);
+    String filePath = mockView.getFilePath();
+
+    controller.startFromFile(filePath);
+    String outputFile = output.toString();
+
+    assertTrue(outputFile.contains("Invalid file path. Please enter a valid file path."));
+  }
+
+  /**
+   * Test if the file with valid file path includes wrong commands.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testFileCommandError() throws IOException {
+
+    String input = "test/file/commdswitherrors.txt\n";
+    StringReader inputReader = new StringReader(input);
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController controller = new ImageController(mockImageService,mockView);
+    String filePath = mockView.getFilePath();
+    controller.startFromFile(filePath);
+    String outputFile = output.toString();
+    String exceptionMessage = "Please enter valid command, blor is invalid.";
+    assertTrue(outputFile.contains(exceptionMessage));
+
+  }
+
+  /**
+   * Test if the file with valid file path includes multiple commands.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testFileMultipleCommands() throws IOException {
+    String input = "test/file/textcommand.txt\n";
+    StringReader inputReader = new StringReader(input);
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController controller = new ImageController(mockImageService,mockView);
+    String filePath = mockView.getFilePath();
+
+    controller.startFromFile(filePath);
+    String outputFile = output.toString();
+
+    assertTrue(outputFile.contains("Invalid file path. Please enter a valid file path."));
+  }
+
+  /**
+   * Test if the file with valid file path includes multiple comments and commands.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testFileCommentsAndMultipleCommands() throws IOException {
+    String input = "test/file/commandWithMultipleComments.txt\n";
+    StringReader inputReader = new StringReader(input);
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController controller = new ImageController(mockImageService,mockView);
+    String filePath = mockView.getFilePath();
+
+    controller.startFromFile(filePath);
+    String outputFile = output.toString();
+
+    assertTrue(outputFile.contains("Loading new image: car"));
+    assertTrue(outputFile.contains("Image blurred"));
+    assertTrue(outputFile.contains("Increase the brightness of the image"));
+    assertTrue(outputFile.contains("Decrease the brightness of the image"));
+
+  }
+
+  /**
+   * Test if the file with valid file path includes a single command.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testFileSingleCommand() throws IOException {
+    String input = "test/file/textsinglecommand.txt\n";
+    StringReader inputReader = new StringReader(input);
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController controller = new ImageController(mockImageService,mockView);
+    String filePath = mockView.getFilePath();
+
+    controller.startFromFile(filePath);
+    String outputFile = output.toString();
+
+    assertTrue(outputFile.contains("Loading new image: koala"));
+  }
+
+  /**
+   * Test if the file with valid file path includes a single comment and a single command.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testFileSingleCommentAndSingleCommand() throws IOException {
+    String input = "test/file/textsinglecommandwithsinglecomment.txt\n";
+    StringReader inputReader = new StringReader(input);
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController controller = new ImageController(mockImageService,mockView);
+    String filePath = mockView.getFilePath();
+
+    controller.startFromFile(filePath);
+    String outputFile = output.toString();
+
+    assertTrue(outputFile.contains("Get the value-component"));
   }
 
 }
