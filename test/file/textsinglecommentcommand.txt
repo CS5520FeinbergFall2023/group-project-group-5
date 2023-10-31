@@ -1,0 +1,2 @@
+# want to load the image I want
+load test/img/mall.jpg mall

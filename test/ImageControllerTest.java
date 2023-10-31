@@ -1,4 +1,3 @@
-import org.junit.Before;
 import org.junit.Test;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,7 +7,6 @@ import java.io.StringWriter;
 import controller.ImageController;
 import model.Image;
 import model.MyImage;
-import service.ImageService;
 import view.ImageView;
 
 import static org.junit.Assert.assertEquals;
@@ -31,9 +29,9 @@ public class ImageControllerTest {
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testBlurCommand() throws IOException {
+  public void testNullBlurCommand() throws IOException {
 
-    String blurCommand = "blur manhattan-small manhattan-small-blur";
+    String blurCommand = "blur manhattan-small manhattan-small-blur\n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
     PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
@@ -41,7 +39,7 @@ public class ImageControllerTest {
     ImageView blurImageView = new ImageView(blurReader, blurPrintWriter);
     MockImageService mockService = new MockImageService();
     ImageController blurController = new ImageController(mockService, blurImageView);
-    blurController.executeCommand(blurCommand);
+    blurController.start();
 
     String output = blurWriter.toString();
     assertTrue(output.contains("No image loaded"));
@@ -54,19 +52,7 @@ public class ImageControllerTest {
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testLoadAndBlurCommand() throws IOException {
-//    String inCommand = "load test/img/manhattan-small.png manhattan-small";
-//    StringReader stringReader = new StringReader(inCommand);
-//    StringWriter stringWriter = new StringWriter();
-//    PrintWriter printWriter = new PrintWriter(stringWriter);
-//
-//    ImageView imageView = new ImageView(stringReader,printWriter);
-//    ImageService imageService = new ImageService();
-//    ImageController loadController = new ImageController(imageService, imageView);
-//    loadController.executeCommand(inCommand);
-//    String output = stringWriter.toString();
-//    assertTrue(output.contains("Loading new image: manhattan-small"));
-
+  public void testBlurCommand() throws IOException {
     String blurCommand = "load test/img/manhattan-small.png manhattan-small\n " +
           "blur manhattan-small manhattan-small-blur\n exit";
     StringReader blurReader = new StringReader(blurCommand);
@@ -77,6 +63,8 @@ public class ImageControllerTest {
     MockImageService mockService = new MockImageService();
     ImageController blurController = new ImageController(mockService, blurImageView);
     blurController.start();
+    String output = blurWriter.toString();
+    assertTrue(output.contains("Image blurred"));
 
     Image executeBlur = blurController.loadedImages.get("manhattan-small-blur");
     Image expectBlur = new MyImage("test/img/manhattan-small-blur.png");
@@ -89,24 +77,28 @@ public class ImageControllerTest {
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testValueComponent() throws IOException {
+  public void testNullValueComponent() throws IOException {
 
-    String valueCommand = "value-component Koala koala-value-greyscale";
+    String valueCommand = "value-component Koala koala-value-greyscale\n exit";
     StringReader valueReader = new StringReader(valueCommand);
     StringWriter valueWriter = new StringWriter();
     PrintWriter valuePrintWriter = new PrintWriter(valueWriter);
     ImageView valueImageView = new ImageView(valueReader, valuePrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController valueController = new ImageController(mockImageService, valueImageView);
-    valueController.executeCommand(valueCommand);
+    valueController.start();
     String output = valueWriter.toString();
     assertTrue(output.contains("No image loaded"));
 
   }
 
+  /**
+   * Test the value component command when there exists a image.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
   @Test
-  public void testLoadAndValueComponent() throws IOException {
-
+  public void testValueComponent() throws IOException {
     String valueCommand = "load test/img/Koala.ppm koala\n " +
           "value-component koala koala-value-greyscale\n exit";
     StringReader valueReader = new StringReader(valueCommand);
@@ -115,15 +107,35 @@ public class ImageControllerTest {
     ImageView valueImageView = new ImageView(valueReader, valuePrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController valueController = new ImageController(mockImageService, valueImageView);
-    //valueController.executeCommand(valueCommand);
     valueController.start();
-    //String output = valueWriter.toString();
-    //assertTrue(output.contains("No image loaded"));
+    String output = valueWriter.toString();
+    assertTrue(output.contains("Get the value-component"));
 
     Image executeValue =valueController.loadedImages.get("koala-value-greyscale");
     Image expectValue = new MyImage("test/img/koala-value-greyscale.png");
 
     assertEquals(expectValue, executeValue);
+  }
+
+  /**
+   * Test the intensity-component command when the image is null.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testNullIntensityComponent() throws IOException {
+    String intensityCommand = "intensity-component manhattan-small " +
+          "manhattan-small-intensity-greyscale\n exit";
+    StringReader intensityReader = new StringReader(intensityCommand);
+    StringWriter intensityWriter = new StringWriter();
+    PrintWriter intensityPrintWriter = new PrintWriter(intensityWriter);
+
+    ImageView intensityImageView = new ImageView(intensityReader, intensityPrintWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController intensityController = new ImageController(mockImageService, intensityImageView);
+    intensityController.start();
+    String output = intensityWriter.toString();
+    assertTrue(output.contains("No image loaded"));
   }
 
   /**
@@ -133,8 +145,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testIntensityComponent() throws IOException {
-    String intensityCommand = "intensity-component manhattan-small " +
-          "manhattan-small-intensity-greyscale";
+    String intensityCommand = "load test/img/manhattan-small.png manhattan-small\n " +
+          "intensity-component manhattan-small manhattan-small-intensity-greyscale\n exit";
     StringReader intensityReader = new StringReader(intensityCommand);
     StringWriter intensityWriter = new StringWriter();
     PrintWriter intensityPrintWriter = new PrintWriter(intensityWriter);
@@ -142,7 +154,10 @@ public class ImageControllerTest {
     ImageView intensityImageView = new ImageView(intensityReader, intensityPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController intensityController = new ImageController(mockImageService, intensityImageView);
-    intensityController.executeCommand(intensityCommand);
+    //intensityController.executeCommand(intensityCommand);
+    intensityController.start();
+    String output = intensityWriter.toString();
+    assertTrue(output.contains("Get the intensity-component"));
 
     Image executeIntensity =intensityController.loadedImages.get
           ("manhattan-small-intensity-greyscale");
@@ -152,25 +167,70 @@ public class ImageControllerTest {
   }
 
   /**
-   * Test the luma-component command.
+   * Test the luma-component command when there is not image exists.
    *
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testLumaComponent() throws IOException {
-    String lumaCommand = "luma-component manhattan-small manhattan-small-luma-greyscale";
+  public void testNullLumaComponent() throws IOException {
+    String lumaCommand = "luma-component manhattan-small manhattan-small-luma-greyscale\n exit";
     StringReader lumaReader = new StringReader(lumaCommand);
     StringWriter lumaWriter = new StringWriter();
     PrintWriter lumaPrintWriter = new PrintWriter(lumaWriter);
     ImageView lumaImageView = new ImageView(lumaReader, lumaPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController lumaController = new ImageController(mockImageService, lumaImageView);
-    lumaController.executeCommand(lumaCommand);
+    lumaController.start();
+    String output = lumaWriter.toString();
+    assertTrue(output.contains("No image loaded"));
+  }
 
-    Image executeLuma =lumaController.loadedImages.get("manhattan-small-luma-greyscale");
+  /**
+   * Test the luma-component command.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testLumaComponent() throws IOException {
+    String lumaCommand = "load test/img/manhattan-small.png manhattan-small\n " +
+          "luma-component manhattan-small manhattan-small-luma-greyscale\n exit";
+    StringReader lumaReader = new StringReader(lumaCommand);
+    StringWriter lumaWriter = new StringWriter();
+    PrintWriter lumaPrintWriter = new PrintWriter(lumaWriter);
+    ImageView lumaImageView = new ImageView(lumaReader, lumaPrintWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController lumaController = new ImageController(mockImageService, lumaImageView);
+    lumaController.start();
+
+    String output = lumaWriter.toString();
+    assertTrue(output.contains("Get the luma-component"));
+
+    Image executeLuma = lumaController.loadedImages.get("manhattan-small-luma-greyscale");
     Image expectLuma = new MyImage("test/img/manhattan-small-luma-greyscale.png");
 
     assertEquals(expectLuma, executeLuma);
+  }
+
+  /**
+   * Test the RGB combine command when there are not images.
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testNullRGBCombine() throws IOException {
+
+    String combineCommand = "rgb-combine manhattan-small manhattan-small-red " +
+          "manhattan-small-green manhattan-small-blue\n exit";
+    StringReader combineReader = new StringReader(combineCommand);
+    StringWriter combineWriter = new StringWriter();
+    PrintWriter combinePrintWriter = new PrintWriter(combineWriter);
+
+    ImageView combineImageView = new ImageView(combineReader, combinePrintWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController combineController = new ImageController(mockImageService, combineImageView);
+    combineController.start();
+    String output = combineWriter.toString();
+    assertTrue(output.contains("No image loaded"));
+
   }
 
   /**
@@ -180,8 +240,11 @@ public class ImageControllerTest {
   @Test
   public void testRGBCombine() throws IOException {
 
-    String combineCommand = "rgb-combine manhattan-small manhattan-small-red " +
-          "manhattan-small-green manhattan-small-blue";
+    String combineCommand = "load test/img/manhattan-small-red.png manhattan-small-red\n " +
+          "load test/img/manhattan-small-green.png manhattan-small-green\n" +
+          "load test/img/manhattan-small-blue.png manhattan-small-blue\n" +
+          "rgb-combine manhattan-small manhattan-small-red manhattan-small-green " +
+          "manhattan-small-blue\n exit";
     StringReader combineReader = new StringReader(combineCommand);
     StringWriter combineWriter = new StringWriter();
     PrintWriter combinePrintWriter = new PrintWriter(combineWriter);
@@ -189,7 +252,9 @@ public class ImageControllerTest {
     ImageView combineImageView = new ImageView(combineReader, combinePrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController combineController = new ImageController(mockImageService, combineImageView);
-    combineController.executeCommand(combineCommand);
+    combineController.start();
+    String output = combineWriter.toString();
+    assertTrue(output.contains("Images combined successfully"));
 
     Image executeCombine = combineController.loadedImages.get("manhattan-small");
     Image expectCombine = new MyImage("test/img/manhattan-small.png");
@@ -199,15 +264,15 @@ public class ImageControllerTest {
   }
 
   /**
-   * Test the RGB Split command.
+   * Test the RGB Split command when there is not exist image.
    *
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testRGBSplit() throws IOException {
+  public void testNullRGBSplit() throws IOException {
 
     String splitCommand = "rgb-split manhattan-small manhattan-small-red manhattan-small-green " +
-          "manhattan-small-blue";
+          "manhattan-small-blue\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -215,7 +280,33 @@ public class ImageControllerTest {
     ImageView splitImageView = new ImageView(splitReader, splitPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController controller = new ImageController(mockImageService, splitImageView);
-    controller.executeCommand(splitCommand);
+    controller.start();
+    String output = splitWriter.toString();
+    assertTrue(output.contains("No image loaded"));
+  }
+
+
+  /**
+   * Test the RGB Split command.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testRGBSplit() throws IOException {
+
+    String splitCommand = "load test/img/manhattan-small.png manhattan-small\n" +
+          "rgb-split manhattan-small manhattan-small-red manhattan-small-green " +
+          "manhattan-small-blue\n exit";
+    StringReader splitReader = new StringReader(splitCommand);
+    StringWriter splitWriter = new StringWriter();
+    PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
+
+    ImageView splitImageView = new ImageView(splitReader, splitPrintWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController controller = new ImageController(mockImageService, splitImageView);
+    controller.start();
+    String output = splitWriter.toString();
+    assertTrue(output.contains("Split the image."));
 
     Image[] splitImages = new Image[3];
     splitImages[0] = controller.loadedImages.get("manhattan-small-red");
@@ -233,13 +324,13 @@ public class ImageControllerTest {
   }
 
   /**
-   * Test the split component command.
+   * Test the split component command when there is not exist image.
    *
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testSplitComponent() throws IOException {
-    String splitCommand = "red-component manhattan-small manhattan-small-red";
+  public void testNullSplitComponent() throws IOException {
+    String splitCommand = "red-component manhattan-small manhattan-small-red\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -247,12 +338,55 @@ public class ImageControllerTest {
           splitPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController splitController = new ImageController(mockImageService, splitImageView);
-    splitController.executeCommand(splitCommand);
+    splitController.start();
+    String output = splitWriter.toString();
+    assertTrue(output.contains("No image loaded"));
+  }
+
+  /**
+   * Test the split component command.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testSplitComponent() throws IOException {
+    String splitCommand = "load test/img/manhattan-small.png manhattan-small\n " +
+          "red-component manhattan-small manhattan-small-red\n exit";
+    StringReader splitReader = new StringReader(splitCommand);
+    StringWriter splitWriter = new StringWriter();
+    PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
+    ImageView splitImageView = new ImageView(splitReader,
+          splitPrintWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController splitController = new ImageController(mockImageService, splitImageView);
+    splitController.start();
+    String output = splitWriter.toString();
+    assertTrue(output.contains("Split image in red component"));
 
     Image executeSplit =splitController.loadedImages.get("manhattan-small-red");
     Image expectSplit = new MyImage("test/img/manhattan-small-red.png");
 
     assertEquals(expectSplit, executeSplit);
+  }
+
+  /**
+   * Test the flip command when there is not exist image.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testNullFlip() throws IOException {
+    String flipCommand = "horizontal-flip manhattan-small manhattan-small-horizontal\n exit";
+    StringReader flipReader = new StringReader(flipCommand);
+    StringWriter flipWriter = new StringWriter();
+    PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
+    ImageView flipImageView = new ImageView(flipReader, flipPrintWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController flipController = new ImageController(mockImageService, flipImageView);
+    flipController.start();
+    String output = flipWriter.toString();
+    assertTrue(output.contains("No image loaded"));
+
   }
 
   /**
@@ -262,14 +396,17 @@ public class ImageControllerTest {
    */
   @Test
   public void testFlip() throws IOException {
-    String flipCommand = "horizontal-flip manhattan-small manhattan-small-horizontal";
+    String flipCommand = "load test/img/manhattan-small.png manhattan-small\n " +
+          "horizontal-flip manhattan-small manhattan-small-horizontal\n exit";
     StringReader flipReader = new StringReader(flipCommand);
     StringWriter flipWriter = new StringWriter();
     PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
     ImageView flipImageView = new ImageView(flipReader, flipPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController flipController = new ImageController(mockImageService, flipImageView);
-    flipController.executeCommand(flipCommand);
+    flipController.start();
+    String output = flipWriter.toString();
+    assertTrue(output.contains("Flip the image horizontally"));
 
     Image execute =flipController.loadedImages.get("manhattan-small-horizontal");
     Image expect = new MyImage("test/img/manhattan-small-horizontal.png");
@@ -279,13 +416,13 @@ public class ImageControllerTest {
   }
 
   /**
-   * Test the brighten command.
+   * Test the brighten command when there is not exist a image.
    *
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testBrighten() throws IOException {
-    String brightenCommand = "brighten 50 manhattan-small manhattan-small-brighter-by-50";
+  public void testNullBrighten() throws IOException {
+    String brightenCommand = "brighten 50 manhattan-small manhattan-small-brighter-by-50\n exit";
     StringReader brightenReader = new StringReader(brightenCommand);
     StringWriter brightenWriter = new StringWriter();
     PrintWriter brightenPrintWriter = new PrintWriter(brightenWriter);
@@ -293,35 +430,57 @@ public class ImageControllerTest {
     MockImageService mockImageService = new MockImageService();
     ImageController brightenController = new ImageController(mockImageService,
           brightenImageView);
-    brightenController.executeCommand(brightenCommand);
+    brightenController.start();
 
-    Image executeIncrease =brightenController.loadedImages.get("manhattan-small-brighter-by-50");
+    String output = brightenWriter.toString();
+    assertTrue(output.contains("No image loaded"));
+
+  }
+
+  /**
+   * Test the brighten command when there exist a image.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testBrighten() throws IOException {
+    String brightenCommand = "load test/img/manhattan-small.png manhattan-small\n " +
+          "brighten 50 manhattan-small manhattan-small-brighter-by-50 \n exit";
+    StringReader brightenReader = new StringReader(brightenCommand);
+    StringWriter brightenWriter = new StringWriter();
+    PrintWriter brightenPrintWriter = new PrintWriter(brightenWriter);
+    ImageView brightenImageView = new ImageView(brightenReader, brightenPrintWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController brightenController = new ImageController(mockImageService,
+          brightenImageView);
+    brightenController.start();
+    String output = brightenWriter.toString();
+    assertTrue(output.contains("Increase the brightness of the image"));
+
+    Image executeIncrease = brightenController.loadedImages.get("manhattan-small-brighter-by-50");
     Image expectIncrease = new MyImage("test/img/manhattan-small-brighter-by-50.png");
 
     assertEquals(expectIncrease, executeIncrease);
   }
 
   /**
-   * Test the darken command.
+   * Test the sharpen command when there is not image exist.
    *
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testDarken() throws IOException {
-    String darkenCommand = "brighten -50 manhattan-small manhattan-small-darker-by-50";
-    StringReader darkenReader = new StringReader(darkenCommand);
-    StringWriter darkenWriter = new StringWriter();
-    PrintWriter darkenPrintWriter = new PrintWriter(darkenWriter);
-    ImageView darkenImageView = new ImageView(darkenReader, darkenPrintWriter);
+  public void testNullSharpen() throws IOException {
+    String sharpenCommand = "sharpen manhattan-small manhattan-small-sharpen\n exit";
+    StringReader sharpenReader = new StringReader(sharpenCommand);
+    StringWriter sharpenWriter = new StringWriter();
+    PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
+    ImageView sharpenImageView = new ImageView(sharpenReader, sharpenPrintWriter);
     MockImageService mockImageService = new MockImageService();
-    ImageController darkenController = new ImageController(mockImageService,
-          darkenImageView);
-    darkenController.executeCommand(darkenCommand);
+    ImageController sharpenController = new ImageController(mockImageService, sharpenImageView);
+    sharpenController.start();
+    String output = sharpenWriter.toString();
+    assertTrue(output.contains("No image loaded"));
 
-    Image executeDecrease =darkenController.loadedImages.get("manhattan-small-darker-by-50");
-    Image expectDecrease = new MyImage("test/img/manhattan-small-darker-by-50.png");
-
-    assertEquals(expectDecrease, executeDecrease);
   }
 
   /**
@@ -331,19 +490,41 @@ public class ImageControllerTest {
    */
   @Test
   public void testSharpen() throws IOException {
-    String sharpenCommand = "sharpen manhattan-small manhattan-small-sharpen";
+    String sharpenCommand = "load test/img/manhattan-small.png manhattan-small\n " +
+          "sharpen manhattan-small manhattan-small-sharpen\n exit";
     StringReader sharpenReader = new StringReader(sharpenCommand);
     StringWriter sharpenWriter = new StringWriter();
     PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
     ImageView sharpenImageView = new ImageView(sharpenReader, sharpenPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController sharpenController = new ImageController(mockImageService, sharpenImageView);
-    sharpenController.executeCommand(sharpenCommand);
+    sharpenController.start();
+    String output = sharpenWriter.toString();
+    assertTrue(output.contains("Sharpen image"));
 
     Image executeSharpen =sharpenController.loadedImages.get("manhattan-small-sharpen");
     Image expectSharpen = new MyImage("test/img/manhattan-small-sharpen.png");
 
     assertEquals(expectSharpen, executeSharpen);
+  }
+
+  /**
+   * Test the sepia command when there is not image exist.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testNullSepia() throws IOException {
+    String sepiaCommand = "sepia manhattan-small manhattan-small-sepia\n exit";
+    StringReader sepiaReader = new StringReader(sepiaCommand);
+    StringWriter sepiaWriter = new StringWriter();
+    PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
+    ImageView sepiaImageView = new ImageView(sepiaReader, sepiaPrintWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController sepiaController = new ImageController(mockImageService, sepiaImageView);
+    sepiaController.start();
+    String output = sepiaWriter.toString();
+    assertTrue(output.contains("No image loaded"));
   }
 
   /**
@@ -353,14 +534,18 @@ public class ImageControllerTest {
    */
   @Test
   public void testSepia() throws IOException {
-    String sepiaCommand = "sepia manhattan-small manhattan-small-sepia";
+    String sepiaCommand = "load test/img/manhattan-small.png manhattan-small\n " +
+          "sepia manhattan-small manhattan-small-sepia\n exit";
     StringReader sepiaReader = new StringReader(sepiaCommand);
     StringWriter sepiaWriter = new StringWriter();
     PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
     ImageView sepiaImageView = new ImageView(sepiaReader, sepiaPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController sepiaController = new ImageController(mockImageService, sepiaImageView);
-    sepiaController.executeCommand(sepiaCommand);
+    sepiaController.start();
+    String output = sepiaWriter.toString();
+    assertTrue(output.contains("Sepia image"));
+
 
     Image executeSepia =sepiaController.loadedImages.get("manhattan-small-sepia");
     Image expectSepia = new MyImage("test/img/manhattan-small-sepia.png");
@@ -579,12 +764,13 @@ public class ImageControllerTest {
   }
 
   /**
-   * Test if the file with valid file path includes a single comment and a single command.
+   * Test if the file with valid file path includes a single comment and a single command, and the
+   * image is not loaded before, which means can not do the execution.
    *
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testFileSingleCommentAndSingleCommand() throws IOException {
+  public void testFileNullSingleCommentSingleCommand() throws IOException {
     String input = "test/file/textsinglecommandwithsinglecomment.txt\n";
     StringReader inputReader = new StringReader(input);
     StringWriter output= new StringWriter();
@@ -597,7 +783,30 @@ public class ImageControllerTest {
     controller.startFromFile(filePath);
     String outputFile = output.toString();
 
-    assertTrue(outputFile.contains("Get the value-component"));
+    assertTrue(outputFile.contains("No image loaded"));
+  }
+
+  /**
+   * Test if the file with valid file path includes a single comment and a single command, and can
+   * execute correctly.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testFileSingleCommentSingleCommand() throws IOException {
+    String input = "test/file/textsinglecommentcommand.txt\n";
+    StringReader inputReader = new StringReader(input);
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController controller = new ImageController(mockImageService,mockView);
+    String filePath = mockView.getFilePath();
+
+    controller.startFromFile(filePath);
+    String outputFile = output.toString();
+
+    assertTrue(outputFile.contains("Loading new image: mall"));
   }
 
 }

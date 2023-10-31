@@ -272,7 +272,24 @@ public class ImageController {
           imageView.displayMessage("Flip the image horizontally");
           break;
         // Change the images' brightness command.
-
+        case "brighten":
+          float amount = Float.parseFloat(tokenizer.nextToken());
+          String imageAliasBrighten = tokenizer.nextToken();
+          Image imageBrighten = loadedImages.get(imageAliasBrighten);
+          if(imageBrighten == null) {
+            imageView.displayMessage("No image loaded");
+            break;
+          }
+          Image brightenImage = imageService.brighten(imageBrighten,amount);
+          String imageAliasAfterBrighten = tokenizer.nextToken();
+          loadedImages.put(imageAliasAfterBrighten, brightenImage);
+          // Increase brightness.
+          if(amount > 0 ){
+            imageView.displayMessage("Increase the brightness of the image");
+          }
+          if(amount < 0 ){
+            imageView.displayMessage("Decrease the brightness of the image");
+          }
         // Red component command.
         case "red-component":
           String imageAliasRedComponent = tokenizer.nextToken();
@@ -337,17 +354,21 @@ public class ImageController {
         case "rgb-combine":
           Channel[] channels = {Channel.RED, Channel.GREEN, Channel.BLUE};
           Image[] imagesToCombine = new Image[3];
-
           String combinedImageName = tokenizer.nextToken();
-
-          for (int i = 0; i < 3; i++) {
-            String singleChannelImageName = tokenizer.nextToken();
-//            if (!loadedImages.containsKey(singleChannelImageName)) {
-//              imageView.displayMessage("Image named " + singleChannelImageName + " not loaded.");
-//              return;
-//            }
-            imagesToCombine[i] = loadedImages.get(singleChannelImageName);
+          String singleChannelImageNameR = tokenizer.nextToken();
+          Image singleChannelImageR = loadedImages.get(singleChannelImageNameR);
+          String singleChannelImageNameG = tokenizer.nextToken();
+          Image singleChannelImageG = loadedImages.get(singleChannelImageNameG);
+          String singleChannelImageNameB = tokenizer.nextToken();
+          Image singleChannelImageB = loadedImages.get(singleChannelImageNameB);
+          if(singleChannelImageR == null || singleChannelImageG == null
+                || singleChannelImageB == null ){
+            imageView.displayMessage("No image loaded");
+            break;
           }
+          imagesToCombine[0] = loadedImages.get(singleChannelImageR);
+          imagesToCombine[1] = loadedImages.get(singleChannelImageG);
+          imagesToCombine[2] = loadedImages.get(singleChannelImageB);
           try {
             Image combinedImage = imageService.combineChannels(channels, imagesToCombine);
             // Store the image in the map.
