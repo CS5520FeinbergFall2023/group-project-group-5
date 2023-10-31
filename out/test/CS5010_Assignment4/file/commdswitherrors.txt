@@ -1,3 +1,0 @@
-load test/img/coffee.png coffee
-# blur the coffee
-blor coffee coffee-blurred
