@@ -73,6 +73,11 @@ public class MyImage extends Image {
    * @throws IllegalArgumentException when there's problem with the path
    */
   public MyImage(String path) throws IllegalArgumentException {
+    //remove quotes in case there's path with blank so requires to be in quotes
+    if ((path.startsWith("\"") && path.endsWith("\"")) || (path.startsWith("'") && path.endsWith(
+        "'"))) {
+      path = path.substring(1, path.length() - 1);
+    }
     try {
       if (path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")) {
         loadJPGPNG(path);

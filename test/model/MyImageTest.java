@@ -45,18 +45,39 @@ public class MyImageTest extends ImageTest {
   }
 
   //  -------------------Constructor Tests----------------------------
-  //MyImage constructor with path
-  // remember to test both JPEG & JPG extension
-  // test malformed path
-  // well-formed path, but the img does not exist
-  // img exist but not PPM,JPG or PNG extension
-  // PPM, JPG & PNG, monochromatic(black,white,red,green,blue), dichromatic or trichromatic. With
-  // each value 0,(a number in between 0-255),255.
 
   @Test
-  public void testMyImagePathJPEG() {
+  public void testMyImagePathJPGWithBlanks() {
+    try {
+      testImage = new MyImage("test/img/car copy.jpg");
+    } catch (IllegalArgumentException e) {
+      fail("Load supported jpg file should not throw exception");
+    }
+  }
+
+  @Test
+  public void testMyImagePathPNGWithBlanks() {
+    try {
+      testImage = new MyImage("test/img/split/rose copy.png");
+    } catch (IllegalArgumentException e) {
+      fail("Load supported jpg file should not throw exception");
+    }
+  }
+
+  @Test
+  public void testMyImagePathPPMWithBlanks() {
+    try {
+      testImage = new MyImage("test/img/trichromatic/simple copy.ppm");
+    } catch (IllegalArgumentException e) {
+      fail("Load supported jpg file should not throw exception");
+    }
+  }
+
+  @Test
+  public void testMyImagePathJPG() {
     try {
       testImage = new MyImage("test/img/car.jpg");
+      testImage = new MyImage("test/img/car.jpeg");
     } catch (IllegalArgumentException e) {
       fail("Load supported jpg file should not throw exception");
     }
