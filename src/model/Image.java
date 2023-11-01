@@ -1,9 +1,11 @@
 package model;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * This interface represents images.
+ * This interface represents images, that has height, width, and 2d array of pixels.
  */
 public abstract class Image {
   Pixel[][] pixels;
@@ -65,7 +67,7 @@ public abstract class Image {
   }
 
   /**
-   * Split channels of the given image
+   * Split channels of the given image.
    *
    * @param channel the channel to split
    * @return the split result
@@ -182,5 +184,6 @@ public abstract class Image {
     }
     return sb.toString();
   }
+
 
 }

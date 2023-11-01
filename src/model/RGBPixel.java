@@ -5,7 +5,8 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * This class represents 8 bit depth RGB pixel.
+ * This class represents 8 bit depth RGB pixel. Every pixel has a map representing the value of
+ * the pixel in each channel (red, green, blue).
  */
 public class RGBPixel extends Pixel {
   private final int bitDepth = 8;
@@ -201,6 +202,17 @@ public class RGBPixel extends Pixel {
     }
     RGBPixel rgbPixel = (RGBPixel) o;
     return Objects.equals(channels, rgbPixel.channels);
+  }
+
+
+  /**
+   * Get the hashcode of the object.
+   *
+   * @return the hashcode of the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(channels);
   }
 
 }

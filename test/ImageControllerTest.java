@@ -154,13 +154,11 @@ public class ImageControllerTest {
     ImageView intensityImageView = new ImageView(intensityReader, intensityPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController intensityController = new ImageController(mockImageService, intensityImageView);
-    //intensityController.executeCommand(intensityCommand);
     intensityController.start();
     String output = intensityWriter.toString();
     assertTrue(output.contains("Get the intensity-component"));
 
-    Image executeIntensity = intensityController.loadedImages.get
-        ("black_intensity");
+    Image executeIntensity = intensityController.loadedImages.get("black_intensity");
     Image expectIntensity = new MyImage("test/img/monochromatic/black_intensity.ppm");
 
     assertEquals(expectIntensity, executeIntensity);
@@ -257,7 +255,7 @@ public class ImageControllerTest {
     assertTrue(output.contains("Images combined successfully"));
 
     Image executeCombine = combineController.loadedImages.get("rose");
-    Image expectCombine = new MyImage("test/img/split/rose.jpg");
+    Image expectCombine = new MyImage("test/img/split/rose.ppm");
 
     assertEquals(expectCombine, executeCombine);
 
@@ -293,7 +291,7 @@ public class ImageControllerTest {
   @Test
   public void testRGBSplit() throws IOException {
 
-    String splitCommand = "load test/img/split/rose.jpg rose\n" +
+    String splitCommand = "load test/img/split/rose.ppm rose\n" +
                           "rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
@@ -578,8 +576,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testSingleCommentSingleCommand() throws IOException {
-    StringReader input = new StringReader
-        ("# This is a comment\n load test\\img\\car.jpg car\n exit");
+    StringReader input =
+        new StringReader("# This is a comment\n load test\\img\\car.jpg car\n exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
     MockImageView mockView = new MockImageView(input, printWriter);
@@ -713,8 +711,8 @@ public class ImageControllerTest {
   }
 
   /**
-   * Test if the file with valid file path includes multiple comments and commands.
-   * This tests contains absolute path, so it won't run on every environment.
+   * Test if the file with valid file path includes multiple comments and commands. This tests
+   * contains absolute path, so it won't run on every environment.
    *
    * @throws IOException if there's an error related to I/O operations.
    */

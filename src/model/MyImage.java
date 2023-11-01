@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -14,7 +16,7 @@ import javax.imageio.ImageIO;
 
 
 /**
- * This class represents 8 bit depth RGB image.
+ * This class represents 8 bit depth RGB image, that has height, width, and 2d array of RGB pixels.
  */
 public class MyImage extends Image {
 
@@ -468,4 +470,15 @@ public class MyImage extends Image {
     return true;
   }
 
+  /**
+   * Returns a hash code value for the object.
+   *
+   * @return a hash code value for this object.
+   */
+  @Override
+  public int hashCode() {
+    int result = Objects.hash(height, width);
+    result = 31 * result + Arrays.deepHashCode(pixels);
+    return result;
+  }
 }

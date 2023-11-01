@@ -9,9 +9,6 @@ import model.Pixel;
  * This class performs image operations.
  */
 public class ImageService {
-  public ImageService() {
-  }
-
   /**
    * Get one certain channel of the image (result in one colored image).
    *

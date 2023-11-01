@@ -8,6 +8,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+/**
+ * This class tests MyImage.
+ */
 public class MyImageTest extends ImageTest {
   private MyImage testImage;
   private MyImage[] testImages;
@@ -38,7 +41,7 @@ public class MyImageTest extends ImageTest {
 
   }
 
-//  -------------------Constructor Tests----------------------------
+  //  -------------------Constructor Tests----------------------------
   //MyImage constructor with path
   // remember to test both JPEG & JPG extension
   // test malformed path
@@ -68,7 +71,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testMyImagePathPPM() {
     try {
-      testImage = new MyImage("test/img/rose.ppm");
+      testImage = new MyImage("test/img/split/rose.ppm");
     } catch (IllegalArgumentException e) {
       fail("Load supported ppm file should not throw exception");
     }
@@ -406,25 +409,34 @@ public class MyImageTest extends ImageTest {
     assertTrue(super.testMatrixMultiplication(triImage, testMatrix, expected));
 
     expected =
-        "RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    \n"
-        + "RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    \n"
-        + "RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    \n"
+        "RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    "
+        + "RED:0 GREEN:255 BLUE:128    \n"
+        + "RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    "
+        + "RED:0 GREEN:255 BLUE:128    \n"
+        + "RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    "
+        + "RED:0 GREEN:255 BLUE:128    \n"
         + "RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128    RED:0 GREEN:255 BLUE:128 "
         + "   RED:0 GREEN:255 BLUE:128    \n";
     assertTrue(super.testMatrixMultiplication(whiteImage, testMatrix, expected));
 
     expected =
-        "RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    \n"
-        + "RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    \n"
-        + "RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    \n"
+        "RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 "
+        + "GREEN:0 BLUE:255    \n"
+        + "RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 "
+        + "GREEN:0 BLUE:255    \n"
+        + "RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 "
+        + "GREEN:0 BLUE:255    \n"
         + "RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    RED:0 GREEN:0 BLUE:255    "
         + "RED:0 GREEN:0 BLUE:255    \n";
     assertTrue(super.testMatrixMultiplication(redImage, testMatrix, expected));
 
     expected =
-        "RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    \n"
-        + "RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    \n"
-        + "RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    \n"
+        "RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 "
+        + "GREEN:20 BLUE:100    \n"
+        + "RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0"
+        + " GREEN:20 BLUE:100    \n"
+        + "RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0"
+        + " GREEN:20 BLUE:100    \n"
         + "RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    RED:0 GREEN:20 BLUE:100    "
         + "RED:0 GREEN:20 BLUE:100    \n";
     assertTrue(super.testMatrixMultiplication(woBlueImage, testMatrix, expected));
@@ -544,7 +556,8 @@ public class MyImageTest extends ImageTest {
     MyImage otherImage = new MyImage(3, 3);
     String expected = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-                      + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
+                      + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                      + "\n";
     assertTrue(testAddition(testImage, otherImage, expected));
     otherImage = otherImage.imgArrayAddition(new float[]{0, 100, 255});
     expected =

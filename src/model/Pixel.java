@@ -4,12 +4,14 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * This interface represents a pixel.
+ * This interface represents a pixel. Every pixel has a map representing the value of the pixel
+ * in each channel.
  */
 public abstract class Pixel {
   Map<Channel, Integer> channels;
 
   public Pixel() {
+    // default constructor which child class use to super()
   }
 
   Pixel(Map<Channel, Integer> channels) {
@@ -98,15 +100,7 @@ public abstract class Pixel {
     return false;
   }
 
-  /**
-   * Get the hashcode of the object.
-   *
-   * @return the hashcode of the object.
-   */
-  @Override
-  public int hashCode() {
-    return Objects.hash(channels);
-  }
+
 
   /**
    * Returns a string representation of the object.

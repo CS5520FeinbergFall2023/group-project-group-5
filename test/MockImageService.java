@@ -132,7 +132,7 @@ public class MockImageService extends ImageService {
   @Override
   public Image combineChannels(Channel[] channels, Image[] images) {
     System.out.println("Receive three images need to combine together, now start to combine.");
-    return new MyImage("test/img/split/rose.jpg");
+    return new MyImage("test/img/split/rose.ppm");
   }
 
   /**
