@@ -85,15 +85,42 @@ This class represents image operations. It implements ImageServiceInterface inte
 #### Purpose
 This class is responsible delivering views and communicating with the user by displaying messages. 
 
+#### Methods
+- `public ImageView(Reader reader, Appendable output) ` 
+    - Initializes an image viewer which reads information from the specified input and displays messages to a designated output.
+- `public String getUserCommand()`  
+    - Fetches a command entered by the user from the input source.
+- `public void displayMessage(String message)`  
+    - Shows the provided message on the screen.
+- `public int getModeChoice()`  
+    - Retrieves the mode selected by the user, which should be a number.
+- `public String getFilePath()`  
+    - Prompts the user for a file path and reads it from the input source.
+
 ### ImageUtil
 
 #### Purpose
 This class provide the main entry point for the program and initializes the other components like controller ans service classes.
 
+#### Methods
+- `public static void main(String[] args) throws IOException ` 
+    - This is the starting point for the image application. It sets up the necessary components for the program: the service for images, the view to interact with the user, and the controller that links them. It asks the user to choose how they want to input commands: directly through the console or from a file.
+
 ### ImageController
 
 #### Purpose
 This class deals with user's input commands or on the command-file and inteprets the order to execute corresponding operations on the specific image.
+
+#### Methods
+- `public ImageController(ImageService imageService, ImageView imageView) ` 
+    - Sets up a controller that connects the image service (which handles image operations) with the view (which interacts with the user).
+- `public void start()`  
+    - Begins an interaction loop with the user, where the user is continuously prompted to enter commands. These commands are then executed to perform operations on images. If the command starts with "#", it's seen as a comment and ignored. The interaction continues until the user enters the "exit" command.
+- `public void startFromFile(String filePath) throws IOException`  
+    - Starts processing commands from a provided file. Each line in the file is treated as a command which gets executed one after the other. Similar to the direct interaction, commands starting with "#" are considered comments and thus ignored. If the file contains the "exit" command, the processing stops.
+- `public void executeCommand(String command)`  
+    - Processes and executes commands related to image operations. It first parses the provided command, then performs the specified image operation based on the command's name. The results or status messages are displayed to the user via the imageView. In the event of an invalid command or if a referenced image is not found, error messages are displayed.
+
 
 
 ## **Usage**
