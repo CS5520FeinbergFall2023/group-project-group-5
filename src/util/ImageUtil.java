@@ -36,20 +36,18 @@ public class ImageUtil {
         case 1:
           imageView.displayMessage("Please enter the command (input 'exit' to exit): ");
           controller.start();
-          exit(0);
-          break;
+          return;
         case 2:
           String filePath = imageView.getFilePath();
           if (filePath != null && !filePath.isEmpty()) {
             controller.startFromFile(filePath);
-            exit(0);
+            return;
           } else {
             imageView.displayMessage("Invalid file path.");
           }
           break;
         case 3:
-          exit(0);
-          break;
+          return;
         default:
           imageView.displayMessage("Please select a valid choice (1 or 2 or 3).");
       }

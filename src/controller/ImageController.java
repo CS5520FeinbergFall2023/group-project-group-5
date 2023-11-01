@@ -19,7 +19,7 @@ import model.image.MyImage;
 import service.ImageService;
 import view.ImageView;
 
-import static java.lang.System.exit;
+
 
 /**
  * This is a controller that based on the user's input commands on controller or on the command-file
@@ -65,7 +65,7 @@ public class ImageController {
       }
       commandFirst = command.substring(0, 1);
       if ("exit".equalsIgnoreCase(command.trim())) {
-        exit(0);
+        return;
       }
       try {
         executeCommand(command);
@@ -104,7 +104,7 @@ public class ImageController {
           }
           commandFirst = command.substring(0, 1);
           if ("exit".equalsIgnoreCase(command.trim())) {
-            exit(0);
+            return;
           }
           try {
             executeCommand(command);
