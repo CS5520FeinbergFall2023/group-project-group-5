@@ -7,8 +7,6 @@ import controller.ImageController;
 import service.ImageService;
 import view.ImageView;
 
-import static java.lang.System.exit;
-
 
 /**
  * This is a utility class for the Image application, providing the main entry point. This class
@@ -28,8 +26,8 @@ public class ImageUtil {
     ImageView imageView = new ImageView(new InputStreamReader(System.in),
         new PrintWriter(System.out, true));
     ImageController controller = new ImageController(imageService, imageView);
-    imageView.displayMessage("Please select which mode you want to input the commands: " +
-                             "1. Console 2. From file 3 Exit");
+    imageView.displayMessage("Please select which mode you want to input the commands: "
+                             + "1. Console 2. From file 3 Exit");
     while (true) {
       int choice = imageView.getModeChoice();
       switch (choice) {

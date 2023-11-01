@@ -167,6 +167,17 @@ public class ImageServiceTest {
   }
 
   @Test
+  public void testGetValueDuoColor() {
+    Image testImage = new MyImage("test/img/duoColor.png");
+    Image resultImage = imageService.getValue(testImage);
+
+    String expected = "RED:250 GREEN:250 BLUE:250    RED:250 GREEN:250 BLUE:250    \n"
+                      + "RED:250 GREEN:250 BLUE:250    RED:250 GREEN:250 BLUE:250    \n";
+
+    assertEquals(expected, resultImage.toString());
+  }
+
+  @Test
   public void testGetValueDichromatic() {
     Image testImageWoBlue = new MyImage("test/img/dichromatic/woBlue.ppm");
     Image testImageWoRed = new MyImage("test/img/dichromatic/woRed.ppm");
@@ -248,6 +259,17 @@ public class ImageServiceTest {
     assertEquals(otherExpected, resultImageRed.toString());
     assertEquals(otherExpected, resultImageGreen.toString());
     assertEquals(otherExpected, resultImageBlue.toString());
+  }
+
+  @Test
+  public void testGetIntensityDuoColor() {
+    Image testImage = new MyImage("test/img/duoColor.png");
+    Image resultImage = imageService.getIntensity(testImage);
+
+    String expected = "RED:183 GREEN:183 BLUE:183    RED:183 GREEN:183 BLUE:183    \n"
+                      + "RED:183 GREEN:183 BLUE:183    RED:183 GREEN:183 BLUE:183    \n";
+
+    assertEquals(expected, resultImage.toString());
   }
 
   @Test
@@ -352,6 +374,19 @@ public class ImageServiceTest {
     assertEquals(blueExpected, resultImageBlue.toString());
   }
 
+
+  @Test
+  public void testGetLumaDuoColor() {
+    Image testImage = new MyImage("test/img/duoColor.png");
+    Image resultImage = imageService.getLuma(testImage);
+
+    String expected = "RED:182 GREEN:182 BLUE:182    RED:182 GREEN:182 BLUE:182    \n"
+                      + "RED:139 GREEN:139 BLUE:139    RED:139 GREEN:139 BLUE:139    \n";
+
+    assertEquals(expected, resultImage.toString());
+  }
+
+
   @Test
   public void testGetLumaDichromatic() {
     Image testImageWoBlue = new MyImage("test/img/dichromatic/woBlue.ppm");
@@ -404,7 +439,7 @@ public class ImageServiceTest {
     assertEquals(expected, resultImage.toString());
   }
 
-//  Flip an image horizontally or vertically.
+  //  Flip an image horizontally or vertically.
 
   //different formats
   //flip horizontally
@@ -628,6 +663,23 @@ public class ImageServiceTest {
     assertEquals(expectedB, resultImages[2].toString());
   }
 
+
+  @Test
+  public void testSplitChannelDuoColor() {
+    Image testImage = new MyImage("test/img/duoColor.png");
+    Image[] resultImages = imageService.splitChannel(testImage);
+    String expectedR = "RED:100 GREEN:100 BLUE:100    RED:100 GREEN:100 BLUE:100    \n"
+                       + "RED:250 GREEN:250 BLUE:250    RED:250 GREEN:250 BLUE:250    \n";
+    String expectedG = "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
+                       + "RED:100 GREEN:100 BLUE:100    RED:100 GREEN:100 BLUE:100    \n";
+    String expectedB = "RED:250 GREEN:250 BLUE:250    RED:250 GREEN:250 BLUE:250    \n"
+                       + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n";
+    assertEquals(expectedR, resultImages[0].toString());
+    assertEquals(expectedG, resultImages[1].toString());
+    assertEquals(expectedB, resultImages[2].toString());
+  }
+
+
   @Test
   public void testSplitChannelDichromatic() {
     Image testImage = new MyImage("test/img/dichromatic/woBlue.ppm");
@@ -710,27 +762,31 @@ public class ImageServiceTest {
   @Test
   public void testCombineChannels() {
     Image image = new MyImage("test/img/monochromatic/red.ppm");
-    Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN,
-        Channel.BLUE}, imageService.splitChannel(image));
+    Image resultImages =
+        imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE},
+            imageService.splitChannel(image));
     assertEquals(image, resultImages);
 
     image = new MyImage("test/img/dichromatic/woBlue.ppm");
-    resultImages = imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN,
-        Channel.BLUE}, imageService.splitChannel(image));
+    resultImages =
+        imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE},
+            imageService.splitChannel(image));
     assertEquals(image, resultImages);
 
     //rectangle
     image = new MyImage("test/img/trichromatic/simple.ppm");
-    resultImages = imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN,
-        Channel.BLUE}, imageService.splitChannel(image));
+    resultImages =
+        imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE},
+            imageService.splitChannel(image));
     assertEquals(image, resultImages);
   }
 
   @Test
   public void testCombineChannelsRose() {
     Image expectedImage = new MyImage("test/img/split/rose.ppm");
-    Image resultImages = imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN,
-        Channel.BLUE}, imageService.splitChannel(expectedImage));
+    Image resultImages =
+        imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE},
+            imageService.splitChannel(expectedImage));
     assertEquals(expectedImage, resultImages);
   }
 
@@ -740,8 +796,8 @@ public class ImageServiceTest {
     Image imageG = new MyImage("test/img/monochromatic/green.ppm");
     Image imageB = new MyImage("test/img/monochromatic/blue.ppm");
 
-    imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN,
-        Channel.BLUE}, new Image[]{imageR, imageG, imageB});
+    imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE},
+        new Image[]{imageR, imageG, imageB});
   }
 
   @Test(expected = IllegalArgumentException.class)

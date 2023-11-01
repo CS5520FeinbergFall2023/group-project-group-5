@@ -117,7 +117,7 @@ public class RGBPixel extends Pixel {
   }
 
   /**
-   * Calculate pixel[r,g,b] + pixel[r',g',b']
+   * Calculate pixel[r,g,b] + pixel[r',g',b'].
    *
    * @param pixel the pixel to add
    * @throws IllegalArgumentException when the given pixel is not legal

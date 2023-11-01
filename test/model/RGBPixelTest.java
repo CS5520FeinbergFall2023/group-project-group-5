@@ -48,8 +48,7 @@ public class RGBPixelTest {
     allTestPixels =
         new RGBPixel[]{whitePixel, blackPixel, redPixel, greenPixel, bluePixel, brownPixel,
             purplePixel, yellowPixel, threeColorSamePixel, threeColorRedMaxPixel,
-            threeColorGreenMaxPixel
-            , threeColorBlueMaxPixel};
+            threeColorGreenMaxPixel, threeColorBlueMaxPixel};
   }
 
   @Test

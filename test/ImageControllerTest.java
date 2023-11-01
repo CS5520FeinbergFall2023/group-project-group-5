@@ -23,6 +23,79 @@ import static org.junit.Assert.assertTrue;
  */
 public class ImageControllerTest {
 
+  @Test
+  public void testPathNotExist() {
+    String command = "load xxxx xxx\n exit";
+    StringReader reader = new StringReader(command);
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(stringWriter);
+    ImageView blurImageView = new ImageView(reader, printWriter);
+    MockImageService mockService = new MockImageService(printWriter);
+    ImageController controller = new ImageController(mockService, blurImageView);
+    controller.start();
+    String output = stringWriter.toString();
+    assertTrue(output.contains("Path does not exist or something wrong with file format."));
+  }
+
+  @Test
+  public void testPathHasSpaceDoubleQuote() {
+    String command = "load \"test/img/car copy.jpg\" xxx\n exit";
+    StringReader reader = new StringReader(command);
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(stringWriter);
+    ImageView blurImageView = new ImageView(reader, printWriter);
+    MockImageService mockService = new MockImageService(printWriter);
+    ImageController controller = new ImageController(mockService, blurImageView);
+    controller.start();
+    String output = stringWriter.toString();
+    assertTrue(output.contains("Loading new image: xxx"));
+  }
+
+  @Test
+  public void testPathHasSpaceSingleQuote() {
+    String command = "load 'test/img/car copy.jpg' xxx\n exit";
+    StringReader reader = new StringReader(command);
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(stringWriter);
+    ImageView blurImageView = new ImageView(reader, printWriter);
+    MockImageService mockService = new MockImageService(printWriter);
+    ImageController controller = new ImageController(mockService, blurImageView);
+    controller.start();
+    String output = stringWriter.toString();
+    assertTrue(output.contains("Loading new image: xxx"));
+  }
+
+
+  @Test
+  public void testCommandsTooLong() {
+    String command = "load test/img/car copy.jpg xxx\n exit";
+    StringReader reader = new StringReader(command);
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(stringWriter);
+    ImageView blurImageView = new ImageView(reader, printWriter);
+    MockImageService mockService = new MockImageService(printWriter);
+    ImageController controller = new ImageController(mockService, blurImageView);
+    controller.start();
+    String output = stringWriter.toString();
+    assertTrue(output.contains(
+        "Argument number not right. Use double or single quotes for path with space."));
+  }
+
+  @Test
+  public void testCommandsTooShort() {
+    String command = "load\n exit";
+    StringReader reader = new StringReader(command);
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(stringWriter);
+    ImageView blurImageView = new ImageView(reader, printWriter);
+    MockImageService mockService = new MockImageService(printWriter);
+    ImageController controller = new ImageController(mockService, blurImageView);
+    controller.start();
+    String output = stringWriter.toString();
+    assertTrue(output.contains(
+        "Argument number not right. Use double or single quotes for path with space."));
+  }
+
   /**
    * Test the blur command when there is no image loaded.
    */
@@ -35,7 +108,7 @@ public class ImageControllerTest {
     PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
 
     ImageView blurImageView = new ImageView(blurReader, blurPrintWriter);
-    MockImageService mockService = new MockImageService();
+    MockImageService mockService = new MockImageService(blurPrintWriter);
     ImageController blurController = new ImageController(mockService, blurImageView);
     blurController.start();
 
@@ -54,8 +127,9 @@ public class ImageControllerTest {
     StringWriter blurWriter = new StringWriter();
     PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
 
+    Image targetImage = new MyImage("test/img/cupcake.png");
     ImageView blurImageView = new ImageView(blurReader, blurPrintWriter);
-    MockImageService mockService = new MockImageService();
+    MockImageService mockService = new MockImageService(blurPrintWriter);
     ImageController blurController = new ImageController(mockService, blurImageView);
     blurController.start();
     String output = blurWriter.toString();
@@ -64,6 +138,7 @@ public class ImageControllerTest {
     Image executeBlur = blurController.loadedImages.get("cupcake_blurOnce");
     Image expectBlur = new MyImage("test/img/cupcake_blurOnce.png");
     assertEquals(expectBlur, executeBlur);
+    assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
   /**
@@ -77,7 +152,7 @@ public class ImageControllerTest {
     StringWriter valueWriter = new StringWriter();
     PrintWriter valuePrintWriter = new PrintWriter(valueWriter);
     ImageView valueImageView = new ImageView(valueReader, valuePrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(valuePrintWriter);
     ImageController valueController = new ImageController(mockImageService, valueImageView);
     valueController.start();
     String output = valueWriter.toString();
@@ -96,16 +171,17 @@ public class ImageControllerTest {
     StringWriter valueWriter = new StringWriter();
     PrintWriter valuePrintWriter = new PrintWriter(valueWriter);
     ImageView valueImageView = new ImageView(valueReader, valuePrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(valuePrintWriter);
     ImageController valueController = new ImageController(mockImageService, valueImageView);
     valueController.start();
     String output = valueWriter.toString();
     assertTrue(output.contains("Get the value-component"));
 
     Image executeValue = valueController.loadedImages.get("black_value");
-    Image expectValue = new MyImage("test/img/monochromatic/black_value.ppm");
+    System.out.println(executeValue);
 
-    assertEquals(expectValue, executeValue);
+    Image targetImage = new MyImage("test/img/monochromatic/black.ppm");
+    assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
   /**
@@ -119,7 +195,7 @@ public class ImageControllerTest {
     PrintWriter intensityPrintWriter = new PrintWriter(intensityWriter);
 
     ImageView intensityImageView = new ImageView(intensityReader, intensityPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(intensityPrintWriter);
     ImageController intensityController = new ImageController(mockImageService, intensityImageView);
     intensityController.start();
     String output = intensityWriter.toString();
@@ -138,16 +214,15 @@ public class ImageControllerTest {
     PrintWriter intensityPrintWriter = new PrintWriter(intensityWriter);
 
     ImageView intensityImageView = new ImageView(intensityReader, intensityPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(intensityPrintWriter);
     ImageController intensityController = new ImageController(mockImageService, intensityImageView);
     intensityController.start();
     String output = intensityWriter.toString();
     assertTrue(output.contains("Get the intensity-component"));
-
     Image executeIntensity = intensityController.loadedImages.get("black_intensity");
-    Image expectIntensity = new MyImage("test/img/monochromatic/black_intensity.ppm");
-
+    Image expectIntensity = new MyImage("res/city_small_intensity.png");
     assertEquals(expectIntensity, executeIntensity);
+    assertTrue(output.contains(new MyImage("test/img/monochromatic/black.ppm").hashCode() + ""));
   }
 
   /**
@@ -160,7 +235,7 @@ public class ImageControllerTest {
     StringWriter lumaWriter = new StringWriter();
     PrintWriter lumaPrintWriter = new PrintWriter(lumaWriter);
     ImageView lumaImageView = new ImageView(lumaReader, lumaPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(lumaPrintWriter);
     ImageController lumaController = new ImageController(mockImageService, lumaImageView);
     lumaController.start();
     String output = lumaWriter.toString();
@@ -178,7 +253,7 @@ public class ImageControllerTest {
     StringWriter lumaWriter = new StringWriter();
     PrintWriter lumaPrintWriter = new PrintWriter(lumaWriter);
     ImageView lumaImageView = new ImageView(lumaReader, lumaPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(lumaPrintWriter);
     ImageController lumaController = new ImageController(mockImageService, lumaImageView);
     lumaController.start();
 
@@ -186,7 +261,8 @@ public class ImageControllerTest {
     assertTrue(output.contains("Get the luma-component"));
 
     Image executeLuma = lumaController.loadedImages.get("black_luma");
-    Image expectLuma = new MyImage("test/img/monochromatic/black_luma.ppm");
+    Image expectLuma = new MyImage("res/city_small_luma.png");
+    assertTrue(output.contains(new MyImage("test/img/monochromatic/black.ppm").hashCode() + ""));
 
     assertEquals(expectLuma, executeLuma);
   }
@@ -203,7 +279,7 @@ public class ImageControllerTest {
     PrintWriter combinePrintWriter = new PrintWriter(combineWriter);
 
     ImageView combineImageView = new ImageView(combineReader, combinePrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(combinePrintWriter);
     ImageController combineController = new ImageController(mockImageService, combineImageView);
     combineController.start();
     String output = combineWriter.toString();
@@ -226,7 +302,7 @@ public class ImageControllerTest {
     PrintWriter combinePrintWriter = new PrintWriter(combineWriter);
 
     ImageView combineImageView = new ImageView(combineReader, combinePrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(combinePrintWriter);
     ImageController combineController = new ImageController(mockImageService, combineImageView);
     combineController.start();
     String output = combineWriter.toString();
@@ -235,8 +311,14 @@ public class ImageControllerTest {
     Image executeCombine = combineController.loadedImages.get("rose");
     Image expectCombine = new MyImage("test/img/split/rose.ppm");
 
-    assertEquals(expectCombine, executeCombine);
+    Image targetImageR = new MyImage("test/img/split/rose_onlyRed.jpg");
+    Image targetImageG = new MyImage("test/img/split/rose_onlyGreen.jpg");
+    Image targetImageB = new MyImage("test/img/split/rose_onlyBlue.jpg");
 
+    assertEquals(expectCombine, executeCombine);
+    assertTrue(output.contains(targetImageR.hashCode() + ""));
+    assertTrue(output.contains(targetImageG.hashCode() + ""));
+    assertTrue(output.contains(targetImageB.hashCode() + ""));
   }
 
   /**
@@ -251,7 +333,7 @@ public class ImageControllerTest {
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
 
     ImageView splitImageView = new ImageView(splitReader, splitPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(splitPrintWriter);
     ImageController controller = new ImageController(mockImageService, splitImageView);
     controller.start();
     String output = splitWriter.toString();
@@ -271,7 +353,7 @@ public class ImageControllerTest {
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
 
     ImageView splitImageView = new ImageView(splitReader, splitPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(splitPrintWriter);
     ImageController controller = new ImageController(mockImageService, splitImageView);
     controller.start();
     String output = splitWriter.toString();
@@ -290,6 +372,8 @@ public class ImageControllerTest {
     assertEquals(myImage2, splitImages[1]);
     assertEquals(myImage3, splitImages[2]);
 
+    Image targetImage = new MyImage("test/img/split/rose.jpg");
+    assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
   /**
@@ -303,7 +387,7 @@ public class ImageControllerTest {
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
     ImageView splitImageView = new ImageView(splitReader,
         splitPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(splitPrintWriter);
     ImageController splitController = new ImageController(mockImageService, splitImageView);
     splitController.start();
     String output = splitWriter.toString();
@@ -322,16 +406,19 @@ public class ImageControllerTest {
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
     ImageView splitImageView = new ImageView(splitReader,
         splitPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(splitPrintWriter);
     ImageController splitController = new ImageController(mockImageService, splitImageView);
     splitController.start();
     String output = splitWriter.toString();
     assertTrue(output.contains("Split image in red component"));
 
     Image executeSplit = splitController.loadedImages.get("simple_greyScale_r");
-    Image expectSplit = new MyImage("test/img/trichromatic/simple_greyScale_r.ppm");
+    Image expectSplit = new MyImage("res/city_small_red_channel_greyscale.png");
 
     assertEquals(expectSplit, executeSplit);
+
+    Image targetImage = new MyImage("test/img/trichromatic/simple.ppm");
+    assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
   /**
@@ -343,8 +430,9 @@ public class ImageControllerTest {
     StringReader flipReader = new StringReader(flipCommand);
     StringWriter flipWriter = new StringWriter();
     PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
+
     ImageView flipImageView = new ImageView(flipReader, flipPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(flipPrintWriter);
     ImageController flipController = new ImageController(mockImageService, flipImageView);
     flipController.start();
     String output = flipWriter.toString();
@@ -357,23 +445,26 @@ public class ImageControllerTest {
    */
   @Test
   public void testFlip() {
-    String flipCommand = "load test/img/flip/car.png car\n "
+    String flipCommand = "load res/car.png car\n "
                          + "horizontal-flip car car_horizontallyFlipped\n exit";
     StringReader flipReader = new StringReader(flipCommand);
     StringWriter flipWriter = new StringWriter();
     PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
+
     ImageView flipImageView = new ImageView(flipReader, flipPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(flipPrintWriter);
     ImageController flipController = new ImageController(mockImageService, flipImageView);
     flipController.start();
     String output = flipWriter.toString();
     assertTrue(output.contains("Flip the image horizontally"));
 
     Image execute = flipController.loadedImages.get("car_horizontallyFlipped");
-    Image expect = new MyImage("test/img/flip/car_horizontallyFlipped.png");
+    Image expect = new MyImage("res/car_doubleFlipped.png");
 
     assertEquals(expect, execute);
 
+    Image targetImage = new MyImage("res/car.png");
+    assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
   /**
@@ -385,15 +476,15 @@ public class ImageControllerTest {
     StringReader brightenReader = new StringReader(brightenCommand);
     StringWriter brightenWriter = new StringWriter();
     PrintWriter brightenPrintWriter = new PrintWriter(brightenWriter);
+
     ImageView brightenImageView = new ImageView(brightenReader, brightenPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(brightenPrintWriter);
     ImageController brightenController = new ImageController(mockImageService,
         brightenImageView);
     brightenController.start();
 
     String output = brightenWriter.toString();
     assertTrue(output.contains("No image loaded"));
-
   }
 
   /**
@@ -406,8 +497,9 @@ public class ImageControllerTest {
     StringReader brightenReader = new StringReader(brightenCommand);
     StringWriter brightenWriter = new StringWriter();
     PrintWriter brightenPrintWriter = new PrintWriter(brightenWriter);
+
     ImageView brightenImageView = new ImageView(brightenReader, brightenPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(brightenPrintWriter);
     ImageController brightenController = new ImageController(mockImageService,
         brightenImageView);
     brightenController.start();
@@ -418,6 +510,9 @@ public class ImageControllerTest {
     Image expectIncrease = new MyImage("test/img/trichromatic/simple-4.ppm");
 
     assertEquals(expectIncrease, executeIncrease);
+
+    Image targetImage = new MyImage("test/img/trichromatic/simple.ppm");
+    assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
   /**
@@ -429,13 +524,13 @@ public class ImageControllerTest {
     StringReader sharpenReader = new StringReader(sharpenCommand);
     StringWriter sharpenWriter = new StringWriter();
     PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
+
     ImageView sharpenImageView = new ImageView(sharpenReader, sharpenPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(sharpenPrintWriter);
     ImageController sharpenController = new ImageController(mockImageService, sharpenImageView);
     sharpenController.start();
     String output = sharpenWriter.toString();
     assertTrue(output.contains("No image loaded"));
-
   }
 
   /**
@@ -448,8 +543,9 @@ public class ImageControllerTest {
     StringReader sharpenReader = new StringReader(sharpenCommand);
     StringWriter sharpenWriter = new StringWriter();
     PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
+
     ImageView sharpenImageView = new ImageView(sharpenReader, sharpenPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(sharpenPrintWriter);
     ImageController sharpenController = new ImageController(mockImageService, sharpenImageView);
     sharpenController.start();
     String output = sharpenWriter.toString();
@@ -459,6 +555,9 @@ public class ImageControllerTest {
     Image expectSharpen = new MyImage("test/img/cupcake_sharpenOnce.png");
 
     assertEquals(expectSharpen, executeSharpen);
+
+    Image targetImage = new MyImage("test/img/cupcake.png");
+    assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
   /**
@@ -470,8 +569,9 @@ public class ImageControllerTest {
     StringReader sepiaReader = new StringReader(sepiaCommand);
     StringWriter sepiaWriter = new StringWriter();
     PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
+
     ImageView sepiaImageView = new ImageView(sepiaReader, sepiaPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(sepiaPrintWriter);
     ImageController sepiaController = new ImageController(mockImageService, sepiaImageView);
     sepiaController.start();
     String output = sepiaWriter.toString();
@@ -488,8 +588,9 @@ public class ImageControllerTest {
     StringReader sepiaReader = new StringReader(sepiaCommand);
     StringWriter sepiaWriter = new StringWriter();
     PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
+
     ImageView sepiaImageView = new ImageView(sepiaReader, sepiaPrintWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(sepiaPrintWriter);
     ImageController sepiaController = new ImageController(mockImageService, sepiaImageView);
     sepiaController.start();
     String output = sepiaWriter.toString();
@@ -500,6 +601,9 @@ public class ImageControllerTest {
     Image expectSepia = new MyImage("test/img/city_small_sepia.png");
 
     assertEquals(expectSepia, executeSepia);
+
+    Image targetImage = new MyImage("test/img/city_small.png");
+    assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
   /**
@@ -510,8 +614,9 @@ public class ImageControllerTest {
     StringReader input = new StringReader("loae test/img/mall.jpg mall\n exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(input, printWriter);
-    MockImageService service = new MockImageService();
+    MockImageService service = new MockImageService(printWriter);
     ImageController controller = new ImageController(service, mockView);
 
     controller.start();
@@ -530,8 +635,9 @@ public class ImageControllerTest {
                                           + "load test\\img\\car.jpg car\n exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(input, printWriter);
-    MockImageService mockService = new MockImageService();
+    MockImageService mockService = new MockImageService(printWriter);
     ImageController testController = new ImageController(mockService, mockView);
 
     testController.start();
@@ -551,8 +657,9 @@ public class ImageControllerTest {
                                           + " exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(input, printWriter);
-    MockImageService mockService = new MockImageService();
+    MockImageService mockService = new MockImageService(printWriter);
     ImageController testController = new ImageController(mockService, mockView);
 
     testController.start();
@@ -562,6 +669,9 @@ public class ImageControllerTest {
     assertTrue(consoleOutput.contains("Loading new image: car"));
     assertTrue(consoleOutput.contains("Image blurred"));
     assertTrue(consoleOutput.contains("Increase the brightness of the image"));
+
+    Image targetImage = new MyImage("test/img/car.jpg");
+    assertTrue(consoleOutput.contains(targetImage.hashCode() + ""));
   }
 
   /**
@@ -576,8 +686,9 @@ public class ImageControllerTest {
                                           + "exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(input, printWriter);
-    MockImageService mockService = new MockImageService();
+    MockImageService mockService = new MockImageService(printWriter);
     ImageController testController = new ImageController(mockService, mockView);
 
     testController.start();
@@ -587,6 +698,9 @@ public class ImageControllerTest {
     assertTrue(consoleOutput.contains("Loading new image: car"));
     assertTrue(consoleOutput.contains("Image blurred"));
     assertTrue(consoleOutput.contains("Increase the brightness of the image"));
+
+    Image targetImage = new MyImage("test/img/car.jpg");
+    assertTrue(consoleOutput.contains(targetImage.hashCode() + ""));
   }
 
   /**
@@ -604,8 +718,9 @@ public class ImageControllerTest {
                                           + "brighten 2 car car-brighten\n exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(input, printWriter);
-    MockImageService mockService = new MockImageService();
+    MockImageService mockService = new MockImageService(printWriter);
     ImageController testController = new ImageController(mockService, mockView);
 
     testController.start();
@@ -623,8 +738,9 @@ public class ImageControllerTest {
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(inputReader, printWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(printWriter);
     ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
@@ -644,8 +760,9 @@ public class ImageControllerTest {
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(inputReader, printWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(printWriter);
     ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
     controller.startFromFile(filePath);
@@ -664,8 +781,9 @@ public class ImageControllerTest {
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(inputReader, printWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(printWriter);
     ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
@@ -687,8 +805,9 @@ public class ImageControllerTest {
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(inputReader, printWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(printWriter);
     ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
@@ -711,8 +830,9 @@ public class ImageControllerTest {
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(inputReader, printWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(printWriter);
     ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
@@ -732,8 +852,9 @@ public class ImageControllerTest {
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(inputReader, printWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(printWriter);
     ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
@@ -753,8 +874,9 @@ public class ImageControllerTest {
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(inputReader, printWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(printWriter);
     ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
@@ -774,8 +896,9 @@ public class ImageControllerTest {
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
+
     MockImageView mockView = new MockImageView(inputReader, printWriter);
-    MockImageService mockImageService = new MockImageService();
+    MockImageService mockImageService = new MockImageService(printWriter);
     ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 

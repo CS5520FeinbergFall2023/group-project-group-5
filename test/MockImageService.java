@@ -1,3 +1,7 @@
+import java.io.Flushable;
+import java.io.IOException;
+import java.util.Arrays;
+
 import model.Axis;
 import model.Channel;
 import model.image.Image;
@@ -10,7 +14,25 @@ import service.ImageService;
  * correctly receives the command that user inputted or not.
  */
 public class MockImageService extends ImageService {
+  private final Appendable output;
 
+  public MockImageService(Appendable output) {
+    this.output = output;
+  }
+
+  private void displayMessage(String message) {
+    try {
+      output.append(message).append("\n");
+
+      // Flush the output if possible
+      if (output instanceof Flushable) {
+        ((Flushable) output).flush();
+      }
+
+    } catch (IOException e) {
+      throw new RuntimeException("Error appending message.", e);
+    }
+  }
 
   /**
    * Get one certain channel of the image (result in one colored image).
@@ -21,8 +43,9 @@ public class MockImageService extends ImageService {
    */
   @Override
   public Image splitComponent(Image image, Channel channel) {
-    System.out.println("Receive the image need to be split and their corresponding channels.");
-    return new MyImage("test/img/trichromatic/simple_greyScale_r.ppm");
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to be split and their corresponding channels.");
+    return new MyImage("res/city_small_red_channel_greyscale.png");
   }
 
   /**
@@ -33,7 +56,8 @@ public class MockImageService extends ImageService {
    */
   @Override
   public Image blur(Image image) {
-    System.out.println("Receive the image need to be blurred, now start to blur.");
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to be blurred, now start to blur.");
     return new MyImage("test/img/cupcake_blurOnce.png");
   }
 
@@ -45,8 +69,9 @@ public class MockImageService extends ImageService {
    */
   @Override
   public Image getValue(Image image) {
-    System.out.println("Receive the image need to get the value-component, now start to do that.");
-    return new MyImage("test/img/monochromatic/black_value.ppm");
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to get the value-component, now start to do that.");
+    return new MyImage("res/city_small_value.png");
   }
 
   /**
@@ -57,9 +82,10 @@ public class MockImageService extends ImageService {
    */
   @Override
   public Image getIntensity(Image image) {
-    System.out.println("Receive the image need to get the intensity-component, now start to do "
-                       + "that.");
-    return new MyImage("test/img/monochromatic/black_intensity.ppm");
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to get the intensity-component, now start to do "
+                   + "that.");
+    return new MyImage("res/city_small_intensity.png");
   }
 
   /**
@@ -70,8 +96,9 @@ public class MockImageService extends ImageService {
    */
   @Override
   public Image getLuma(Image image) {
-    System.out.println("Receive the image need to get the luma-component, now start to do that.");
-    return new MyImage("test/img/monochromatic/black_luma.ppm");
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to get the luma-component, now start to do that.");
+    return new MyImage("res/city_small_luma.png");
   }
 
   /**
@@ -83,8 +110,9 @@ public class MockImageService extends ImageService {
    */
   @Override
   public Image flip(Image image, Axis axis) {
-    System.out.println("Receive the image need to be flipped, now start to flip.");
-    return new MyImage("test/img/flip/car_horizontallyFlipped.png");
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to be flipped, now start to flip.");
+    return new MyImage("res/car_doubleFlipped.png");
   }
 
 
@@ -97,7 +125,8 @@ public class MockImageService extends ImageService {
    */
   @Override
   public Image brighten(Image image, float delta) {
-    System.out.println("Receive the image need to be brightened, now start to brighten.");
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to be brightened, now start to brighten.");
     return new MyImage("test/img/trichromatic/simple-4.ppm");
   }
 
@@ -109,7 +138,8 @@ public class MockImageService extends ImageService {
    */
   @Override
   public Image[] splitChannel(Image image) {
-    System.out.println("Receive the image need to be split, now start to split.");
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to be split, now start to split.");
     Image myImage1 = new MyImage("test/img/split/rose_onlyRed.jpg");
     Image myImage2 = new MyImage("test/img/split/rose_onlyGreen.jpg");
     Image myImage3 = new MyImage("test/img/split/rose_onlyBlue.jpg");
@@ -131,7 +161,11 @@ public class MockImageService extends ImageService {
    */
   @Override
   public Image combineChannels(Channel[] channels, Image[] images) {
-    System.out.println("Receive three images need to combine together, now start to combine.");
+    displayMessage(Arrays.toString(channels));
+    for (int i = 0; i < images.length; i++) {
+      displayMessage(images[i].hashCode() + "");
+    }
+    displayMessage("Receive three images need to combine together, now start to combine.");
     return new MyImage("test/img/split/rose.ppm");
   }
 
@@ -143,7 +177,8 @@ public class MockImageService extends ImageService {
    */
   @Override
   public Image sharpen(Image image) {
-    System.out.println("Receive the image need to be sharpened, now start to sharpen.");
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to be sharpened, now start to sharpen.");
     return new MyImage("test/img/cupcake_sharpenOnce.png");
   }
 
@@ -155,7 +190,8 @@ public class MockImageService extends ImageService {
    */
   @Override
   public Image getSepia(Image image) {
-    System.out.println("Receive the image need to get its sepia, now start to do that.");
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to get its sepia, now start to do that.");
     return new MyImage("test/img/city_small_sepia.png");
   }
 }

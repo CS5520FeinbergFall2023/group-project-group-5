@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,7 +19,6 @@ import model.image.Image;
 import model.image.MyImage;
 import service.ImageService;
 import view.ImageView;
-
 
 
 /**
@@ -56,7 +56,7 @@ public class ImageController {
         continue;
       }
       if (command.startsWith("#")) {
-        if (commandFirst == "#") {
+        if (Objects.equals(commandFirst, "#")) {
           imageView.displayMessage("There are multiple comments. Please modify it.");
           break;
         }
@@ -91,26 +91,24 @@ public class ImageController {
       String commandFirst = null;
       while ((command = reader.readLine()) != null) {
         if (command.isEmpty()) {
-          if (command.isEmpty() || command.startsWith("#")) {
-            continue;
+          continue;
+        }
+        if (command.startsWith("#")) {
+          if (commandFirst != null && commandFirst.equals("#")) {
+            imageView.displayMessage("There are multiple comments. Please modify it.");
+            break;
           }
-          if (command.startsWith("#")) {
-            if (commandFirst == "#") {
-              imageView.displayMessage("There are multiple comments. Please modify it.");
-              break;
-            }
-            commandFirst = "#";
-            continue;
-          }
-          commandFirst = command.substring(0, 1);
-          if ("exit".equalsIgnoreCase(command.trim())) {
-            return;
-          }
-          try {
-            executeCommand(command);
-          } catch (Exception e) {
-            imageView.displayMessage(e.getMessage());
-          }
+          commandFirst = "#";
+          continue;
+        }
+        commandFirst = command.substring(0, 1);
+        if ("exit".equalsIgnoreCase(command.trim())) {
+          return;
+        }
+        try {
+          executeCommand(command);
+        } catch (Exception e) {
+          imageView.displayMessage(e.getMessage());
         }
       }
     } catch (IOException e) {
