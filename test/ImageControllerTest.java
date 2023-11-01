@@ -25,11 +25,9 @@ public class ImageControllerTest {
 
   /**
    * Test the blur command when there is no image loaded.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testNullBlurCommand() throws IOException {
+  public void testNullBlurCommand() {
 
     String blurCommand = "blur cupcake cupcake_blurOnce\n exit";
     StringReader blurReader = new StringReader(blurCommand);
@@ -48,13 +46,10 @@ public class ImageControllerTest {
 
   /**
    * Test the blur command when there exist a image.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testBlurCommand() throws IOException {
-    String blurCommand = "load test/img/cupcake.png cupcake\n " +
-          "blur cupcake cupcake_blurOnce\n exit";
+  public void testBlurCommand() {
+    String blurCommand = "load test/img/cupcake.png cupcake\n blur cupcake cupcake_blurOnce\n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
     PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
@@ -73,11 +68,9 @@ public class ImageControllerTest {
 
   /**
    * Test the value-component command when there is no image loaded.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testNullValueComponent() throws IOException {
+  public void testNullValueComponent() {
 
     String valueCommand = "value-component black black_value\n exit";
     StringReader valueReader = new StringReader(valueCommand);
@@ -94,13 +87,11 @@ public class ImageControllerTest {
 
   /**
    * Test the value component command when there exists a image.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testValueComponent() throws IOException {
-    String valueCommand = "load test/img/monochromatic/black.ppm black\n " +
-          "value-component black black_value\n exit";
+  public void testValueComponent() {
+    String valueCommand = "load test/img/monochromatic/black.ppm black\n "
+          + "value-component black black_value\n exit";
     StringReader valueReader = new StringReader(valueCommand);
     StringWriter valueWriter = new StringWriter();
     PrintWriter valuePrintWriter = new PrintWriter(valueWriter);
@@ -119,11 +110,9 @@ public class ImageControllerTest {
 
   /**
    * Test the intensity-component command when the image is null.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testNullIntensityComponent() throws IOException {
+  public void testNullIntensityComponent() {
     String intensityCommand = "intensity-component black black_intensity\n exit";
     StringReader intensityReader = new StringReader(intensityCommand);
     StringWriter intensityWriter = new StringWriter();
@@ -139,13 +128,11 @@ public class ImageControllerTest {
 
   /**
    * Test the intensity-component command.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testIntensityComponent() throws IOException {
-    String intensityCommand = "load test/img/monochromatic/black.ppm black\n " +
-          "intensity-component black black_intensity\n exit";
+  public void testIntensityComponent(){
+    String intensityCommand = "load test/img/monochromatic/black.ppm black\n "
+          + "intensity-component black black_intensity\n exit";
     StringReader intensityReader = new StringReader(intensityCommand);
     StringWriter intensityWriter = new StringWriter();
     PrintWriter intensityPrintWriter = new PrintWriter(intensityWriter);
@@ -167,11 +154,9 @@ public class ImageControllerTest {
 
   /**
    * Test the luma-component command when there is not image exists.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testNullLumaComponent() throws IOException {
+  public void testNullLumaComponent() {
     String lumaCommand = "luma-component black black_luma\n exit";
     StringReader lumaReader = new StringReader(lumaCommand);
     StringWriter lumaWriter = new StringWriter();
@@ -186,13 +171,11 @@ public class ImageControllerTest {
 
   /**
    * Test the luma-component command.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testLumaComponent() throws IOException {
-    String lumaCommand = "load test/img/monochromatic/black.ppm black\n " +
-          "luma-component black black_luma\n exit";
+  public void testLumaComponent() {
+    String lumaCommand = "load test/img/monochromatic/black.ppm black\n "
+          + "luma-component black black_luma\n exit";
     StringReader lumaReader = new StringReader(lumaCommand);
     StringWriter lumaWriter = new StringWriter();
     PrintWriter lumaPrintWriter = new PrintWriter(lumaWriter);
@@ -212,10 +195,9 @@ public class ImageControllerTest {
 
   /**
    * Test the RGB combine command when there are not images.
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testNullRGBCombine() throws IOException {
+  public void testNullRGBCombine() {
 
     String combineCommand = "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader combineReader = new StringReader(combineCommand);
@@ -233,15 +215,14 @@ public class ImageControllerTest {
 
   /**
    * Test the RGB combine command.
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testRGBCombine() throws IOException {
+  public void testRGBCombine() {
 
-    String combineCommand = "load test/img/split/rose_onlyRed.jpg rose_onlyRed\n " +
-          "load test/img/split/rose_onlyGreen.jpg rose_onlyGreen\n" +
-          "load test/img/split/rose_onlyBlue.jpg rose_onlyBlue\n" +
-          "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
+    String combineCommand = "load test/img/split/rose_onlyRed.jpg rose_onlyRed\n "
+          + "load test/img/split/rose_onlyGreen.jpg rose_onlyGreen\n"
+          + "load test/img/split/rose_onlyBlue.jpg rose_onlyBlue\n"
+          + "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader combineReader = new StringReader(combineCommand);
     StringWriter combineWriter = new StringWriter();
     PrintWriter combinePrintWriter = new PrintWriter(combineWriter);
@@ -262,11 +243,9 @@ public class ImageControllerTest {
 
   /**
    * Test the RGB Split command when there is not exist image.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testNullRGBSplit() throws IOException {
+  public void testNullRGBSplit() {
 
     String splitCommand = "rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader splitReader = new StringReader(splitCommand);
@@ -284,14 +263,12 @@ public class ImageControllerTest {
 
   /**
    * Test the RGB Split command.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testRGBSplit() throws IOException {
+  public void testRGBSplit() {
 
-    String splitCommand = "load test/img/split/rose.jpg rose\n" +
-          "rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
+    String splitCommand = "load test/img/split/rose.jpg rose\n"
+          +"rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -320,11 +297,9 @@ public class ImageControllerTest {
 
   /**
    * Test the split component command when there is not exist image.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testNullSplitComponent() throws IOException {
+  public void testNullSplitComponent() {
     String splitCommand = "red-component simple simple_greyScale_r\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
@@ -340,13 +315,11 @@ public class ImageControllerTest {
 
   /**
    * Test the split component command.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testSplitComponent() throws IOException {
-    String splitCommand = "load test/img/trichromatic/simple.ppm simple\n " +
-          "red-component simple simple_greyScale_r\n exit";
+  public void testSplitComponent() {
+    String splitCommand = "load test/img/trichromatic/simple.ppm simple\n "
+          + "red-component simple simple_greyScale_r\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -366,11 +339,9 @@ public class ImageControllerTest {
 
   /**
    * Test the flip command when there is not exist image.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testNullFlip() throws IOException {
+  public void testNullFlip() {
     String flipCommand = "horizontal-flip car car_horizontallyFlipped\n exit";
     StringReader flipReader = new StringReader(flipCommand);
     StringWriter flipWriter = new StringWriter();
@@ -386,13 +357,11 @@ public class ImageControllerTest {
 
   /**
    * Test the flip command.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testFlip() throws IOException {
-    String flipCommand = "load test/img/flip/car.png car\n " +
-          "horizontal-flip car car_horizontallyFlipped\n exit";
+  public void testFlip() {
+    String flipCommand = "load test/img/flip/car.png car\n "
+          + "horizontal-flip car car_horizontallyFlipped\n exit";
     StringReader flipReader = new StringReader(flipCommand);
     StringWriter flipWriter = new StringWriter();
     PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
@@ -412,11 +381,9 @@ public class ImageControllerTest {
 
   /**
    * Test the brighten command when there is not exist a image.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testNullBrighten() throws IOException {
+  public void testNullBrighten() {
     String brightenCommand = "brighten -4 simple simple-4 \n exit";
     StringReader brightenReader = new StringReader(brightenCommand);
     StringWriter brightenWriter = new StringWriter();
@@ -434,13 +401,11 @@ public class ImageControllerTest {
 
   /**
    * Test the brighten command when there exist a image.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testBrighten() throws IOException {
-    String brightenCommand = "load test/img/trichromatic/simple.ppm simple\n " +
-          "brighten -4 simple simple-4 \n exit";
+  public void testBrighten() {
+    String brightenCommand = "load test/img/trichromatic/simple.ppm simple\n "
+          + "brighten -4 simple simple-4 \n exit";
     StringReader brightenReader = new StringReader(brightenCommand);
     StringWriter brightenWriter = new StringWriter();
     PrintWriter brightenPrintWriter = new PrintWriter(brightenWriter);
@@ -460,11 +425,9 @@ public class ImageControllerTest {
 
   /**
    * Test the sharpen command when there is not image exist.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testNullSharpen() throws IOException {
+  public void testNullSharpen() {
     String sharpenCommand = "sharpen cupcake cupcake_sharpenOnce \n exit";
     StringReader sharpenReader = new StringReader(sharpenCommand);
     StringWriter sharpenWriter = new StringWriter();
@@ -480,13 +443,11 @@ public class ImageControllerTest {
 
   /**
    * Test the sharpen command.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testSharpen() throws IOException {
-    String sharpenCommand = "load test/img/cupcake.png cupcake\n " +
-          "sharpen cupcake cupcake_sharpenOnce\n exit";
+  public void testSharpen() {
+    String sharpenCommand = "load test/img/cupcake.png cupcake\n "
+          + "sharpen cupcake cupcake_sharpenOnce\n exit";
     StringReader sharpenReader = new StringReader(sharpenCommand);
     StringWriter sharpenWriter = new StringWriter();
     PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
@@ -505,11 +466,9 @@ public class ImageControllerTest {
 
   /**
    * Test the sepia command when there is not image exist.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testNullSepia() throws IOException {
+  public void testNullSepia() {
     String sepiaCommand = "sepia city-small city-small-sepia\n exit";
     StringReader sepiaReader = new StringReader(sepiaCommand);
     StringWriter sepiaWriter = new StringWriter();
@@ -524,13 +483,11 @@ public class ImageControllerTest {
 
   /**
    * Test the sepia command.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testSepia() throws IOException {
-    String sepiaCommand = "load test/img/city_small.png city_small\n " +
-          "sepia city_small city_small_sepia\n exit";
+  public void testSepia() {
+    String sepiaCommand = "load test/img/city_small.png city_small\n "
+          + "sepia city_small city_small_sepia\n exit";
     StringReader sepiaReader = new StringReader(sepiaCommand);
     StringWriter sepiaWriter = new StringWriter();
     PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
@@ -560,7 +517,6 @@ public class ImageControllerTest {
     MockImageService service = new MockImageService();
     ImageController controller = new ImageController(service, mockView);
 
-    //controller.executeCommand("loae test/img/mall.jpg mall");
     controller.start();
     String consoleOutput = output.toString();
 
@@ -570,13 +526,11 @@ public class ImageControllerTest {
 
   /**
    * Test a input command with a single-line comment.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testSingleCommentSingleCommand() throws IOException {
-    StringReader input = new StringReader
-          ("# This is a comment\n load test\\img\\car.jpg car\n exit");
+  public void testSingleCommentSingleCommand() {
+    StringReader input = new StringReader("# This is a comment\n "
+          + "load test\\img\\car.jpg car\n exit");
     StringWriter output= new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
     MockImageView mockView = new MockImageView(input, printWriter);
@@ -592,14 +546,11 @@ public class ImageControllerTest {
 
   /**
    * Test when user input multiple line of commands.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testMultipleCommands() throws IOException {
-    StringReader input = new StringReader
-          ("load test\\img\\car.jpg car\n blur car car-blurred\n brighten 2 car car-brighten\n "
-                + "exit");
+  public void testMultipleCommands() {
+    StringReader input = new StringReader("load test\\img\\car.jpg car\n "
+          + "blur car car-blurred\n brighten 2 car car-brighten\n exit");
     StringWriter output= new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
     MockImageView mockView = new MockImageView(input, printWriter);
@@ -617,14 +568,12 @@ public class ImageControllerTest {
 
   /**
    * Test when user input multiple line of commands and their comments.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testMultipleCommentsAndCommands() throws IOException {
-    StringReader input = new StringReader
-          ("load test\\img\\car.jpg car\n # want to blur the car\n blur car car-blurred\n" +
-                " # want to change the image's brightness\n brighten 2 car car-brighten\n "
+  public void testMultipleCommentsAndCommands() {
+    StringReader input = new StringReader("load test\\img\\car.jpg car\n "
+          + "# want to blur the car\n blur car car-blurred\n "
+          + "# want to change the image's brightness\n brighten 2 car car-brighten\n "
                 + "exit");
     StringWriter output= new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
@@ -639,6 +588,28 @@ public class ImageControllerTest {
     assertTrue(consoleOutput.contains("Loading new image: car"));
     assertTrue(consoleOutput.contains("Image blurred"));
     assertTrue(consoleOutput.contains("Increase the brightness of the image"));
+  }
+
+  /**
+   * Test if the command user inputted includes continous comments and a single command. It can
+   *  not execute correctly.
+   */
+  @Test
+  public void testContinousCommentsAndCommands() {
+    StringReader input = new StringReader("# I want to load a beautiful image\n "
+          + "# This image is about a car\n load test\\img\\car.jpg car\n # want to blur the car\n "
+          + "blur car car-blurred\n # want to change the image's brightness\n "
+          + "brighten 2 car car-brighten\n exit");
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(input, printWriter);
+    MockImageService mockService = new MockImageService();
+    ImageController testController = new ImageController(mockService, mockView);
+
+    testController.start();
+    String consoleOutput = output.toString();
+
+    assertTrue(consoleOutput.contains("There are multiple comments. Please modify it."));
   }
 
   /**
@@ -755,7 +726,6 @@ public class ImageControllerTest {
     controller.startFromFile(filePath);
     String outputFile = output.toString();
 
-    //assertTrue(outputFile.contains("Loading new image: koala"));
     assertTrue(outputFile.contains("Loading new image: car"));
   }
 
@@ -803,6 +773,29 @@ public class ImageControllerTest {
     String outputFile = output.toString();
 
     assertTrue(outputFile.contains("Loading new image: mall"));
+  }
+
+  /**
+   * Test if the file with valid file path includes continous comments and a single command. It can
+   * not execute correctly.
+   *
+   * @throws IOException if there's an error related to I/O operations.
+   */
+  @Test
+  public void testFileContinousCommentSingleCommand() throws IOException {
+    String input = "test/file/textcontinouscomment.txt\n";
+    StringReader inputReader = new StringReader(input);
+    StringWriter output= new StringWriter();
+    PrintWriter printWriter = new PrintWriter(output, true);
+    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageService mockImageService = new MockImageService();
+    ImageController controller = new ImageController(mockImageService,mockView);
+    String filePath = mockView.getFilePath();
+
+    controller.startFromFile(filePath);
+    String outputFile = output.toString();
+
+    assertTrue(outputFile.contains("There are multiple comments. Please modify it."));
   }
 
 }
