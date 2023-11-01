@@ -51,11 +51,6 @@ The key design here is to categorize image operations according to the mechanism
 
 ## Interface
 
-### ImageServiceInterface
-
-#### Purpose
-This interface describes common operations perform on images, including sharpening images, brightening images, making images sepia, etc. Having this interface helps with mock/stub tests in the controller.
-
 ## Enums
 
 ### Axis

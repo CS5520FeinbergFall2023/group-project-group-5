@@ -1,4 +1,5 @@
 import org.junit.Test;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 
 /**
- * This test class is test the controller component. For the controller, need to test whether it
+ * This test class is to test the controller component. For the controller, need to test whether it
  * correctly gets the command that user inputted, correctly gets the related images and transfers
  * those information to ImageService component correctly or not. Also, this test class tests whether
  * two ways (console and text file) for users to input their commands work correctly (allow comments
@@ -47,14 +48,14 @@ public class ImageControllerTest {
   }
 
   /**
-   * Test the blur command when there exist a image.
+   * Test the blur command when there exist an image.
    *
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
   public void testBlurCommand() throws IOException {
     String blurCommand = "load test/img/cupcake.png cupcake\n " +
-          "blur cupcake cupcake_blurOnce\n exit";
+                         "blur cupcake cupcake_blurOnce\n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
     PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
@@ -100,7 +101,7 @@ public class ImageControllerTest {
   @Test
   public void testValueComponent() throws IOException {
     String valueCommand = "load test/img/monochromatic/black.ppm black\n " +
-          "value-component black black_value\n exit";
+                          "value-component black black_value\n exit";
     StringReader valueReader = new StringReader(valueCommand);
     StringWriter valueWriter = new StringWriter();
     PrintWriter valuePrintWriter = new PrintWriter(valueWriter);
@@ -111,7 +112,7 @@ public class ImageControllerTest {
     String output = valueWriter.toString();
     assertTrue(output.contains("Get the value-component"));
 
-    Image executeValue =valueController.loadedImages.get("black_value");
+    Image executeValue = valueController.loadedImages.get("black_value");
     Image expectValue = new MyImage("test/img/monochromatic/black_value.ppm");
 
     assertEquals(expectValue, executeValue);
@@ -145,7 +146,7 @@ public class ImageControllerTest {
   @Test
   public void testIntensityComponent() throws IOException {
     String intensityCommand = "load test/img/monochromatic/black.ppm black\n " +
-          "intensity-component black black_intensity\n exit";
+                              "intensity-component black black_intensity\n exit";
     StringReader intensityReader = new StringReader(intensityCommand);
     StringWriter intensityWriter = new StringWriter();
     PrintWriter intensityPrintWriter = new PrintWriter(intensityWriter);
@@ -158,8 +159,8 @@ public class ImageControllerTest {
     String output = intensityWriter.toString();
     assertTrue(output.contains("Get the intensity-component"));
 
-    Image executeIntensity =intensityController.loadedImages.get
-          ("black_intensity");
+    Image executeIntensity = intensityController.loadedImages.get
+        ("black_intensity");
     Image expectIntensity = new MyImage("test/img/monochromatic/black_intensity.ppm");
 
     assertEquals(expectIntensity, executeIntensity);
@@ -192,7 +193,7 @@ public class ImageControllerTest {
   @Test
   public void testLumaComponent() throws IOException {
     String lumaCommand = "load test/img/monochromatic/black.ppm black\n " +
-          "luma-component black black_luma\n exit";
+                         "luma-component black black_luma\n exit";
     StringReader lumaReader = new StringReader(lumaCommand);
     StringWriter lumaWriter = new StringWriter();
     PrintWriter lumaPrintWriter = new PrintWriter(lumaWriter);
@@ -212,6 +213,7 @@ public class ImageControllerTest {
 
   /**
    * Test the RGB combine command when there are not images.
+   *
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
@@ -233,15 +235,16 @@ public class ImageControllerTest {
 
   /**
    * Test the RGB combine command.
+   *
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
   public void testRGBCombine() throws IOException {
 
     String combineCommand = "load test/img/split/rose_onlyRed.jpg rose_onlyRed\n " +
-          "load test/img/split/rose_onlyGreen.jpg rose_onlyGreen\n" +
-          "load test/img/split/rose_onlyBlue.jpg rose_onlyBlue\n" +
-          "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
+                            "load test/img/split/rose_onlyGreen.jpg rose_onlyGreen\n" +
+                            "load test/img/split/rose_onlyBlue.jpg rose_onlyBlue\n" +
+                            "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader combineReader = new StringReader(combineCommand);
     StringWriter combineWriter = new StringWriter();
     PrintWriter combinePrintWriter = new PrintWriter(combineWriter);
@@ -291,7 +294,7 @@ public class ImageControllerTest {
   public void testRGBSplit() throws IOException {
 
     String splitCommand = "load test/img/split/rose.jpg rose\n" +
-          "rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
+                          "rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -330,7 +333,7 @@ public class ImageControllerTest {
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
     ImageView splitImageView = new ImageView(splitReader,
-          splitPrintWriter);
+        splitPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController splitController = new ImageController(mockImageService, splitImageView);
     splitController.start();
@@ -346,19 +349,19 @@ public class ImageControllerTest {
   @Test
   public void testSplitComponent() throws IOException {
     String splitCommand = "load test/img/trichromatic/simple.ppm simple\n " +
-          "red-component simple simple_greyScale_r\n exit";
+                          "red-component simple simple_greyScale_r\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
     ImageView splitImageView = new ImageView(splitReader,
-          splitPrintWriter);
+        splitPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController splitController = new ImageController(mockImageService, splitImageView);
     splitController.start();
     String output = splitWriter.toString();
     assertTrue(output.contains("Split image in red component"));
 
-    Image executeSplit =splitController.loadedImages.get("simple_greyScale_r");
+    Image executeSplit = splitController.loadedImages.get("simple_greyScale_r");
     Image expectSplit = new MyImage("test/img/trichromatic/simple_greyScale_r.ppm");
 
     assertEquals(expectSplit, executeSplit);
@@ -392,7 +395,7 @@ public class ImageControllerTest {
   @Test
   public void testFlip() throws IOException {
     String flipCommand = "load test/img/flip/car.png car\n " +
-          "horizontal-flip car car_horizontallyFlipped\n exit";
+                         "horizontal-flip car car_horizontallyFlipped\n exit";
     StringReader flipReader = new StringReader(flipCommand);
     StringWriter flipWriter = new StringWriter();
     PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
@@ -403,7 +406,7 @@ public class ImageControllerTest {
     String output = flipWriter.toString();
     assertTrue(output.contains("Flip the image horizontally"));
 
-    Image execute =flipController.loadedImages.get("car_horizontallyFlipped");
+    Image execute = flipController.loadedImages.get("car_horizontallyFlipped");
     Image expect = new MyImage("test/img/flip/car_horizontallyFlipped.png");
 
     assertEquals(expect, execute);
@@ -424,7 +427,7 @@ public class ImageControllerTest {
     ImageView brightenImageView = new ImageView(brightenReader, brightenPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController brightenController = new ImageController(mockImageService,
-          brightenImageView);
+        brightenImageView);
     brightenController.start();
 
     String output = brightenWriter.toString();
@@ -439,15 +442,15 @@ public class ImageControllerTest {
    */
   @Test
   public void testBrighten() throws IOException {
-    String brightenCommand = "load test/img/trichromatic/simple.ppm simple\n " +
-          "brighten -4 simple simple-4 \n exit";
+    String brightenCommand = "load test/img/trichromatic/simple.ppm simple\n "
+                             + "brighten -4 simple simple-4 \n exit";
     StringReader brightenReader = new StringReader(brightenCommand);
     StringWriter brightenWriter = new StringWriter();
     PrintWriter brightenPrintWriter = new PrintWriter(brightenWriter);
     ImageView brightenImageView = new ImageView(brightenReader, brightenPrintWriter);
     MockImageService mockImageService = new MockImageService();
     ImageController brightenController = new ImageController(mockImageService,
-          brightenImageView);
+        brightenImageView);
     brightenController.start();
     String output = brightenWriter.toString();
     assertTrue(output.contains("Decrease the brightness of the image"));
@@ -486,7 +489,7 @@ public class ImageControllerTest {
   @Test
   public void testSharpen() throws IOException {
     String sharpenCommand = "load test/img/cupcake.png cupcake\n " +
-          "sharpen cupcake cupcake_sharpenOnce\n exit";
+                            "sharpen cupcake cupcake_sharpenOnce\n exit";
     StringReader sharpenReader = new StringReader(sharpenCommand);
     StringWriter sharpenWriter = new StringWriter();
     PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
@@ -497,7 +500,7 @@ public class ImageControllerTest {
     String output = sharpenWriter.toString();
     assertTrue(output.contains("Sharpen image"));
 
-    Image executeSharpen =sharpenController.loadedImages.get("cupcake_sharpenOnce");
+    Image executeSharpen = sharpenController.loadedImages.get("cupcake_sharpenOnce");
     Image expectSharpen = new MyImage("test/img/cupcake_sharpenOnce.png");
 
     assertEquals(expectSharpen, executeSharpen);
@@ -530,7 +533,7 @@ public class ImageControllerTest {
   @Test
   public void testSepia() throws IOException {
     String sepiaCommand = "load test/img/city_small.png city_small\n " +
-          "sepia city_small city_small_sepia\n exit";
+                          "sepia city_small city_small_sepia\n exit";
     StringReader sepiaReader = new StringReader(sepiaCommand);
     StringWriter sepiaWriter = new StringWriter();
     PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
@@ -542,7 +545,7 @@ public class ImageControllerTest {
     assertTrue(output.contains("Sepia image"));
 
 
-    Image executeSepia =sepiaController.loadedImages.get("city_small_sepia");
+    Image executeSepia = sepiaController.loadedImages.get("city_small_sepia");
     Image expectSepia = new MyImage("test/img/city_small_sepia.png");
 
     assertEquals(expectSepia, executeSepia);
@@ -576,8 +579,8 @@ public class ImageControllerTest {
   @Test
   public void testSingleCommentSingleCommand() throws IOException {
     StringReader input = new StringReader
-          ("# This is a comment\n load test\\img\\car.jpg car\n exit");
-    StringWriter output= new StringWriter();
+        ("# This is a comment\n load test\\img\\car.jpg car\n exit");
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
     MockImageView mockView = new MockImageView(input, printWriter);
     MockImageService mockService = new MockImageService();
@@ -598,9 +601,9 @@ public class ImageControllerTest {
   @Test
   public void testMultipleCommands() throws IOException {
     StringReader input = new StringReader
-          ("load test\\img\\car.jpg car\n blur car car-blurred\n brighten 2 car car-brighten\n "
-                + "exit");
-    StringWriter output= new StringWriter();
+        ("load test\\img\\car.jpg car\n blur car car-blurred\n brighten 2 car car-brighten\n "
+         + "exit");
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
     MockImageView mockView = new MockImageView(input, printWriter);
     MockImageService mockService = new MockImageService();
@@ -623,10 +626,10 @@ public class ImageControllerTest {
   @Test
   public void testMultipleCommentsAndCommands() throws IOException {
     StringReader input = new StringReader
-          ("load test\\img\\car.jpg car\n # want to blur the car\n blur car car-blurred\n" +
-                " # want to change the image's brightness\n brighten 2 car car-brighten\n "
-                + "exit");
-    StringWriter output= new StringWriter();
+        ("load test\\img\\car.jpg car\n # want to blur the car\n blur car car-blurred\n" +
+         " # want to change the image's brightness\n brighten 2 car car-brighten\n "
+         + "exit");
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
     MockImageView mockView = new MockImageView(input, printWriter);
     MockImageService mockService = new MockImageService();
@@ -642,7 +645,6 @@ public class ImageControllerTest {
   }
 
   /**
-   *
    * @throws IOException if there's an error related to I/O operations.
    */
   @Test
@@ -650,11 +652,11 @@ public class ImageControllerTest {
 
     String input = "test/file/invalid/not/exist.txt\n";
     StringReader inputReader = new StringReader(input);
-    StringWriter output= new StringWriter();
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
-    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageView mockView = new MockImageView(inputReader, printWriter);
     MockImageService mockImageService = new MockImageService();
-    ImageController controller = new ImageController(mockImageService,mockView);
+    ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
     controller.startFromFile(filePath);
@@ -673,11 +675,11 @@ public class ImageControllerTest {
 
     String input = "test/file/commdswitherrors.txt\n";
     StringReader inputReader = new StringReader(input);
-    StringWriter output= new StringWriter();
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
-    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageView mockView = new MockImageView(inputReader, printWriter);
     MockImageService mockImageService = new MockImageService();
-    ImageController controller = new ImageController(mockImageService,mockView);
+    ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
     controller.startFromFile(filePath);
     String outputFile = output.toString();
@@ -695,11 +697,11 @@ public class ImageControllerTest {
   public void testFileMultipleCommands() throws IOException {
     String input = "test/file/textcommand.txt\n";
     StringReader inputReader = new StringReader(input);
-    StringWriter output= new StringWriter();
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
-    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageView mockView = new MockImageView(inputReader, printWriter);
     MockImageService mockImageService = new MockImageService();
-    ImageController controller = new ImageController(mockImageService,mockView);
+    ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
     controller.startFromFile(filePath);
@@ -712,6 +714,7 @@ public class ImageControllerTest {
 
   /**
    * Test if the file with valid file path includes multiple comments and commands.
+   * This tests contains absolute path, so it won't run on every environment.
    *
    * @throws IOException if there's an error related to I/O operations.
    */
@@ -719,11 +722,11 @@ public class ImageControllerTest {
   public void testFileCommentsAndMultipleCommands() throws IOException {
     String input = "test/file/commandWithMultipleComments.txt\n";
     StringReader inputReader = new StringReader(input);
-    StringWriter output= new StringWriter();
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
-    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageView mockView = new MockImageView(inputReader, printWriter);
     MockImageService mockImageService = new MockImageService();
-    ImageController controller = new ImageController(mockImageService,mockView);
+    ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
     controller.startFromFile(filePath);
@@ -745,11 +748,11 @@ public class ImageControllerTest {
   public void testFileSingleCommand() throws IOException {
     String input = "test/file/textsinglecommand.txt\n";
     StringReader inputReader = new StringReader(input);
-    StringWriter output= new StringWriter();
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
-    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageView mockView = new MockImageView(inputReader, printWriter);
     MockImageService mockImageService = new MockImageService();
-    ImageController controller = new ImageController(mockImageService,mockView);
+    ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
     controller.startFromFile(filePath);
@@ -769,11 +772,11 @@ public class ImageControllerTest {
   public void testFileNullSingleCommentSingleCommand() throws IOException {
     String input = "test/file/textsinglecommandwithsinglecomment.txt\n";
     StringReader inputReader = new StringReader(input);
-    StringWriter output= new StringWriter();
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
-    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageView mockView = new MockImageView(inputReader, printWriter);
     MockImageService mockImageService = new MockImageService();
-    ImageController controller = new ImageController(mockImageService,mockView);
+    ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
     controller.startFromFile(filePath);
@@ -792,11 +795,11 @@ public class ImageControllerTest {
   public void testFileSingleCommentSingleCommand() throws IOException {
     String input = "test/file/textsinglecommentcommand.txt\n";
     StringReader inputReader = new StringReader(input);
-    StringWriter output= new StringWriter();
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
-    MockImageView mockView = new MockImageView(inputReader,printWriter);
+    MockImageView mockView = new MockImageView(inputReader, printWriter);
     MockImageService mockImageService = new MockImageService();
-    ImageController controller = new ImageController(mockImageService,mockView);
+    ImageController controller = new ImageController(mockImageService, mockView);
     String filePath = mockView.getFilePath();
 
     controller.startFromFile(filePath);

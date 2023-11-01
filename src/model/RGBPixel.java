@@ -130,6 +130,7 @@ public class RGBPixel extends Pixel {
    *
    * @return a pixel with all channels the max value among all channels
    */
+  @Override
   public RGBPixel max() {
     int max = 0;
     for (Channel channel : channels.keySet()) {
@@ -147,6 +148,7 @@ public class RGBPixel extends Pixel {
    *
    * @return a pixel with all channels the average value among all channels
    */
+  @Override
   public RGBPixel avg() {
     int sum = 0;
     for (Channel channel : channels.keySet()) {

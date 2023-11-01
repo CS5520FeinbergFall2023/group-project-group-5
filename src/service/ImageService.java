@@ -8,7 +8,7 @@ import model.Pixel;
 /**
  * This class performs image operations.
  */
-public class ImageService implements ImageServiceInterface {
+public class ImageService {
   public ImageService() {
   }
 
@@ -20,6 +20,7 @@ public class ImageService implements ImageServiceInterface {
    * @return the split colored image
    * @throws IllegalArgumentException when given argument is null or not legal
    */
+
   public Image splitComponent(Image image, Channel channel) throws IllegalArgumentException {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
@@ -34,6 +35,7 @@ public class ImageService implements ImageServiceInterface {
    * @return the result image
    * @throws IllegalArgumentException when given argument is null or not legal
    */
+
   public Image blur(Image image) throws IllegalArgumentException {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
@@ -53,6 +55,7 @@ public class ImageService implements ImageServiceInterface {
    * @return the result image
    * @throws IllegalArgumentException when given argument is null or not legal
    */
+
   public Image getValue(Image image) throws IllegalArgumentException {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
@@ -105,6 +108,9 @@ public class ImageService implements ImageServiceInterface {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
     }
+    if (axis == null) {
+      throw new IllegalArgumentException("The axis is null");
+    }
     int[][] matrix;
     if (axis == Axis.Y) {
       //horizontal flip
@@ -141,7 +147,11 @@ public class ImageService implements ImageServiceInterface {
 
 
   /**
-   * Greyscale an image.
+   * Greyscale an image. In this specific case, greyscale uses the same matrix as luma. However,
+   * greyscale can be a general term that only guarantees same value in every channel. Although it's
+   * currently not required for user to call greyscale, so it's only a private function, it's still
+   * better idea to list this function as individual function than luma, so even when we need apply
+   * different interpretation for greyscale, we can easily do so without dependency on luma.
    *
    * @param image the image to operate on
    * @return the result image
@@ -151,9 +161,6 @@ public class ImageService implements ImageServiceInterface {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
     }
-    //todo:same as luma?
-    //todo:
-    //todo: need greyscale after intensity and value?
     float[][] greyscale = new float[][]{
         {0.2126f, 0.7152f, 0.0722f},
         {0.2126f, 0.7152f, 0.0722f},
@@ -188,7 +195,11 @@ public class ImageService implements ImageServiceInterface {
    * @return the result image
    * @throws IllegalArgumentException when given argument is null or not legal
    */
+
   public Image combineChannels(Channel[] channels, Image[] images) throws IllegalArgumentException {
+    if (channels.length == 0) {
+      throw new IllegalArgumentException("There has to at least one channel.");
+    }
     if (images.length == 0) {
       throw new IllegalArgumentException("There has to at least one image.");
     }

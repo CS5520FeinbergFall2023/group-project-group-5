@@ -1,6 +1,5 @@
 package model;
 
-import java.io.IOException;
 import java.util.function.Function;
 
 /**
@@ -15,9 +14,9 @@ public abstract class Image {
    * Save image to local file.
    *
    * @param path the file path
-   * @throws IOException if there's problem with IO
+   * @throws IllegalArgumentException if there's problem with the path
    */
-  public abstract void save(String path) throws IOException;
+  public abstract void save(String path) throws IllegalArgumentException;
 
   /**
    * Get height of the image.

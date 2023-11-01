@@ -17,12 +17,9 @@ import javax.imageio.ImageIO;
  * This class represents 8 bit depth RGB image.
  */
 public class MyImage extends Image {
-//  public MyImage(String path) throws IllegalArgumentException {
-//    super(path);
-//  }
 
   /**
-   * Construct all white image with given height and width
+   * Construct all white image with given height and width.
    *
    * @param height height of the image
    * @param width  weight of the image
@@ -63,6 +60,12 @@ public class MyImage extends Image {
     this.pixels = pixels;
   }
 
+  /**
+   * Construct an image with given local path.
+   *
+   * @param path the local image path
+   * @throws IllegalArgumentException when there's problem with the path
+   */
   public MyImage(String path) throws IllegalArgumentException {
     try {
       if (path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")) {
@@ -94,7 +97,7 @@ public class MyImage extends Image {
     while (sc.hasNextLine()) {
       String s = sc.nextLine();
       if (s.charAt(0) != '#') {
-        builder.append(s + System.lineSeparator());
+        builder.append(s).append(System.lineSeparator());
       }
     }
     //now set up the scanner to read from the string we just built
@@ -147,9 +150,10 @@ public class MyImage extends Image {
    * Save image to local file.
    *
    * @param path the file path
-   * @throws IOException if there's problem with IO
+   * @throws IllegalArgumentException if there's problem with the path
    */
-  public void save(String path) throws IOException {
+  @Override
+  public void save(String path) throws IllegalArgumentException {
     try {
       if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
         saveJPGPNG(path, "jpg");
@@ -203,9 +207,9 @@ public class MyImage extends Image {
         BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        int rgb = (((RGBPixel) pixels[y][x]).getRed() << 16) |
-                  (((RGBPixel) pixels[y][x]).getGreen() << 8) |
-                  ((RGBPixel) pixels[y][x]).getBlue();
+        int rgb = (((RGBPixel) pixels[y][x]).getRed() << 16)
+                  | (((RGBPixel) pixels[y][x]).getGreen() << 8)
+                  | ((RGBPixel) pixels[y][x]).getBlue();
         bufferedImage.setRGB(x, y, rgb);
       }
     }
@@ -241,17 +245,6 @@ public class MyImage extends Image {
     }
     pixels[x][y] = pixel;
   }
-
-//  /**
-//   * Perform array addition an image with given matrix.
-//   *
-//   * @param matrix the given matrix (1x3)
-//   * @throws IllegalArgumentException when the given matrix does not match
-//   */
-//  @Override
-//  public MyImage imgArrayAddition(float[] matrix) throws IllegalArgumentException{
-//    return mapElement(pixel -> pixel.addition(matrix));
-//  }
 
   /**
    * Perform filtering an image with given matrix.
@@ -293,12 +286,9 @@ public class MyImage extends Image {
         for (int x = rowStart; x <= rowEnd; x++) {
           for (int y = colStart; y <= colEnd; y++) {
             RGBPixel tmp = this.getPixel(x, y);
-//                    .multiplyNumber(kernel[x - (i - kernelCenterRow)][y - (j - kernelCenterCol)]);
             r += tmp.getRed() * kernel[x - (i - kernelCenterRow)][y - (j - kernelCenterCol)];
             g += tmp.getGreen() * kernel[x - (i - kernelCenterRow)][y - (j - kernelCenterCol)];
             b += tmp.getBlue() * kernel[x - (i - kernelCenterRow)][y - (j - kernelCenterCol)];
-//            result.setPixel(i, j, result.getPixel(i, j).addition(tmp));
-//            result.setPixel(i, j, function.apply(result.getPixel(i, j),tmp));
           }
         }
         result.setPixel(i, j, new RGBPixel(Math.round(r), Math.round(g), Math.round(b)));
@@ -309,7 +299,7 @@ public class MyImage extends Image {
 
 
   /**
-   * Split channels of the given image
+   * Split channels of the given image.
    *
    * @param channel the channel to split
    * @return the split result
@@ -357,7 +347,9 @@ public class MyImage extends Image {
     }
     RGBPixel[][] resultPixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
-      System.arraycopy(this.pixels[i], 0, resultPixels[i], 0, width);
+      for (int j = 0; j < height; j++) {
+        resultPixels[i][j] = (RGBPixel) this.pixels[i][j];
+      }
     }
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
@@ -406,6 +398,7 @@ public class MyImage extends Image {
    * @param function the mapping function
    * @return the mapped result
    */
+  @Override
   public MyImage mapElement(Function<Pixel, Pixel> function) {
     MyImage result = new MyImage(this.height, this.width);
     for (int i = 0; i < this.height; i++) {

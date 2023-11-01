@@ -8,15 +8,15 @@ import java.util.List;
 import view.ImageView;
 
 /**
- * This is a "mock" ImageView class which extends the ImageView class. In this class,
- * overwriting functions to help to test the controller, to examine whether the controller component
- * correctly receives the command that user inputted or not.
+ * This is a "mock" ImageView class which extends the ImageView class. In this class, overwriting
+ * functions to help to test the controller, to examine whether the controller component correctly
+ * receives the command that user inputted or not.
  */
 public class MockImageView extends ImageView {
 
-  private List<String> messagesDisplayed = new ArrayList<>();
   private final Appendable output;
   private final BufferedReader bufferedReader;
+  private final List<String> messagesDisplayed = new ArrayList<>();
 
   /**
    * The constructor of the ImageView.

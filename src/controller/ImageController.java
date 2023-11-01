@@ -1,4 +1,5 @@
 package controller;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -24,13 +25,13 @@ public class ImageController {
   private final ImageService imageService;
   private final ImageView imageView;
   public Map<String, Image> loadedImages = new HashMap<>();
-  private List<String> errorMessages = new ArrayList<>();
+  private final List<String> errorMessages = new ArrayList<>();
 
   /**
    * The constructor of the ImageController in this program with the given image service and view.
    *
    * @param imageService the service responsible for image processing operations.
-   * @param imageView the view that interacts with the user and displays results/messages.
+   * @param imageView    the view that interacts with the user and displays results/messages.
    */
   public ImageController(ImageService imageService, ImageView imageView) {
     this.imageService = imageService;
@@ -40,8 +41,8 @@ public class ImageController {
   /**
    * Starts the user interaction loop, prompting the user for commands, based on the commands to
    * execute the corresponding operations, and displaying the results or errors until the user
-   * entering the "exit" command.
-   * Commands that start with "#" are considered comments and are ignored.
+   * entering the "exit" command. Commands that start with "#" are considered comments and are
+   * ignored.
    */
   public void start() {
     while (true) {
@@ -56,21 +57,23 @@ public class ImageController {
       executeCommand(command);
     }
   }
-     //enter the file path only once, if the file path is invalid, directly exit.
+  //enter the file path only once, if the file path is invalid, directly exit.
+
   /**
    * Starts the processing of user commands from a specified file. Each line in the file represents
-   * a command, which will be executed in order.
-   * Commands that start with "#" are considered comments and are ignored.
-   * If the "exit" command is found in the file, then exiting the program.
+   * a command, which will be executed in order. Commands that start with "#" are considered
+   * comments and are ignored. If the "exit" command is found in the file, then exiting the
+   * program.
    *
    * @param filePath the path to the file containing the list of commands to execute.
    * @throws IOException if there's an error reading from the specified file.
    */
+
   public void startFromFile(String filePath) throws IOException {
     try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
       String command;
       while ((command = reader.readLine()) != null) {
-        if(command.isEmpty() || command.startsWith("#")) {
+        if (command.isEmpty() || command.startsWith("#")) {
           continue;
         }
         if ("exit".equalsIgnoreCase(command.trim())) {
@@ -224,21 +227,21 @@ public class ImageController {
           float amount = Float.parseFloat(tokenizer.nextToken());
           String imageAliasBrighten = tokenizer.nextToken();
           Image imageBrighten = loadedImages.get(imageAliasBrighten);
-          if(imageBrighten == null) {
+          if (imageBrighten == null) {
             imageView.displayMessage("No image loaded");
             break;
           }
-          Image brightenImage = imageService.brighten(imageBrighten,amount);
+          Image brightenImage = imageService.brighten(imageBrighten, amount);
           String imageAliasAfterBrighten = tokenizer.nextToken();
           loadedImages.put(imageAliasAfterBrighten, brightenImage);
           // Increase brightness.
-          if(amount > 0 ){
+          if (amount > 0) {
             imageView.displayMessage("Increase the brightness of the image");
           }
-          if(amount < 0 ){
+          if (amount < 0) {
             imageView.displayMessage("Decrease the brightness of the image");
           }
-        // Red component command.
+          // Red component command.
         case "red-component":
           String imageAliasRedComponent = tokenizer.nextToken();
           Image imageRedComponent = loadedImages.get(imageAliasRedComponent);
@@ -260,7 +263,8 @@ public class ImageController {
             imageView.displayMessage("No image loaded");
             break;
           }
-          Image greenComponentImage = imageService.splitComponent(imageGreenComponent, Channel.GREEN);
+          Image greenComponentImage =
+              imageService.splitComponent(imageGreenComponent, Channel.GREEN);
           String imageAliasGetGreen = tokenizer.nextToken();
           // Store the image in the map.
           loadedImages.put(imageAliasGetGreen, greenComponentImage);
@@ -309,8 +313,8 @@ public class ImageController {
           Image singleChannelImageG = loadedImages.get(singleChannelImageNameG);
           String singleChannelImageNameB = tokenizer.nextToken();
           Image singleChannelImageB = loadedImages.get(singleChannelImageNameB);
-          if(singleChannelImageR == null || singleChannelImageG == null
-                || singleChannelImageB == null ){
+          if (singleChannelImageR == null || singleChannelImageG == null
+              || singleChannelImageB == null) {
             imageView.displayMessage("No image loaded");
             break;
           }
@@ -359,7 +363,7 @@ public class ImageController {
           imageView.displayMessage("Please enter valid command, " + operation + " is invalid.");
       }
       imageView.displayMessage("Please enter command:");
-    } catch (RuntimeException | IOException e) {
+    } catch (RuntimeException e) {
       errorMessages.add("An error occurred while processing the command: " + e.getMessage());
     }
   }

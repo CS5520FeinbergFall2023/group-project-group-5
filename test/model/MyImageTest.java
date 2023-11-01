@@ -253,7 +253,7 @@ public class MyImageTest extends ImageTest {
                       + "RED:0 GREEN:100 BLUE:255    RED:0 GREEN:100 BLUE:255    \n";
     assertTrue(super.testImgArrayAddition(testImage, array, expected));
 
-    testImage = (MyImage) testImage.imgArrayAddition(array);
+    testImage = testImage.imgArrayAddition(array);
     array = new float[]{2, 5, -50};
     expected = "RED:2 GREEN:105 BLUE:205    RED:2 GREEN:105 BLUE:205    \n"
                + "RED:2 GREEN:105 BLUE:205    RED:2 GREEN:105 BLUE:205    \n";
@@ -298,7 +298,7 @@ public class MyImageTest extends ImageTest {
     expected = "RED:0 GREEN:5 BLUE:0    RED:0 GREEN:120 BLUE:55    \n"
                + "RED:130 GREEN:0 BLUE:5    RED:0 GREEN:0 BLUE:0    \n"
                + "RED:0 GREEN:125 BLUE:0    RED:100 GREEN:125 BLUE:10    \n";
-    assertTrue(super.testImgArrayAddition(testImage,array,expected));
+    assertTrue(super.testImgArrayAddition(testImage, array, expected));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -318,7 +318,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testFilteringKernelSmallerSize() {
     testImage = new MyImage(2, 2);
-    testImage = (MyImage) testImage.imgArrayAddition(new float[]{10, 20, 30});
+    testImage = testImage.imgArrayAddition(new float[]{10, 20, 30});
     float[][] kernel = new float[][]{{0.1f}};
     String expected = "RED:1 GREEN:2 BLUE:3    RED:1 GREEN:2 BLUE:3    \n"
                       + "RED:1 GREEN:2 BLUE:3    RED:1 GREEN:2 BLUE:3    \n";
@@ -328,7 +328,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testFilteringKernelSameSize() {
     testImage = new MyImage(3, 3);
-    testImage = (MyImage) testImage.imgArrayAddition(new float[]{10, 20, 30});
+    testImage = testImage.imgArrayAddition(new float[]{10, 20, 30});
     float[][] kernel = new float[][]{{0.1f, 0.2f, 0.3f}, {1, 1, 1}, {0, 0, 0}};
     String expected =
         "RED:20 GREEN:40 BLUE:60    RED:30 GREEN:60 BLUE:90    RED:20 GREEN:40 BLUE:60    \n"
@@ -342,7 +342,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testFilteringKernelLargerSize() {
     testImage = new MyImage(2, 2);
-    testImage = (MyImage) testImage.imgArrayAddition(new float[]{10, 20, 30});
+    testImage = testImage.imgArrayAddition(new float[]{10, 20, 30});
     float[][] kernel = new float[][]{{0.1f, 0.2f, 0.3f}, {1, 1, 1}, {0, 0, 0}};
     String expected = "RED:20 GREEN:40 BLUE:60    RED:20 GREEN:40 BLUE:60    \n"
                       + "RED:25 GREEN:50 BLUE:75    RED:23 GREEN:46 BLUE:69    \n";
@@ -352,7 +352,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testFilteringKernelLShape() {
     testImage = new MyImage(2, 4);
-    testImage = (MyImage) testImage.imgArrayAddition(new float[]{10, 20, 30});
+    testImage = testImage.imgArrayAddition(new float[]{10, 20, 30});
     float[][] kernel = new float[][]{{0.1f, 0.2f, 0.3f}, {1, 1, 1}, {0, 0, 0}};
     System.out.println(testImage);
     String expected =
@@ -442,7 +442,7 @@ public class MyImageTest extends ImageTest {
     assertEquals(blackImage, greenImage.channelSplit(Channel.RED));
     assertEquals(blackImage, blueImage.channelSplit(Channel.RED));
     assertEquals(blackImage, woRedImage.channelSplit(Channel.RED));
-    MyImage expected = (MyImage) new MyImage(4, 4).imgArrayAddition(new float[]{200, 0, 0});
+    MyImage expected = new MyImage(4, 4).imgArrayAddition(new float[]{200, 0, 0});
     assertEquals(expected, woGreenImage.channelSplit(Channel.RED));
     assertEquals(expected, woBlueImage.channelSplit(Channel.RED));
     assertEquals("RED:100 GREEN:0 BLUE:0    RED:30 GREEN:0 BLUE:0    \n"
@@ -458,7 +458,7 @@ public class MyImageTest extends ImageTest {
     assertEquals(blackImage, redImage.channelSplit(Channel.GREEN));
     assertEquals(greenImage, greenImage.channelSplit(Channel.GREEN));
     assertEquals(blackImage, blueImage.channelSplit(Channel.GREEN));
-    MyImage expected = (MyImage) new MyImage(4, 4).imgArrayAddition(new float[]{0, 200, 0});
+    MyImage expected = new MyImage(4, 4).imgArrayAddition(new float[]{0, 200, 0});
     assertEquals(expected, woRedImage.channelSplit(Channel.GREEN));
     assertEquals(blackImage, woGreenImage.channelSplit(Channel.GREEN));
     assertEquals(expected, woBlueImage.channelSplit(Channel.GREEN));
@@ -476,7 +476,7 @@ public class MyImageTest extends ImageTest {
     assertEquals(blackImage, redImage.channelSplit(Channel.BLUE));
     assertEquals(blackImage, greenImage.channelSplit(Channel.BLUE));
     assertEquals(blueImage, blueImage.channelSplit(Channel.BLUE));
-    MyImage expected = (MyImage) new MyImage(4, 4).imgArrayAddition(new float[]{0, 0, 200});
+    MyImage expected = new MyImage(4, 4).imgArrayAddition(new float[]{0, 0, 200});
     assertEquals(expected, woRedImage.channelSplit(Channel.BLUE));
     assertEquals(expected, woGreenImage.channelSplit(Channel.BLUE));
     assertEquals(blackImage, woBlueImage.channelSplit(Channel.BLUE));
@@ -529,10 +529,10 @@ public class MyImageTest extends ImageTest {
     MyImage otherImage = new MyImage(1, 1);
     String expected = "RED:0 GREEN:0 BLUE:0    \n";
     assertTrue(testAddition(testImage, otherImage, expected));
-    otherImage = (MyImage) otherImage.imgArrayAddition(new float[]{0, 100, 255});
+    otherImage = otherImage.imgArrayAddition(new float[]{0, 100, 255});
     expected = "RED:0 GREEN:100 BLUE:255    \n";
     assertTrue(testAddition(testImage, otherImage, expected));
-    testImage = (MyImage) testImage.imgArrayAddition(new float[]{0, 100, 255});
+    testImage = testImage.imgArrayAddition(new float[]{0, 100, 255});
     expected = "RED:0 GREEN:200 BLUE:255    \n";
     assertTrue(testAddition(testImage, otherImage, expected));
 
@@ -546,13 +546,13 @@ public class MyImageTest extends ImageTest {
                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
     assertTrue(testAddition(testImage, otherImage, expected));
-    otherImage = (MyImage) otherImage.imgArrayAddition(new float[]{0, 100, 255});
+    otherImage = otherImage.imgArrayAddition(new float[]{0, 100, 255});
     expected =
         "RED:0 GREEN:100 BLUE:255    RED:0 GREEN:100 BLUE:255    RED:0 GREEN:100 BLUE:255    \n"
         + "RED:0 GREEN:100 BLUE:255    RED:0 GREEN:100 BLUE:255    RED:0 GREEN:100 BLUE:255    \n"
         + "RED:0 GREEN:100 BLUE:255    RED:0 GREEN:100 BLUE:255    RED:0 GREEN:100 BLUE:255    \n";
     assertTrue(testAddition(testImage, otherImage, expected));
-    testImage = (MyImage) testImage.imgArrayAddition(new float[]{0, 100, 255});
+    testImage = testImage.imgArrayAddition(new float[]{0, 100, 255});
     expected =
         "RED:0 GREEN:200 BLUE:255    RED:0 GREEN:200 BLUE:255    RED:0 GREEN:200 BLUE:255    \n"
         + "RED:0 GREEN:200 BLUE:255    RED:0 GREEN:200 BLUE:255    RED:0 GREEN:200 BLUE:255    \n"
@@ -576,9 +576,9 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testAdditionWidthLong() {
     MyImage testImage = new MyImage(2, 3);
-    testImage = (MyImage) testImage.imgArrayAddition(new float[]{99, 7, 34});
+    testImage = testImage.imgArrayAddition(new float[]{99, 7, 34});
     MyImage testImage2 = new MyImage(2, 3);
-    testImage2 = (MyImage) testImage2.imgArrayAddition(new float[]{10, 40, 80});
+    testImage2 = testImage2.imgArrayAddition(new float[]{10, 40, 80});
     System.out.println(testImage.addition(testImage2));
     String expected =
         "RED:109 GREEN:47 BLUE:114    RED:109 GREEN:47 BLUE:114    RED:109 GREEN:47 BLUE:114"
