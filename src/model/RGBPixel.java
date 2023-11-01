@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * This class represents 8 bit depth RGB pixel. Every pixel has a map representing the value of
- * the pixel in each channel (red, green, blue).
+ * This class represents 8 bit depth RGB pixel. Every pixel has a map representing the value of the
+ * pixel in each channel (red, green, blue).
  */
 public class RGBPixel extends Pixel {
   private final int bitDepth = 8;
@@ -33,6 +33,16 @@ public class RGBPixel extends Pixel {
     channels.put(Channel.RED, red);
     channels.put(Channel.GREEN, green);
     channels.put(Channel.BLUE, blue);
+  }
+
+  /**
+   * Check if this pixel is greyscale.
+   *
+   * @return if this pixel is greyscale
+   */
+  @Override
+  public boolean isGreyscale() {
+    return (getRed() == getBlue() && getRed() == getGreen());
   }
 
   private RGBPixel(Map<Channel, Integer> channels) {

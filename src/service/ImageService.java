@@ -1,5 +1,7 @@
 package service;
 
+import java.util.Arrays;
+
 import model.Axis;
 import model.Channel;
 import model.Image;
@@ -143,28 +145,28 @@ public class ImageService {
   }
 
 
-  /**
-   * Greyscale an image. In this specific case, greyscale uses the same matrix as luma. However,
-   * greyscale can be a general term that only guarantees same value in every channel. Although it's
-   * currently not required for user to call greyscale, so it's only a private function, it's still
-   * better idea to list this function as individual function than luma, so even when we need apply
-   * different interpretation for greyscale, we can easily do so without dependency on luma.
-   *
-   * @param image the image to operate on
-   * @return the result image
-   * @throws IllegalArgumentException when given argument is null or not legal
-   */
-  private Image greyscale(Image image) throws IllegalArgumentException {
-    if (image == null) {
-      throw new IllegalArgumentException("The image is null");
-    }
-    float[][] greyscale = new float[][]{
-        {0.2126f, 0.7152f, 0.0722f},
-        {0.2126f, 0.7152f, 0.0722f},
-        {0.2126f, 0.7152f, 0.0722f}
-    };
-    return image.matrixMultiplication(greyscale);
-  }
+//  /**
+//   * Greyscale an image. In this specific case, greyscale uses the same matrix as luma. However,
+//   * greyscale can be a general term that only guarantees same value in every channel. Although it's
+//   * currently not required for user to call greyscale, so it's only a private function, it's still
+//   * better idea to list this function as individual function than luma, so even when we need apply
+//   * different interpretation for greyscale, we can easily do so without dependency on luma.
+//   *
+//   * @param image the image to operate on
+//   * @return the result image
+//   * @throws IllegalArgumentException when given argument is null or not legal
+//   */
+//  private Image greyscale(Image image) throws IllegalArgumentException {
+//    if (image == null) {
+//      throw new IllegalArgumentException("The image is null");
+//    }
+//    float[][] greyscale = new float[][]{
+//        {0.2126f, 0.7152f, 0.0722f},
+//        {0.2126f, 0.7152f, 0.0722f},
+//        {0.2126f, 0.7152f, 0.0722f}
+//    };
+//    return image.matrixMultiplication(greyscale);
+//  }
 
   /**
    * Result in channelCount greyscale images.
@@ -179,20 +181,23 @@ public class ImageService {
     }
     Image[] result = new Image[image.getChannels().length];
     for (int i = 0; i < result.length; i++) {
-      result[i] = greyscale(image.channelSplit(image.getChannels()[i]));
+      float[][] matrix = new float[image.getChannels().length][image.getChannels().length];
+      for (int row = 0; row < matrix.length; row++) {
+        matrix[row][i] = 1;
+      }
+      result[i] = image.channelSplit(image.getChannels()[i]).matrixMultiplication(matrix);
     }
     return result;
   }
 
   /**
-   * Combine images each representing one monochrome channel to one multicolor image.
+   * Combine greyscale images each representing one channel to one multicolor image.
    *
    * @param channels the channels to combine
    * @param images   the images to combine, corresponding to channels
    * @return the result image
    * @throws IllegalArgumentException when given argument is null or not legal
    */
-
   public Image combineChannels(Channel[] channels, Image[] images) throws IllegalArgumentException {
     if (channels.length == 0) {
       throw new IllegalArgumentException("There has to at least one channel.");
@@ -200,23 +205,17 @@ public class ImageService {
     if (images.length == 0) {
       throw new IllegalArgumentException("There has to at least one image.");
     }
-    if (images[0].isMonochromeOfChannel(channels[0])) {
-      Image result = images[0];
-
-      for (int i = 1; i < images.length; i++) {
-        if (images[i].isMonochromeOfChannel(channels[i])) {
-          result = result.addition(images[i]);
-
-        } else {
-          throw new IllegalArgumentException("Input image should be monochrome of corresponding "
-                                             + "channel.");
-        }
-      }
-
-      return result;
+    if (channels.length != images.length) {
+      throw new IllegalArgumentException("Image number is not the same as channel number");
     }
-    throw new IllegalArgumentException("Input image should be monochrome of corresponding channel"
-                                       + ".");
+    Image[] splits = new Image[images.length];
+    for (int i = 0; i < images.length; i++) {
+      if (!images[i].isGreyscale()) {
+        throw new IllegalArgumentException("Only take greyscale images");
+      }
+      splits[i] = images[i].channelSplit(channels[i]);
+    }
+    return Arrays.stream(splits).reduce(Image::addition).orElse(null);
   }
 
   /**

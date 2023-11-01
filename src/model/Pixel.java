@@ -1,11 +1,10 @@
 package model;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
- * This interface represents a pixel. Every pixel has a map representing the value of the pixel
- * in each channel.
+ * This interface represents a pixel. Every pixel has a map representing the value of the pixel in
+ * each channel.
  */
 public abstract class Pixel {
   Map<Channel, Integer> channels;
@@ -80,26 +79,11 @@ public abstract class Pixel {
   public abstract Pixel avg();
 
   /**
-   * Check if the pixel is monochrome of the given channel.
+   * Check if this pixel is greyscale.
    *
-   * @param channel the channel to check
-   * @return if the pixel is monochrome of the given channel
+   * @return if this pixel is greyscale
    */
-  public boolean isMonochromeOfChannel(Channel channel) {
-    if (containsChannel(channel)) {
-      for (Channel c : channels.keySet()) {
-        if (c == channel) {
-          continue;
-        }
-        if (channels.get(c) != 0) {
-          return false;
-        }
-      }
-      return true;
-    }
-    return false;
-  }
-
+  public abstract boolean isGreyscale();
 
 
   /**

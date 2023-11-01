@@ -344,51 +344,19 @@ public class RGBPixelTest {
   }
 
   @Test
-  public void isMonochromeOfChannelRed() {
-    assertTrue(whitePixel.isMonochromeOfChannel(Channel.RED));
-    assertFalse(blackPixel.isMonochromeOfChannel(Channel.RED));
-    assertTrue(redPixel.isMonochromeOfChannel(Channel.RED));
-    assertFalse(greenPixel.isMonochromeOfChannel(Channel.RED));
-    assertFalse(bluePixel.isMonochromeOfChannel(Channel.RED));
-    assertFalse(brownPixel.isMonochromeOfChannel(Channel.RED));
-    assertFalse(purplePixel.isMonochromeOfChannel(Channel.RED));
-    assertFalse(yellowPixel.isMonochromeOfChannel(Channel.RED));
-    assertFalse(threeColorSamePixel.isMonochromeOfChannel(Channel.RED));
-    assertFalse(threeColorRedMaxPixel.isMonochromeOfChannel(Channel.RED));
-    assertFalse(threeColorGreenMaxPixel.isMonochromeOfChannel(Channel.RED));
-    assertFalse(threeColorBlueMaxPixel.isMonochromeOfChannel(Channel.RED));
-  }
-
-  @Test
-  public void isMonochromeOfChannelGreen() {
-    assertTrue(whitePixel.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(blackPixel.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(redPixel.isMonochromeOfChannel(Channel.GREEN));
-    assertTrue(greenPixel.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(bluePixel.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(brownPixel.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(purplePixel.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(yellowPixel.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(threeColorSamePixel.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(threeColorRedMaxPixel.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(threeColorGreenMaxPixel.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(threeColorBlueMaxPixel.isMonochromeOfChannel(Channel.GREEN));
-  }
-
-  @Test
-  public void isMonochromeOfChannelBlue() {
-    assertTrue(whitePixel.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(blackPixel.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(redPixel.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(greenPixel.isMonochromeOfChannel(Channel.BLUE));
-    assertTrue(bluePixel.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(brownPixel.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(purplePixel.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(yellowPixel.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(threeColorSamePixel.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(threeColorRedMaxPixel.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(threeColorGreenMaxPixel.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(threeColorBlueMaxPixel.isMonochromeOfChannel(Channel.BLUE));
+  public void testGreyscale() {
+    assertTrue(whitePixel.isGreyscale());
+    assertTrue(blackPixel.isGreyscale());
+    assertTrue(threeColorSamePixel.isGreyscale());
+    assertFalse(redPixel.isGreyscale());
+    assertFalse(greenPixel.isGreyscale());
+    assertFalse(bluePixel.isGreyscale());
+    assertFalse(brownPixel.isGreyscale());
+    assertFalse(purplePixel.isGreyscale());
+    assertFalse(yellowPixel.isGreyscale());
+    assertFalse(threeColorRedMaxPixel.isGreyscale());
+    assertFalse(threeColorGreenMaxPixel.isGreyscale());
+    assertFalse(threeColorBlueMaxPixel.isGreyscale());
   }
 
   @Test

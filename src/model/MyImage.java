@@ -334,7 +334,6 @@ public class MyImage extends Image {
     return (MyImage) super.imgArrayAddition(matrix);
   }
 
-
   /**
    * Perform addition with another image.
    *
@@ -349,7 +348,7 @@ public class MyImage extends Image {
     }
     RGBPixel[][] resultPixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
-      for (int j = 0; j < height; j++) {
+      for (int j = 0; j < width; j++) {
         resultPixels[i][j] = (RGBPixel) this.pixels[i][j];
       }
     }
@@ -423,24 +422,7 @@ public class MyImage extends Image {
     return new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE};
   }
 
-  /**
-   * Check if the image is monochrome of the given channel.
-   *
-   * @param channel the channel to check
-   * @return if the image is monochrome of the given channel
-   */
-  @Override
-  public boolean isMonochromeOfChannel(Channel channel) {
-    for (int i = 0; i < this.height; i++) {
-      for (int j = 0; j < this.width; j++) {
-        RGBPixel pixel = this.getPixel(i, j);
-        if (!pixel.containsChannel(channel) || !pixel.isMonochromeOfChannel(channel)) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
+
 
   /**
    * Check if two images are identical.
