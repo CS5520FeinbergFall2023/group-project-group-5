@@ -3,6 +3,9 @@ package model;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.pixel.Pixel;
+import model.pixel.RGBPixel;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;

@@ -1,8 +1,10 @@
-package model;
+package model.pixel;
 
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
+
+import model.Channel;
 
 /**
  * This class represents 8 bit depth RGB pixel. Every pixel has a map representing the value of the
@@ -35,6 +37,10 @@ public class RGBPixel extends Pixel {
     channels.put(Channel.BLUE, blue);
   }
 
+  private RGBPixel(Map<Channel, Integer> channels) {
+    this.channels = channels;
+  }
+
   /**
    * Check if this pixel is greyscale.
    *
@@ -45,10 +51,6 @@ public class RGBPixel extends Pixel {
     return (getRed() == getBlue() && getRed() == getGreen());
   }
 
-  private RGBPixel(Map<Channel, Integer> channels) {
-    super(channels);
-  }
-
   /**
    * Get certain channel component of the pixel.
    *
@@ -57,7 +59,7 @@ public class RGBPixel extends Pixel {
    * @throws IllegalArgumentException when the given channel is not in the pixel
    */
   @Override
-  Pixel getChannelComponent(Channel channel) throws IllegalArgumentException {
+  public Pixel getChannelComponent(Channel channel) throws IllegalArgumentException {
     if (!containsChannel(channel)) {
       throw new IllegalArgumentException("The pixel does not contain the channel");
     }
@@ -102,7 +104,7 @@ public class RGBPixel extends Pixel {
    * @throws IllegalArgumentException when the given matrix is not legal
    */
   @Override
-  public RGBPixel addition(float[] matrix) {
+  public RGBPixel addition(float[] matrix) throws IllegalArgumentException {
     if (matrix.length == 3) {
       int red = channels.get(Channel.RED);
       int green = channels.get(Channel.GREEN);
@@ -174,7 +176,7 @@ public class RGBPixel extends Pixel {
    *
    * @return the value of the red channel of the image
    */
-  int getRed() {
+  public int getRed() {
     return channels.get(Channel.RED);
   }
 
@@ -183,7 +185,7 @@ public class RGBPixel extends Pixel {
    *
    * @return the value of the blue channel of the image
    */
-  int getBlue() {
+  public int getBlue() {
     return channels.get(Channel.BLUE);
   }
 
@@ -192,7 +194,7 @@ public class RGBPixel extends Pixel {
    *
    * @return the value of the green channel of the image
    */
-  int getGreen() {
+  public int getGreen() {
     return channels.get(Channel.GREEN);
   }
 

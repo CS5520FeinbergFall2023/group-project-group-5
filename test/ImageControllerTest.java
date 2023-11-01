@@ -6,8 +6,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 import controller.ImageController;
-import model.Image;
-import model.MyImage;
+import model.image.Image;
+import model.image.MyImage;
 import view.ImageView;
 
 import static org.junit.Assert.assertEquals;
@@ -92,7 +92,7 @@ public class ImageControllerTest {
   @Test
   public void testValueComponent() {
     String valueCommand = "load test/img/monochromatic/black.ppm black\n "
-          + "value-component black black_value\n exit";
+                          + "value-component black black_value\n exit";
     StringReader valueReader = new StringReader(valueCommand);
     StringWriter valueWriter = new StringWriter();
     PrintWriter valuePrintWriter = new PrintWriter(valueWriter);
@@ -131,9 +131,9 @@ public class ImageControllerTest {
    * Test the intensity-component command.
    */
   @Test
-  public void testIntensityComponent(){
+  public void testIntensityComponent() {
     String intensityCommand = "load test/img/monochromatic/black.ppm black\n "
-          + "intensity-component black black_intensity\n exit";
+                              + "intensity-component black black_intensity\n exit";
     StringReader intensityReader = new StringReader(intensityCommand);
     StringWriter intensityWriter = new StringWriter();
     PrintWriter intensityPrintWriter = new PrintWriter(intensityWriter);
@@ -174,7 +174,7 @@ public class ImageControllerTest {
   @Test
   public void testLumaComponent() {
     String lumaCommand = "load test/img/monochromatic/black.ppm black\n "
-          + "luma-component black black_luma\n exit";
+                         + "luma-component black black_luma\n exit";
     StringReader lumaReader = new StringReader(lumaCommand);
     StringWriter lumaWriter = new StringWriter();
     PrintWriter lumaPrintWriter = new PrintWriter(lumaWriter);
@@ -223,9 +223,9 @@ public class ImageControllerTest {
   public void testRGBCombine() {
 
     String combineCommand = "load test/img/split/rose_onlyRed.jpg rose_onlyRed\n "
-          + "load test/img/split/rose_onlyGreen.jpg rose_onlyGreen\n"
-          + "load test/img/split/rose_onlyBlue.jpg rose_onlyBlue\n"
-          + "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
+                            + "load test/img/split/rose_onlyGreen.jpg rose_onlyGreen\n"
+                            + "load test/img/split/rose_onlyBlue.jpg rose_onlyBlue\n"
+                            + "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader combineReader = new StringReader(combineCommand);
     StringWriter combineWriter = new StringWriter();
     PrintWriter combinePrintWriter = new PrintWriter(combineWriter);
@@ -270,7 +270,7 @@ public class ImageControllerTest {
   @Test
   public void testRGBSplit() {
     String splitCommand = "load test/img/split/rose.jpg rose\n"
-          +"rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
+                          + "rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -321,7 +321,7 @@ public class ImageControllerTest {
   @Test
   public void testSplitComponent() {
     String splitCommand = "load test/img/trichromatic/simple.ppm simple\n "
-          + "red-component simple simple_greyScale_r\n exit";
+                          + "red-component simple simple_greyScale_r\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -363,7 +363,7 @@ public class ImageControllerTest {
   @Test
   public void testFlip() {
     String flipCommand = "load test/img/flip/car.png car\n "
-          + "horizontal-flip car car_horizontallyFlipped\n exit";
+                         + "horizontal-flip car car_horizontallyFlipped\n exit";
     StringReader flipReader = new StringReader(flipCommand);
     StringWriter flipWriter = new StringWriter();
     PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
@@ -407,7 +407,7 @@ public class ImageControllerTest {
   @Test
   public void testBrighten() {
     String brightenCommand = "load test/img/trichromatic/simple.ppm simple\n "
-          + "brighten -4 simple simple-4 \n exit";
+                             + "brighten -4 simple simple-4 \n exit";
     StringReader brightenReader = new StringReader(brightenCommand);
     StringWriter brightenWriter = new StringWriter();
     PrintWriter brightenPrintWriter = new PrintWriter(brightenWriter);
@@ -449,7 +449,7 @@ public class ImageControllerTest {
   @Test
   public void testSharpen() {
     String sharpenCommand = "load test/img/cupcake.png cupcake\n "
-          + "sharpen cupcake cupcake_sharpenOnce\n exit";
+                            + "sharpen cupcake cupcake_sharpenOnce\n exit";
     StringReader sharpenReader = new StringReader(sharpenCommand);
     StringWriter sharpenWriter = new StringWriter();
     PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
@@ -489,7 +489,7 @@ public class ImageControllerTest {
   @Test
   public void testSepia() {
     String sepiaCommand = "load test/img/city_small.png city_small\n "
-          + "sepia city_small city_small_sepia\n exit";
+                          + "sepia city_small city_small_sepia\n exit";
     StringReader sepiaReader = new StringReader(sepiaCommand);
     StringWriter sepiaWriter = new StringWriter();
     PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
@@ -532,8 +532,8 @@ public class ImageControllerTest {
   @Test
   public void testSingleCommentSingleCommand() {
     StringReader input = new StringReader("# This is a comment\n "
-          + "load test\\img\\car.jpg car\n exit");
-    StringWriter output= new StringWriter();
+                                          + "load test\\img\\car.jpg car\n exit");
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
     MockImageView mockView = new MockImageView(input, printWriter);
     MockImageService mockService = new MockImageService();
@@ -552,8 +552,8 @@ public class ImageControllerTest {
   @Test
   public void testMultipleCommands() {
     StringReader input = new StringReader("load test\\img\\car.jpg car\n "
-          + "blur car car-blurred\n brighten 2 car car-brighten\n exit");
-    StringWriter output= new StringWriter();
+                                          + "blur car car-blurred\n brighten 2 car car-brighten\n exit");
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
     MockImageView mockView = new MockImageView(input, printWriter);
     MockImageService mockService = new MockImageService();
@@ -574,10 +574,10 @@ public class ImageControllerTest {
   @Test
   public void testMultipleCommentsAndCommands() {
     StringReader input = new StringReader("load test\\img\\car.jpg car\n "
-          + "# want to blur the car\n blur car car-blurred\n "
-          + "# want to change the image's brightness\n brighten 2 car car-brighten\n "
-                + "exit");
-    StringWriter output= new StringWriter();
+                                          + "# want to blur the car\n blur car car-blurred\n "
+                                          + "# want to change the image's brightness\n brighten 2 car car-brighten\n "
+                                          + "exit");
+    StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
     MockImageView mockView = new MockImageView(input, printWriter);
     MockImageService mockService = new MockImageService();
@@ -593,15 +593,15 @@ public class ImageControllerTest {
   }
 
   /**
-   * Test if the command user inputted includes continous comments and a single command. It can
-   *  not execute correctly.
+   * Test if the command user inputted includes continous comments and a single command. It can not
+   * execute correctly.
    */
   @Test
   public void testContinousCommentsAndCommands() {
     StringReader input = new StringReader("# I want to load a beautiful image\n "
-          + "# This image is about a car\n load test\\img\\car.jpg car\n # want to blur the car\n "
-          + "blur car car-blurred\n # want to change the image's brightness\n "
-          + "brighten 2 car car-brighten\n exit");
+                                          + "# This image is about a car\n load test\\img\\car.jpg car\n # want to blur the car\n "
+                                          + "blur car car-blurred\n # want to change the image's brightness\n "
+                                          + "brighten 2 car car-brighten\n exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
     MockImageView mockView = new MockImageView(input, printWriter);

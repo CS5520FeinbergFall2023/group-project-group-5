@@ -1,6 +1,9 @@
-package model;
+package model.image;
 
 import java.util.function.Function;
+
+import model.Channel;
+import model.pixel.Pixel;
 
 /**
  * This interface represents images, that has height, width, and 2d array of pixels.
@@ -36,14 +39,14 @@ public abstract class Image {
     return this.width;
   }
 
-  Pixel getPixel(int x, int y) {
+  Pixel getPixel(int x, int y) throws IllegalArgumentException {
     if (x < 0 || x > this.height || y < 0 || y > this.width) {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
     return pixels[x][y];
   }
 
-  void setPixel(int x, int y, Pixel pixel) {
+  void setPixel(int x, int y, Pixel pixel) throws IllegalArgumentException {
     if (pixel == null) {
       throw new IllegalArgumentException("The pixel cannot be null.");
     }
@@ -153,16 +156,18 @@ public abstract class Image {
    *
    * @param that the other image to be added
    * @return the add result
+   * @throws IllegalArgumentException when given argument is illegal
    */
-  public abstract Image addition(Image that);
+  public abstract Image addition(Image that) throws IllegalArgumentException;
 
   /**
    * Perform array addition an image with given matrix.
    *
    * @param matrix the given matrix (1x3)
    * @return the added result
+   * @throws IllegalArgumentException when given argument is illegal
    */
-  public Image imgArrayAddition(float[] matrix) {
+  public Image imgArrayAddition(float[] matrix) throws IllegalArgumentException {
     return mapElement(pixel -> pixel.addition(matrix));
   }
 

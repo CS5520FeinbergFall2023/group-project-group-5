@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 import model.Axis;
 import model.Channel;
-import model.Image;
-import model.Pixel;
+import model.image.Image;
+import model.pixel.Pixel;
 
 /**
  * This class performs image operations.
@@ -144,32 +144,8 @@ public class ImageService {
     return image.imgArrayAddition(matrix);
   }
 
-
-//  /**
-//   * Greyscale an image. In this specific case, greyscale uses the same matrix as luma. However,
-//   * greyscale can be a general term that only guarantees same value in every channel. Although it's
-//   * currently not required for user to call greyscale, so it's only a private function, it's still
-//   * better idea to list this function as individual function than luma, so even when we need apply
-//   * different interpretation for greyscale, we can easily do so without dependency on luma.
-//   *
-//   * @param image the image to operate on
-//   * @return the result image
-//   * @throws IllegalArgumentException when given argument is null or not legal
-//   */
-//  private Image greyscale(Image image) throws IllegalArgumentException {
-//    if (image == null) {
-//      throw new IllegalArgumentException("The image is null");
-//    }
-//    float[][] greyscale = new float[][]{
-//        {0.2126f, 0.7152f, 0.0722f},
-//        {0.2126f, 0.7152f, 0.0722f},
-//        {0.2126f, 0.7152f, 0.0722f}
-//    };
-//    return image.matrixMultiplication(greyscale);
-//  }
-
   /**
-   * Result in channelCount greyscale images.
+   * Split channels and result in $channelCount greyscale images.
    *
    * @param image the image to operate on
    * @return the result images

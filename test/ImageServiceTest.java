@@ -3,8 +3,8 @@ import org.junit.Test;
 
 import model.Axis;
 import model.Channel;
-import model.Image;
-import model.MyImage;
+import model.image.Image;
+import model.image.MyImage;
 import service.ImageService;
 
 import static org.junit.Assert.assertEquals;
@@ -599,30 +599,30 @@ public class ImageServiceTest {
     Image testImage = new MyImage("test/img/monochromatic/red.ppm");
     Image[] resultImages = imageService.splitChannel(testImage);
 
-    String expectedR="RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 "
-                     + "GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
-                     + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 "
-                     + "GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
-                     + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 "
-                     + "GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
-                     + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 "
-                     + "GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n";
-    String expectedG="RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n"
-                     + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n"
-                     + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n"
-                     + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n";
-    String expectedB="RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n"
-                     + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n"
-                     + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n"
-                     + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n";
+    String expectedR = "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 "
+                       + "GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
+                       + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 "
+                       + "GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
+                       + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 "
+                       + "GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
+                       + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 "
+                       + "GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n";
+    String expectedG = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n"
+                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n"
+                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n"
+                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n";
+    String expectedB = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n"
+                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n"
+                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n"
+                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n";
     assertEquals(expectedR, resultImages[0].toString());
     assertEquals(expectedG, resultImages[1].toString());
     assertEquals(expectedB, resultImages[2].toString());
@@ -632,30 +632,30 @@ public class ImageServiceTest {
   public void testSplitChannelDichromatic() {
     Image testImage = new MyImage("test/img/dichromatic/woBlue.ppm");
     Image[] resultImages = imageService.splitChannel(testImage);
-    String expectedR="RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
-                     + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
-                     + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
-                     + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
-                     + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
-                     + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
-                     + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
-                     + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n";
-    String expectedG="RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
-                     + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
-                     + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
-                     + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
-                     + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
-                     + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
-                     + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
-                     + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n";
-    String expectedB="RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n"
-                     + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n"
-                     + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n"
-                     + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
-                     + "RED:0 GREEN:0 BLUE:0    \n";
+    String expectedR = "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
+                       + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
+                       + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
+                       + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
+                       + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
+                       + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
+                       + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
+                       + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n";
+    String expectedG = "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
+                       + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
+                       + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
+                       + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
+                       + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
+                       + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
+                       + "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
+                       + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n";
+    String expectedB = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n"
+                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n"
+                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n"
+                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+                       + "RED:0 GREEN:0 BLUE:0    \n";
     assertEquals(expectedR, resultImages[0].toString());
     assertEquals(expectedG, resultImages[1].toString());
     assertEquals(expectedB, resultImages[2].toString());
@@ -666,15 +666,15 @@ public class ImageServiceTest {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
     Image[] resultImages = imageService.splitChannel(testImage);
 
-    String expectedR="RED:100 GREEN:100 BLUE:100    RED:30 GREEN:30 BLUE:30    \n"
-                     + "RED:245 GREEN:245 BLUE:245    RED:105 GREEN:105 BLUE:105    \n"
-                     + "RED:95 GREEN:95 BLUE:95    RED:215 GREEN:215 BLUE:215    \n";
-    String expectedG="RED:85 GREEN:85 BLUE:85    RED:200 GREEN:200 BLUE:200    \n"
-                     + "RED:50 GREEN:50 BLUE:50    RED:65 GREEN:65 BLUE:65    \n"
-                     + "RED:205 GREEN:205 BLUE:205    RED:205 GREEN:205 BLUE:205    \n";
-    String expectedB="RED:90 GREEN:90 BLUE:90    RED:150 GREEN:150 BLUE:150    \n"
-                     + "RED:100 GREEN:100 BLUE:100    RED:75 GREEN:75 BLUE:75    \n"
-                     + "RED:85 GREEN:85 BLUE:85    RED:105 GREEN:105 BLUE:105    \n";
+    String expectedR = "RED:100 GREEN:100 BLUE:100    RED:30 GREEN:30 BLUE:30    \n"
+                       + "RED:245 GREEN:245 BLUE:245    RED:105 GREEN:105 BLUE:105    \n"
+                       + "RED:95 GREEN:95 BLUE:95    RED:215 GREEN:215 BLUE:215    \n";
+    String expectedG = "RED:85 GREEN:85 BLUE:85    RED:200 GREEN:200 BLUE:200    \n"
+                       + "RED:50 GREEN:50 BLUE:50    RED:65 GREEN:65 BLUE:65    \n"
+                       + "RED:205 GREEN:205 BLUE:205    RED:205 GREEN:205 BLUE:205    \n";
+    String expectedB = "RED:90 GREEN:90 BLUE:90    RED:150 GREEN:150 BLUE:150    \n"
+                       + "RED:100 GREEN:100 BLUE:100    RED:75 GREEN:75 BLUE:75    \n"
+                       + "RED:85 GREEN:85 BLUE:85    RED:105 GREEN:105 BLUE:105    \n";
 
     assertEquals(expectedR, resultImages[0].toString());
     assertEquals(expectedG, resultImages[1].toString());
@@ -687,15 +687,15 @@ public class ImageServiceTest {
     Image[] resultImages = imageService.splitChannel(testImage);
     resultImages = imageService.splitChannel(resultImages[0]);
 
-    String expectedR="RED:100 GREEN:100 BLUE:100    RED:30 GREEN:30 BLUE:30    \n"
-                     + "RED:245 GREEN:245 BLUE:245    RED:105 GREEN:105 BLUE:105    \n"
-                     + "RED:95 GREEN:95 BLUE:95    RED:215 GREEN:215 BLUE:215    \n";
-    String expectedG="RED:100 GREEN:100 BLUE:100    RED:30 GREEN:30 BLUE:30    \n"
-                     + "RED:245 GREEN:245 BLUE:245    RED:105 GREEN:105 BLUE:105    \n"
-                     + "RED:95 GREEN:95 BLUE:95    RED:215 GREEN:215 BLUE:215    \n";
-    String expectedB="RED:100 GREEN:100 BLUE:100    RED:30 GREEN:30 BLUE:30    \n"
-                     + "RED:245 GREEN:245 BLUE:245    RED:105 GREEN:105 BLUE:105    \n"
-                     + "RED:95 GREEN:95 BLUE:95    RED:215 GREEN:215 BLUE:215    \n";
+    String expectedR = "RED:100 GREEN:100 BLUE:100    RED:30 GREEN:30 BLUE:30    \n"
+                       + "RED:245 GREEN:245 BLUE:245    RED:105 GREEN:105 BLUE:105    \n"
+                       + "RED:95 GREEN:95 BLUE:95    RED:215 GREEN:215 BLUE:215    \n";
+    String expectedG = "RED:100 GREEN:100 BLUE:100    RED:30 GREEN:30 BLUE:30    \n"
+                       + "RED:245 GREEN:245 BLUE:245    RED:105 GREEN:105 BLUE:105    \n"
+                       + "RED:95 GREEN:95 BLUE:95    RED:215 GREEN:215 BLUE:215    \n";
+    String expectedB = "RED:100 GREEN:100 BLUE:100    RED:30 GREEN:30 BLUE:30    \n"
+                       + "RED:245 GREEN:245 BLUE:245    RED:105 GREEN:105 BLUE:105    \n"
+                       + "RED:95 GREEN:95 BLUE:95    RED:215 GREEN:215 BLUE:215    \n";
 
     assertEquals(expectedR, resultImages[0].toString());
     assertEquals(expectedG, resultImages[1].toString());

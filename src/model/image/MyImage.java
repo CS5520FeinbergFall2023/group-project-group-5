@@ -1,4 +1,4 @@
-package model;
+package model.image;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
@@ -14,6 +14,10 @@ import java.util.function.Function;
 
 import javax.imageio.ImageIO;
 
+import model.Channel;
+import model.pixel.Pixel;
+import model.pixel.RGBPixel;
+
 
 /**
  * This class represents 8 bit depth RGB image, that has height, width, and 2d array of RGB pixels.
@@ -21,7 +25,7 @@ import javax.imageio.ImageIO;
 public class MyImage extends Image {
 
   /**
-   * Construct all white image with given height and width.
+   * Construct all black image with given height and width.
    *
    * @param height height of the image
    * @param width  weight of the image
@@ -255,7 +259,7 @@ public class MyImage extends Image {
    * @throws IllegalArgumentException when the given argument is not legal
    */
   @Override
-  public MyImage filtering(float[][] kernel) {
+  public MyImage filtering(float[][] kernel) throws IllegalArgumentException {
     MyImage result = new MyImage(this.height, this.width);
     int kernelHeight = kernel.length;
     int kernelWidth = kernel[0].length;
@@ -328,9 +332,10 @@ public class MyImage extends Image {
    *
    * @param matrix the given matrix (1x3)
    * @return the added result
+   * @throws IllegalArgumentException when given matrix size is not legal
    */
   @Override
-  public MyImage imgArrayAddition(float[] matrix) {
+  public MyImage imgArrayAddition(float[] matrix) throws IllegalArgumentException {
     return (MyImage) super.imgArrayAddition(matrix);
   }
 
@@ -342,7 +347,7 @@ public class MyImage extends Image {
    * @throws IllegalArgumentException when image size not match or illegal image type
    */
   @Override
-  public MyImage addition(Image that) {
+  public MyImage addition(Image that) throws IllegalArgumentException {
     if (this.width != that.width || this.height != that.height) {
       throw new IllegalArgumentException("Image size not match");
     }
@@ -423,9 +428,8 @@ public class MyImage extends Image {
   }
 
 
-
   /**
-   * Check if two images are identical.
+   * Check if two objects are identical.
    *
    * @param o the other object to compare with
    * @return true if two image have the same size and every pixel are identical

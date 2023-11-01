@@ -1,7 +1,7 @@
 import model.Axis;
 import model.Channel;
-import model.Image;
-import model.MyImage;
+import model.image.Image;
+import model.image.MyImage;
 import service.ImageService;
 
 /**

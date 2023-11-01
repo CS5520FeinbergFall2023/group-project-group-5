@@ -2,6 +2,8 @@ package model;
 
 import java.io.File;
 
+import model.image.Image;
+
 import static org.junit.Assert.assertEquals;
 
 /**

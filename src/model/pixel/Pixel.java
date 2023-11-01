@@ -1,6 +1,8 @@
-package model;
+package model.pixel;
 
 import java.util.Map;
+
+import model.Channel;
 
 /**
  * This interface represents a pixel. Every pixel has a map representing the value of the pixel in
@@ -13,9 +15,6 @@ public abstract class Pixel {
     // default constructor which child class use to super()
   }
 
-  Pixel(Map<Channel, Integer> channels) {
-    this.channels = channels;
-  }
 
   /**
    * Checks if the pixel has the given channel.
@@ -28,7 +27,7 @@ public abstract class Pixel {
   }
 
   /**
-   * Calculate 3x3 matrix * [r,g,b].
+   * Perform linear transformation. E.g. calculate 3x3 matrix * [r,g,b].
    *
    * @param matrix the matrix to multiply
    * @return the result pixel
@@ -37,7 +36,7 @@ public abstract class Pixel {
   public abstract Pixel linearTransformation(float[][] matrix) throws IllegalArgumentException;
 
   /**
-   * Calculate pixel[r',g',b'] = matrix[x,y,z] + pixel[r,g,b].
+   * Adds matrix to pixel. E.g. calculate pixel[r',g',b'] = matrix[x,y,z] + pixel[r,g,b].
    *
    * @param matrix the matrix to add
    * @return the result pixel
@@ -46,7 +45,7 @@ public abstract class Pixel {
   public abstract Pixel addition(float[] matrix) throws IllegalArgumentException;
 
   /**
-   * Calculate [r,g,b] + [r',g',b'].
+   * Adds two pixels. E.g. calculate [r,g,b] + [r',g',b'].
    *
    * @param pixel the pixel to add
    * @return the result pixel
@@ -60,7 +59,7 @@ public abstract class Pixel {
    * @param channel the channel to split
    * @return the component pixel
    */
-  abstract Pixel getChannelComponent(Channel channel);
+  public abstract Pixel getChannelComponent(Channel channel);
 
   /**
    * Calculate the max value among all channels of the pixel and get a pixel with all channels this
