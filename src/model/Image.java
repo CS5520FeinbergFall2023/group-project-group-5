@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -53,6 +51,23 @@ public abstract class Image {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
     pixels[x][y] = pixel;
+  }
+
+
+  /**
+   * Check if this is a greyscale image.
+   *
+   * @return if this is a greyscale image
+   */
+  public boolean isGreyscale() {
+    for (Pixel[] row : pixels) {
+      for (Pixel p : row) {
+        if (!p.isGreyscale()) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   /**
@@ -157,15 +172,6 @@ public abstract class Image {
    * @return channels of pixels in the image
    */
   public abstract Channel[] getChannels();
-
-  /**
-   * Check if the image is monochrome of the given channel.
-   *
-   * @param channel the channel to check
-   * @return if the image is monochrome of the given channel
-   */
-  public abstract boolean isMonochromeOfChannel(Channel channel);
-
 
   /**
    * Returns a string representation of the object.

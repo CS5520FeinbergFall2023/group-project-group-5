@@ -734,42 +734,19 @@ public class MyImageTest extends ImageTest {
   }
 
   @Test
-  public void testIsMonochromeOfChannelRed() {
-    assertFalse(whiteImage.isMonochromeOfChannel(Channel.RED));
-    assertTrue(blackImage.isMonochromeOfChannel(Channel.RED));
-    assertTrue(redImage.isMonochromeOfChannel(Channel.RED));
-    assertFalse(greenImage.isMonochromeOfChannel(Channel.RED));
-    assertFalse(blueImage.isMonochromeOfChannel(Channel.RED));
-    assertFalse(woRedImage.isMonochromeOfChannel(Channel.RED));
-    assertFalse(woGreenImage.isMonochromeOfChannel(Channel.RED));
-    assertFalse(woBlueImage.isMonochromeOfChannel(Channel.RED));
-    assertFalse(triImage.isMonochromeOfChannel(Channel.RED));
-  }
-
-  @Test
-  public void testIsMonochromeOfChannelGreen() {
-    assertFalse(whiteImage.isMonochromeOfChannel(Channel.GREEN));
-    assertTrue(blackImage.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(redImage.isMonochromeOfChannel(Channel.GREEN));
-    assertTrue(greenImage.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(blueImage.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(woRedImage.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(woGreenImage.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(woBlueImage.isMonochromeOfChannel(Channel.GREEN));
-    assertFalse(triImage.isMonochromeOfChannel(Channel.GREEN));
-  }
-
-  @Test
-  public void testIsMonochromeOfChannelBlue() {
-    assertFalse(whiteImage.isMonochromeOfChannel(Channel.BLUE));
-    assertTrue(blackImage.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(redImage.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(greenImage.isMonochromeOfChannel(Channel.BLUE));
-    assertTrue(blueImage.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(woRedImage.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(woGreenImage.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(woBlueImage.isMonochromeOfChannel(Channel.BLUE));
-    assertFalse(triImage.isMonochromeOfChannel(Channel.BLUE));
+  public void testIsGreyscale() {
+    assertTrue(whiteImage.isGreyscale());
+    assertTrue(whiteImage.imgArrayAddition(new float[]{10, 10, 10}).isGreyscale());
+    assertTrue(whiteImage.imgArrayAddition(new float[]{0.5f, 0.5f, 0.5f}).isGreyscale());
+    assertTrue(blackImage.isGreyscale());
+    assertFalse(blackImage.imgArrayAddition(new float[]{1, 2, 3}).isGreyscale());
+    assertFalse(redImage.isGreyscale());
+    assertFalse(greenImage.isGreyscale());
+    assertFalse(blueImage.isGreyscale());
+    assertFalse(woRedImage.isGreyscale());
+    assertFalse(woGreenImage.isGreyscale());
+    assertFalse(woBlueImage.isGreyscale());
+    assertFalse(triImage.isGreyscale());
   }
 
   @Test
