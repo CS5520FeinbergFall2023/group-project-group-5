@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -63,7 +62,11 @@ public class ImageController {
       if ("exit".equalsIgnoreCase(command.trim())) {
         exit(0);
       }
-      executeCommand(command);
+      try {
+        executeCommand(command);
+      } catch (Exception e) {
+        imageView.displayMessage(e.getMessage());
+      }
     }
   }
   //enter the file path only once, if the file path is invalid, directly exit.
@@ -75,10 +78,9 @@ public class ImageController {
    * program.
    *
    * @param filePath the path to the file containing the list of commands to execute.
-   * @throws IOException if there's an error reading from the specified file.
    */
 
-  public void startFromFile(String filePath) throws IOException {
+  public void startFromFile(String filePath) {
     try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
       String command;
       String commandFirst = null;
@@ -99,10 +101,14 @@ public class ImageController {
           if ("exit".equalsIgnoreCase(command.trim())) {
             exit(0);
           }
-          executeCommand(command);
+          try {
+            executeCommand(command);
+          } catch (Exception e) {
+            imageView.displayMessage(e.getMessage());
+          }
         }
       }
-    } catch (FileNotFoundException e) {
+    } catch (IOException e) {
       imageView.displayMessage("Invalid file path. Please enter a valid file path.");
     }
   }
@@ -114,7 +120,7 @@ public class ImageController {
    * @param command the full string command provided by the user for execution.
    * @throws IllegalArgumentException if the command is null or empty.
    */
-  public void executeCommand(String command) {
+  public void executeCommand(String command) throws IllegalArgumentException {
     if (command == null || command.isEmpty()) {
       throw new IllegalArgumentException("Invalid command");
     }
@@ -334,7 +340,7 @@ public class ImageController {
         String singleChannelImageNameB = tokenizer.nextToken();
         Image singleChannelImageB = loadedImages.get(singleChannelImageNameB);
         if (singleChannelImageR == null || singleChannelImageG == null
-              || singleChannelImageB == null) {
+            || singleChannelImageB == null) {
           imageView.displayMessage("No image loaded");
           break;
         }
