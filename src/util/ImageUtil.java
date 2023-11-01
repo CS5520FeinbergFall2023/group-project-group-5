@@ -1,6 +1,5 @@
 package util;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
@@ -42,7 +41,7 @@ public class ImageUtil {
         case 2:
           String filePath = imageView.getFilePath();
           if (filePath != null && !filePath.isEmpty()) {
-              controller.startFromFile(filePath);
+            controller.startFromFile(filePath);
             exit(0);
           } else {
             imageView.displayMessage("Invalid file path.");

@@ -3,10 +3,14 @@ package controller;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import model.Axis;
 import model.Channel;
@@ -138,11 +142,26 @@ public class ImageController {
         case "load":
           String filePath;
           String imageAlias;
-          // The file path of the image.
-          filePath = tokenizer.nextToken();
-          // The alias of the image.
-          imageAlias = tokenizer.nextToken();
-
+          Pattern pattern = Pattern.compile("\"([^\"]*)\"|'([^']*)'|([^\"' ]+)");
+          Matcher matcher = pattern.matcher(command);
+          List<String> matches = new ArrayList<>();
+          while (matcher.find()) {
+            String match = matcher.group(1);
+            if (match == null) {
+              match = matcher.group(2);
+              if (match == null) {
+                match = matcher.group(3);
+              }
+            }
+            matches.add(match);
+          }
+          if (matches.size() != 3) {
+            imageView.displayMessage("Argument number not right. Use double or single quotes for "
+                                     + "path with space.");
+            break;
+          }
+          filePath = matches.get(1);
+          imageAlias = matches.get(2);
           MyImage loadedImage = new MyImage(filePath);
           if (loadedImage == null) {
             imageView.displayMessage("Failed to load the image from " + filePath);

@@ -49,6 +49,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testMyImagePathJPGWithBlanks() {
     try {
+      testImage = new MyImage("'test/img/car copy.jpg'");
       testImage = new MyImage("test/img/car copy.jpg");
     } catch (IllegalArgumentException e) {
       fail("Load supported jpg file should not throw exception");
