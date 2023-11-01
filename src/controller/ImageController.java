@@ -1,4 +1,5 @@
 package controller;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -27,7 +28,7 @@ public class ImageController {
    * The constructor of the ImageController in this program with the given image service and view.
    *
    * @param imageService the service responsible for image processing operations.
-   * @param imageView the view that interacts with the user and displays results/messages.
+   * @param imageView    the view that interacts with the user and displays results/messages.
    */
   public ImageController(ImageService imageService, ImageView imageView) {
     this.imageService = imageService;
@@ -37,63 +38,67 @@ public class ImageController {
   /**
    * Starts the user interaction loop, prompting the user for commands, based on the commands to
    * execute the corresponding operations, and displaying the results or errors until the user
-   * entering the "exit" command.
-   * Commands that start with "#" are considered comments and are ignored.
+   * entering the "exit" command. Commands that start with "#" are considered comments and are
+   * ignored.
    */
   public void start() {
     String commandFirst = null;
     while (true) {
       String command = imageView.getUserCommand();
       command = command.trim();
-      if(command.isEmpty()) {
+      if (command.isEmpty()) {
         continue;
       }
-      if(command.startsWith("#")) {
-        if(commandFirst == "#") {
+      if (command.startsWith("#")) {
+        if (commandFirst == "#") {
           imageView.displayMessage("There are multiple comments. Please modify it.");
           break;
         }
         commandFirst = "#";
         continue;
       }
-      commandFirst = command.substring(0,1);
+      commandFirst = command.substring(0, 1);
       if ("exit".equalsIgnoreCase(command.trim())) {
         break;
       }
       executeCommand(command);
     }
   }
-     //enter the file path only once, if the file path is invalid, directly exit.
+  //enter the file path only once, if the file path is invalid, directly exit.
+
   /**
    * Starts the processing of user commands from a specified file. Each line in the file represents
-   * a command, which will be executed in order.
-   * Commands that start with "#" are considered comments and are ignored.
-   * If the "exit" command is found in the file, then exiting the program.
+   * a command, which will be executed in order. Commands that start with "#" are considered
+   * comments and are ignored. If the "exit" command is found in the file, then exiting the
+   * program.
    *
    * @param filePath the path to the file containing the list of commands to execute.
    * @throws IOException if there's an error reading from the specified file.
    */
+
   public void startFromFile(String filePath) throws IOException {
     try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
       String command;
       String commandFirst = null;
       while ((command = reader.readLine()) != null) {
-        if(command.isEmpty()) {
-          continue;
-        }
-        if(command.startsWith("#")) {
-          if(commandFirst == "#") {
-            imageView.displayMessage("There are multiple comments. Please modify it.");
+        if (command.isEmpty()) {
+          if (command.isEmpty() || command.startsWith("#")) {
+            continue;
+          }
+          if (command.startsWith("#")) {
+            if (commandFirst == "#") {
+              imageView.displayMessage("There are multiple comments. Please modify it.");
+              break;
+            }
+            commandFirst = "#";
+            continue;
+          }
+          commandFirst = command.substring(0, 1);
+          if ("exit".equalsIgnoreCase(command.trim())) {
             break;
           }
-          commandFirst = "#";
-          continue;
+          executeCommand(command);
         }
-        commandFirst = command.substring(0,1);
-        if ("exit".equalsIgnoreCase(command.trim())) {
-          break;
-        }
-        executeCommand(command);
       }
     } catch (FileNotFoundException e) {
       imageView.displayMessage("Invalid file path. Please enter a valid file path.");
@@ -148,11 +153,7 @@ public class ImageController {
           imageView.displayMessage("Image " + imageNameSave + " not found.");
           break;
         }
-        try {
-          imageToSave.save(outputPath);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
+        imageToSave.save(outputPath);
         imageView.displayMessage("Save image");
         break;
       // Blur command.
@@ -382,3 +383,4 @@ public class ImageController {
     imageView.displayMessage("Please enter command:");
   }
 }
+

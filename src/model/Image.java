@@ -1,10 +1,11 @@
 package model;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * This interface represents images.
+ * This interface represents images, that has height, width, and 2d array of pixels.
  */
 public abstract class Image {
   Pixel[][] pixels;
@@ -15,9 +16,9 @@ public abstract class Image {
    * Save image to local file.
    *
    * @param path the file path
-   * @throws IOException if there's problem with IO
+   * @throws IllegalArgumentException if there's problem with the path
    */
-  public abstract void save(String path) throws IOException;
+  public abstract void save(String path) throws IllegalArgumentException;
 
   /**
    * Get height of the image.
@@ -66,7 +67,7 @@ public abstract class Image {
   }
 
   /**
-   * Split channels of the given image
+   * Split channels of the given image.
    *
    * @param channel the channel to split
    * @return the split result
@@ -183,5 +184,6 @@ public abstract class Image {
     }
     return sb.toString();
   }
+
 
 }

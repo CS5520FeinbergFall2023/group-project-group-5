@@ -1,5 +1,4 @@
 load D:\23Fall\PDP\Projects\CS5010_Assignment4\test\img\car.jpg car
-
 # blur the car
 blur car car-blurred
 brighten 2 car-blurred car-blurred-brighten
