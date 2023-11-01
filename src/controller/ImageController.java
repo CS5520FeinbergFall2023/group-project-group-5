@@ -179,6 +179,11 @@ public class ImageController {
         case "save":
           String outputPath = tokenizer.nextToken();
           String imageNameSave = tokenizer.nextToken();
+          // check if there are still more arguments
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           MyImage imageToSave = (MyImage) loadedImages.get(imageNameSave);
           if (imageToSave == null) {
             imageView.displayMessage("Image " + imageNameSave + " not found.");
@@ -197,6 +202,10 @@ public class ImageController {
           }
           Image blurImage = imageService.blur(imageBlur);
           String imageAliasBlurred = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           // Store the image in the map.
           loadedImages.put(imageAliasBlurred, blurImage);
           imageView.displayMessage("Image blurred");
@@ -211,6 +220,10 @@ public class ImageController {
           }
           Image valueImage = imageService.getValue(imageValueComponent);
           String imageAliasGetValue = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           // Store the image in the map.
           loadedImages.put(imageAliasGetValue, valueImage);
           imageView.displayMessage("Get the value-component");
@@ -225,6 +238,10 @@ public class ImageController {
           }
           Image intensityImage = imageService.getIntensity(imageIntensityComponent);
           String imageAliasGetIntensity = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           // Store the image in the map.
           loadedImages.put(imageAliasGetIntensity, intensityImage);
           imageView.displayMessage("Get the intensity-component");
@@ -239,6 +256,10 @@ public class ImageController {
           }
           Image lumaImage = imageService.getLuma(imageLumaComponent);
           String imageAliasGetLuma = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           // Store the image in the map.
           loadedImages.put(imageAliasGetLuma, lumaImage);
           imageView.displayMessage("Get the luma-component");
@@ -253,6 +274,10 @@ public class ImageController {
           }
           Image vertialImage = imageService.flip(imageFlipVertical, Axis.X);
           String imageAliasVertical = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           // Store the image in the map.
           loadedImages.put(imageAliasVertical, vertialImage);
           imageView.displayMessage("Flip the image vertically");
@@ -267,6 +292,10 @@ public class ImageController {
           }
           Image hoizontalImage = imageService.flip(imageFlipHorizontal, Axis.Y);
           String imageAliasHorizontal = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           // Store the image in the map.
           loadedImages.put(imageAliasHorizontal, hoizontalImage);
           imageView.displayMessage("Flip the image horizontally");
@@ -282,6 +311,10 @@ public class ImageController {
           }
           Image brightenImage = imageService.brighten(imageBrighten, amount);
           String imageAliasAfterBrighten = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           loadedImages.put(imageAliasAfterBrighten, brightenImage);
           // Increase brightness.
           if (amount > 0) {
@@ -301,6 +334,10 @@ public class ImageController {
           }
           Image redComponentImage = imageService.splitComponent(imageRedComponent, Channel.RED);
           String imageAliasGetRed = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           // Store the image in the map.
           loadedImages.put(imageAliasGetRed, redComponentImage);
           imageView.displayMessage("Split image in red component");
@@ -316,6 +353,10 @@ public class ImageController {
           Image greenComponentImage =
               imageService.splitComponent(imageGreenComponent, Channel.GREEN);
           String imageAliasGetGreen = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           // Store the image in the map.
           loadedImages.put(imageAliasGetGreen, greenComponentImage);
           imageView.displayMessage("Split image in green component");
@@ -330,6 +371,10 @@ public class ImageController {
           }
           Image blueComponentImage = imageService.splitComponent(imageBlueComponent, Channel.BLUE);
           String imageAliasGetBlue = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           // Store the image in the map.
           loadedImages.put(imageAliasGetBlue, blueComponentImage);
           imageView.displayMessage("Split image in blue component");
@@ -340,6 +385,10 @@ public class ImageController {
           String imageAliasSplitR = tokenizer.nextToken();
           String imageAliasSplitG = tokenizer.nextToken();
           String imageAliasSplitB = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           Image imageSplit = loadedImages.get(imageAliasSplit);
           if (imageSplit == null) {
             imageView.displayMessage("No image loaded");
@@ -363,6 +412,10 @@ public class ImageController {
           Image singleChannelImageG = loadedImages.get(singleChannelImageNameG);
           String singleChannelImageNameB = tokenizer.nextToken();
           Image singleChannelImageB = loadedImages.get(singleChannelImageNameB);
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           if (singleChannelImageR == null || singleChannelImageG == null
               || singleChannelImageB == null) {
             imageView.displayMessage("No image loaded");
@@ -390,6 +443,10 @@ public class ImageController {
           }
           Image sharpenImage = imageService.sharpen(imageSharpen);
           String imageAliasSharpened = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           // Store the image in the map.
           loadedImages.put(imageAliasSharpened, sharpenImage);
           imageView.displayMessage("Sharpen image");
@@ -404,6 +461,10 @@ public class ImageController {
           }
           Image getSepiaImage = imageService.getSepia(imageSepia);
           String imageAliasGetSepia = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
           // Store the image in the map.
           loadedImages.put(imageAliasGetSepia, getSepiaImage);
           imageView.displayMessage("Sepia image");
