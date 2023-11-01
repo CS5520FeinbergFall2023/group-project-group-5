@@ -1,6 +1,5 @@
 import org.junit.Test;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -194,8 +193,6 @@ public class ImageControllerTest {
 
   /**
    * Test the RGB combine command when there are not images.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
   public void testNullRGBCombine() {
@@ -216,8 +213,6 @@ public class ImageControllerTest {
 
   /**
    * Test the RGB combine command.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
   public void testRGBCombine() {
@@ -552,7 +547,8 @@ public class ImageControllerTest {
   @Test
   public void testMultipleCommands() {
     StringReader input = new StringReader("load test\\img\\car.jpg car\n "
-                                          + "blur car car-blurred\n brighten 2 car car-brighten\n exit");
+                                          + "blur car car-blurred\n brighten 2 car car-brighten\n"
+                                          + " exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
     MockImageView mockView = new MockImageView(input, printWriter);
@@ -575,7 +571,8 @@ public class ImageControllerTest {
   public void testMultipleCommentsAndCommands() {
     StringReader input = new StringReader("load test\\img\\car.jpg car\n "
                                           + "# want to blur the car\n blur car car-blurred\n "
-                                          + "# want to change the image's brightness\n brighten 2 car car-brighten\n "
+                                          + "# want to change the image's brightness\n "
+                                          + "brighten 2 car car-brighten\n "
                                           + "exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
@@ -599,8 +596,11 @@ public class ImageControllerTest {
   @Test
   public void testContinousCommentsAndCommands() {
     StringReader input = new StringReader("# I want to load a beautiful image\n "
-                                          + "# This image is about a car\n load test\\img\\car.jpg car\n # want to blur the car\n "
-                                          + "blur car car-blurred\n # want to change the image's brightness\n "
+                                          + "# This image is about a car\n"
+                                          + " load test\\img\\car.jpg car\n"
+                                          + " # want to blur the car\n "
+                                          + "blur car car-blurred\n"
+                                          + " # want to change the image's brightness\n "
                                           + "brighten 2 car car-brighten\n exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
@@ -616,12 +616,9 @@ public class ImageControllerTest {
 
   /**
    * Test when user enter an invalid file path.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testInvalidFilePath() throws IOException {
-
+  public void testInvalidFilePath() {
     String input = "test/file/invalid/not/exist.txt\n";
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
@@ -639,11 +636,9 @@ public class ImageControllerTest {
 
   /**
    * Test if the file with valid file path includes wrong commands.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testFileCommandError() throws IOException {
+  public void testFileCommandError() {
 
     String input = "test/file/commdswitherrors.txt\n";
     StringReader inputReader = new StringReader(input);
@@ -662,11 +657,9 @@ public class ImageControllerTest {
 
   /**
    * Test if the file with valid file path includes multiple commands.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testFileMultipleCommands() throws IOException {
+  public void testFileMultipleCommands() {
     String input = "test/file/textcommand.txt\n";
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
@@ -687,11 +680,9 @@ public class ImageControllerTest {
   /**
    * Test if the file with valid file path includes multiple comments and commands. This tests
    * contains absolute path, so it won't run on every environment.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testFileCommentsAndMultipleCommands() throws IOException {
+  public void testFileCommentsAndMultipleCommands() {
     String input = "test/file/commandWithMultipleComments.txt\n";
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
@@ -713,11 +704,9 @@ public class ImageControllerTest {
 
   /**
    * Test if the file with valid file path includes a single command.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testFileSingleCommand() throws IOException {
+  public void testFileSingleCommand() {
     String input = "test/file/textsinglecommand.txt\n";
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
@@ -736,11 +725,9 @@ public class ImageControllerTest {
   /**
    * Test if the file with valid file path includes a single comment and a single command, and the
    * image is not loaded before, which means can not do the execution.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testFileNullSingleCommentSingleCommand() throws IOException {
+  public void testFileNullSingleCommentSingleCommand() {
     String input = "test/file/textsinglecommandwithsinglecomment.txt\n";
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
@@ -759,11 +746,9 @@ public class ImageControllerTest {
   /**
    * Test if the file with valid file path includes a single comment and a single command, and can
    * execute correctly.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testFileSingleCommentSingleCommand() throws IOException {
+  public void testFileSingleCommentSingleCommand() {
     String input = "test/file/textsinglecommentcommand.txt\n";
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
@@ -782,11 +767,9 @@ public class ImageControllerTest {
   /**
    * Test if the file with valid file path includes continous comments and a single command. It can
    * not execute correctly.
-   *
-   * @throws IOException if there's an error related to I/O operations.
    */
   @Test
-  public void testFileContinousCommentSingleCommand() throws IOException {
+  public void testFileContinuousCommentSingleCommand() {
     String input = "test/file/textcontinouscomment.txt\n";
     StringReader inputReader = new StringReader(input);
     StringWriter output = new StringWriter();
