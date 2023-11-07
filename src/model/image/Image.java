@@ -14,7 +14,7 @@ public abstract class Image {
   Pixel[][] pixels;
   int height;
   int width;
-  final Compressor compressor=new HaarWaveletCompressor();
+  final Compressor compressor = new HaarWaveletCompressor();
 
   /**
    * Save image to local file.
@@ -174,11 +174,14 @@ public abstract class Image {
     return mapElement(pixel -> pixel.addition(matrix));
   }
 
-  /** Compress the images with given compressor.
+  /**
+   * Compress the image with given compressor.
+   *
    * @param compressor the given compressor
+   * @param ratio      the compress ration ([0,1])
    * @return the compressed image
    */
-  public abstract Image compress(Compressor compressor);
+  public abstract Image compress(Compressor compressor, float ratio);
 
   /**
    * Get channels of pixels in the image.

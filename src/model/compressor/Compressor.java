@@ -6,34 +6,34 @@ package model.compressor;
 public interface Compressor {
 
   /**
-   * Compress a 2D double array.
+   * Compress a 2D float array.
    *
-   * @param matrix the given 2D double array to compress
+   * @param matrix the given 2D float array to compress
    * @return the compressed result
    */
-  double[][] compress2D(double[][] matrix, double ratio);
+  float[][] compress2D(float[][] matrix, float ratio);
 
   /**
-   * Decompress a 2D double array.
+   * Decompress a 2D float array.
    *
    * @param compressed the given 2D array to decompress
    * @return the decompressed result
    */
-  double[][] decompress2D(double[][] compressed);
+  float[][] decompress2D(float[][] compressed);
 
   /**
-   * Compress an 1D double array.
+   * Compress an 1D float array.
    *
-   * @param nums the given 1D double array to compress
+   * @param nums the given 1D float array to compress
    * @return the compressed result
    */
-  double[] compress(double[] nums, double ratio);
+  float[] compress(float[] nums, float ratio);
 
   /**
-   * Decompress an 1D double array.
+   * Decompress an 1D float array.
    *
    * @param compressed the 1D compressed array to decompress
    * @return the decompressed result
    */
-  double[] decompress(double[] compressed);
+  float[] decompress(float[] compressed);
 }

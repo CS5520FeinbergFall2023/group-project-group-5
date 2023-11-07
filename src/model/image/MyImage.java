@@ -434,14 +434,42 @@ public class MyImage extends Image {
   }
 
   /**
-   * Compress the images with given compressor.
+   * Compress the image with given compressor.
    *
    * @param compressor the given compressor
+   * @param ratio      the compress ration ([0,1])
    * @return the compressed image
    */
   @Override
-  public Image compress(Compressor compressor) {
-    return null;
+  public Image compress(Compressor compressor, float ratio) {
+    if (ratio < 0 || ratio > 1) {
+      throw new IllegalArgumentException("Ratio cannot be smaller than 0 or larger than 1.");
+    }
+    float[][] redPixels = new float[height][width];
+    float[][] greenPixels = new float[height][width];
+    float[][] bluePixels = new float[height][width];
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        redPixels[i][j] = getPixel(i, j).getRed();
+        greenPixels[i][j] = getPixel(i, j).getGreen();
+        bluePixels[i][j] = getPixel(i, j).getBlue();
+      }
+    }
+    float[][] redPixelsCompressed =
+        compressor.decompress2D(compressor.compress2D(redPixels, ratio));
+    float[][] greenPixelsCompressed = compressor.decompress2D(compressor.compress2D(greenPixels,
+        ratio));
+    float[][] bluePixelsCompressed =
+        compressor.decompress2D(compressor.compress2D(bluePixels, ratio));
+    RGBPixel[][] pixels=new RGBPixel[height][width];
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        pixels[i][j] = new RGBPixel(Math.round(redPixelsCompressed[i][j]),
+            Math.round(greenPixelsCompressed[i][j]),
+            Math.round(bluePixelsCompressed[i][j]));
+      }
+    }
+    return new MyImage(pixels);
   }
 
   /**
