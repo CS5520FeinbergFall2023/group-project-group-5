@@ -8,22 +8,53 @@ import java.util.Arrays;
 public class HaarWaveletCompressor implements Compressor {
   private static final double sqrt2 = Math.sqrt(2);
 
-  public double[][] compress2D(double[][] matrix) {
-    if (matrix.length == 0) {
+  /**
+   * Compress a 2D double matrix.
+   *
+   * @param matrix the given 2D double matrix to compress
+   * @return the compressed result
+   */
+  @Override
+  public double[][] compress2D(double[][] matrix, double ratio) {
+    int height = matrix.length % 2 == 0 ? matrix.length : matrix.length + 1;
+    int width = matrix[0].length % 2 == 0 ? matrix[0].length : matrix[0].length + 1;
+    if (height == 0) {
       throw new IllegalArgumentException("The given matrix to compress is empty.");
     }
-    double[][] result = new double[matrix.length][];
+    //default values are 0.0
+    double[][] result = new double[height][width];
     for (int i = 0; i < matrix.length; i++) {
-      result[i] = compress();
+      System.arraycopy(matrix[i], 0, result[i], 0, matrix[i].length);
+    }
+    //compress the rows
+    for (int i = 0; i < height; i++) {
+      int rowWidth = matrix[i].length % 2 == 0 ? matrix[i].length : matrix[i].length + 1;
+      if (rowWidth != width) {
+        throw new IllegalArgumentException("The given matrix to compress is not rectangle.");
+      }
+      result[i] = compress(matrix[i],ratio);
+    }
+    //then compress the columns
+    for (int j = 0; j < width; j++) {
+      double[] tmp = new double[height];
+      for (int i = 0; i < height; i++) {
+        tmp[i] = matrix[i][j];
+      }
+      tmp = compress(tmp,ratio);
+      for (int i = 0; i < height; i++) {
+        result[i][j] = tmp[i];
+      }
     }
     return result;
   }
+
+
 
   /**
    * Compress an 1D integer array. Forward transformation with Haar Wavelet Transform.
    */
   @Override
-  public double[] compress(double[] nums) {
+  public double[] compress(double[] nums, double ratio) {
     if (nums.length == 0) {
       throw new IllegalArgumentException("The given list to compress is empty.");
     }
@@ -41,7 +72,7 @@ public class HaarWaveletCompressor implements Compressor {
     }
     int m = result.length;
     while (m > 1) {
-      double[] tmp = transform(Arrays.copyOfRange(result, 0, m));
+      double[] tmp = transform(Arrays.copyOfRange(result, 0, m),ratio);
       if (m < result.length) {
         System.arraycopy(result, m, tmp, m, result.length - m);
       }
@@ -56,7 +87,7 @@ public class HaarWaveletCompressor implements Compressor {
     return (n > 0) && ((n & (n - 1)) == 0);
   }
 
-  private double[] transform(double[] nums) {
+  private double[] transform(double[] nums,double ratio) {
     if (nums.length == 0) {
       throw new IllegalArgumentException("The given list to transform is empty.");
     }
@@ -74,6 +105,12 @@ public class HaarWaveletCompressor implements Compressor {
       compressed[groupCount - 1] = nums[nums.length - 1] / sqrt2;
       compressed[compressed.length - 1] = nums[nums.length - 1] / sqrt2;
     }
+    double threshold = getThreshold(compressed, ratio);
+    for (int i = 0; i < compressed.length; i++) {
+      if (compressed[i] <= threshold) {
+        compressed[i] = 0.0;
+      }
+    }
     return compressed;
   }
 
@@ -82,7 +119,7 @@ public class HaarWaveletCompressor implements Compressor {
    * Decompress a double list.
    */
   @Override
-  public double[] decompress(double[] compressed, double ratio) {
+  public double[] decompress(double[] compressed) {
     if (compressed.length == 0) {
       throw new IllegalArgumentException("The given list to decompress is empty.");
     }
@@ -101,12 +138,7 @@ public class HaarWaveletCompressor implements Compressor {
       result = tmp;
       m *= 2;
     }
-    double threshold = getThreshold(result, ratio);
-    for (int i = 0; i < result.length; i++) {
-      if (result[i] <= threshold) {
-        result[i] = 0.0;
-      }
-    }
+
     return result;
   }
 
