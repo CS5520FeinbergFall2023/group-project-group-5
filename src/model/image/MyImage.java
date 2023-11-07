@@ -15,6 +15,7 @@ import java.util.function.Function;
 import javax.imageio.ImageIO;
 
 import model.Channel;
+import model.compressor.Compressor;
 import model.pixel.Pixel;
 import model.pixel.RGBPixel;
 
@@ -432,6 +433,16 @@ public class MyImage extends Image {
     return new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE};
   }
 
+  /**
+   * Compress the images with given compressor.
+   *
+   * @param compressor the given compressor
+   * @return the compressed image
+   */
+  @Override
+  public Image compress(Compressor compressor) {
+    return null;
+  }
 
   /**
    * Check if two objects are identical.

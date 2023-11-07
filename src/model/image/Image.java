@@ -3,6 +3,8 @@ package model.image;
 import java.util.function.Function;
 
 import model.Channel;
+import model.compressor.Compressor;
+import model.compressor.HaarWaveletCompressor;
 import model.pixel.Pixel;
 
 /**
@@ -12,6 +14,7 @@ public abstract class Image {
   Pixel[][] pixels;
   int height;
   int width;
+  final Compressor compressor=new HaarWaveletCompressor();
 
   /**
    * Save image to local file.
@@ -170,6 +173,12 @@ public abstract class Image {
   public Image imgArrayAddition(float[] matrix) throws IllegalArgumentException {
     return mapElement(pixel -> pixel.addition(matrix));
   }
+
+  /** Compress the images with given compressor.
+   * @param compressor the given compressor
+   * @return the compressed image
+   */
+  public abstract Image compress(Compressor compressor);
 
   /**
    * Get channels of pixels in the image.
