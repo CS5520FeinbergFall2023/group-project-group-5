@@ -11,14 +11,16 @@ import java.util.List;
 public class HaarWaveletCompressor implements Compressor {
   private static final float sqrt2 = (float) Math.sqrt(2);
 
-  //创建 SingleObject 的一个对象
+  //singleton
   private static HaarWaveletCompressor instance = new HaarWaveletCompressor();
 
-  //让构造函数为 private，这样该类就不会被实例化
-  private HaarWaveletCompressor(){}
+  private HaarWaveletCompressor() {
+  }
 
-  //获取唯一可用的对象
-  public static HaarWaveletCompressor getInstance(){
+  /**
+   * Get the singleton instance of the compressor.
+   */
+  public static HaarWaveletCompressor getInstance() {
     return instance;
   }
 
