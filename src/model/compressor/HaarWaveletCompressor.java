@@ -28,21 +28,26 @@ public class HaarWaveletCompressor implements Compressor {
    * Compress a 2D float matrix.
    *
    * @param matrix the given 2D float matrix to compress
+   * @param ratio  the compression ratio ([0,1])
    * @return the compressed result
+   * @throws IllegalArgumentException when given matrix or ratio is illegal
    */
   @Override
-  public float[][] compress2D(float[][] matrix, float ratio) {
+  public float[][] compress2D(float[][] matrix, float ratio) throws IllegalArgumentException {
     if (matrix.length == 0) {
       throw new IllegalArgumentException("The given matrix to compress is empty.");
     }
+    if (ratio < 0 || ratio > 1) {
+      throw new IllegalArgumentException("Ratio cannot be smaller than 0 or larger than 1.");
+    }
     int height = matrix.length;
     if (!isPowerOfTwo(matrix.length)) {
-      height = 1 << ((int) Math.ceil(Math.log(matrix.length)));
+      height = 1 << ((int) Math.ceil(log2(matrix.length)));
     }
     int originalWidth = matrix[0].length;
     int width = originalWidth;
     if (!isPowerOfTwo(width)) {
-      width = 1 << ((int) Math.ceil(Math.log(width)));
+      width = 1 << ((int) Math.ceil(log2(width)));
     }
     //copy the original values. default values are 0.0
     float[][] result = new float[height][width];
@@ -61,7 +66,7 @@ public class HaarWaveletCompressor implements Compressor {
     for (int j = 0; j < width; j++) {
       float[] tmp = new float[height];
       for (int i = 0; i < height; i++) {
-        tmp[i] = matrix[i][j];
+        tmp[i] = result[i][j];
       }
       tmp = compress(tmp, 0);
       for (int i = 0; i < height; i++) {
@@ -117,35 +122,41 @@ public class HaarWaveletCompressor implements Compressor {
     return result;
   }
 
-
   /**
-   * Compress an 1D integer array. Forward transformation with Haar Wavelet Transform.
+   * Compress an 1D float array.
+   *
+   * @param nums  the given 1D float array to compress
+   * @param ratio the compression ratio ([0,1])
+   * @return the compressed result
+   * @throws IllegalArgumentException when given array or ratio is illegal
    */
   @Override
-  public float[] compress(float[] nums, float ratio) {
+  public float[] compress(float[] nums, float ratio) throws IllegalArgumentException {
     if (nums.length == 0) {
       throw new IllegalArgumentException("The given list to compress is empty.");
     }
+    if (ratio < 0 || ratio > 1) {
+      throw new IllegalArgumentException("Ratio cannot be smaller than 0 or larger than 1.");
+    }
     int desiredLength = nums.length;
     if (!isPowerOfTwo(nums.length)) {
-      desiredLength = 1 << ((int) Math.ceil(Math.log(nums.length)));
+      desiredLength = 1 << ((int) Math.ceil(log2(nums.length)));
     }
     float[] result = new float[desiredLength];
-    System.arraycopy(nums, 0, result,
-        0, nums.length);
-    if (nums.length < desiredLength) {
-      for (int i = nums.length; i < desiredLength; i++) {
-        result[i] = 0.0f;
-      }
-    }
+    System.arraycopy(nums, 0, result, 0, nums.length);
     int m = result.length;
     while (m > 1) {
       float[] tmp = transform(Arrays.copyOfRange(result, 0, m), ratio);
-      if (m < result.length) {
-        System.arraycopy(result, m, tmp, m, result.length - m);
-      }
-      result = tmp;
+      System.arraycopy(tmp, 0, result, 0, m);
       m /= 2;
+    }
+    if (ratio > 0) {
+      float threshold = getThreshold(result, ratio);
+      for (int i = 0; i < result.length; i++) {
+        if (result[i] <= threshold) {
+          result[i] = 0.0f;
+        }
+      }
     }
     return result;
   }
@@ -168,25 +179,20 @@ public class HaarWaveletCompressor implements Compressor {
     if (nums.length % 2 == 0) {
       compressed[groupCount - 1] =
           (nums[nums.length - 2] + nums[nums.length - 1]) / sqrt2;
-      compressed[compressed.length - 1] = (nums[nums.length - 2] - nums[nums.length - 1]) / sqrt2;
+      compressed[2 * groupCount - 1] = (nums[nums.length - 2] - nums[nums.length - 1]) / sqrt2;
     } else {
       compressed[groupCount - 1] = nums[nums.length - 1] / sqrt2;
-      compressed[compressed.length - 1] = nums[nums.length - 1] / sqrt2;
-    }
-    if (ratio > 0) {
-      float threshold = getThreshold(compressed, ratio);
-      for (int i = 0; i < compressed.length; i++) {
-        if (compressed[i] <= threshold) {
-          compressed[i] = 0.0f;
-        }
-      }
+      compressed[2 * groupCount - 1] = nums[nums.length - 1] / sqrt2;
     }
     return compressed;
   }
 
 
   /**
-   * Decompress a float list.
+   * Decompress an 1D float array.
+   *
+   * @param compressed the 1D compressed array to decompress
+   * @return the decompressed result
    */
   @Override
   public float[] decompress(float[] compressed) {
@@ -201,11 +207,7 @@ public class HaarWaveletCompressor implements Compressor {
     int m = 2;
     while (m <= compressed.length) {
       float[] tmp = invert(Arrays.copyOfRange(result, 0, m));
-      if (m < result.length) {
-        System.arraycopy(result, m, tmp, m, result.length - m);
-
-      }
-      result = tmp;
+      System.arraycopy(tmp, 0, result, 0, m);
       m *= 2;
     }
 
@@ -262,4 +264,9 @@ public class HaarWaveletCompressor implements Compressor {
     }
     return inverted;
   }
+
+  private float log2(float number) {
+    return (float) (Math.log(number) / Math.log(2));
+  }
+
 }
