@@ -14,6 +14,7 @@ import java.util.function.Function;
 
 import javax.imageio.ImageIO;
 
+import model.Axis;
 import model.Channel;
 import model.compressor.Compressor;
 import model.pixel.Pixel;
@@ -65,6 +66,18 @@ public class MyImage extends Image {
     this.height = height;
     this.width = width;
     this.pixels = pixels;
+  }
+
+  private MyImage(MyImage other) {
+    height = other.height;
+    width = other.width;
+    pixels = new RGBPixel[other.height][other.width];
+    for (int row = 0; row < this.height; row++) {
+      for (int col = 0; col < this.width; col++) {
+        pixels[row][col] = new RGBPixel(other.getPixel(row, col).getRed(),
+            other.getPixel(row, col).getGreen(), other.getPixel(row, col).getBlue());
+      }
+    }
   }
 
   /**
@@ -461,7 +474,8 @@ public class MyImage extends Image {
         ratio));
     float[][] bluePixelsCompressed =
         compressor.decompress2D(compressor.compress2D(bluePixels, ratio));
-    RGBPixel[][] pixels=new RGBPixel[height][width];
+    // restore as original size and discard the padding.
+    RGBPixel[][] pixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         pixels[i][j] = new RGBPixel(Math.round(redPixelsCompressed[i][j]),
@@ -470,6 +484,123 @@ public class MyImage extends Image {
       }
     }
     return new MyImage(pixels);
+  }
+
+  /**
+   * Split the images to 2 images according to the given percentage.
+   *
+   * @param percentage the split percentage ([0,1], the first part will be of that percentage)
+   * @param axis       the axis to split (X means a vertical line split the images to 2 images
+   *                   horizontally with the same height)
+   * @return the split images (always with length 2, if one is empty when percentage is 0 or 1, that
+   *     object will be null)
+   */
+  @Override
+  public MyImage[] split(float percentage, Axis axis) {
+    if (percentage < 0 || percentage > 1) {
+      throw new IllegalArgumentException("The split percentage should be within [0,1]");
+    }
+    MyImage[] result = new MyImage[2];
+    int firstSize =
+        (axis == Axis.X) ? Math.round(width * percentage) : Math.round(height * percentage);
+    if (firstSize == 0) {
+      result[0] = null;
+      result[1] = new MyImage(this);
+    } else if (firstSize == 1) {
+      result[0] = new MyImage(this);
+      result[1] = null;
+    } else {
+      if (axis == Axis.X) {
+        //left width, or the position of the split line
+        RGBPixel[][] pixels1 = new RGBPixel[height][firstSize];
+        for (int i = 0; i < height; i++) {
+          for (int j = 0; j < firstSize; j++) {
+            pixels1[i][j] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
+                getPixel(i, j).getBlue());
+          }
+        }
+        RGBPixel[][] pixels2 = new RGBPixel[height][width - firstSize];
+        for (int i = 0; i < height; i++) {
+          for (int j = firstSize; j < width; j++) {
+            pixels2[i][j] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
+                getPixel(i, j).getBlue());
+          }
+        }
+        result[0] = new MyImage(pixels1);
+        result[1] = new MyImage(pixels2);
+      } else {
+        RGBPixel[][] pixels1 = new RGBPixel[firstSize][width];
+        for (int i = 0; i < firstSize; i++) {
+          for (int j = 0; j < width; j++) {
+            pixels1[i][j] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
+                getPixel(i, j).getBlue());
+          }
+        }
+        RGBPixel[][] pixels2 = new RGBPixel[height - firstSize][width];
+        for (int i = firstSize; i < height; i++) {
+          for (int j = 0; j < width; j++) {
+            pixels2[i][j] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
+                getPixel(i, j).getBlue());
+          }
+        }
+        result[0] = new MyImage(pixels1);
+        result[1] = new MyImage(pixels2);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Combine two images together on the given axis.
+   *
+   * @param other the other images to combine with this one
+   * @param axis  the axis to combine on (X means combine two images with same height horizontally)
+   * @return the combined image
+   */
+  @Override
+  public MyImage combineImages(Image other, Axis axis) {
+    if (other == null) {
+      return this;
+    }
+    if (!(other instanceof MyImage)) {
+      throw new IllegalArgumentException("Images to combine must be of same type.");
+    }
+    if (axis == Axis.X) {
+      if (this.getHeight() != other.getHeight()) {
+        throw new IllegalArgumentException("Images to combine are not of same height.");
+      }
+      RGBPixel[][] newPixels = new RGBPixel[height][width + other.getWidth()];
+      for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+          newPixels[i][j] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
+              getPixel(i, j).getBlue());
+        }
+        for (int j = 0; j < other.getWidth(); j++) {
+          newPixels[i][width + j] = new RGBPixel(((RGBPixel) other.getPixel(i, j)).getRed(),
+              ((RGBPixel) other.getPixel(i, j)).getGreen(),
+              ((RGBPixel) other.getPixel(i, j)).getBlue());
+        }
+      }
+      return new MyImage(newPixels);
+    } else {
+      if (this.getWidth() != other.getWidth()) {
+        throw new IllegalArgumentException("Images to combine are not of same width.");
+      }
+      RGBPixel[][] newPixels = new RGBPixel[height + other.getHeight()][width];
+
+      for (int j = 0; j < width; j++) {
+        for (int i = 0; i < height; i++) {
+          newPixels[i][j] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
+              getPixel(i, j).getBlue());
+        }
+        for (int i = 0; i < other.getHeight(); i++) {
+          newPixels[height + i][j] = new RGBPixel(((RGBPixel) other.getPixel(i, j)).getRed(),
+              ((RGBPixel) other.getPixel(i, j)).getGreen(),
+              ((RGBPixel) other.getPixel(i, j)).getBlue());
+        }
+      }
+      return new MyImage(newPixels);
+    }
   }
 
   /**

@@ -12,6 +12,7 @@ import model.pixel.Pixel;
  * This class performs image operations.
  */
 public class ImageService {
+
   /**
    * Get one certain channel of the image (result in one colored image).
    *
@@ -31,21 +32,35 @@ public class ImageService {
   /**
    * Blur an image.
    *
-   * @param image the image to operate on
+   * @param image      the image to operate on
+   * @param percentage the split operation percentage (the first part will be operated while the
+   *                   second part remains unchanged)
+   * @param splitAxis  the axis to split (X means split the images as left and right)
    * @return the result image
    * @throws IllegalArgumentException when given argument is null or not legal
    */
 
-  public Image blur(Image image) throws IllegalArgumentException {
+  public Image blur(Image image, float percentage, Axis splitAxis) throws IllegalArgumentException {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
+    }
+    if (percentage < 0 || percentage > 1) {
+      throw new IllegalArgumentException("The split percentage should be within [0,1]");
     }
     float[][] blur = new float[][]{
         {0.0625f, 0.125f, 0.0625f},
         {0.125f, 0.25f, 0.125f},
         {0.0625f, 0.125f, 0.0625f}
     };
-    return image.filtering(blur);
+    Image[] splitImages = image.split(percentage, splitAxis);
+    if (splitImages[0] == null) {
+      return splitImages[1];
+    } else if (splitImages[1] == null) {
+      return splitImages[0].filtering(blur);
+    } else {
+      splitImages[0] = splitImages[0].filtering(blur);
+      return splitImages[0].combineImages(splitImages[1], splitAxis);
+    }
   }
 
   /**
@@ -94,6 +109,40 @@ public class ImageService {
         {0.2126f, 0.7152f, 0.0722f}
     };
     return image.matrixMultiplication(luma);
+  }
+
+  /**
+   * Greyscale an image.
+   *
+   * @param image      the image to operate on
+   * @param percentage the split operation percentage (the first part will be operated while the
+   *                   second part remains unchanged)
+   * @param splitAxis  the axis to split (X means split the images as left and right)
+   * @return the result image
+   * @throws IllegalArgumentException when given argument is null or not legal
+   */
+  public Image greyscale(Image image, float percentage, Axis splitAxis)
+      throws IllegalArgumentException {
+    if (image == null) {
+      throw new IllegalArgumentException("The image is null");
+    }
+    if (percentage < 0 || percentage > 1) {
+      throw new IllegalArgumentException("The split percentage should be within [0,1]");
+    }
+    float[][] greyscale = new float[][]{
+        {0.2126f, 0.7152f, 0.0722f},
+        {0.2126f, 0.7152f, 0.0722f},
+        {0.2126f, 0.7152f, 0.0722f}
+    };
+    Image[] splitImages = image.split(percentage, splitAxis);
+    if (splitImages[0] == null) {
+      return splitImages[1];
+    } else if (splitImages[1] == null) {
+      return splitImages[0].matrixMultiplication(greyscale);
+    } else {
+      splitImages[0] = splitImages[0].matrixMultiplication(greyscale);
+      return splitImages[0].combineImages(splitImages[1], splitAxis);
+    }
   }
 
   /**
@@ -198,13 +247,20 @@ public class ImageService {
   /**
    * Sharpen an image.
    *
-   * @param image the image to operate on
+   * @param image      the image to operate on
+   * @param percentage the split operation percentage (the first part will be operated while the
+   *                   second part remains unchanged)
+   * @param splitAxis  the axis to split (X means split the images as left and right)
    * @return the result image
    * @throws IllegalArgumentException when given argument is null or not legal
    */
-  public Image sharpen(Image image) throws IllegalArgumentException {
+  public Image sharpen(Image image, float percentage, Axis splitAxis)
+      throws IllegalArgumentException {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
+    }
+    if (percentage < 0 || percentage > 1) {
+      throw new IllegalArgumentException("The split percentage should be within [0,1]");
     }
     float[][] sharpen = new float[][]{
         {-0.125f, -0.125f, -0.125f, -0.125f, -0.125f},
@@ -213,20 +269,35 @@ public class ImageService {
         {-0.125f, 0.25f, 0.25f, 0.25f, -0.125f},
         {-0.125f, -0.125f, -0.125f, -0.125f, -0.125f},
     };
-    return image.filtering(sharpen);
+    Image[] splitImages = image.split(percentage, splitAxis);
+    if (splitImages[0] == null) {
+      return splitImages[1];
+    } else if (splitImages[1] == null) {
+      return splitImages[0].filtering(sharpen);
+    } else {
+      splitImages[0] = splitImages[0].filtering(sharpen);
+      return splitImages[0].combineImages(splitImages[1], splitAxis);
+    }
   }
 
 
   /**
    * Get sepia version of an image.
    *
-   * @param image the image to operate on
+   * @param image      the image to operate on
+   * @param percentage the split operation percentage (the first part will be operated while the
+   *                   second part remains unchanged)
+   * @param splitAxis  the axis to split (X means split the images as left and right)
    * @return the result image
    * @throws IllegalArgumentException when given argument is null or not legal
    */
-  public Image getSepia(Image image) throws IllegalArgumentException {
+  public Image getSepia(Image image, float percentage, Axis splitAxis)
+      throws IllegalArgumentException {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
+    }
+    if (percentage < 0 || percentage > 1) {
+      throw new IllegalArgumentException("The split percentage should be within [0,1]");
     }
     float[][] sepia = new float[][]
         {
@@ -234,7 +305,15 @@ public class ImageService {
             {0.349f, 0.686f, 0.168f},
             {0.272f, 0.534f, 0.131f}
         };
-    return image.matrixMultiplication(sepia);
+    Image[] splitImages = image.split(percentage, splitAxis);
+    if (splitImages[0] == null) {
+      return splitImages[1];
+    } else if (splitImages[1] == null) {
+      return splitImages[0].matrixMultiplication(sepia);
+    } else {
+      splitImages[0] = splitImages[0].matrixMultiplication(sepia);
+      return splitImages[0].combineImages(splitImages[1], splitAxis);
+    }
   }
 
   /**
