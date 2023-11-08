@@ -26,28 +26,34 @@ public class ImageUtil {
     ImageView imageView = new ImageView(new InputStreamReader(System.in),
         new PrintWriter(System.out, true));
     ImageController controller = new ImageController(imageService, imageView);
-    imageView.displayMessage("Please select which mode you want to input the commands: "
-                             + "1. Console 2. From file 3 Exit");
-    while (true) {
-      int choice = imageView.getModeChoice();
-      switch (choice) {
-        case 1:
-          imageView.displayMessage("Please enter the command (input 'exit' to exit): ");
-          controller.start();
-          return;
-        case 2:
-          String filePath = imageView.getFilePath();
-          if (filePath != null && !filePath.isEmpty()) {
-            controller.startFromFile(filePath);
+
+    if (args.length > 1 && "-file".equals(args[0])) {
+      controller.startFromFile(args[1]);
+    }
+    else{
+      imageView.displayMessage("Please select which mode you want to input the commands: "
+            + "1. Console 2. From file 3 Exit");
+      while (true) {
+        int choice = imageView.getModeChoice();
+        switch (choice) {
+          case 1:
+            imageView.displayMessage("Please enter the command (input 'exit' to exit): ");
+            controller.start();
             return;
-          } else {
-            imageView.displayMessage("Invalid file path.");
-          }
-          break;
-        case 3:
-          return;
-        default:
-          imageView.displayMessage("Please select a valid choice (1 or 2 or 3).");
+          case 2:
+            String filePath = imageView.getFilePath();
+            if (filePath != null && !filePath.isEmpty()) {
+              controller.startFromFile(filePath);
+              return;
+            } else {
+              imageView.displayMessage("Invalid file path.");
+            }
+            break;
+          case 3:
+            return;
+          default:
+            imageView.displayMessage("Please select a valid choice (1 or 2 or 3).");
+        }
       }
     }
   }

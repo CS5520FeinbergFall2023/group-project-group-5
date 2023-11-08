@@ -198,12 +198,30 @@ public class ImageController {
             imageView.displayMessage("No image loaded");
             break;
           }
-          Image blurImage = imageService.blur(imageBlur);
           String imageAliasBlurred = tokenizer.nextToken();
+          float percentage = 1.0f;
+          Axis splitAxis = Axis.X;
+          if(tokenizer.hasMoreTokens()) {
+            String nextToken = tokenizer.nextToken();
+            try {
+              percentage = Float.parseFloat(nextToken);
+              if (tokenizer.hasMoreTokens()) {
+                String axisToken = tokenizer.nextToken();
+                splitAxis = Axis.valueOf(axisToken.toUpperCase());
+              }
+            } catch (NumberFormatException e) {
+              imageView.displayMessage("Invalid percentage format.");
+              break;
+            } catch (IllegalArgumentException e) {
+              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+              break;
+            }
+          }
           if (tokenizer.hasMoreTokens()) {
             imageView.displayMessage("More arguments than expected.");
             break;
           }
+          Image blurImage = imageService.blur(imageBlur, percentage, splitAxis);
           // Store the image in the map.
           loadedImages.put(imageAliasBlurred, blurImage);
           imageView.displayMessage("Image blurred");
@@ -439,12 +457,31 @@ public class ImageController {
             imageView.displayMessage("No image loaded");
             break;
           }
-          Image sharpenImage = imageService.sharpen(imageSharpen);
           String imageAliasSharpened = tokenizer.nextToken();
+          float percentageSharpen = 1.0f;
+          Axis splitAxisSharpen = Axis.X;
+          if(tokenizer.hasMoreTokens()) {
+            String nextToken = tokenizer.nextToken();
+            try {
+              percentageSharpen = Float.parseFloat(nextToken);
+              if(tokenizer.hasMoreTokens()) {
+                String axisToken = tokenizer.nextToken();
+                splitAxisSharpen = Axis.valueOf(axisToken.toUpperCase());
+              }
+            } catch (NumberFormatException e) {
+              imageView.displayMessage("Invalid percentage format.");
+              break;
+            } catch (IllegalArgumentException e) {
+              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+              break;
+            }
+          }
           if (tokenizer.hasMoreTokens()) {
             imageView.displayMessage("More arguments than expected.");
             break;
           }
+          Image sharpenImage = imageService.sharpen(imageSharpen, percentageSharpen,
+                splitAxisSharpen);
           // Store the image in the map.
           loadedImages.put(imageAliasSharpened, sharpenImage);
           imageView.displayMessage("Sharpen image");
@@ -457,18 +494,186 @@ public class ImageController {
             imageView.displayMessage("No image loaded");
             break;
           }
-          Image getSepiaImage = imageService.getSepia(imageSepia);
           String imageAliasGetSepia = tokenizer.nextToken();
+          float percentageSepia = 1.0f;
+          Axis splitAxisSepia = Axis.X;
+          if(tokenizer.hasMoreTokens()) {
+            String nextToken = tokenizer.nextToken();
+            try {
+              percentageSepia = Float.parseFloat(nextToken);
+              if(tokenizer.hasMoreTokens()) {
+                String axisToken = tokenizer.nextToken();
+                splitAxisSepia = Axis.valueOf(axisToken.toUpperCase());
+              }
+            } catch (NumberFormatException e) {
+              imageView.displayMessage("Invalid percentage format.");
+              break;
+            } catch (IllegalArgumentException e) {
+              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+              break;
+            }
+          }
           if (tokenizer.hasMoreTokens()) {
             imageView.displayMessage("More arguments than expected.");
             break;
           }
+          Image getSepiaImage = imageService.getSepia(imageSepia, percentageSepia, splitAxisSepia);
           // Store the image in the map.
           loadedImages.put(imageAliasGetSepia, getSepiaImage);
           imageView.displayMessage("Sepia image");
           break;
+        // Greyscale command.
+        case "greyscale":
+          String imageAliasGreyScale = tokenizer.nextToken();
+          Image imageGreyScale = loadedImages.get(imageAliasGreyScale);
+          if (imageGreyScale == null) {
+            imageView.displayMessage("No image loaded");
+            break;
+          }
+          String imageAliasGetGreyScale = tokenizer.nextToken();
+          float percentageGreyScale = 1.0f;
+          Axis splitAxisGreyScale = Axis.X;
+          if(tokenizer.hasMoreTokens()) {
+            String nextToken = tokenizer.nextToken();
+            try {
+              percentageGreyScale = Float.parseFloat(nextToken);
+              if(tokenizer.hasMoreTokens()) {
+                String axisToken = tokenizer.nextToken();
+                splitAxisGreyScale = Axis.valueOf(axisToken.toUpperCase());
+              }
+            } catch (NumberFormatException e) {
+              imageView.displayMessage("Invalid percentage format.");
+              break;
+            } catch (IllegalArgumentException e) {
+              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+              break;
+            }
+          }
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
+          Image getGreyScaleImage = imageService.greyscale(imageGreyScale, percentageGreyScale,
+                splitAxisGreyScale);
+          // Store the image in the map.
+          loadedImages.put(imageAliasGetGreyScale, getGreyScaleImage);
+          imageView.displayMessage("Greyscale image");
+          break;
+        // Compress command.
+        case "compress":
+          float ratio = Float.parseFloat(tokenizer.nextToken());
+          String imageAliasCompress = tokenizer.nextToken();
+          Image imageToCompress = loadedImages.get(imageAliasCompress);
+          if (imageToCompress == null) {
+            imageView.displayMessage("No image loaded");
+            break;
+          }
+          Image compressImage = imageService.haarWaveletCompress(imageToCompress, ratio);
+          String imageAliasAfterCompress = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
+          loadedImages.put(imageAliasAfterCompress, compressImage);
+          imageView.displayMessage("Compress image");
+          break;
+        // Get the histogram command.
+        case "histogram":
+
+          break;
+
+        // Color-correct command.
+        case "color-correct":
+          String imageAliasCorrect = tokenizer.nextToken();
+          Image imageToCorrect = loadedImages.get(imageAliasCorrect);
+          if (imageToCorrect == null) {
+            imageView.displayMessage("No image loaded");
+            break;
+          }
+          String imageAliasAfterCorrect = tokenizer.nextToken();
+          float percentageCorrect = 1.0f;
+          Axis splitAxisCorrect = Axis.X;
+          if(tokenizer.hasMoreTokens()) {
+            String nextToken = tokenizer.nextToken();
+            try {
+              percentageCorrect = Float.parseFloat(nextToken);
+              if(tokenizer.hasMoreTokens()) {
+                String axisToken = tokenizer.nextToken();
+                splitAxisCorrect = Axis.valueOf(axisToken.toUpperCase());
+              }
+            } catch (NumberFormatException e) {
+              imageView.displayMessage("Invalid percentage format.");
+              break;
+            } catch (IllegalArgumentException e) {
+              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+              break;
+            }
+          }
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
+//          Image colorCorrectImage = imageService.xxx(imageToCorrect, percentageCorrect,
+//                splitAxisCorrect);
+//          loadedImages.put(imageAliasAfterCorrect, colorCorrectImage);
+          imageView.displayMessage("Color-Correct image");
+          break;
+        // Levels-adjust command.
+        case "levels-adjust":
+          try {
+            int blackValue = Integer.parseInt(tokenizer.nextToken());
+            int midValue = Integer.parseInt(tokenizer.nextToken());
+            int whiteValue = Integer.parseInt(tokenizer.nextToken());
+
+            // Check whether b,m,w are in ascending order and belong to 0-255.
+            if (blackValue < 0 || blackValue > 255 || midValue < 0 || midValue > 255
+                  || whiteValue < 0 || whiteValue > 255
+                  || !(blackValue < midValue && midValue < whiteValue)) {
+              imageView.displayMessage("Invalid values. m,w,b must in ascending order and within " +
+                    "0 to 255.");
+              break;
+            }
+            String imageAliasAdjust = tokenizer.nextToken();
+            Image imageToAdjust = loadedImages.get(imageAliasAdjust);
+            if (imageToAdjust == null) {
+              imageView.displayMessage("No image loaded");
+              break;
+            }
+            String imageAliasAfterAdjust = tokenizer.nextToken();
+            float percentageAdjust = 1.0f;
+            Axis splitAxisAdjust = Axis.X;
+            if(tokenizer.hasMoreTokens()) {
+              String nextToken = tokenizer.nextToken();
+              try {
+                percentageAdjust = Float.parseFloat(nextToken);
+                if(tokenizer.hasMoreTokens()) {
+                  String axisToken = tokenizer.nextToken();
+                  splitAxisAdjust = Axis.valueOf(axisToken.toUpperCase());
+                }
+              } catch (NumberFormatException e) {
+                imageView.displayMessage("Invalid percentage format.");
+                break;
+              } catch (IllegalArgumentException e) {
+                imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+                break;
+              }
+            }
+            if (tokenizer.hasMoreTokens()) {
+              imageView.displayMessage("More arguments than expected.");
+              break;
+            }
+//            Image adjustedImage = imageService.xxx(imageToAdjust, blackValue, midValue, whiteValue,
+//                  percentageAdjust, splitAxisAdjust);
+//            // Store the image in map.
+//            loadedImages.put(imageAliasAfterAdjust, adjustedImage);
+            imageView.displayMessage("Levels-adjust image");
+          } catch (NoSuchElementException e) {
+            imageView.displayMessage("No enough arguments for levels-adjust.");
+          }catch (NumberFormatException e) {
+            imageView.displayMessage("Black, mid or white values must be integers.");
+          }
+          break;
         default:
-          //System.out.println("Please enter valid command, " + operation + " is invalid.");
           imageView.displayMessage("Please enter valid command, " + operation + " is invalid.");
       }
       imageView.displayMessage("Please enter command:");
