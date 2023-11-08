@@ -620,7 +620,58 @@ public class ImageController {
           break;
         // Levels-adjust command.
         case "levels-adjust":
+          try {
+            int blackValue = Integer.parseInt(tokenizer.nextToken());
+            int midValue = Integer.parseInt(tokenizer.nextToken());
+            int whiteValue = Integer.parseInt(tokenizer.nextToken());
 
+            // Check whether b,m,w are in ascending order and belong to 0-255.
+            if (blackValue < 0 || blackValue > 255 || midValue < 0 || midValue > 255
+                  || whiteValue < 0 || whiteValue > 255
+                  || !(blackValue < midValue && midValue < whiteValue)) {
+              imageView.displayMessage("Invalid values. m,w,b must in ascending order and within " +
+                    "0 to 255.");
+              break;
+            }
+            String imageAliasAdjust = tokenizer.nextToken();
+            Image imageToAdjust = loadedImages.get(imageAliasAdjust);
+            if (imageToAdjust == null) {
+              imageView.displayMessage("No image loaded");
+              break;
+            }
+            String imageAliasAfterAdjust = tokenizer.nextToken();
+            float percentageAdjust = 1.0f;
+            Axis splitAxisAdjust = Axis.X;
+            if(tokenizer.hasMoreTokens()) {
+              String nextToken = tokenizer.nextToken();
+              try {
+                percentageAdjust = Float.parseFloat(nextToken);
+                if(tokenizer.hasMoreTokens()) {
+                  String axisToken = tokenizer.nextToken();
+                  splitAxisAdjust = Axis.valueOf(axisToken.toUpperCase());
+                }
+              } catch (NumberFormatException e) {
+                imageView.displayMessage("Invalid percentage format.");
+                break;
+              } catch (IllegalArgumentException e) {
+                imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+                break;
+              }
+            }
+            if (tokenizer.hasMoreTokens()) {
+              imageView.displayMessage("More arguments than expected.");
+              break;
+            }
+            Image adjustedImage = imageService.xxx(imageToAdjust, blackValue, midValue, whiteValue,
+                  percentageAdjust, splitAxisAdjust);
+            // Store the image in map.
+            loadedImages.put(imageAliasAfterAdjust, adjustedImage);
+            imageView.displayMessage("Levels-adjust image");
+          } catch (NoSuchElementException e) {
+            imageView.displayMessage("No enough arguments for levels-adjust.");
+          }catch (NumberFormatException e) {
+            imageView.displayMessage("Black, mid or white values must be integers.");
+          }
           break;
         default:
           imageView.displayMessage("Please enter valid command, " + operation + " is invalid.");
