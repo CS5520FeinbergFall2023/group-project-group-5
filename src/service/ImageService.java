@@ -331,7 +331,9 @@ public class ImageService {
     return image.compress(HaarWaveletCompressor.getInstance(), ratio);
   }
 
-  /** Get histogram of the image.
+  /**
+   * Get histogram of the image.
+   *
    * @param image the image to get histogram on
    * @return histogram of the image
    */
@@ -340,6 +342,19 @@ public class ImageService {
       throw new IllegalArgumentException("The image is null");
     }
     return image.getHistogram();
+  }
+
+  /**
+   * Color correct the image.
+   *
+   * @param image the image to correct
+   * @return the corrected image
+   */
+  public Image colorCorrect(Image image) {
+    if (image == null) {
+      throw new IllegalArgumentException("The image is null");
+    }
+    return image.colorCorrect();
   }
 
 

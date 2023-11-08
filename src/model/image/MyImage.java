@@ -624,6 +624,15 @@ public class MyImage extends Image {
     return Arrays.stream(nums).summaryStatistics().getMax();
   }
 
+  private int findIndexOf(int value, int[] arr) {
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i] == value) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   /**
    * Get histogram of the current image.
    *
@@ -655,6 +664,35 @@ public class MyImage extends Image {
       }
     }
     return new MyImage(histogramPixels);
+  }
+
+  /**
+   * Color-correct an image by aligning the meaningful peaks of its histogram.
+   *
+   * @return the color-corrected result
+   */
+  @Override
+  public Image colorCorrect() {
+    int[][] freq = getFrequency();
+    //  only consider values greater than 10 and lesser than 245 in each channel
+    int[] redFreq = Arrays.copyOfRange(freq[0], 11, 245);
+    int[] greenFreq = Arrays.copyOfRange(freq[1], 11, 245);
+    int[] blueFreq = Arrays.copyOfRange(freq[2], 11, 245);
+    // find the peaks (and the values at which they occur) of each channel in the histogram.
+    int redFreqHighest = getMax(redFreq);
+    int redFreqHighestValue = findIndexOf(redFreqHighest, redFreq);
+    int greenFreqHighest = getMax(greenFreq);
+    int greenFreqHighestValue = findIndexOf(greenFreqHighest, greenFreq);
+    int blueFreqHighest = getMax(blueFreq);
+    int blueFreqHighestValue = findIndexOf(blueFreqHighest, blueFreq);
+    // Then we compute the average value across peaks.
+    float perkAverageValue =
+        (redFreqHighestValue + greenFreqHighestValue + blueFreqHighestValue) / 3.0f;
+    // align with the average perk
+    float redDelta = perkAverageValue - redFreqHighestValue;
+    float greenDelta = perkAverageValue - greenFreqHighestValue;
+    float blueDelta = perkAverageValue - blueFreqHighestValue;
+    return imgArrayAddition(new float[]{redDelta, greenDelta, blueDelta});
   }
 
   /**

@@ -218,6 +218,13 @@ public abstract class Image {
   public abstract Image getHistogram();
 
   /**
+   * Color-correct an image by aligning the meaningful peaks of its histogram.
+   *
+   * @return the color-corrected result
+   */
+  public abstract Image colorCorrect();
+
+  /**
    * Returns a string representation of the object.
    *
    * @return a string representation of the object.
