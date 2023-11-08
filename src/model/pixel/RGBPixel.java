@@ -11,7 +11,7 @@ import model.Channel;
  * pixel in each channel (red, green, blue).
  */
 public class RGBPixel extends Pixel {
-  private final int bitDepth = 8;
+  public static final int bitDepth = 8;
 
   /**
    * Construct an RGB pixel. Every value of the channel is in the range of [0,1]. If the input is
@@ -196,6 +196,23 @@ public class RGBPixel extends Pixel {
    */
   public int getGreen() {
     return channels.get(Channel.GREEN);
+  }
+
+  /**
+   * Subtractive pigment mix of colors (instead of additive light mix).
+   *
+   * @param other the other pixel to mix with
+   * @return the mix result
+   * @throws IllegalArgumentException when given pixel is not of the right type
+   */
+  @Override
+  public RGBPixel mix(Pixel other) throws IllegalArgumentException {
+    if (!(other instanceof RGBPixel)) {
+      throw new IllegalArgumentException("Only pixels of the same type can be mixed.");
+    }
+    return new RGBPixel((1 << bitDepth) - getRed() - ((RGBPixel) other).getRed(),
+        (1 << bitDepth) - getGreen() - ((RGBPixel) other).getGreen(),
+        (1 << bitDepth) - getBlue() - ((RGBPixel) other).getBlue());
   }
 
   /**

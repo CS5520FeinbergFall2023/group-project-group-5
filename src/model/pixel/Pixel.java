@@ -84,6 +84,14 @@ public abstract class Pixel {
    */
   public abstract boolean isGreyscale();
 
+  /**
+   * Pigment mix of colors (instead of light mix).
+   *
+   * @param other the other pixel to mix with
+   * @return the mix result
+   */
+  public abstract Pixel mix(Pixel other);
+
 
   /**
    * Returns a string representation of the object.

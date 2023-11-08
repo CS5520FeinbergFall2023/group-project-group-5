@@ -210,7 +210,12 @@ public abstract class Image {
    */
   public abstract Image combineImages(Image other, Axis axis);
 
-
+  /**
+   * Get histogram of the current image.
+   *
+   * @return the histogram of the current image
+   */
+  public abstract Image getHistogram();
 
   /**
    * Returns a string representation of the object.

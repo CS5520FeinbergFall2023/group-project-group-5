@@ -331,4 +331,16 @@ public class ImageService {
     return image.compress(HaarWaveletCompressor.getInstance(), ratio);
   }
 
+  /** Get histogram of the image.
+   * @param image the image to get histogram on
+   * @return histogram of the image
+   */
+  public Image getHistogram(Image image) {
+    if (image == null) {
+      throw new IllegalArgumentException("The image is null");
+    }
+    return image.getHistogram();
+  }
+
+
 }

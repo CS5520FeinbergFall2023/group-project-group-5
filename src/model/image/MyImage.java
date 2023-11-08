@@ -604,6 +604,60 @@ public class MyImage extends Image {
   }
 
   /**
+   * Get appearance frequency of colors in the image.
+   */
+  private int[][] getFrequency() {
+    int[] redCount = new int[1 << RGBPixel.bitDepth];
+    int[] greenCount = new int[1 << RGBPixel.bitDepth];
+    int[] blueCount = new int[1 << RGBPixel.bitDepth];
+    for (Pixel[] row : pixels) {
+      for (Pixel p : row) {
+        redCount[((RGBPixel) p).getRed()] += 1;
+        greenCount[((RGBPixel) p).getGreen()] += 1;
+        blueCount[((RGBPixel) p).getBlue()] += 1;
+      }
+    }
+    return new int[][]{redCount, greenCount, blueCount};
+  }
+
+  private int getMax(int... nums) {
+    return Arrays.stream(nums).summaryStatistics().getMax();
+  }
+
+  /**
+   * Get histogram of the current image.
+   *
+   * @return the histogram of the current image
+   */
+  @Override
+  public MyImage getHistogram() {
+    int dimension = 1 << RGBPixel.bitDepth;
+    RGBPixel[][] histogramPixels = new RGBPixel[dimension][dimension];
+    int[][] freq = getFrequency();
+    int[] redFreq = freq[0];
+    int[] greenFreq = freq[1];
+    int[] blueFreq = freq[2];
+    int max = getMax(getMax(redFreq), getMax(greenFreq), getMax(blueFreq));
+    float gap = (float) max / (dimension);
+    // 256 x 256
+    for (int x = 0; x < dimension; x++) {
+      int redIndex = dimension - Math.round(redFreq[x] / gap);
+      int greenIndex = dimension - Math.round(greenFreq[x] / gap);
+      int blueIndex = dimension - Math.round(blueFreq[x] / gap);
+      //todo: overlap with the second color or blend/mix?
+      histogramPixels[redIndex][x] = new RGBPixel(255, 0, 0);
+      histogramPixels[greenIndex][x] = new RGBPixel(0, 255, 0);
+      histogramPixels[blueIndex][x] = new RGBPixel(0, 0, 255);
+      for (int y = 0; y < dimension; y++) {
+        if (histogramPixels[y][x] == null) {
+          histogramPixels[y][x] = new RGBPixel(255, 255, 255);
+        }
+      }
+    }
+    return new MyImage(histogramPixels);
+  }
+
+  /**
    * Check if two objects are identical.
    *
    * @param o the other object to compare with
