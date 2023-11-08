@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import model.Axis;
 import model.Channel;
+import model.compressor.HaarWaveletCompressor;
 import model.image.Image;
 import model.pixel.Pixel;
 
@@ -234,6 +235,21 @@ public class ImageService {
             {0.272f, 0.534f, 0.131f}
         };
     return image.matrixMultiplication(sepia);
+  }
+
+  /**
+   * Compress images with Haar Wavelet compressor
+   *
+   * @param image the image to compress
+   * @param ratio the compress ratio ([0,1])
+   * @return the compressed image
+   * @throws IllegalArgumentException if the given argument is null or not legal
+   */
+  public Image haarWaveletCompress(Image image, float ratio) throws IllegalArgumentException {
+    if (image == null) {
+      throw new IllegalArgumentException("The image is null");
+    }
+    return image.compress(HaarWaveletCompressor.getInstance(), ratio);
   }
 
 }

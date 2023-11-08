@@ -14,7 +14,6 @@ public abstract class Image {
   Pixel[][] pixels;
   int height;
   int width;
-  final Compressor compressor = new HaarWaveletCompressor();
 
   /**
    * Save image to local file.
