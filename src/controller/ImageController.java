@@ -467,8 +467,46 @@ public class ImageController {
           loadedImages.put(imageAliasGetSepia, getSepiaImage);
           imageView.displayMessage("Sepia image");
           break;
+        // Compress command.
+        case "compress":
+          float ratio = Float.parseFloat(tokenizer.nextToken());
+          String imageAliasCompress = tokenizer.nextToken();
+          Image imageToCompress = loadedImages.get(imageAliasCompress);
+          if (imageToCompress == null) {
+            imageView.displayMessage("No image loaded");
+            break;
+          }
+          Image compressImage = imageService.haarWaveletCompress(imageToCompress, ratio);
+          String imageAliasAfterCompress = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
+          loadedImages.put(imageAliasAfterCompress, compressImage);
+          imageView.displayMessage("Compress image");
+          break;
+
+        case "histogram":
+
+          break;
+
+        case "color-correct":
+          String imageAliasCorrect = tokenizer.nextToken();
+          Image imageToCorrect = loadedImages.get(imageAliasCorrect);
+          if (imageToCorrect == null) {
+            imageView.displayMessage("No image loaded");
+            break;
+          }
+          Image colorCorrectImage = imageService.xxx(imageToCorrect);
+          String imageAliasAfterCorrect = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
+          loadedImages.put(imageAliasAfterCorrect, colorCorrectImage);
+          imageView.displayMessage("Color-Correct image");
+          break;
         default:
-          //System.out.println("Please enter valid command, " + operation + " is invalid.");
           imageView.displayMessage("Please enter valid command, " + operation + " is invalid.");
       }
       imageView.displayMessage("Please enter command:");

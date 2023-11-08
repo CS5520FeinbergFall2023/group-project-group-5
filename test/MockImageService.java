@@ -194,4 +194,5 @@ public class MockImageService extends ImageService {
     displayMessage("Receive the image need to get its sepia, now start to do that.");
     return new MyImage("test/img/city_small_sepia.png");
   }
+
 }
