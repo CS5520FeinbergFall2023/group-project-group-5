@@ -613,9 +613,9 @@ public class ImageController {
             imageView.displayMessage("More arguments than expected.");
             break;
           }
-          //Image colorCorrectImage = imageService.xxx(imageToCorrect, percentageCorrect,
-          //      splitAxisCorrect);
-          //loadedImages.put(imageAliasAfterCorrect, colorCorrectImage);
+//          Image colorCorrectImage = imageService.xxx(imageToCorrect, percentageCorrect,
+//                splitAxisCorrect);
+//          loadedImages.put(imageAliasAfterCorrect, colorCorrectImage);
           imageView.displayMessage("Color-Correct image");
           break;
         // Levels-adjust command.
@@ -662,10 +662,10 @@ public class ImageController {
               imageView.displayMessage("More arguments than expected.");
               break;
             }
-            Image adjustedImage = imageService.xxx(imageToAdjust, blackValue, midValue, whiteValue,
-                  percentageAdjust, splitAxisAdjust);
-            // Store the image in map.
-            loadedImages.put(imageAliasAfterAdjust, adjustedImage);
+//            Image adjustedImage = imageService.xxx(imageToAdjust, blackValue, midValue, whiteValue,
+//                  percentageAdjust, splitAxisAdjust);
+//            // Store the image in map.
+//            loadedImages.put(imageAliasAfterAdjust, adjustedImage);
             imageView.displayMessage("Levels-adjust image");
           } catch (NoSuchElementException e) {
             imageView.displayMessage("No enough arguments for levels-adjust.");
