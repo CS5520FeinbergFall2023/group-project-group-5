@@ -18,11 +18,8 @@ public class HaarWaveletCompressorTest {
     instance = HaarWaveletCompressor.getInstance();
   }
 
-
-
   @Test
   public void testGetInstance() {
-
     assertEquals("model.compressor.HaarWaveletCompressor", instance.getClass().getName());
   }
 

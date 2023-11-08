@@ -2,9 +2,9 @@ package model.image;
 
 import java.util.function.Function;
 
+import model.Axis;
 import model.Channel;
 import model.compressor.Compressor;
-import model.compressor.HaarWaveletCompressor;
 import model.pixel.Pixel;
 
 /**
@@ -188,6 +188,29 @@ public abstract class Image {
    * @return channels of pixels in the image
    */
   public abstract Channel[] getChannels();
+
+
+  /**
+   * Split the images to 2 images according to the given percentage.
+   *
+   * @param percentage the split percentage ([0,1], the first part will be of that percentage)
+   * @param axis       the axis to split (X means a vertical line split the images to 2 images
+   *                   horizontally with the same height)
+   * @return the split images (always with length 2, if one is empty when percentage is 0 or 1, that
+   *     object will be null)
+   */
+  public abstract Image[] split(float percentage, Axis axis);
+
+  /**
+   * Combine two images together on the given axis.
+   *
+   * @param other the other images to combine with this one
+   * @param axis  the axis to combine on (X means combine two images with same height horizontally)
+   * @return the combined image
+   */
+  public abstract Image combineImages(Image other, Axis axis);
+
+
 
   /**
    * Returns a string representation of the object.
