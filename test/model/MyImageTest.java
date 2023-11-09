@@ -791,6 +791,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testLevelAdjustment() {
     MyImage testImage = new MyImage("test/img/trichromatic/simple.ppm");
-    testImage.levelAdjustment(0.1f, 0.5f, 0.8f);
+    Image result = testImage.levelAdjustment(0.1f, 0.5f, 0.8f);
+    System.out.println(result);
   }
 }

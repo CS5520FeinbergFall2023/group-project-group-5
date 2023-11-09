@@ -348,32 +348,56 @@ public class ImageService {
   /**
    * Color correct the image.
    *
-   * @param image the image to correct
+   * @param image      the image to correct
+   * @param percentage the split operation percentage (the first part will be operated while the
+   *                   second part remains unchanged)
+   * @param splitAxis  the axis to split (X means split the images as left and right)
    * @return the corrected image
    * @throws IllegalArgumentException if the given argument is null or not legal
    */
-  public Image colorCorrect(Image image) throws IllegalArgumentException {
+  public Image colorCorrect(Image image, float percentage, Axis splitAxis)
+      throws IllegalArgumentException {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
     }
-    return image.colorCorrect();
+    Image[] splitImages = image.split(percentage, splitAxis);
+    if (splitImages[0] == null) {
+      return splitImages[1];
+    } else if (splitImages[1] == null) {
+      return splitImages[0].colorCorrect();
+    } else {
+      splitImages[0] = splitImages[0].colorCorrect();
+      return splitImages[0].combineImages(splitImages[1], splitAxis);
+    }
   }
 
   /**
    * Perform level adjustment on the image.
    *
-   * @param image     the image to operate on
-   * @param black     the positions of the black (shadow) point on the horizontal axis
-   * @param mid       the positions of the middle point on the horizontal axis
-   * @param white the positions of the white (highlight) point on the horizontal axis
+   * @param image      the image to operate on
+   * @param black      the positions of the black (shadow) point on the horizontal axis
+   * @param mid        the positions of the middle point on the horizontal axis
+   * @param white      the positions of the white (highlight) point on the horizontal axis
+   * @param percentage the split operation percentage (the first part will be operated while the
+   *                   second part remains unchanged)
+   * @param splitAxis  the axis to split (X means split the images as left and right)
    * @return the adjusted image
    * @throws IllegalArgumentException if the given argument is null or not legal
    */
-  public Image levelAdjustment(Image image, float black, float mid, float white)
+  public Image levelAdjustment(Image image, float black, float mid, float white, float percentage,
+                               Axis splitAxis)
       throws IllegalArgumentException {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
     }
-    return image.levelAdjustment(black, mid, white);
+    Image[] splitImages = image.split(percentage, splitAxis);
+    if (splitImages[0] == null) {
+      return splitImages[1];
+    } else if (splitImages[1] == null) {
+      return splitImages[0].levelAdjustment(black, mid, white);
+    } else {
+      splitImages[0] = splitImages[0].levelAdjustment(black, mid, white);
+      return splitImages[0].combineImages(splitImages[1], splitAxis);
+    }
   }
 }

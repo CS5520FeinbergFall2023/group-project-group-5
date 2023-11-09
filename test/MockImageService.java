@@ -55,7 +55,7 @@ public class MockImageService extends ImageService {
    * @return the result image.
    */
   @Override
-  public Image blur(Image image) {
+  public Image blur(Image image, float percentage, Axis splitAxis) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to be blurred, now start to blur.");
     return new MyImage("test/img/cupcake_blurOnce.png");
@@ -176,7 +176,7 @@ public class MockImageService extends ImageService {
    * @return the result image.
    */
   @Override
-  public Image sharpen(Image image) {
+  public Image sharpen(Image image, float percentage, Axis splitAxis) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to be sharpened, now start to sharpen.");
     return new MyImage("test/img/cupcake_sharpenOnce.png");
@@ -189,7 +189,7 @@ public class MockImageService extends ImageService {
    * @return the result image.
    */
   @Override
-  public Image getSepia(Image image) {
+  public Image getSepia(Image image, float percentage, Axis splitAxis) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to get its sepia, now start to do that.");
     return new MyImage("test/img/city_small_sepia.png");

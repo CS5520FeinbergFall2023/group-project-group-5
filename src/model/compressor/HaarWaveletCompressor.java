@@ -9,7 +9,7 @@ import java.util.List;
  * This class represents a compressor that uses Haar Wavelet Transform.
  */
 public class HaarWaveletCompressor implements Compressor {
-  private static final float sqrt2 = (float) Math.sqrt(2);
+  public static final float sqrt2 = (float) Math.sqrt(2);
 
   //singleton
   private static HaarWaveletCompressor instance = new HaarWaveletCompressor();

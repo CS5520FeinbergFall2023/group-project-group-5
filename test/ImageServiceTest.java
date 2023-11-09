@@ -38,7 +38,7 @@ public class ImageServiceTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testBlurNull() {
-    imageService.blur(null);
+    imageService.blur(null,1,Axis.X);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -83,12 +83,12 @@ public class ImageServiceTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testSharpenNull() {
-    imageService.sharpen(null);
+    imageService.sharpen(null,1,Axis.X);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testGetSepiaNull() {
-    imageService.getSepia(null);
+    imageService.getSepia(null,1,Axis.X);
   }
 
 
@@ -812,7 +812,7 @@ public class ImageServiceTest {
   @Test
   public void testBlurSimple() {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-    Image resultImages = imageService.blur(testImage);
+    Image resultImages = imageService.blur(testImage,1,Axis.X);
     Image expectedImage = new MyImage("test/img/trichromatic/simple_blur.ppm");
     assertEquals(expectedImage, resultImages);
   }
@@ -820,7 +820,7 @@ public class ImageServiceTest {
   @Test
   public void testBlurOnce() {
     Image testImage = new MyImage("test/img/cupcake.png");
-    Image resultImages = imageService.blur(testImage);
+    Image resultImages = imageService.blur(testImage,1,Axis.X);
     Image expectedImage = new MyImage("test/img/cupcake_blurOnce.png");
 
     assertEquals(expectedImage, resultImages);
@@ -829,8 +829,8 @@ public class ImageServiceTest {
   @Test
   public void testBlurTwice() {
     Image testImage = new MyImage("test/img/cupcake.png");
-    Image resultImages = imageService.blur(testImage);
-    resultImages = imageService.blur(resultImages);
+    Image resultImages = imageService.blur(testImage,1,Axis.X);
+    resultImages = imageService.blur(resultImages,1,Axis.X);
     Image expectedImage = new MyImage("test/img/cupcake_blurTwice.png");
 
     assertEquals(expectedImage, resultImages);
@@ -839,7 +839,7 @@ public class ImageServiceTest {
   @Test
   public void testSharpenSimple() {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-    Image resultImages = imageService.sharpen(testImage);
+    Image resultImages = imageService.sharpen(testImage,1,Axis.X);
     Image expectedImage = new MyImage("test/img/trichromatic/simple_sharpen.ppm");
     assertEquals(expectedImage, resultImages);
   }
@@ -847,7 +847,7 @@ public class ImageServiceTest {
   @Test
   public void testSharpenOnce() {
     Image testImage = new MyImage("test/img/cupcake.png");
-    Image resultImages = imageService.sharpen(testImage);
+    Image resultImages = imageService.sharpen(testImage,1,Axis.X);
     Image expectedImage = new MyImage("test/img/cupcake_sharpenOnce.png");
     assertEquals(expectedImage, resultImages);
   }
@@ -855,8 +855,8 @@ public class ImageServiceTest {
   @Test
   public void testSharpenTwice() {
     Image testImage = new MyImage("test/img/cupcake.png");
-    Image resultImages = imageService.sharpen(testImage);
-    resultImages = imageService.sharpen(resultImages);
+    Image resultImages = imageService.sharpen(testImage,1,Axis.X);
+    resultImages = imageService.sharpen(resultImages,1,Axis.X);
     Image expectedImage = new MyImage("test/img/cupcake_sharpenTwice.png");
     assertEquals(expectedImage, resultImages);
   }
@@ -864,8 +864,8 @@ public class ImageServiceTest {
   @Test
   public void testBlurThenSharp() {
     Image testImage = new MyImage("test/img/cupcake.png");
-    Image resultImages = imageService.blur(testImage);
-    resultImages = imageService.sharpen(resultImages);
+    Image resultImages = imageService.blur(testImage,1,Axis.X);
+    resultImages = imageService.sharpen(resultImages,1,Axis.X);
     Image expectedImage = new MyImage("test/img/cupcake_blurThenSharp.png");
     assertEquals(expectedImage, resultImages);
   }
@@ -877,7 +877,7 @@ public class ImageServiceTest {
   @Test
   public void testGetSepiaSimple() {
     Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
-    Image resultImages = imageService.getSepia(testImage);
+    Image resultImages = imageService.getSepia(testImage,1,Axis.X);
     Image expectedImage = new MyImage("test/img/trichromatic/simple_sepia.ppm");
     assertEquals(expectedImage, resultImages);
   }
@@ -885,7 +885,7 @@ public class ImageServiceTest {
   @Test
   public void testGetSepiaCity() {
     Image testImage = new MyImage("test/img/city_small.png");
-    Image resultImages = imageService.getSepia(testImage);
+    Image resultImages = imageService.getSepia(testImage,1,Axis.X);
     Image expectedImage = new MyImage("test/img/city_small_sepia.png");
     assertEquals(expectedImage, resultImages);
   }
@@ -893,8 +893,8 @@ public class ImageServiceTest {
   @Test
   public void testGetSepiaCityTwice() {
     Image testImage = new MyImage("test/img/city_small.png");
-    Image resultImages = imageService.getSepia(testImage);
-    resultImages = imageService.getSepia(resultImages);
+    Image resultImages = imageService.getSepia(testImage,1,Axis.X);
+    resultImages = imageService.getSepia(resultImages,1,Axis.X);
     Image expectedImage = new MyImage("test/img/city_small_sepia_sepia.png");
     assertEquals(expectedImage, resultImages);
   }
