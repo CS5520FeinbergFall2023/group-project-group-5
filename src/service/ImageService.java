@@ -336,8 +336,9 @@ public class ImageService {
    *
    * @param image the image to get histogram on
    * @return histogram of the image
+   * @throws IllegalArgumentException if the given argument is null or not legal
    */
-  public Image getHistogram(Image image) {
+  public Image getHistogram(Image image) throws IllegalArgumentException {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
     }
@@ -349,13 +350,30 @@ public class ImageService {
    *
    * @param image the image to correct
    * @return the corrected image
+   * @throws IllegalArgumentException if the given argument is null or not legal
    */
-  public Image colorCorrect(Image image) {
+  public Image colorCorrect(Image image) throws IllegalArgumentException {
     if (image == null) {
       throw new IllegalArgumentException("The image is null");
     }
     return image.colorCorrect();
   }
 
-
+  /**
+   * Perform level adjustment on the image.
+   *
+   * @param image     the image to operate on
+   * @param black     the positions of the black (shadow) point on the horizontal axis
+   * @param mid       the positions of the middle point on the horizontal axis
+   * @param white the positions of the white (highlight) point on the horizontal axis
+   * @return the adjusted image
+   * @throws IllegalArgumentException if the given argument is null or not legal
+   */
+  public Image levelAdjustment(Image image, float black, float mid, float white)
+      throws IllegalArgumentException {
+    if (image == null) {
+      throw new IllegalArgumentException("The image is null");
+    }
+    return image.levelAdjustment(black, mid, white);
+  }
 }

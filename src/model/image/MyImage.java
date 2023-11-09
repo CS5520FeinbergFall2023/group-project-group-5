@@ -696,6 +696,43 @@ public class MyImage extends Image {
   }
 
   /**
+   * Perform level adjustment on the image.
+   *
+   * @param black the positions of the black (shadow) point on the horizontal axis
+   * @param mid   the positions of the middle point on the horizontal axis
+   * @param white the positions of the white (highlight) point on the horizontal axis
+   * @return the adjusted image
+   */
+  @Override
+  public Image levelAdjustment(float black, float mid, float white) {
+    //fitting the curve y = ax^2+bx+c
+    float A =
+        black * black * (mid - white) - black * (mid * mid - white * white) + white * mid * mid
+        - mid * white * white;
+    float aa = -black * (128 - 255) + 128 * white - 255 * mid;
+    float ab = black * black * (128 - 255) + 255 * mid * mid - 128 * white * white;
+    float ac =
+        black * black * (255 * mid - 128 * white) - black * (255 * mid * mid - 128 * white * white);
+    float a = aa / A;
+    float b = ab / A;
+    float c = ac / A;
+    RGBPixel[][] newPixels = new RGBPixel[height][width];
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        RGBPixel pixel = getPixel(i, j);
+        int originalRed = pixel.getRed();
+        int originalGreen = pixel.getGreen();
+        int originalBlue = pixel.getBlue();
+        int newRed = Math.round(a * originalRed * originalRed + b * originalRed + c);
+        int newGreen = Math.round(a * originalGreen * originalGreen + b * originalGreen + c);
+        int newBlue = Math.round(a * originalBlue * originalBlue + b * originalBlue + c);
+        newPixels[i][j] = new RGBPixel(newRed, newGreen, newBlue);
+      }
+    }
+    return new MyImage(newPixels);
+  }
+
+  /**
    * Check if two objects are identical.
    *
    * @param o the other object to compare with

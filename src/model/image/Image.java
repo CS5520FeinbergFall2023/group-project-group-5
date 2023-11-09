@@ -225,6 +225,16 @@ public abstract class Image {
   public abstract Image colorCorrect();
 
   /**
+   * Perform level adjustment on the image.
+   *
+   * @param black     the positions of the black (shadow) point on the horizontal axis
+   * @param mid       the positions of the middle point on the horizontal axis
+   * @param highlight the positions of the white (highlight) point on the horizontal axis
+   * @return the adjusted image
+   */
+  public abstract Image levelAdjustment(float black, float mid, float highlight);
+
+  /**
    * Returns a string representation of the object.
    *
    * @return a string representation of the object.
