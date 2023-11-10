@@ -239,7 +239,7 @@ public class HaarWaveletCompressor implements Compressor {
         } else {
           flattenedList.add(Math.abs((float) element));
         }
-      }
+      }git
     } else {
       throw new IllegalArgumentException(
           "The argument needs to be an array of arbitrary dimension.");

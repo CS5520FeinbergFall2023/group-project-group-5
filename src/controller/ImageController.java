@@ -579,9 +579,21 @@ public class ImageController {
           break;
         // Get the histogram command.
         case "histogram":
-
+          String imageAliasHistogram = tokenizer.nextToken();
+          Image imageToGetHistogram = loadedImages.get(imageAliasHistogram);
+          if (imageToGetHistogram == null) {
+            imageView.displayMessage("No image loaded");
+            break;
+          }
+          Image getHistogramImage = imageService.getHistogram(imageToGetHistogram);
+          String imageAliasAfterHistogram = tokenizer.nextToken();
+          if (tokenizer.hasMoreTokens()) {
+            imageView.displayMessage("More arguments than expected.");
+            break;
+          }
+          loadedImages.put(imageAliasAfterHistogram, getHistogramImage);
+          imageView.displayMessage("Get histogram image");
           break;
-
         // Color-correct command.
         case "color-correct":
           String imageAliasCorrect = tokenizer.nextToken();
@@ -613,9 +625,9 @@ public class ImageController {
             imageView.displayMessage("More arguments than expected.");
             break;
           }
-//          Image colorCorrectImage = imageService.xxx(imageToCorrect, percentageCorrect,
-//                splitAxisCorrect);
-//          loadedImages.put(imageAliasAfterCorrect, colorCorrectImage);
+          Image colorCorrectImage = imageService.colorCorrect(imageToCorrect, percentageCorrect,
+                splitAxisCorrect);
+          loadedImages.put(imageAliasAfterCorrect, colorCorrectImage);
           imageView.displayMessage("Color-Correct image");
           break;
         // Levels-adjust command.
@@ -624,7 +636,6 @@ public class ImageController {
             int blackValue = Integer.parseInt(tokenizer.nextToken());
             int midValue = Integer.parseInt(tokenizer.nextToken());
             int whiteValue = Integer.parseInt(tokenizer.nextToken());
-
             // Check whether b,m,w are in ascending order and belong to 0-255.
             if (blackValue < 0 || blackValue > 255 || midValue < 0 || midValue > 255
                   || whiteValue < 0 || whiteValue > 255
@@ -662,10 +673,10 @@ public class ImageController {
               imageView.displayMessage("More arguments than expected.");
               break;
             }
-//            Image adjustedImage = imageService.xxx(imageToAdjust, blackValue, midValue, whiteValue,
-//                  percentageAdjust, splitAxisAdjust);
-//            // Store the image in map.
-//            loadedImages.put(imageAliasAfterAdjust, adjustedImage);
+            Image adjustedImage = imageService.levelAdjustment(imageToAdjust, blackValue, midValue,
+                  whiteValue, percentageAdjust, splitAxisAdjust);
+            // Store the image in map.
+            loadedImages.put(imageAliasAfterAdjust, adjustedImage);
             imageView.displayMessage("Levels-adjust image");
           } catch (NoSuchElementException e) {
             imageView.displayMessage("No enough arguments for levels-adjust.");
