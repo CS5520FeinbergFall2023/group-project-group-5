@@ -27,10 +27,10 @@ public class ImageUtil {
         new PrintWriter(System.out, true));
     ImageController controller = new ImageController(imageService, imageView);
 
-    if (args.length > 1 && "-file".equals(args[0])) {
-      controller.startFromFile(args[1]);
-    }
-    else{
+    if (args.length > 0 && "-file".equals(args[0]) && args.length > 1) {
+      String scriptFileName = args[1];
+      controller.startFromFile(scriptFileName);
+    } else {
       imageView.displayMessage("Please select which mode you want to input the commands: "
             + "1. Console 2. From file 3 Exit");
       while (true) {
