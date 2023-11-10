@@ -77,7 +77,7 @@ public class HaarWaveletCompressor implements Compressor {
       float threshold = getThreshold(result, ratio);
       for (int i = 0; i < result.length; i++) {
         for (int j = 0; j < result[i].length; j++) {
-          if (result[i][j] <= threshold) {
+          if (Math.abs(result[i][j]) <= threshold) {
             result[i][j] = 0;
           }
         }
@@ -222,22 +222,22 @@ public class HaarWaveletCompressor implements Compressor {
       throw new IllegalArgumentException(
           "The argument needs to be an array of arbitrary dimension.");
     }
-    List<Float> flattenedList = flattenArray(numsArray);
+    List<Float> flattenedList = flattenAbsoluteArray(numsArray);
     Collections.sort(flattenedList);
     int index = (int) Math.ceil(flattenedList.size() * ratio) - 1;
     return flattenedList.get(index);
   }
 
-  private List<Float> flattenArray(Object array) throws IllegalArgumentException {
+  private List<Float> flattenAbsoluteArray(Object array) throws IllegalArgumentException {
     List<Float> flattenedList = new ArrayList<>();
     if (array.getClass().isArray()) {
       int length = java.lang.reflect.Array.getLength(array);
       for (int i = 0; i < length; i++) {
         Object element = java.lang.reflect.Array.get(array, i);
         if (element.getClass().isArray()) {
-          flattenedList.addAll(flattenArray(element));
+          flattenedList.addAll(flattenAbsoluteArray(element));
         } else {
-          flattenedList.add((float) element);
+          flattenedList.add(Math.abs((float) element));
         }
       }
     } else {

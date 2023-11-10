@@ -501,12 +501,13 @@ public class MyImage extends Image {
       throw new IllegalArgumentException("The split percentage should be within [0,1]");
     }
     MyImage[] result = new MyImage[2];
+    int wholeLength = (axis == Axis.X) ? width : height;
     int firstSize =
         (axis == Axis.X) ? Math.round(width * percentage) : Math.round(height * percentage);
     if (firstSize == 0) {
       result[0] = null;
       result[1] = new MyImage(this);
-    } else if (firstSize == 1) {
+    } else if (firstSize == wholeLength) {
       result[0] = new MyImage(this);
       result[1] = null;
     } else {
@@ -522,7 +523,7 @@ public class MyImage extends Image {
         RGBPixel[][] pixels2 = new RGBPixel[height][width - firstSize];
         for (int i = 0; i < height; i++) {
           for (int j = firstSize; j < width; j++) {
-            pixels2[i][j] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
+            pixels2[i][j-firstSize] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
                 getPixel(i, j).getBlue());
           }
         }
@@ -539,7 +540,7 @@ public class MyImage extends Image {
         RGBPixel[][] pixels2 = new RGBPixel[height - firstSize][width];
         for (int i = firstSize; i < height; i++) {
           for (int j = 0; j < width; j++) {
-            pixels2[i][j] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
+            pixels2[i-firstSize][j] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
                 getPixel(i, j).getBlue());
           }
         }

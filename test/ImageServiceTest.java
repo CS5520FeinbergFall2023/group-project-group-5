@@ -818,6 +818,16 @@ public class ImageServiceTest {
   }
 
   @Test
+  public void testBlurSimplePercentage() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.blur(testImage, 0.5f, Axis.X);
+    String expectedImage= "RED:56 GREEN:28 BLUE:35    RED:30 GREEN:200 BLUE:150    \n"
+                          + "RED:86 GREEN:49 BLUE:47    RED:105 GREEN:65 BLUE:75    \n"
+                          + "RED:54 GREEN:58 BLUE:34    RED:215 GREEN:205 BLUE:105    \n";
+    assertEquals(expectedImage, resultImage.toString());
+  }
+
+  @Test
   public void testBlurOnce() {
     Image testImage = new MyImage("test/img/cupcake.png");
     Image resultImages = imageService.blur(testImage,1,Axis.X);
@@ -842,6 +852,16 @@ public class ImageServiceTest {
     Image resultImages = imageService.sharpen(testImage,1,Axis.X);
     Image expectedImage = new MyImage("test/img/trichromatic/simple_sharpen.ppm");
     assertEquals(expectedImage, resultImages);
+  }
+
+  @Test
+  public void testSharpenSimplePercentage() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.sharpen(testImage,0.5f,Axis.X);
+    String expectedImage= "RED:149 GREEN:72 BLUE:104    RED:30 GREEN:200 BLUE:150    \n"
+                          + "RED:255 GREEN:123 BLUE:144    RED:105 GREEN:65 BLUE:75    \n"
+                          + "RED:144 GREEN:207 BLUE:99    RED:215 GREEN:205 BLUE:105    \n";
+    assertEquals(expectedImage, resultImage.toString());
   }
 
   @Test
@@ -883,6 +903,17 @@ public class ImageServiceTest {
   }
 
   @Test
+  public void testGetSepiaSimplePercentage() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.getSepia(testImage,1,Axis.X);
+    System.out.println(resultImage);
+    String expectedImage = "RED:122 GREEN:108 BLUE:84    RED:194 GREEN:173 BLUE:135    \n"
+                           + "RED:154 GREEN:137 BLUE:106    RED:105 GREEN:94 BLUE:73    \n"
+                           + "RED:211 GREEN:188 BLUE:146    RED:255 GREEN:233 BLUE:182    \n";
+    assertEquals(expectedImage, resultImage.toString());
+  }
+
+  @Test
   public void testGetSepiaCity() {
     Image testImage = new MyImage("test/img/city_small.png");
     Image resultImages = imageService.getSepia(testImage,1,Axis.X);
@@ -899,4 +930,153 @@ public class ImageServiceTest {
     assertEquals(expectedImage, resultImages);
   }
 
+  // test greyscale
+  @Test
+  public void testGreyscaleMonochromatic() {
+    Image testImageBlack = new MyImage("test/img/monochromatic/black.ppm");
+    Image testImageWhite = new MyImage("test/img/monochromatic/white.ppm");
+    Image testImageRed = new MyImage("test/img/monochromatic/red.ppm");
+    Image testImageGreen = new MyImage("test/img/monochromatic/green.ppm");
+    Image testImageBlue = new MyImage("test/img/monochromatic/blue.ppm");
+
+    Image resultImageBlack = imageService.greyscale(testImageBlack,1,Axis.X);
+    Image resultImageWhite = imageService.greyscale(testImageWhite,1,Axis.X);
+    Image resultImageRed = imageService.greyscale(testImageRed,1,Axis.X);
+    Image resultImageGreen = imageService.greyscale(testImageGreen,1,Axis.X);
+    Image resultImageBlue = imageService.greyscale(testImageBlue,1,Axis.X);
+
+    String blackExpected =
+        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 "
+        + "BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 "
+        + "BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 "
+        + "BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 "
+        + "BLUE:0    \n";
+    String whiteExpected =
+        "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255  "
+        + "  RED:255 GREEN:255 BLUE:255    \n"
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255"
+        + "    RED:255 GREEN:255 BLUE:255    \n"
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255"
+        + "    RED:255 GREEN:255 BLUE:255    \n"
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255"
+        + "    RED:255 GREEN:255 BLUE:255    \n";
+    String redExpected =
+        "RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:54 "
+        + "GREEN:54 BLUE:54    \n"
+        + "RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    "
+        + "RED:54 GREEN:54 BLUE:54    \n"
+        + "RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    "
+        + "RED:54 GREEN:54 BLUE:54    \n"
+        + "RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    "
+        + "RED:54 GREEN:54 BLUE:54    \n";
+    String greenExpected =
+        "RED:182 GREEN:182 BLUE:182    RED:182 GREEN:182 BLUE:182    RED:182 GREEN:182 BLUE:182  "
+        + "  RED:182 GREEN:182 BLUE:182    \n"
+        + "RED:182 GREEN:182 BLUE:182    RED:182 GREEN:182 BLUE:182    RED:182 GREEN:182 BLUE:182"
+        + "    RED:182 GREEN:182 BLUE:182    \n"
+        + "RED:182 GREEN:182 BLUE:182    RED:182 GREEN:182 BLUE:182    RED:182 GREEN:182 BLUE:182"
+        + "    RED:182 GREEN:182 BLUE:182    \n"
+        + "RED:182 GREEN:182 BLUE:182    RED:182 GREEN:182 BLUE:182    RED:182 GREEN:182 BLUE:182"
+        + "    RED:182 GREEN:182 BLUE:182    \n";
+    String blueExpected =
+        "RED:18 GREEN:18 BLUE:18    RED:18 GREEN:18 BLUE:18    RED:18 GREEN:18 BLUE:18    RED:18 "
+        + "GREEN:18 BLUE:18    \n"
+        + "RED:18 GREEN:18 BLUE:18    RED:18 GREEN:18 BLUE:18    RED:18 GREEN:18 BLUE:18    "
+        + "RED:18 GREEN:18 BLUE:18    \n"
+        + "RED:18 GREEN:18 BLUE:18    RED:18 GREEN:18 BLUE:18    RED:18 GREEN:18 BLUE:18    "
+        + "RED:18 GREEN:18 BLUE:18    \n"
+        + "RED:18 GREEN:18 BLUE:18    RED:18 GREEN:18 BLUE:18    RED:18 GREEN:18 BLUE:18    "
+        + "RED:18 GREEN:18 BLUE:18    \n";
+
+    assertEquals(blackExpected, resultImageBlack.toString());
+    assertEquals(whiteExpected, resultImageWhite.toString());
+    assertEquals(redExpected, resultImageRed.toString());
+    assertEquals(greenExpected, resultImageGreen.toString());
+    assertEquals(blueExpected, resultImageBlue.toString());
+  }
+
+
+  @Test
+  public void testGreyscaleDuoColor() {
+    Image testImage = new MyImage("test/img/duoColor.png");
+    Image resultImage = imageService.greyscale(testImage,1,Axis.X);
+
+    String expected = "RED:182 GREEN:182 BLUE:182    RED:182 GREEN:182 BLUE:182    \n"
+                      + "RED:139 GREEN:139 BLUE:139    RED:139 GREEN:139 BLUE:139    \n";
+
+    assertEquals(expected, resultImage.toString());
+  }
+
+
+  @Test
+  public void testGreyscaleDichromatic() {
+    Image testImageWoBlue = new MyImage("test/img/dichromatic/woBlue.ppm");
+    Image testImageWoRed = new MyImage("test/img/dichromatic/woRed.ppm");
+    Image testImageWoGreen = new MyImage("test/img/dichromatic/woGreen.ppm");
+
+    Image resultImageWoBlue = imageService.greyscale(testImageWoBlue,1,Axis.X);
+    Image resultImageWoRed = imageService.greyscale(testImageWoRed,1,Axis.X);
+    Image resultImageWoGreen = imageService.greyscale(testImageWoGreen,1,Axis.X);
+
+    String expected =
+        "RED:186 GREEN:186 BLUE:186    RED:186 GREEN:186 BLUE:186    RED:186 GREEN:186 BLUE:186  "
+        + "  RED:186 GREEN:186 BLUE:186    \n"
+        + "RED:186 GREEN:186 BLUE:186    RED:186 GREEN:186 BLUE:186    RED:186 GREEN:186 BLUE:186"
+        + "    RED:186 GREEN:186 BLUE:186    \n"
+        + "RED:186 GREEN:186 BLUE:186    RED:186 GREEN:186 BLUE:186    RED:186 GREEN:186 BLUE:186"
+        + "    RED:186 GREEN:186 BLUE:186    \n"
+        + "RED:186 GREEN:186 BLUE:186    RED:186 GREEN:186 BLUE:186    RED:186 "
+        + "GREEN:186 BLUE:186    RED:186 GREEN:186 BLUE:186    \n";
+    assertEquals(expected, resultImageWoBlue.toString());
+    expected =
+        "RED:157 GREEN:157 BLUE:157    RED:157 GREEN:157 BLUE:157    RED:157 GREEN:157 BLUE:157  "
+        + "  RED:157 GREEN:157 BLUE:157    \n"
+        + "RED:157 GREEN:157 BLUE:157    RED:157 GREEN:157 BLUE:157    RED:157 GREEN:157 BLUE:157"
+        + "    RED:157 GREEN:157 BLUE:157    \n"
+        + "RED:157 GREEN:157 BLUE:157    RED:157 GREEN:157 BLUE:157    RED:157 GREEN:157 BLUE:157"
+        + "    RED:157 GREEN:157 BLUE:157    \n"
+        + "RED:157 GREEN:157 BLUE:157    RED:157 GREEN:157 BLUE:157    RED:157 GREEN:157 BLUE:157"
+        + "    RED:157 GREEN:157 BLUE:157    \n";
+    assertEquals(expected, resultImageWoRed.toString());
+    expected =
+        "RED:57 GREEN:57 BLUE:57    RED:57 GREEN:57 BLUE:57    RED:57 GREEN:57 BLUE:57    RED:57 "
+        + "GREEN:57 BLUE:57    \n"
+        + "RED:57 GREEN:57 BLUE:57    RED:57 GREEN:57 BLUE:57    RED:57 GREEN:57 BLUE:57    "
+        + "RED:57 GREEN:57 BLUE:57    \n"
+        + "RED:57 GREEN:57 BLUE:57    RED:57 GREEN:57 BLUE:57    RED:57 GREEN:57 BLUE:57    "
+        + "RED:57 GREEN:57 BLUE:57    \n"
+        + "RED:57 GREEN:57 BLUE:57    RED:57 GREEN:57 BLUE:57    RED:57 GREEN:57 BLUE:57    "
+        + "RED:57 GREEN:57 BLUE:57    \n";
+    assertEquals(expected, resultImageWoGreen.toString());
+  }
+
+  @Test
+  public void testGreyscaleTrichromatic() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.greyscale(testImage,1,Axis.X);
+    String expected = "RED:89 GREEN:89 BLUE:89    RED:160 GREEN:160 BLUE:160    \n"
+                      + "RED:95 GREEN:95 BLUE:95    RED:74 GREEN:74 BLUE:74    \n"
+                      + "RED:173 GREEN:173 BLUE:173    RED:200 GREEN:200 BLUE:200    \n";
+    assertEquals(expected, resultImage.toString());
+  }
+
+  @Test
+  public void testGreyscaleTrichromaticPercentage() {
+    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image resultImage = imageService.greyscale(testImage,0.5f,Axis.X);
+    System.out.println(resultImage);
+    String expected = "RED:89 GREEN:89 BLUE:89    RED:30 GREEN:200 BLUE:150    \n"
+                      + "RED:95 GREEN:95 BLUE:95    RED:105 GREEN:65 BLUE:75    \n"
+                      + "RED:173 GREEN:173 BLUE:173    RED:215 GREEN:205 BLUE:105    \n";
+    assertEquals(expected, resultImage.toString());
+  }
+
+  // Histogram
+  @Test
+  public void testGetHistogram(){
+
+  }
 }

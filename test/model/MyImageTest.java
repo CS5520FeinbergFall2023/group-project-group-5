@@ -8,6 +8,7 @@ import model.image.MyImage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -775,6 +776,132 @@ public class MyImageTest extends ImageTest {
   }
 
   @Test
+  public void testSplitZero() {
+    for (MyImage image : testImages) {
+      MyImage[] splitImages = image.split(0, Axis.X);
+      assertNull(splitImages[0]);
+      assertEquals(image, splitImages[1]);
+    }
+    for (MyImage image : testImages) {
+      MyImage[] splitImages = image.split(0, Axis.Y);
+      assertNull(splitImages[0]);
+      assertEquals(image, splitImages[1]);
+    }
+  }
+
+  @Test
+  public void testSplitOne() {
+    for (MyImage image : testImages) {
+      MyImage[] splitImages = image.split(1, Axis.X);
+      assertNull(splitImages[1]);
+      assertEquals(image, splitImages[0]);
+    }
+    for (MyImage image : testImages) {
+      MyImage[] splitImages = image.split(1, Axis.Y);
+      assertNull(splitImages[1]);
+      assertEquals(image, splitImages[0]);
+    }
+  }
+
+  @Test
+  public void testSplitPreciseX() {
+    MyImage[] splitImages = triImage.split(0.5f, Axis.X);
+    String firstPart = "RED:100 GREEN:85 BLUE:90    \n"
+                       + "RED:245 GREEN:50 BLUE:100    \n"
+                       + "RED:95 GREEN:205 BLUE:85    \n";
+    String secondPart = "RED:30 GREEN:200 BLUE:150    \n"
+                        + "RED:105 GREEN:65 BLUE:75    \n"
+                        + "RED:215 GREEN:205 BLUE:105    \n";
+
+    assertEquals(firstPart, splitImages[0].toString());
+    assertEquals(secondPart, splitImages[1].toString());
+  }
+
+  @Test
+  public void testSplitRoundToSmallX() {
+    MyImage[] splitImages = redImage.split(0.3f, Axis.X);
+    String firstPart = "RED:255 GREEN:0 BLUE:0    \n"
+                       + "RED:255 GREEN:0 BLUE:0    \n"
+                       + "RED:255 GREEN:0 BLUE:0    \n"
+                       + "RED:255 GREEN:0 BLUE:0    \n";
+    String secondPart =
+        "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 "
+        + "BLUE:0    \n";
+    assertEquals(firstPart, splitImages[0].toString());
+    assertEquals(secondPart, splitImages[1].toString());
+  }
+
+  @Test
+  public void testSplitRoundToLargeX() {
+    MyImage[] splitImages = redImage.split(0.7f, Axis.X);
+    System.out.println(splitImages[0]);
+    System.out.println(splitImages[1]);
+    String firstPart =
+        "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 "
+        + "BLUE:0    \n";
+    String secondPart = "RED:255 GREEN:0 BLUE:0    \n"
+                        + "RED:255 GREEN:0 BLUE:0    \n"
+                        + "RED:255 GREEN:0 BLUE:0    \n"
+                        + "RED:255 GREEN:0 BLUE:0    \n";
+    assertEquals(firstPart, splitImages[0].toString());
+    assertEquals(secondPart, splitImages[1].toString());
+  }
+
+  @Test
+  public void testCombineNull() {
+    for (MyImage image : testImages) {
+      assertEquals(image, image.combineImages(null, Axis.X));
+      assertEquals(image, image.combineImages(null, Axis.Y));
+    }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCombineSizeNotMatchX() {
+    redImage.combineImages(new MyImage(3, 4), Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCombineSizeNotMatchY() {
+    redImage.combineImages(new MyImage(4, 3), Axis.Y);
+  }
+
+  @Test
+  public void testCombineHalf() {
+    MyImage[] splitImages = triImage.split(0.5f, Axis.X);
+    assertEquals(triImage, splitImages[0].combineImages(splitImages[1], Axis.X));
+  }
+
+  @Test
+  public void testCombineFirstSmaller() {
+    MyImage[] splitImages = triImage.split(0.3f, Axis.X);
+    assertEquals(triImage, splitImages[0].combineImages(splitImages[1], Axis.X));
+  }
+
+  @Test
+  public void testCombineFirstLarger() {
+    MyImage[] splitImages = triImage.split(0.7f, Axis.X);
+    assertEquals(triImage, splitImages[0].combineImages(splitImages[1], Axis.X));
+  }
+
+  @Test
+  public void testGetHistogram() {
+
+  }
+
+  //  @Test
+//  public void testLevelAdjustment() {
+//    MyImage testImage = new MyImage("test/img/trichromatic/simple.ppm");
+//    Image result = testImage.levelAdjustment(0.1f, 0.5f, 0.8f);
+//    System.out.println(result);
+//  }
+//
+  @Test
   public void testEquals() {
     MyImage image1 = new MyImage("test/img/trichromatic/simple.ppm");
     MyImage image2 = new MyImage("test/img/trichromatic/simple.ppm");
@@ -788,10 +915,5 @@ public class MyImageTest extends ImageTest {
 
   }
 
-  @Test
-  public void testLevelAdjustment() {
-    MyImage testImage = new MyImage("test/img/trichromatic/simple.ppm");
-    Image result = testImage.levelAdjustment(0.1f, 0.5f, 0.8f);
-    System.out.println(result);
-  }
+
 }
