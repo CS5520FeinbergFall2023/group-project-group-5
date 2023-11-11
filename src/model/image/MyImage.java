@@ -523,8 +523,9 @@ public class MyImage extends Image {
         RGBPixel[][] pixels2 = new RGBPixel[height][width - firstSize];
         for (int i = 0; i < height; i++) {
           for (int j = firstSize; j < width; j++) {
-            pixels2[i][j-firstSize] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
-                getPixel(i, j).getBlue());
+            pixels2[i][j - firstSize] =
+                new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
+                    getPixel(i, j).getBlue());
           }
         }
         result[0] = new MyImage(pixels1);
@@ -540,8 +541,9 @@ public class MyImage extends Image {
         RGBPixel[][] pixels2 = new RGBPixel[height - firstSize][width];
         for (int i = firstSize; i < height; i++) {
           for (int j = 0; j < width; j++) {
-            pixels2[i-firstSize][j] = new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
-                getPixel(i, j).getBlue());
+            pixels2[i - firstSize][j] =
+                new RGBPixel(getPixel(i, j).getRed(), getPixel(i, j).getGreen(),
+                    getPixel(i, j).getBlue());
           }
         }
         result[0] = new MyImage(pixels1);
@@ -607,25 +609,62 @@ public class MyImage extends Image {
   /**
    * Get appearance frequency of colors in the image.
    */
-  private int[][] getFrequency() {
-    int[] redCount = new int[1 << RGBPixel.bitDepth];
-    int[] greenCount = new int[1 << RGBPixel.bitDepth];
-    int[] blueCount = new int[1 << RGBPixel.bitDepth];
-    for (Pixel[] row : pixels) {
-      for (Pixel p : row) {
-        redCount[((RGBPixel) p).getRed()] += 1;
-        greenCount[((RGBPixel) p).getGreen()] += 1;
-        blueCount[((RGBPixel) p).getBlue()] += 1;
+  private float[][] getFrequency() {
+//    float[][] greyscale = new float[][]{
+//        {0.2126f, 0.7152f, 0.0722f},
+//        {0.2126f, 0.7152f, 0.0722f},
+//        {0.2126f, 0.7152f, 0.0722f}
+//    };
+    int length = 1 << RGBPixel.bitDepth;
+//    MyImage redGreyscale = (MyImage) channelSplit(Channel.RED).matrixMultiplication(greyscale);
+//    MyImage greenGreyscale = (MyImage) channelSplit(Channel.GREEN).matrixMultiplication(greyscale);
+//    MyImage blueGreyscale = (MyImage) channelSplit(Channel.BLUE).matrixMultiplication(greyscale);
+    float[] redCount = new float[length];
+    float[] greenCount = new float[length];
+    float[] blueCount = new float[length];
+    for (int row = 0; row < height; row++) {
+      for (int column = 0; column < width; column++) {
+        redCount[(getPixel(row, column)).getRed()] += 1;
+        greenCount[(getPixel(row, column)).getGreen()] += 1;
+        blueCount[(getPixel(row, column)).getBlue()] += 1;
       }
     }
-    return new int[][]{redCount, greenCount, blueCount};
+
+    for (int i = 0; i < length; i++) {
+      redCount[i] /= (height*width);
+      greenCount[i] /= (height*width);
+      blueCount[i] /= (height*width);
+    }
+    return new float[][]{redCount, greenCount, blueCount};
   }
 
-  private int getMax(int... nums) {
-    return Arrays.stream(nums).summaryStatistics().getMax();
+  private float getMax(float... nums) {
+    if (nums == null || nums.length == 0) {
+      throw new IllegalArgumentException("Nums are null or empty");
+    }
+    float max = Float.NEGATIVE_INFINITY;
+
+    for (float value : nums) {
+      max = Math.max(max, value);
+    }
+
+    return max;
   }
 
-  private int findIndexOf(int value, int[] arr) {
+  private float getMin(float... nums) {
+    if (nums == null || nums.length == 0) {
+      throw new IllegalArgumentException("Nums are null or empty");
+    }
+    float min = Float.POSITIVE_INFINITY;
+
+    for (float value : nums) {
+      min = Math.min(min, value);
+    }
+
+    return min;
+  }
+
+  private int findIndexOf(float value, float[] arr) {
     for (int i = 0; i < arr.length; i++) {
       if (arr[i] == value) {
         return i;
@@ -643,21 +682,56 @@ public class MyImage extends Image {
   public MyImage getHistogram() {
     int dimension = 1 << RGBPixel.bitDepth;
     RGBPixel[][] histogramPixels = new RGBPixel[dimension][dimension];
-    int[][] freq = getFrequency();
-    int[] redFreq = freq[0];
-    int[] greenFreq = freq[1];
-    int[] blueFreq = freq[2];
-    int max = getMax(getMax(redFreq), getMax(greenFreq), getMax(blueFreq));
-    float gap = (float) max / (dimension);
+    float[][] freq = getFrequency();
+    float[] redFreq = freq[0];
+    float[] greenFreq = freq[1];
+    float[] blueFreq = freq[2];
+    float maxFreq = getMax(getMax(redFreq), getMax(greenFreq), getMax(blueFreq));
+    //the length of gap/small grid vertically
+    float gap = maxFreq / (dimension - 1);
+//    float redGap = (getMax(redFreq) - getMin(redFreq)) / (dimension - 1);
+//    float greenGap = (getMax(greenFreq) - getMin(greenFreq)) / (dimension - 1);
+//    float blueGap = (getMax(blueFreq) - getMin(blueFreq)) / (dimension - 1);
+
+    int[] redIndices = new int[dimension];
+    int[] greenIndices = new int[dimension];
+    int[] blueIndices = new int[dimension];
     // 256 x 256
+    for (int i = 0; i < dimension; i++) {
+      redIndices[i] = dimension - 1 - Math.round(redFreq[i] / gap);
+      greenIndices[i] = dimension - 1 - Math.round(greenFreq[i] / gap);
+      blueIndices[i] = dimension - 1 - Math.round(blueFreq[i] / gap);
+    }
     for (int x = 0; x < dimension; x++) {
-      int redIndex = dimension - Math.round(redFreq[x] / gap);
-      int greenIndex = dimension - Math.round(greenFreq[x] / gap);
-      int blueIndex = dimension - Math.round(blueFreq[x] / gap);
+      int redIndex = redIndices[x];
+      int greenIndex = greenIndices[x];
+      int blueIndex = blueIndices[x];
       //todo: overlap with the second color or blend/mix?
-      histogramPixels[redIndex][x] = new RGBPixel(255, 0, 0);
-      histogramPixels[greenIndex][x] = new RGBPixel(0, 255, 0);
-      histogramPixels[blueIndex][x] = new RGBPixel(0, 0, 255);
+      //the final one
+      if (x == dimension - 1) {
+        histogramPixels[redIndex][x] = new RGBPixel(255, 0, 0);
+        histogramPixels[greenIndex][x] = new RGBPixel(0, 255, 0);
+        histogramPixels[blueIndex][x] = new RGBPixel(0, 0, 255);
+      }
+      //draw the vertical line to the same height as next one
+      else {
+        int redLower = Math.min(redIndex, redIndices[x + 1]);
+        int redHigher = Math.max(redIndex, redIndices[x + 1]);
+        for (int y = redLower; y < redHigher; y++) {
+          histogramPixels[y][x] = new RGBPixel(255, 0, 0);
+        }
+        int greenLower = Math.min(greenIndex, greenIndices[x + 1]);
+        int greenHigher = Math.max(greenIndex, greenIndices[x + 1]);
+        for (int y = greenLower; y < greenHigher; y++) {
+          histogramPixels[y][x] = new RGBPixel(0, 255, 0);
+        }
+        int blueLower = Math.min(blueIndex, blueIndices[x + 1]);
+        int blueHigher = Math.max(blueIndex, blueIndices[x + 1]);
+        for (int y = blueLower; y < blueHigher; y++) {
+          histogramPixels[y][x] = new RGBPixel(0, 0, 255);
+        }
+      }
+      //all other spaces are left white
       for (int y = 0; y < dimension; y++) {
         if (histogramPixels[y][x] == null) {
           histogramPixels[y][x] = new RGBPixel(255, 255, 255);
@@ -674,17 +748,17 @@ public class MyImage extends Image {
    */
   @Override
   public Image colorCorrect() {
-    int[][] freq = getFrequency();
+    float[][] freq = getFrequency();
     //  only consider values greater than 10 and lesser than 245 in each channel
-    int[] redFreq = Arrays.copyOfRange(freq[0], 11, 245);
-    int[] greenFreq = Arrays.copyOfRange(freq[1], 11, 245);
-    int[] blueFreq = Arrays.copyOfRange(freq[2], 11, 245);
+    float[] redFreq = Arrays.copyOfRange(freq[0], 11, 245);
+    float[] greenFreq = Arrays.copyOfRange(freq[1], 11, 245);
+    float[] blueFreq = Arrays.copyOfRange(freq[2], 11, 245);
     // find the peaks (and the values at which they occur) of each channel in the histogram.
-    int redFreqHighest = getMax(redFreq);
+    float redFreqHighest = getMax(redFreq);
     int redFreqHighestValue = findIndexOf(redFreqHighest, redFreq);
-    int greenFreqHighest = getMax(greenFreq);
+    float greenFreqHighest = getMax(greenFreq);
     int greenFreqHighestValue = findIndexOf(greenFreqHighest, greenFreq);
-    int blueFreqHighest = getMax(blueFreq);
+    float blueFreqHighest = getMax(blueFreq);
     int blueFreqHighestValue = findIndexOf(blueFreqHighest, blueFreq);
     // Then we compute the average value across peaks.
     float perkAverageValue =

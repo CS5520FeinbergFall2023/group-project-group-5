@@ -891,6 +891,17 @@ public class MyImageTest extends ImageTest {
 
   @Test
   public void testGetHistogram() {
+    MyImage histogram = new MyImage("manhattan-small.png").getHistogram();
+    histogram.save("histogram.png");
+  }
+
+  @Test
+  public void testColorAdjustment() {
+
+  }
+
+  @Test
+  public void testLevelAdjustment() {
 
   }
 
