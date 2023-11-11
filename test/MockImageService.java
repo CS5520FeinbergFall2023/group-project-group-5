@@ -58,7 +58,8 @@ public class MockImageService extends ImageService {
   public Image blur(Image image, float percentage, Axis splitAxis) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to be blurred, now start to blur.");
-    return new MyImage("test/img/cupcake_blurOnce.png");
+    //return new MyImage("test/img/cupcake_blurOnce.png");
+    return new MyImage("halfBlurCupcake.png");
   }
 
   /**
@@ -148,8 +149,6 @@ public class MockImageService extends ImageService {
     result[1] = myImage2;
     result[2] = myImage3;
     return result;
-
-
   }
 
   /**
@@ -192,7 +191,49 @@ public class MockImageService extends ImageService {
   public Image getSepia(Image image, float percentage, Axis splitAxis) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to get its sepia, now start to do that.");
+    //todo: add the image path
     return new MyImage("test/img/city_small_sepia.png");
   }
+
+  @Override
+  public Image greyscale(Image image, float percentage, Axis splitAxis) {
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to get its greyscale, now start to greyscale");
+    //todo: add the image path
+    return new MyImage("test/img/monochromatic/red_grayScale_b.ppm");
+  }
+
+  @Override
+  public Image haarWaveletCompress(Image image, float ratio) {
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to compress, now start to compress");
+    return new MyImage("test/img/car_compress.jpg");
+  }
+
+  @Override
+  public Image getHistogram(Image image) {
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to get histogram, now start to get histogram");
+    //todo: add the image path
+    return new MyImage("histogram.png");
+  }
+
+  @Override
+  public Image colorCorrect(Image image, float percentage, Axis splitAxis) {
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to do the color-correct, now start to correct the color");
+    //todo: add the image path
+    return new MyImage("histogram-color-correct.png");
+  }
+
+  @Override
+  public Image levelAdjustment(Image image, float black, float mid, float white, float percentage,
+                               Axis splitAxis) {
+    displayMessage(image.hashCode() + "");
+    displayMessage("Receive the image need to level-adjustment, now start to adjust the level");
+    //todo: add the image path
+    return new MyImage("level-adjustment.png");
+  }
+
 
 }
