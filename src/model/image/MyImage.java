@@ -689,10 +689,6 @@ public class MyImage extends Image {
     float maxFreq = getMax(getMax(redFreq), getMax(greenFreq), getMax(blueFreq));
     //the length of gap/small grid vertically
     float gap = maxFreq / (dimension - 1);
-//    float redGap = (getMax(redFreq) - getMin(redFreq)) / (dimension - 1);
-//    float greenGap = (getMax(greenFreq) - getMin(greenFreq)) / (dimension - 1);
-//    float blueGap = (getMax(blueFreq) - getMin(blueFreq)) / (dimension - 1);
-
     int[] redIndices = new int[dimension];
     int[] greenIndices = new int[dimension];
     int[] blueIndices = new int[dimension];
@@ -717,17 +713,17 @@ public class MyImage extends Image {
       else {
         int redLower = Math.min(redIndex, redIndices[x + 1]);
         int redHigher = Math.max(redIndex, redIndices[x + 1]);
-        for (int y = redLower; y < redHigher; y++) {
+        for (int y = redLower; y <= redHigher; y++) {
           histogramPixels[y][x] = new RGBPixel(255, 0, 0);
         }
         int greenLower = Math.min(greenIndex, greenIndices[x + 1]);
         int greenHigher = Math.max(greenIndex, greenIndices[x + 1]);
-        for (int y = greenLower; y < greenHigher; y++) {
+        for (int y = greenLower; y <= greenHigher; y++) {
           histogramPixels[y][x] = new RGBPixel(0, 255, 0);
         }
         int blueLower = Math.min(blueIndex, blueIndices[x + 1]);
         int blueHigher = Math.max(blueIndex, blueIndices[x + 1]);
-        for (int y = blueLower; y < blueHigher; y++) {
+        for (int y = blueLower; y <= blueHigher; y++) {
           histogramPixels[y][x] = new RGBPixel(0, 0, 255);
         }
       }

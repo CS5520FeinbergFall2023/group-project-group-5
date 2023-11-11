@@ -891,13 +891,14 @@ public class MyImageTest extends ImageTest {
 
   @Test
   public void testGetHistogram() {
-    MyImage histogram = new MyImage("manhattan-small.png").getHistogram();
+    MyImage histogram = new MyImage("galaxy.png").getHistogram();
     histogram.save("histogram.png");
   }
 
   @Test
-  public void testColorAdjustment() {
-
+  public void testColorCorrect() {
+    MyImage image = new MyImage("galaxy.png");
+    image.colorCorrect().getHistogram().save("histogram-color-correct.png");
   }
 
   @Test
