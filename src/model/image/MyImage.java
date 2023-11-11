@@ -631,9 +631,9 @@ public class MyImage extends Image {
     }
 
     for (int i = 0; i < length; i++) {
-      redCount[i] /= (height*width);
-      greenCount[i] /= (height*width);
-      blueCount[i] /= (height*width);
+      redCount[i] /= (height * width);
+      greenCount[i] /= (height * width);
+      blueCount[i] /= (height * width);
     }
     return new float[][]{redCount, greenCount, blueCount};
   }
@@ -698,6 +698,9 @@ public class MyImage extends Image {
       greenIndices[i] = dimension - 1 - Math.round(greenFreq[i] / gap);
       blueIndices[i] = dimension - 1 - Math.round(blueFreq[i] / gap);
     }
+    System.out.println(Arrays.toString(redIndices));
+    System.out.println(Arrays.toString(greenIndices));
+    System.out.println(Arrays.toString(blueIndices));
     for (int x = 0; x < dimension; x++) {
       int redIndex = redIndices[x];
       int greenIndex = greenIndices[x];
@@ -743,7 +746,7 @@ public class MyImage extends Image {
    * @return the color-corrected result
    */
   @Override
-  public Image colorCorrect() {
+  public MyImage colorCorrect() {
     float[][] freq = getFrequency();
     //  only consider values greater than 10 and lesser than 245 in each channel
     float[] redFreq = Arrays.copyOfRange(freq[0], 11, 245);
@@ -775,7 +778,7 @@ public class MyImage extends Image {
    * @return the adjusted image
    */
   @Override
-  public Image levelAdjustment(float black, float mid, float white) {
+  public MyImage levelAdjustment(float black, float mid, float white) {
     //fitting the curve y = ax^2+bx+c
     float A =
         black * black * (mid - white) - black * (mid * mid - white * white) + white * mid * mid

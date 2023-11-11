@@ -1,13 +1,17 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import model.Axis;
 import model.Channel;
+import model.MyImageTest;
 import model.image.Image;
 import model.image.MyImage;
 import service.ImageService;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This class is to test ImageService.
@@ -828,6 +832,30 @@ public class ImageServiceTest {
   }
 
   @Test
+  public void testBlurSimplePercentageSmall() {
+    Image testImage = new MyImage("test/img/monochromatic/red.png");
+    Image resultImage = imageService.blur(testImage, 0.3f, Axis.X);
+    System.out.println(resultImage);
+    String expectedImage= "RED:96 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+                          + "RED:128 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+                          + "RED:128 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+                          + "RED:96 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n";
+    assertEquals(expectedImage, resultImage.toString());
+  }
+
+  @Test
+  public void testBlurSimplePercentageBig() {
+    Image testImage = new MyImage("test/img/monochromatic/red.png");
+    Image resultImage = imageService.blur(testImage, 0.7f, Axis.X);
+    System.out.println(resultImage);
+    String expectedImage= "RED:143 GREEN:0 BLUE:0    RED:191 GREEN:0 BLUE:0    RED:143 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+                          + "RED:191 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:191 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+                          + "RED:191 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:191 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+                          + "RED:143 GREEN:0 BLUE:0    RED:191 GREEN:0 BLUE:0    RED:143 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n";
+    assertEquals(expectedImage, resultImage.toString());
+  }
+
+  @Test
   public void testBlurOnce() {
     Image testImage = new MyImage("test/img/cupcake.png");
     Image resultImages = imageService.blur(testImage,1,Axis.X);
@@ -861,6 +889,30 @@ public class ImageServiceTest {
     String expectedImage= "RED:149 GREEN:72 BLUE:104    RED:30 GREEN:200 BLUE:150    \n"
                           + "RED:255 GREEN:123 BLUE:144    RED:105 GREEN:65 BLUE:75    \n"
                           + "RED:144 GREEN:207 BLUE:99    RED:215 GREEN:205 BLUE:105    \n";
+    assertEquals(expectedImage, resultImage.toString());
+  }
+
+  @Test
+  public void testSharpenSimplePercentageSmall() {
+    Image testImage = new MyImage("test/img/dichromatic/woBlue.png");
+    Image resultImage = imageService.sharpen(testImage,0.3f,Axis.X);
+    System.out.println(resultImage);
+    String expectedImage= "RED:225 GREEN:225 BLUE:0    RED:200 GREEN:200 BLUE:0    RED:200 GREEN:200 BLUE:0    RED:200 GREEN:200 BLUE:0    \n"
+                          + "RED:255 GREEN:255 BLUE:0    RED:200 GREEN:200 BLUE:0    RED:200 GREEN:200 BLUE:0    RED:200 GREEN:200 BLUE:0    \n"
+                          + "RED:255 GREEN:255 BLUE:0    RED:200 GREEN:200 BLUE:0    RED:200 GREEN:200 BLUE:0    RED:200 GREEN:200 BLUE:0    \n"
+                          + "RED:225 GREEN:225 BLUE:0    RED:200 GREEN:200 BLUE:0    RED:200 GREEN:200 BLUE:0    RED:200 GREEN:200 BLUE:0    \n";
+    assertEquals(expectedImage, resultImage.toString());
+  }
+
+  @Test
+  public void testSharpenSimplePercentageBig() {
+    Image testImage = new MyImage("test/img/dichromatic/woBlue.png");
+    Image resultImage = imageService.sharpen(testImage,0.7f,Axis.X);
+    System.out.println(resultImage);
+    String expectedImage= "RED:225 GREEN:225 BLUE:0    RED:255 GREEN:255 BLUE:0    RED:225 GREEN:225 BLUE:0    RED:200 GREEN:200 BLUE:0    \n"
+                          + "RED:255 GREEN:255 BLUE:0    RED:255 GREEN:255 BLUE:0    RED:255 GREEN:255 BLUE:0    RED:200 GREEN:200 BLUE:0    \n"
+                          + "RED:255 GREEN:255 BLUE:0    RED:255 GREEN:255 BLUE:0    RED:255 GREEN:255 BLUE:0    RED:200 GREEN:200 BLUE:0    \n"
+                          + "RED:225 GREEN:225 BLUE:0    RED:255 GREEN:255 BLUE:0    RED:225 GREEN:225 BLUE:0    RED:200 GREEN:200 BLUE:0    \n";
     assertEquals(expectedImage, resultImage.toString());
   }
 
@@ -1055,7 +1107,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGreyscaleTrichromatic() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/duoColor.png");
     Image resultImage = imageService.greyscale(testImage,1,Axis.X);
     String expected = "RED:89 GREEN:89 BLUE:89    RED:160 GREEN:160 BLUE:160    \n"
                       + "RED:95 GREEN:95 BLUE:95    RED:74 GREEN:74 BLUE:74    \n"
@@ -1074,9 +1126,95 @@ public class ImageServiceTest {
     assertEquals(expected, resultImage.toString());
   }
 
-  // Histogram
   @Test
-  public void testGetHistogram(){
+  public void testGreyscaleTrichromaticPercentageSmall() {
+    Image testImage = new MyImage("test/img/monochromatic/red.png");
+    System.out.println(testImage);
+    Image resultImage = imageService.greyscale(testImage,0.3f,Axis.X);
+    System.out.println(resultImage);
+    String expected = "RED:54 GREEN:54 BLUE:54    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+                      + "RED:54 GREEN:54 BLUE:54    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+                      + "RED:54 GREEN:54 BLUE:54    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+                      + "RED:54 GREEN:54 BLUE:54    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n";
+    assertEquals(expected, resultImage.toString());
+  }
 
+  @Test
+  public void testGreyscaleTrichromaticPercentageBig() {
+    Image testImage = new MyImage("test/img/monochromatic/red.png");
+    System.out.println(testImage);
+    Image resultImage = imageService.greyscale(testImage,0.7f,Axis.X);
+    System.out.println(resultImage);
+    String expected = "RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:255 GREEN:0 BLUE:0    \n"
+                      + "RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:255 GREEN:0 BLUE:0    \n"
+                      + "RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:255 GREEN:0 BLUE:0    \n"
+                      + "RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    RED:255 GREEN:0 BLUE:0    \n";
+    assertEquals(expected, resultImage.toString());
+  }
+
+
+  // Histogram
+  @Test(expected = IllegalArgumentException.class)
+  public void testGetHistogramNull(){
+    Image resultHistogram = imageService.getHistogram(null);
+  }
+
+  @Test
+  public void testGetHistogram() throws IOException {
+    MyImage testImage = new MyImage("test/img/city.png");
+    Image histogram = imageService.getHistogram(testImage);
+    String path = "histogram.png";
+    histogram.save(path);
+    int[] redPoints =
+        new int[]{253, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 254,
+            255, 255, 255, 255, 253, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 252, 253,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 247, 255, 255, 255, 253, 255, 255, 255,
+            248, 255, 255, 255, 255, 255, 255, 240, 255, 252, 255, 255, 255, 255, 255, 255, 255,
+            255, 232, 255, 255, 255, 249, 251, 250, 255, 240, 251, 255, 255, 255, 252, 255, 255,
+            230, 255, 248, 255, 250, 236, 255, 255, 217, 255, 251, 255, 255, 255, 255, 255, 205,
+            255, 253, 255, 230, 251, 252, 246, 213, 255, 255, 255, 255, 250, 255, 255, 224, 255,
+            254, 235, 249, 247, 248, 255, 228, 255, 255, 255, 255, 255, 247, 255, 234, 255, 246,
+            240, 252, 244, 246, 255, 167, 237, 255, 255, 246, 249, 252, 255, 125, 250, 247, 244,
+            255, 255, 245, 248, 143, 255, 249, 255, 248, 249, 255, 250, 167, 252, 255, 255, 249,
+            238, 251, 255, 170, 255, 255, 255, 241, 247, 253, 255, 211, 254, 237, 243, 239, 255,
+            247, 248, 228, 238, 255, 254, 255, 255, 253, 248, 251, 247, 238, 248, 255, 250, 255,
+            255, 255, 252, 255, 248, 255, 255, 249, 255, 255, 239, 255, 253, 253, 255, 252, 255,
+            255, 255, 251, 255, 251, 255, 255, 255, 255, 255, 255, 255, 253, 255, 255, 253, 251,
+            250, 255, 255, 255, 255, 252, 255, 255, 255, 255, 255, 255, 245, 255, 249, 255, 255,
+            255, 254};
+    int[] greenPoints =
+        new int[]{253, 255, 255, 255, 255, 255, 255, 255, 255, 255, 253, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 254, 255, 255, 253, 255, 255, 255, 255, 255, 253, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 252, 252, 255, 255, 255, 252, 255, 255, 255, 255,
+            255, 255, 255, 248, 255, 255, 255, 255, 251, 255, 255, 255, 251, 247, 255, 249, 255,
+            255, 255, 255, 255, 255, 255, 248, 251, 250, 247, 255, 248, 255, 255, 255, 255, 255,
+            255, 246, 250, 255, 255, 251, 241, 246, 252, 255, 255, 255, 255, 255, 255, 235, 244,
+            252, 242, 255, 255, 255, 250, 251, 219, 255, 255, 255, 250, 249, 255, 255, 206, 252,
+            252, 245, 255, 255, 248, 250, 202, 248, 252, 255, 255, 255, 255, 255, 201, 245, 250,
+            249, 255, 253, 246, 255, 216, 255, 255, 255, 255, 255, 255, 239, 235, 244, 251, 250,
+            249, 255, 244, 255, 255, 242, 255, 242, 255, 249, 252, 255, 255, 248, 248, 255, 246,
+            242, 255, 255, 255, 247, 255, 255, 251, 255, 252, 241, 249, 255, 255, 248, 254, 255,
+            255, 255, 178, 254, 247, 253, 252, 248, 255, 231, 44, 243, 255, 251, 255, 251, 248, 255,
+            0, 255, 252, 255, 255, 255, 255, 255, 180, 255, 241, 243, 250, 248, 250, 255, 239, 255,
+            255, 251, 255, 253, 255, 255, 253, 255, 255, 249, 255, 255, 255, 255, 253, 249, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 250, 255, 255, 253, 255, 255, 255, 254};
+    int[] bluePoints =
+        new int[]{253, 255, 255, 255, 255, 255, 255, 253, 255, 255, 253, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 253, 254, 252, 255, 255, 255,
+            255, 255, 255, 252, 255, 251, 255, 255, 255, 255, 255, 255, 255, 255, 251, 255, 255,
+            252, 255, 248, 255, 255, 252, 249, 255, 255, 255, 250, 255, 255, 255, 247, 255, 255,
+            248, 254, 255, 253, 255, 250, 243, 255, 251, 255, 255, 252, 251, 255, 250, 255, 253,
+            250, 255, 249, 251, 244, 250, 253, 250, 253, 252, 255, 255, 255, 246, 255, 255, 252,
+            252, 243, 255, 238, 241, 251, 255, 255, 244, 255, 252, 254, 255, 255, 255, 244, 248,
+            239, 245, 238, 240, 249, 255, 228, 255, 255, 255, 255, 255, 255, 255, 212, 243, 255,
+            251, 232, 252, 252, 255, 205, 255, 255, 255, 251, 255, 254, 248, 210, 253, 236, 247,
+            255, 251, 255, 255, 212, 255, 255, 255, 255, 251, 251, 255, 229, 255, 244, 255, 255,
+            249, 238, 255, 231, 250, 255, 255, 255, 255, 253, 249, 230, 248, 255, 239, 255, 255,
+            251, 255, 223, 255, 255, 252, 252, 252, 255, 255, 229, 255, 254, 253, 255, 255, 242,
+            255, 242, 255, 255, 250, 255, 245, 255, 255, 196, 252, 255, 255, 245, 255, 255, 255,
+            137, 249, 255, 255, 255, 255, 253, 255, 70, 255, 255, 252, 255, 255, 244, 253, 100, 255,
+            255, 255, 255, 247, 255, 255, 234, 248, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            254};
+    assertTrue(MyImageTest.checkHistogramLines(path,redPoints,greenPoints,bluePoints));
   }
 }
