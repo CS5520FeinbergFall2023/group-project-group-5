@@ -776,9 +776,14 @@ public class MyImage extends Image {
    * @param mid   the positions of the middle point on the horizontal axis
    * @param white the positions of the white (highlight) point on the horizontal axis
    * @return the adjusted image
+   * @throws IllegalArgumentException when given arguments is illegal (outside the range [0,255])
    */
   @Override
   public MyImage levelAdjustment(float black, float mid, float white) {
+    if (black < 0 || black > (1 << RGBPixel.bitDepth) || mid < 0 || mid > (1 << RGBPixel.bitDepth)
+        || white < 0 || white > (1 << RGBPixel.bitDepth)) {
+      throw new IllegalArgumentException("Black, mid and white should all be in range [0, 255]");
+    }
     //fitting the curve y = ax^2+bx+c
     float A =
         black * black * (mid - white) - black * (mid * mid - white * white) + white * mid * mid
