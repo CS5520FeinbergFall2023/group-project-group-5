@@ -202,18 +202,32 @@ public class ImageController {
           float percentage = 1.0f;
           Axis splitAxis = Axis.X;
           if(tokenizer.hasMoreTokens()) {
-            String nextToken = tokenizer.nextToken();
-            try {
-              percentage = Float.parseFloat(nextToken);
-              if (tokenizer.hasMoreTokens()) {
-                String axisToken = tokenizer.nextToken();
-                splitAxis = Axis.valueOf(axisToken.toUpperCase());
+            String potentialSplitKeyword = tokenizer.nextToken();
+            if ("split".equalsIgnoreCase(potentialSplitKeyword)) {
+              if(tokenizer.hasMoreTokens()) {
+                try {
+                  percentage = Float.parseFloat(tokenizer.nextToken());
+                  if (percentage < 0 || percentage > 1) {
+                    imageView.displayMessage("Percentage must be between 0 and 1.");
+                    break;
+                  }
+                  if (tokenizer.hasMoreTokens()) {
+                    String axisToken = tokenizer.nextToken();
+                    splitAxis = Axis.valueOf(axisToken.toUpperCase());
+                  }
+                } catch (NumberFormatException e) {
+                  imageView.displayMessage("Invalid percentage format.");
+                  break;
+                } catch (IllegalArgumentException e) {
+                  imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+                  break;
+                }
+              } else {
+                imageView.displayMessage("Percentage value expected after 'split'.");
+                break;
               }
-            } catch (NumberFormatException e) {
-              imageView.displayMessage("Invalid percentage format.");
-              break;
-            } catch (IllegalArgumentException e) {
-              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+            } else {
+              imageView.displayMessage("'split' keyword expected.");
               break;
             }
           }
@@ -461,21 +475,51 @@ public class ImageController {
           float percentageSharpen = 1.0f;
           Axis splitAxisSharpen = Axis.X;
           if(tokenizer.hasMoreTokens()) {
-            String nextToken = tokenizer.nextToken();
-            try {
-              percentageSharpen = Float.parseFloat(nextToken);
+            String potentialSplitKeyword = tokenizer.nextToken();
+            if ("split".equalsIgnoreCase(potentialSplitKeyword)) {
               if(tokenizer.hasMoreTokens()) {
-                String axisToken = tokenizer.nextToken();
-                splitAxisSharpen = Axis.valueOf(axisToken.toUpperCase());
+                try {
+                  percentageSharpen = Float.parseFloat(tokenizer.nextToken());
+                  if (percentageSharpen < 0 || percentageSharpen > 1) {
+                    imageView.displayMessage("Percentage must be between 0 and 1.");
+                    break;
+                  }
+                  if (tokenizer.hasMoreTokens()) {
+                    String axisToken = tokenizer.nextToken();
+                    splitAxisSharpen = Axis.valueOf(axisToken.toUpperCase());
+                  }
+                } catch (NumberFormatException e) {
+                  imageView.displayMessage("Invalid percentage format.");
+                  break;
+                } catch (IllegalArgumentException e) {
+                  imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+                  break;
+                }
+              } else {
+                imageView.displayMessage("Percentage value expected after 'split'.");
+                break;
               }
-            } catch (NumberFormatException e) {
-              imageView.displayMessage("Invalid percentage format.");
-              break;
-            } catch (IllegalArgumentException e) {
-              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+            } else {
+              imageView.displayMessage("'split' keyword expected.");
               break;
             }
           }
+//          if(tokenizer.hasMoreTokens()) {
+//            String nextToken = tokenizer.nextToken();
+//            try {
+//              percentageSharpen = Float.parseFloat(nextToken);
+//              if(tokenizer.hasMoreTokens()) {
+//                String axisToken = tokenizer.nextToken();
+//                splitAxisSharpen = Axis.valueOf(axisToken.toUpperCase());
+//              }
+//            } catch (NumberFormatException e) {
+//              imageView.displayMessage("Invalid percentage format.");
+//              break;
+//            } catch (IllegalArgumentException e) {
+//              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+//              break;
+//            }
+//          }
           if (tokenizer.hasMoreTokens()) {
             imageView.displayMessage("More arguments than expected.");
             break;
@@ -498,21 +542,52 @@ public class ImageController {
           float percentageSepia = 1.0f;
           Axis splitAxisSepia = Axis.X;
           if(tokenizer.hasMoreTokens()) {
-            String nextToken = tokenizer.nextToken();
-            try {
-              percentageSepia = Float.parseFloat(nextToken);
+            String potentialSplitKeyword = tokenizer.nextToken();
+            if ("split".equalsIgnoreCase(potentialSplitKeyword)) {
               if(tokenizer.hasMoreTokens()) {
-                String axisToken = tokenizer.nextToken();
-                splitAxisSepia = Axis.valueOf(axisToken.toUpperCase());
+                try {
+                  percentageSepia = Float.parseFloat(tokenizer.nextToken());
+                  if (percentageSepia < 0 || percentageSepia > 1) {
+                    imageView.displayMessage("Percentage must be between 0 and 1.");
+                    break;
+                  }
+                  if (tokenizer.hasMoreTokens()) {
+                    String axisToken = tokenizer.nextToken();
+                    splitAxisSepia = Axis.valueOf(axisToken.toUpperCase());
+                  }
+                } catch (NumberFormatException e) {
+                  imageView.displayMessage("Invalid percentage format.");
+                  break;
+                } catch (IllegalArgumentException e) {
+                  imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+                  break;
+                }
+              } else {
+                imageView.displayMessage("Percentage value expected after 'split'.");
+                break;
               }
-            } catch (NumberFormatException e) {
-              imageView.displayMessage("Invalid percentage format.");
-              break;
-            } catch (IllegalArgumentException e) {
-              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+            } else {
+              imageView.displayMessage("'split' keyword expected.");
               break;
             }
           }
+
+//          if(tokenizer.hasMoreTokens()) {
+//            String nextToken = tokenizer.nextToken();
+//            try {
+//              percentageSepia = Float.parseFloat(nextToken);
+//              if(tokenizer.hasMoreTokens()) {
+//                String axisToken = tokenizer.nextToken();
+//                splitAxisSepia = Axis.valueOf(axisToken.toUpperCase());
+//              }
+//            } catch (NumberFormatException e) {
+//              imageView.displayMessage("Invalid percentage format.");
+//              break;
+//            } catch (IllegalArgumentException e) {
+//              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+//              break;
+//            }
+//          }
           if (tokenizer.hasMoreTokens()) {
             imageView.displayMessage("More arguments than expected.");
             break;
@@ -534,21 +609,52 @@ public class ImageController {
           float percentageGreyScale = 1.0f;
           Axis splitAxisGreyScale = Axis.X;
           if(tokenizer.hasMoreTokens()) {
-            String nextToken = tokenizer.nextToken();
-            try {
-              percentageGreyScale = Float.parseFloat(nextToken);
+            String potentialSplitKeyword = tokenizer.nextToken();
+            if ("split".equalsIgnoreCase(potentialSplitKeyword)) {
               if(tokenizer.hasMoreTokens()) {
-                String axisToken = tokenizer.nextToken();
-                splitAxisGreyScale = Axis.valueOf(axisToken.toUpperCase());
+                try {
+                  percentageGreyScale = Float.parseFloat(tokenizer.nextToken());
+                  if (percentageGreyScale < 0 || percentageGreyScale > 1) {
+                    imageView.displayMessage("Percentage must be between 0 and 1.");
+                    break;
+                  }
+                  if (tokenizer.hasMoreTokens()) {
+                    String axisToken = tokenizer.nextToken();
+                    splitAxisGreyScale = Axis.valueOf(axisToken.toUpperCase());
+                  }
+                } catch (NumberFormatException e) {
+                  imageView.displayMessage("Invalid percentage format.");
+                  break;
+                } catch (IllegalArgumentException e) {
+                  imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+                  break;
+                }
+              } else {
+                imageView.displayMessage("Percentage value expected after 'split'.");
+                break;
               }
-            } catch (NumberFormatException e) {
-              imageView.displayMessage("Invalid percentage format.");
-              break;
-            } catch (IllegalArgumentException e) {
-              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+            } else {
+              imageView.displayMessage("'split' keyword expected.");
               break;
             }
           }
+
+//          if(tokenizer.hasMoreTokens()) {
+//            String nextToken = tokenizer.nextToken();
+//            try {
+//              percentageGreyScale = Float.parseFloat(nextToken);
+//              if(tokenizer.hasMoreTokens()) {
+//                String axisToken = tokenizer.nextToken();
+//                splitAxisGreyScale = Axis.valueOf(axisToken.toUpperCase());
+//              }
+//            } catch (NumberFormatException e) {
+//              imageView.displayMessage("Invalid percentage format.");
+//              break;
+//            } catch (IllegalArgumentException e) {
+//              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+//              break;
+//            }
+//          }
           if (tokenizer.hasMoreTokens()) {
             imageView.displayMessage("More arguments than expected.");
             break;
@@ -606,21 +712,52 @@ public class ImageController {
           float percentageCorrect = 1.0f;
           Axis splitAxisCorrect = Axis.X;
           if(tokenizer.hasMoreTokens()) {
-            String nextToken = tokenizer.nextToken();
-            try {
-              percentageCorrect = Float.parseFloat(nextToken);
+            String potentialSplitKeyword = tokenizer.nextToken();
+            if ("split".equalsIgnoreCase(potentialSplitKeyword)) {
               if(tokenizer.hasMoreTokens()) {
-                String axisToken = tokenizer.nextToken();
-                splitAxisCorrect = Axis.valueOf(axisToken.toUpperCase());
+                try {
+                  percentageCorrect = Float.parseFloat(tokenizer.nextToken());
+                  if (percentageCorrect < 0 || percentageCorrect > 1) {
+                    imageView.displayMessage("Percentage must be between 0 and 1.");
+                    break;
+                  }
+                  if (tokenizer.hasMoreTokens()) {
+                    String axisToken = tokenizer.nextToken();
+                    splitAxisCorrect = Axis.valueOf(axisToken.toUpperCase());
+                  }
+                } catch (NumberFormatException e) {
+                  imageView.displayMessage("Invalid percentage format.");
+                  break;
+                } catch (IllegalArgumentException e) {
+                  imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+                  break;
+                }
+              } else {
+                imageView.displayMessage("Percentage value expected after 'split'.");
+                break;
               }
-            } catch (NumberFormatException e) {
-              imageView.displayMessage("Invalid percentage format.");
-              break;
-            } catch (IllegalArgumentException e) {
-              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+            } else {
+              imageView.displayMessage("'split' keyword expected.");
               break;
             }
           }
+
+//          if(tokenizer.hasMoreTokens()) {
+//            String nextToken = tokenizer.nextToken();
+//            try {
+//              percentageCorrect = Float.parseFloat(nextToken);
+//              if(tokenizer.hasMoreTokens()) {
+//                String axisToken = tokenizer.nextToken();
+//                splitAxisCorrect = Axis.valueOf(axisToken.toUpperCase());
+//              }
+//            } catch (NumberFormatException e) {
+//              imageView.displayMessage("Invalid percentage format.");
+//              break;
+//            } catch (IllegalArgumentException e) {
+//              imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+//              break;
+//            }
+//          }
           if (tokenizer.hasMoreTokens()) {
             imageView.displayMessage("More arguments than expected.");
             break;
@@ -654,21 +791,52 @@ public class ImageController {
             float percentageAdjust = 1.0f;
             Axis splitAxisAdjust = Axis.X;
             if(tokenizer.hasMoreTokens()) {
-              String nextToken = tokenizer.nextToken();
-              try {
-                percentageAdjust = Float.parseFloat(nextToken);
+              String potentialSplitKeyword = tokenizer.nextToken();
+              if ("split".equalsIgnoreCase(potentialSplitKeyword)) {
                 if(tokenizer.hasMoreTokens()) {
-                  String axisToken = tokenizer.nextToken();
-                  splitAxisAdjust = Axis.valueOf(axisToken.toUpperCase());
+                  try {
+                    percentageAdjust = Float.parseFloat(tokenizer.nextToken());
+                    if (percentageAdjust < 0 || percentageAdjust > 1) {
+                      imageView.displayMessage("Percentage must be between 0 and 1.");
+                      break;
+                    }
+                    if (tokenizer.hasMoreTokens()) {
+                      String axisToken = tokenizer.nextToken();
+                      splitAxisAdjust = Axis.valueOf(axisToken.toUpperCase());
+                    }
+                  } catch (NumberFormatException e) {
+                    imageView.displayMessage("Invalid percentage format.");
+                    break;
+                  } catch (IllegalArgumentException e) {
+                    imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+                    break;
+                  }
+                } else {
+                  imageView.displayMessage("Percentage value expected after 'split'.");
+                  break;
                 }
-              } catch (NumberFormatException e) {
-                imageView.displayMessage("Invalid percentage format.");
-                break;
-              } catch (IllegalArgumentException e) {
-                imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+              } else {
+                imageView.displayMessage("'split' keyword expected.");
                 break;
               }
             }
+
+//            if(tokenizer.hasMoreTokens()) {
+//              String nextToken = tokenizer.nextToken();
+//              try {
+//                percentageAdjust = Float.parseFloat(nextToken);
+//                if(tokenizer.hasMoreTokens()) {
+//                  String axisToken = tokenizer.nextToken();
+//                  splitAxisAdjust = Axis.valueOf(axisToken.toUpperCase());
+//                }
+//              } catch (NumberFormatException e) {
+//                imageView.displayMessage("Invalid percentage format.");
+//                break;
+//              } catch (IllegalArgumentException e) {
+//                imageView.displayMessage("Invalid axis value. Please use 'X' or 'Y'.");
+//                break;
+//              }
+//            }
             if (tokenizer.hasMoreTokens()) {
               imageView.displayMessage("More arguments than expected.");
               break;
