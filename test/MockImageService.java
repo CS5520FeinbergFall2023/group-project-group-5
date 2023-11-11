@@ -192,7 +192,7 @@ public class MockImageService extends ImageService {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to get its sepia, now start to do that.");
     //todo: add the image path
-    return new MyImage("test/xxx");
+    return new MyImage("test/img/city_small_sepia.png");
   }
 
   @Override
@@ -207,8 +207,7 @@ public class MockImageService extends ImageService {
   public Image haarWaveletCompress(Image image, float ratio) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to compress, now start to compress");
-    //todo: add the image path
-    return new MyImage("test/img/xxx");
+    return new MyImage("test/img/car_compress.jpg");
   }
 
   @Override
@@ -216,7 +215,7 @@ public class MockImageService extends ImageService {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to get histogram, now start to get histogram");
     //todo: add the image path
-    return new MyImage("test/xxx");
+    return new MyImage("histogram.png");
   }
 
   @Override
@@ -224,7 +223,7 @@ public class MockImageService extends ImageService {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to do the color-correct, now start to correct the color");
     //todo: add the image path
-    return new MyImage("test/xxx");
+    return new MyImage("histogram-color-correct.png");
   }
 
   @Override

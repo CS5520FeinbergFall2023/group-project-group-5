@@ -619,29 +619,29 @@ public class ImageControllerTest {
   /**
    * Test the sharpen command.
    */
-//  @Test
-//  public void testSharpen() {
-//    String sharpenCommand = "load test/img/cupcake.png cupcake\n "
-//                            + "sharpen cupcake cupcake_sharpenOnce\n exit";
-//    StringReader sharpenReader = new StringReader(sharpenCommand);
-//    StringWriter sharpenWriter = new StringWriter();
-//    PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
-//
-//    ImageView sharpenImageView = new ImageView(sharpenReader, sharpenPrintWriter);
-//    MockImageService mockImageService = new MockImageService(sharpenPrintWriter);
-//    ImageController sharpenController = new ImageController(mockImageService, sharpenImageView);
-//    sharpenController.start();
-//    String output = sharpenWriter.toString();
-//    assertTrue(output.contains("Sharpen image"));
-//
-//    Image executeSharpen = sharpenController.loadedImages.get("cupcake_sharpenOnce");
-//    Image expectSharpen = new MyImage("test/img/cupcake_sharpenOnce.png");
-//
-//    assertEquals(expectSharpen, executeSharpen);
-//
-//    Image targetImage = new MyImage("test/img/cupcake.png");
-//    assertTrue(output.contains(targetImage.hashCode() + ""));
-//  }
+  @Test
+  public void testSharpen() {
+    String sharpenCommand = "load test/img/cupcake.png cupcake\n "
+                            + "sharpen cupcake cupcake_sharpenOnce\n exit";
+    StringReader sharpenReader = new StringReader(sharpenCommand);
+    StringWriter sharpenWriter = new StringWriter();
+    PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
+
+    ImageView sharpenImageView = new ImageView(sharpenReader, sharpenPrintWriter);
+    MockImageService mockImageService = new MockImageService(sharpenPrintWriter);
+    ImageController sharpenController = new ImageController(mockImageService, sharpenImageView);
+    sharpenController.start();
+    String output = sharpenWriter.toString();
+    assertTrue(output.contains("Sharpen image"));
+
+    Image executeSharpen = sharpenController.loadedImages.get("cupcake_sharpenOnce");
+    Image expectSharpen = new MyImage("test/img/cupcake_sharpenOnce.png");
+
+    assertEquals(expectSharpen, executeSharpen);
+
+    Image targetImage = new MyImage("test/img/cupcake.png");
+    assertTrue(output.contains(targetImage.hashCode() + ""));
+  }
 
   /**
    * Test the sharpen command(with split) when there exist a image.
@@ -650,7 +650,7 @@ public class ImageControllerTest {
   public void testSharpenWithSplitCommand() {
     //todo: add the image path
     String sharpenCommand = "load test/img/cupcake.png cupcake\n "
-          + "sharpen cupcake halfSharpenCupcake split 0.5 \n exit";
+          + "sharpen cupcake cupcake_sharpenOnce split 1 \n exit";
     StringReader sharpenReader = new StringReader(sharpenCommand);
     StringWriter sharpenWriter = new StringWriter();
     PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
@@ -663,8 +663,8 @@ public class ImageControllerTest {
     String output = sharpenWriter.toString();
     assertTrue(output.contains("Sharpen image"));
 
-    Image executeSharpen = sharpenController.loadedImages.get("halfSharpenCupcake");
-    Image expectSharpen = new MyImage("halfSharpenCupcake.png");
+    Image executeSharpen = sharpenController.loadedImages.get("cupcake_sharpenOnce");
+    Image expectSharpen = new MyImage("test/img/cupcake_sharpenOnce.png");
     assertEquals(expectSharpen, executeSharpen);
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
@@ -690,44 +690,43 @@ public class ImageControllerTest {
   /**
    * Test the sepia command.
    */
-//  @Test
-//  public void testSepia() {
-//    String sepiaCommand = "load test/img/city_small.png city_small\n "
-//                          + "sepia city_small city_small_sepia\n exit";
-//    StringReader sepiaReader = new StringReader(sepiaCommand);
-//    StringWriter sepiaWriter = new StringWriter();
-//    PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
-//
-//    ImageView sepiaImageView = new ImageView(sepiaReader, sepiaPrintWriter);
-//    MockImageService mockImageService = new MockImageService(sepiaPrintWriter);
-//    ImageController sepiaController = new ImageController(mockImageService, sepiaImageView);
-//    sepiaController.start();
-//    String output = sepiaWriter.toString();
-//    assertTrue(output.contains("Sepia image"));
-//
-//
-//    Image executeSepia = sepiaController.loadedImages.get("city_small_sepia");
-//    Image expectSepia = new MyImage("test/img/city_small_sepia.png");
-//
-//    assertEquals(expectSepia, executeSepia);
-//
-//    Image targetImage = new MyImage("test/img/city_small.png");
-//    assertTrue(output.contains(targetImage.hashCode() + ""));
-//  }
+  @Test
+  public void testSepia() {
+    String sepiaCommand = "load test/img/city_small.png city_small\n "
+                          + "sepia city_small city_small_sepia\n exit";
+    StringReader sepiaReader = new StringReader(sepiaCommand);
+    StringWriter sepiaWriter = new StringWriter();
+    PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
+
+    ImageView sepiaImageView = new ImageView(sepiaReader, sepiaPrintWriter);
+    MockImageService mockImageService = new MockImageService(sepiaPrintWriter);
+    ImageController sepiaController = new ImageController(mockImageService, sepiaImageView);
+    sepiaController.start();
+    String output = sepiaWriter.toString();
+    assertTrue(output.contains("Sepia image"));
+
+
+    Image executeSepia = sepiaController.loadedImages.get("city_small_sepia");
+    Image expectSepia = new MyImage("test/img/city_small_sepia.png");
+
+    assertEquals(expectSepia, executeSepia);
+
+    Image targetImage = new MyImage("test/img/city_small.png");
+    assertTrue(output.contains(targetImage.hashCode() + ""));
+  }
 
   /**
    * Test the sepia command(with split) when there exist a image.
    */
   @Test
   public void testSepiaWithSplitCommand() {
-    //todo: add the image path
-    String sepiaCommand = "load test/img/cupcake.png cupcake\n "
-          + "sepia cupcake halfSepiaCupcake split 0.5 \n exit";
+    String sepiaCommand = "load test/img/city_small.png city_small\n "
+          + "sepia city_small city_small_sepia split 1\n exit";
     StringReader sepiaReader = new StringReader(sepiaCommand);
     StringWriter sepiaWriter = new StringWriter();
     PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
 
-    Image targetImage = new MyImage("test/img/cupcake.png");
+    Image targetImage = new MyImage("test/img/city_small.png");
     ImageView sepiaImageView = new ImageView(sepiaReader, sepiaPrintWriter);
     MockImageService mockService = new MockImageService(sepiaPrintWriter);
     ImageController sepiaController = new ImageController(mockService, sepiaImageView);
@@ -735,8 +734,8 @@ public class ImageControllerTest {
     String output = sepiaWriter.toString();
     assertTrue(output.contains("Sepia image"));
 
-    Image executeSepia = sepiaController.loadedImages.get("halfSepiaCupcake");
-    Image expectSepia = new MyImage("halfSepiaCupcake.png");
+    Image executeSepia = sepiaController.loadedImages.get("city_small_sepia");
+    Image expectSepia = new MyImage("test/img/city_small_sepia.png");
     assertEquals(expectSepia, executeSepia);
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
@@ -793,7 +792,7 @@ public class ImageControllerTest {
   @Test
   public void testGreyscaleWithSplitCommand() {
     String greyscaleCommand = "load test/img/monochromatic/red.ppm red\n "
-          + "greyscale red red_grayScale_b split 0.5 \n exit";
+          + "greyscale red red_grayScale_b split 1 \n exit";
     StringReader greyscaleReader = new StringReader(greyscaleCommand);
     StringWriter greyscaleWriter = new StringWriter();
     PrintWriter greyscalePrintWriter = new PrintWriter(greyscaleWriter);
@@ -819,8 +818,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testNullCompress() {
-    //todo：add the path of the image.
-    String compressCommand = "compress 0.8 car car_compress\n exit";
+    String compressCommand = "compress 0.5 car car_compress\n exit";
     StringReader compressReader = new StringReader(compressCommand);
     StringWriter compressWriter = new StringWriter();
     PrintWriter compressPrintWriter = new PrintWriter(compressWriter);
@@ -834,13 +832,30 @@ public class ImageControllerTest {
   }
 
   /**
+   * Test the compress command when there is not image exist.
+   */
+  @Test
+  public void testCompressWithInvalidParameter() {
+    String compressCommand = "compress 1.2 car car_compress\n exit";
+    StringReader compressReader = new StringReader(compressCommand);
+    StringWriter compressWriter = new StringWriter();
+    PrintWriter compressPrintWriter = new PrintWriter(compressWriter);
+
+    ImageView compressImageView = new ImageView(compressReader, compressPrintWriter);
+    MockImageService mockImageService = new MockImageService(compressPrintWriter);
+    ImageController compressController = new ImageController(mockImageService, compressImageView);
+    compressController.start();
+    String output = compressWriter.toString();
+    assertTrue(output.contains("Ratio must be between 0 and 1."));
+  }
+
+  /**
    * Test the compress command.
    */
   @Test
-  public void testCompress() {
-    //todo：add the command and path of the image.
+  public void testCompressCommand() {
     String compressCommand = "load test/img/car.jpg car\n "
-          + "compress 0.8 car car_compress\n exit";
+          + "compress 0.5 car car_compress\n exit";
     StringReader compressReader = new StringReader(compressCommand);
     StringWriter compressWriter = new StringWriter();
     PrintWriter compressPrintWriter = new PrintWriter(compressWriter);
@@ -853,12 +868,10 @@ public class ImageControllerTest {
     assertTrue(output.contains("Compress image"));
 
     Image executeCompress = compressController.loadedImages.get("car_compress");
-    //todo：add the path of the image.
-    Image expectCompress = new MyImage("test/img/xxx");
+    Image expectCompress = new MyImage("test/img/car_compress.jpg");
 
     assertEquals(expectCompress, executeCompress);
-    //todo：add the path of the image.
-    Image targetImage = new MyImage("test/img/xxx");
+    Image targetImage = new MyImage("test/img/car.jpg");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
@@ -867,7 +880,6 @@ public class ImageControllerTest {
    */
   @Test
   public void testNullHistogram() {
-    //todo：add the command of the image.
     String histogramCommand = "histogram car car_histogram\n exit";
     StringReader histogramReader = new StringReader(histogramCommand);
     StringWriter histogramWriter = new StringWriter();
@@ -888,7 +900,7 @@ public class ImageControllerTest {
   public void testHistogram() {
     //todo：add the command and path of the image.
     String histogramCommand = "load test/img/car.jpg car\n "
-          + "histogram xxx\n exit";
+          + "histogram car histogram\n exit";
     StringReader histogramReader = new StringReader(histogramCommand);
     StringWriter histogramWriter = new StringWriter();
     PrintWriter histogramPrintWriter = new PrintWriter(histogramWriter);
@@ -899,14 +911,11 @@ public class ImageControllerTest {
     histogramController.start();
     String output = histogramWriter.toString();
     assertTrue(output.contains("Get histogram image"));
-    //todo：add the alias of the image.
-    Image executeHistogram = histogramController.loadedImages.get("xxx");
-    //todo：add the path of the image.
-    Image expectHistogram = new MyImage("test/img/xxx");
+    Image executeHistogram = histogramController.loadedImages.get("histogram");
+    Image expectHistogram = new MyImage("histogram.png");
 
     assertEquals(expectHistogram, executeHistogram);
-    //todo：add the path of the image.
-    Image targetImage = new MyImage("test/img/xxx");
+    Image targetImage = new MyImage("test/img/car.jpg");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
@@ -915,7 +924,6 @@ public class ImageControllerTest {
    */
   @Test
   public void testNullColorCorrect() {
-    //todo：add the command of the image.
     String colorCorrectCommand = "color-correct car car_color_correct\n exit";
     StringReader colorCorrectReader = new StringReader(colorCorrectCommand);
     StringWriter colorCorrectWriter = new StringWriter();
@@ -935,9 +943,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testColorCorrect() {
-    //todo：add the command and path of the image.
-    String colorCorrectCommand = "load test/img/car.jpg car\n "
-          + "color-correct xxx\n exit";
+    String colorCorrectCommand = "load histogram.png histogram\n "
+          + "color-correct histogram histogram-color-correct\n exit";
     StringReader colorCorrectReader = new StringReader(colorCorrectCommand);
     StringWriter colorCorrectWriter = new StringWriter();
     PrintWriter colorCorrectPrintWriter = new PrintWriter(colorCorrectWriter);
@@ -948,14 +955,11 @@ public class ImageControllerTest {
     colorCorrectController.start();
     String output = colorCorrectWriter.toString();
     assertTrue(output.contains("Color-Correct image"));
-    //todo：add the alias of the image.
-    Image executeColorCorrect = colorCorrectController.loadedImages.get("xxx");
-    //todo：add the path of the image.
-    Image expectColorCorrect = new MyImage("test/img/xxx");
+    Image executeColorCorrect = colorCorrectController.loadedImages.get("histogram-color-correct");
+    Image expectColorCorrect = new MyImage("histogram-color-correct.png");
 
     assertEquals(expectColorCorrect, executeColorCorrect);
-    //todo：add the path of the image.
-    Image targetImage = new MyImage("test/img/xxx");
+    Image targetImage = new MyImage("histogram.png");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
@@ -964,9 +968,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testColorCorrectWithSplitCommand() {
-    //todo：add the command and path of the image.
-    String colorCorrectCommand = "load test/img/car.jpg car\n "
-          + "color-correct xxx split 0.5\n exit";
+    String colorCorrectCommand = "load histogram.png histogram\n "
+          + "color-correct histogram histogram-color-correct split 1\n exit";
     StringReader colorCorrectReader = new StringReader(colorCorrectCommand);
     StringWriter colorCorrectWriter = new StringWriter();
     PrintWriter colorCorrectPrintWriter = new PrintWriter(colorCorrectWriter);
@@ -977,14 +980,11 @@ public class ImageControllerTest {
     colorCorrectController.start();
     String output = colorCorrectWriter.toString();
     assertTrue(output.contains("Color-Correct image"));
-    //todo：add the alias of the image.
-    Image executeColorCorrect = colorCorrectController.loadedImages.get("xxx");
-    //todo：add the path of the image.
-    Image expectColorCorrect = new MyImage("test/img/xxx");
+    Image executeColorCorrect = colorCorrectController.loadedImages.get("histogram-color-correct");
+    Image expectColorCorrect = new MyImage("histogram-color-correct.png");
 
     assertEquals(expectColorCorrect, executeColorCorrect);
-    //todo：add the path of the image.
-    Image targetImage = new MyImage("test/img/xxx");
+    Image targetImage = new MyImage("histogram.png");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
@@ -993,7 +993,6 @@ public class ImageControllerTest {
    */
   @Test
   public void testNullLevelAdjustment() {
-    //todo：add the command of the image.
     String levelAdjustCommand = "levels-adjust 54 125 220 car car_levels-adjustment\n exit";
     StringReader levelAdjustReader = new StringReader(levelAdjustCommand);
     StringWriter levelAdjustWriter = new StringWriter();
@@ -1014,7 +1013,6 @@ public class ImageControllerTest {
    */
   @Test
   public void testInvalidOrderLevelAdjustment() {
-    //todo：add the command of the image.
     String levelAdjustCommand = "load test/img/car.jpg car\n "
           + "levels-adjust 54 220 125 car car_levels_adjust\n exit";
     StringReader levelAdjustReader = new StringReader(levelAdjustCommand);
@@ -1037,7 +1035,6 @@ public class ImageControllerTest {
    */
   @Test
   public void testInvalidFormatLevelAdjustment() {
-    //todo：add the command of the image.
     String levelAdjustCommand = "load test/img/car.jpg car\n "
           + "levels-adjust 54 89.5 188 car car_levels_adjust\n exit";
     StringReader levelAdjustReader = new StringReader(levelAdjustCommand);
@@ -1059,9 +1056,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testLevelAdjustment() {
-    //todo：add the command and path of the image.
     String levelAdjustCommand = "load galaxy.png galaxy\n "
-          + "levels-adjust 54 125 220 galaxy level-adjustment split 1\n exit";
+          + "levels-adjust 54 125 220 galaxy level-adjustment\n exit";
     StringReader levelAdjustReader = new StringReader(levelAdjustCommand);
     StringWriter levelAdjustWriter = new StringWriter();
     PrintWriter levelAdjustPrintWriter = new PrintWriter(levelAdjustWriter);
@@ -1073,13 +1069,10 @@ public class ImageControllerTest {
     levelAdjustController.start();
     String output = levelAdjustWriter.toString();
     assertTrue(output.contains("Levels-adjust image"));
-    //todo：add the alias of the image.
     Image executeLevelAdjust = levelAdjustController.loadedImages.get("level-adjustment");
-    //todo：add the path of the image.
     Image expectLevelAdjust = new MyImage("level-adjustment.png");
 
     assertEquals(expectLevelAdjust, executeLevelAdjust);
-    //todo：add the path of the image.
     Image targetImage = new MyImage("galaxy.png");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
@@ -1089,7 +1082,6 @@ public class ImageControllerTest {
    */
   @Test
   public void testLevelAdjustmentWithSplitCommand() {
-    //todo：add the command and path of the image.
     String levelAdjustCommand = "load galaxy.png galaxy\n "
           + "levels-adjust 54 125 220 galaxy level-adjustment split 1\n exit";
     StringReader levelAdjustReader = new StringReader(levelAdjustCommand);
@@ -1103,17 +1095,14 @@ public class ImageControllerTest {
     levelAdjustController.start();
     String output = levelAdjustWriter.toString();
     assertTrue(output.contains("Levels-adjust image"));
-    //todo：add the alias of the image.
     Image executeLevelAdjust = levelAdjustController.loadedImages.get("level-adjustment");
-    //todo：add the path of the image.
     Image expectLevelAdjust = new MyImage("level-adjustment.png");
 
     assertEquals(expectLevelAdjust, executeLevelAdjust);
-    //todo：add the path of the image.
     Image targetImage = new MyImage("galaxy.png");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
-  
+
   /**
    * Test when user enter invalid command.
    */
