@@ -6,14 +6,12 @@ import model.Axis;
 import model.Channel;
 import model.compressor.Compressor;
 import model.pixel.Pixel;
+import model.pixel.RGBPixel;
 
 /**
  * This interface represents images, that has height, width, and 2d array of pixels.
  */
-public abstract class Image {
-  Pixel[][] pixels;
-  int height;
-  int width;
+public interface Image {
 
   /**
    * Save image to local file.
@@ -21,42 +19,21 @@ public abstract class Image {
    * @param path the file path
    * @throws IllegalArgumentException if there's problem with the path
    */
-  public abstract void save(String path) throws IllegalArgumentException;
+  void save(String path) throws IllegalArgumentException;
 
   /**
    * Get height of the image.
    *
    * @return height of the image
    */
-  public int getHeight() {
-    return this.height;
-  }
+  int getHeight();
 
   /**
    * Get width of the image.
    *
    * @return width of the image
    */
-  public int getWidth() {
-    return this.width;
-  }
-
-  Pixel getPixel(int x, int y) throws IllegalArgumentException {
-    if (x < 0 || x > this.height || y < 0 || y > this.width) {
-      throw new IllegalArgumentException("The x or y is out of bound.");
-    }
-    return pixels[x][y];
-  }
-
-  void setPixel(int x, int y, Pixel pixel) throws IllegalArgumentException {
-    if (pixel == null) {
-      throw new IllegalArgumentException("The pixel cannot be null.");
-    }
-    if (x < 0 || x > this.height || y < 0 || y > this.width) {
-      throw new IllegalArgumentException("The x or y is out of bound.");
-    }
-    pixels[x][y] = pixel;
-  }
+  int getWidth();
 
 
   /**
@@ -64,16 +41,7 @@ public abstract class Image {
    *
    * @return if this is a greyscale image
    */
-  public boolean isGreyscale() {
-    for (Pixel[] row : pixels) {
-      for (Pixel p : row) {
-        if (!p.isGreyscale()) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
+  boolean isGreyscale();
 
   /**
    * Multiply matrix to the every pixel of the image.
@@ -82,9 +50,7 @@ public abstract class Image {
    * @return the multiplied result
    * @throws IllegalArgumentException when the given matrix is illegal
    */
-  public Image matrixMultiplication(float[][] matrix) throws IllegalArgumentException {
-    return mapElement(pixel -> pixel.linearTransformation(matrix));
-  }
+  Image matrixMultiplication(float[][] matrix) throws IllegalArgumentException;
 
   /**
    * Split channels of the given image.
@@ -93,7 +59,7 @@ public abstract class Image {
    * @return the split result
    * @throws IllegalArgumentException when the given channel is illegal
    */
-  public abstract Image channelSplit(Channel channel) throws IllegalArgumentException;
+  Image channelSplit(Channel channel) throws IllegalArgumentException;
 
   /**
    * Perform filtering an image with given matrix.
@@ -101,7 +67,7 @@ public abstract class Image {
    * @param kernel the given kernel
    * @throws IllegalArgumentException when the given argument is not legal
    */
-  public abstract Image filtering(float[][] kernel);
+  Image filtering(float[][] kernel);
 
   /**
    * Map all pixels in the image with given pixel function.
@@ -109,7 +75,7 @@ public abstract class Image {
    * @param function the mapping function
    * @return the mapped result
    */
-  public abstract Image mapElement(Function<Pixel, Pixel> function);
+  Image mapElement(Function<Pixel, Pixel> function);
 
   /**
    * Project coordinate of the original component element and actually move the pixels. For example,
@@ -120,38 +86,7 @@ public abstract class Image {
    * @return the project result
    * @throws IllegalArgumentException when the given argument is illegal
    */
-  public abstract Image projectCoordinate(int[][] projectMatrix);
-
-  /**
-   * Project coordinate of the original component element but only calculate the coordinate
-   * projection relations. projectResult[y][x] = [newY,newX]
-   *
-   * @param projectMatrix the matrix to be used to perform the projection
-   * @return the project matrix
-   * @throws IllegalArgumentException when the given argument is illegal
-   */
-  int[][][] projectCoordinateCal(int[][] projectMatrix) throws IllegalArgumentException {
-    int[][][] projectResult = new int[height][width][2];
-    if (projectMatrix.length != 2 || projectMatrix[0].length != 3 || projectMatrix[1].length != 3) {
-      throw new IllegalArgumentException("Project matrix should be 2x3 for 2d image");
-    }
-    //coordinate is reverse of row/column
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        int newX = projectMatrix[0][0] * j + projectMatrix[0][1] * i + projectMatrix[0][2];
-        int newY = projectMatrix[1][0] * j + projectMatrix[1][1] * i + projectMatrix[1][2];
-        if (newY < height && newX < width) {
-          // int x=j;
-          // int y=i;
-          // resultPixels[newY][newX] = pixels[y][x];
-          projectResult[i][j] = new int[]{newY, newX};
-        } else {
-          projectResult[i][j] = new int[]{-1, -1};
-        }
-      }
-    }
-    return projectResult;
-  }
+  Image projectCoordinate(int[][] projectMatrix);
 
   /**
    * Perform addition with another image.
@@ -160,7 +95,7 @@ public abstract class Image {
    * @return the add result
    * @throws IllegalArgumentException when given argument is illegal
    */
-  public abstract Image addition(Image that) throws IllegalArgumentException;
+  Image addition(Image that) throws IllegalArgumentException;
 
   /**
    * Perform array addition an image with given matrix.
@@ -169,9 +104,7 @@ public abstract class Image {
    * @return the added result
    * @throws IllegalArgumentException when given argument is illegal
    */
-  public Image imgArrayAddition(float[] matrix) throws IllegalArgumentException {
-    return mapElement(pixel -> pixel.addition(matrix));
-  }
+  Image imgArrayAddition(float[] matrix) throws IllegalArgumentException;
 
   /**
    * Compress the image with given compressor.
@@ -179,27 +112,29 @@ public abstract class Image {
    * @param compressor the given compressor
    * @param ratio      the compress ration ([0,1])
    * @return the compressed image
+   * @throws IllegalArgumentException when given argument is illegal
    */
-  public abstract Image compress(Compressor compressor, float ratio);
+  Image compress(Compressor compressor, float ratio) throws IllegalArgumentException;
 
   /**
    * Get channels of pixels in the image.
    *
    * @return channels of pixels in the image
    */
-  public abstract Channel[] getChannels();
+  Channel[] getChannels();
 
 
   /**
-   * Split the images to 2 images according to the given percentage.
+   * Split the images to 2 images according to the given percentage on the given axis.
    *
    * @param percentage the split percentage ([0,1], the first part will be of that percentage)
    * @param axis       the axis to split (X means a vertical line split the images to 2 images
    *                   horizontally with the same height)
    * @return the split images (always with length 2, if one is empty when percentage is 0 or 1, that
    *     object will be null)
+   * @throws IllegalArgumentException when given argument is illegal
    */
-  public abstract Image[] split(float percentage, Axis axis);
+  Image[] split(float percentage, Axis axis) throws IllegalArgumentException;
 
   /**
    * Combine two images together on the given axis.
@@ -207,22 +142,23 @@ public abstract class Image {
    * @param other the other images to combine with this one
    * @param axis  the axis to combine on (X means combine two images with same height horizontally)
    * @return the combined image
+   * @throws IllegalArgumentException when given arguments are illegal
    */
-  public abstract Image combineImages(Image other, Axis axis);
+  Image combineImages(Image other, Axis axis) throws IllegalArgumentException;
 
   /**
    * Get histogram of the current image.
    *
    * @return the histogram of the current image
    */
-  public abstract Image getHistogram();
+  Image getHistogram();
 
   /**
    * Color-correct an image by aligning the meaningful peaks of its histogram.
    *
    * @return the color-corrected result
    */
-  public abstract Image colorCorrect();
+  Image colorCorrect();
 
   /**
    * Perform level adjustment on the image.
@@ -232,25 +168,9 @@ public abstract class Image {
    * @param highlight the positions of the white (highlight) point on the horizontal axis
    * @return the adjusted image
    */
-  public abstract Image levelAdjustment(float black, float mid, float highlight);
+  Image levelAdjustment(float black, float mid, float highlight);
 
-  /**
-   * Returns a string representation of the object.
-   *
-   * @return a string representation of the object.
-   */
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        sb.append(pixels[y][x].toString());
-        sb.append("   ");
-      }
-      sb.append("\n");
-    }
-    return sb.toString();
-  }
+
 
 
 }

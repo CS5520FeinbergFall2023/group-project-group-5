@@ -33,7 +33,7 @@ public class HaarWaveletCompressor implements Compressor {
    * @throws IllegalArgumentException when given matrix or ratio is illegal
    */
   @Override
-  public float[][] compress2D(float[][] matrix, float ratio) throws IllegalArgumentException {
+  public float[][] compress(float[][] matrix, float ratio) throws IllegalArgumentException {
     if (matrix.length == 0) {
       throw new IllegalArgumentException("The given matrix to compress is empty.");
     }
@@ -94,7 +94,7 @@ public class HaarWaveletCompressor implements Compressor {
    * @return the decompressed result
    */
   @Override
-  public float[][] decompress2D(float[][] compressed) {
+  public float[][] decompress(float[][] compressed) {
     if (compressed.length == 0) {
       throw new IllegalArgumentException("The given matrix to compress is empty.");
     }

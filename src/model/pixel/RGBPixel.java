@@ -10,8 +10,9 @@ import model.Channel;
  * This class represents 8 bit depth RGB pixel. Every pixel has a map representing the value of the
  * pixel in each channel (red, green, blue).
  */
-public class RGBPixel extends Pixel {
+public class RGBPixel implements Pixel {
   public static final int bitDepth = 8;
+  private final Map<Channel, Integer> channels;
 
   /**
    * Construct an RGB pixel. Every value of the channel is in the range of [0,1]. If the input is
@@ -39,6 +40,16 @@ public class RGBPixel extends Pixel {
 
   private RGBPixel(Map<Channel, Integer> channels) {
     this.channels = channels;
+  }
+
+  /**
+   * Checks if the pixel has the given channel.
+   *
+   * @param channel the channel to check.
+   * @return if the pixel has the given channel
+   */
+  public boolean containsChannel(Channel channel) {
+    return channels.containsKey(channel);
   }
 
   /**
@@ -130,9 +141,9 @@ public class RGBPixel extends Pixel {
     int red = channels.get(Channel.RED);
     int green = channels.get(Channel.GREEN);
     int blue = channels.get(Channel.BLUE);
-    int thatRed = pixel.channels.get(Channel.RED);
-    int thatGreen = pixel.channels.get(Channel.GREEN);
-    int thatBlue = pixel.channels.get(Channel.BLUE);
+    int thatRed = ((RGBPixel)pixel).getRed();
+    int thatGreen = ((RGBPixel)pixel).getGreen();
+    int thatBlue = ((RGBPixel)pixel).getBlue();
     return new RGBPixel(red + thatRed, green + thatGreen,
         blue + thatBlue);
   }
@@ -198,22 +209,6 @@ public class RGBPixel extends Pixel {
     return channels.get(Channel.GREEN);
   }
 
-  /**
-   * Subtractive pigment mix of colors (instead of additive light mix).
-   *
-   * @param other the other pixel to mix with
-   * @return the mix result
-   * @throws IllegalArgumentException when given pixel is not of the right type
-   */
-  @Override
-  public RGBPixel mix(Pixel other) throws IllegalArgumentException {
-    if (!(other instanceof RGBPixel)) {
-      throw new IllegalArgumentException("Only pixels of the same type can be mixed.");
-    }
-    return new RGBPixel((1 << bitDepth) - getRed() - ((RGBPixel) other).getRed(),
-        (1 << bitDepth) - getGreen() - ((RGBPixel) other).getGreen(),
-        (1 << bitDepth) - getBlue() - ((RGBPixel) other).getBlue());
-  }
 
   /**
    * Compare if two objects are equal.
@@ -242,6 +237,23 @@ public class RGBPixel extends Pixel {
   @Override
   public int hashCode() {
     return Objects.hash(channels);
+  }
+
+  /**
+   * Returns a string representation of the object.
+   *
+   * @return a string representation of the object.
+   */
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    for (Channel channel : channels.keySet()) {
+      sb.append(channel);
+      sb.append(":");
+      sb.append(channels.get(channel));
+      sb.append(" ");
+    }
+    return sb.toString();
   }
 
 }

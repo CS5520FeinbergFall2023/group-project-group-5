@@ -24,7 +24,10 @@ import model.pixel.RGBPixel;
 /**
  * This class represents 8 bit depth RGB image, that has height, width, and 2d array of RGB pixels.
  */
-public class MyImage extends Image {
+public class MyImage implements Image {
+  private final RGBPixel[][] pixels;
+  private final int height;
+  private final int width;
 
   /**
    * Construct all black image with given height and width.
@@ -46,7 +49,7 @@ public class MyImage extends Image {
     }
   }
 
-  private MyImage(Pixel[][] pixels) {
+  private MyImage(RGBPixel[][] pixels) {
     int height = pixels.length;
     if (height == 0) {
       throw new IllegalArgumentException("Invalid pixels size.");
@@ -57,16 +60,11 @@ public class MyImage extends Image {
         throw new IllegalArgumentException("Pixels must be a rectangle");
       }
     }
-
-    for (Pixel[] row : pixels) {
-      if (!(row instanceof RGBPixel[])) {
-        throw new IllegalArgumentException("MyImage must be consisted of RGBPixels");
-      }
-    }
     this.height = height;
     this.width = width;
     this.pixels = pixels;
   }
+
 
   private MyImage(MyImage other) {
     height = other.height;
@@ -78,6 +76,26 @@ public class MyImage extends Image {
             other.getPixel(row, col).getGreen(), other.getPixel(row, col).getBlue());
       }
     }
+  }
+
+  /**
+   * Get height of the image.
+   *
+   * @return height of the image
+   */
+  @Override
+  public int getHeight() {
+    return this.height;
+  }
+
+  /**
+   * Get width of the image.
+   *
+   * @return width of the image
+   */
+  @Override
+  public int getWidth() {
+    return this.width;
   }
 
   /**
@@ -94,80 +112,73 @@ public class MyImage extends Image {
     }
     try {
       if (path.endsWith(".jpg") || path.endsWith(".jpeg") || path.endsWith(".png")) {
-        loadJPGPNG(path);
+        BufferedImage image;
+        File file = new File(path);
+        if (!file.isAbsolute()) {
+          file = new File(System.getProperty("user.dir"), path);
+        }
+        image = ImageIO.read(file);
+        if (image == null) {
+          throw new IllegalArgumentException("The image format is not correct");
+        }
+        width = image.getWidth();
+        height = image.getHeight();
+        pixels = new RGBPixel[height][width];
+        for (int y = 0; y < height; y++) {
+          for (int x = 0; x < width; x++) {
+            int pixel = image.getRGB(x, y);
+            int red = (pixel >> 16) & 0xFF;
+            int green = (pixel >> 8) & 0xFF;
+            int blue = pixel & 0xFF;
+            pixels[y][x] = new RGBPixel(red, green, blue);
+          }
+        }
       } else if (path.endsWith(".ppm")) {
-        loadPPM(path);
+        Scanner sc;
+        try {
+          File file = new File(path);
+          if (!file.isAbsolute()) {
+            file = new File(System.getProperty("user.dir"), path);
+          }
+          sc = new Scanner(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+          throw new IOException("File " + path + " not found!");
+        }
+        StringBuilder builder = new StringBuilder();
+        //read the file line by line, and populate a string. This will throw away any comment lines
+        while (sc.hasNextLine()) {
+          String s = sc.nextLine();
+          if (s.charAt(0) != '#') {
+            builder.append(s).append(System.lineSeparator());
+          }
+        }
+        //now set up the scanner to read from the string we just built
+        sc = new Scanner(builder.toString());
+        String token;
+        token = sc.next();
+        if (!token.equals("P3")) {
+          throw new IllegalArgumentException(
+              "Invalid PPM file: plain RAW file should begin with P3");
+        }
+        this.width = sc.nextInt();
+        this.height = sc.nextInt();
+        sc.nextInt();
+
+        pixels = new RGBPixel[height][width];
+        for (int i = 0; i < height; i++) {
+          for (int j = 0; j < width; j++) {
+            int r = sc.nextInt();
+            int g = sc.nextInt();
+            int b = sc.nextInt();
+            pixels[i][j] = new RGBPixel(r, g, b);
+          }
+        }
       } else {
         throw new IllegalArgumentException("Extension not supported.");
       }
     } catch (IllegalArgumentException | IOException e) {
       throw new IllegalArgumentException("Path does not exist or something wrong with file format"
                                          + ".");
-    }
-  }
-
-  private void loadPPM(String path) throws IOException, IllegalArgumentException {
-    Scanner sc;
-    try {
-      File file = new File(path);
-      if (!file.isAbsolute()) {
-        file = new File(System.getProperty("user.dir"), path);
-      }
-      sc = new Scanner(new FileInputStream(file));
-    } catch (FileNotFoundException e) {
-      throw new IOException("File " + path + " not found!");
-    }
-    StringBuilder builder = new StringBuilder();
-    //read the file line by line, and populate a string. This will throw away any comment lines
-    while (sc.hasNextLine()) {
-      String s = sc.nextLine();
-      if (s.charAt(0) != '#') {
-        builder.append(s).append(System.lineSeparator());
-      }
-    }
-    //now set up the scanner to read from the string we just built
-    sc = new Scanner(builder.toString());
-    String token;
-    token = sc.next();
-    if (!token.equals("P3")) {
-      throw new IllegalArgumentException("Invalid PPM file: plain RAW file should begin with P3");
-    }
-    this.width = sc.nextInt();
-    this.height = sc.nextInt();
-    sc.nextInt();
-
-    pixels = new RGBPixel[height][width];
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        int r = sc.nextInt();
-        int g = sc.nextInt();
-        int b = sc.nextInt();
-        pixels[i][j] = new RGBPixel(r, g, b);
-      }
-    }
-  }
-
-  private void loadJPGPNG(String path) throws IOException, IllegalArgumentException {
-    BufferedImage image;
-    File file = new File(path);
-    if (!file.isAbsolute()) {
-      file = new File(System.getProperty("user.dir"), path);
-    }
-    image = ImageIO.read(file);
-    if (image == null) {
-      throw new IllegalArgumentException("The image format is not correct");
-    }
-    width = image.getWidth();
-    height = image.getHeight();
-    pixels = new RGBPixel[height][width];
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        int pixel = image.getRGB(x, y);
-        int red = (pixel >> 16) & 0xFF;
-        int green = (pixel >> 8) & 0xFF;
-        int blue = pixel & 0xFF;
-        pixels[y][x] = new RGBPixel(red, green, blue);
-      }
     }
   }
 
@@ -249,16 +260,14 @@ public class MyImage extends Image {
     ImageIO.write(bufferedImage, format, file);
   }
 
-  @Override
   RGBPixel getPixel(int x, int y) {
     if (x < 0 || x > this.height || y < 0 || y > this.width) {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
-    return (RGBPixel) pixels[x][y];
+    return pixels[x][y];
   }
 
-  @Override
-  void setPixel(int x, int y, Pixel pixel) {
+  private void setPixel(int x, int y, Pixel pixel) {
     if (pixel == null) {
       throw new IllegalArgumentException("The pixel cannot be null.");
     }
@@ -268,7 +277,36 @@ public class MyImage extends Image {
     if (!(pixel instanceof RGBPixel)) {
       throw new IllegalArgumentException("MyImage should only contain RGB pixels");
     }
-    pixels[x][y] = pixel;
+    pixels[x][y] = (RGBPixel) pixel;
+  }
+
+  /**
+   * Check if this is a greyscale image.
+   *
+   * @return if this is a greyscale image
+   */
+  @Override
+  public boolean isGreyscale() {
+    for (Pixel[] row : pixels) {
+      for (Pixel p : row) {
+        if (!p.isGreyscale()) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Multiply matrix to the every pixel of the image.
+   *
+   * @param matrix the multiplying image
+   * @return the multiplied result
+   * @throws IllegalArgumentException when the given matrix is illegal
+   */
+  @Override
+  public Image matrixMultiplication(float[][] matrix) throws IllegalArgumentException {
+    return mapElement(pixel -> pixel.linearTransformation(matrix));
   }
 
   /**
@@ -355,7 +393,7 @@ public class MyImage extends Image {
    */
   @Override
   public MyImage imgArrayAddition(float[] matrix) throws IllegalArgumentException {
-    return (MyImage) super.imgArrayAddition(matrix);
+    return mapElement(pixel -> pixel.addition(matrix));
   }
 
   /**
@@ -367,7 +405,7 @@ public class MyImage extends Image {
    */
   @Override
   public MyImage addition(Image that) throws IllegalArgumentException {
-    if (this.width != that.width || this.height != that.height) {
+    if (this.width != that.getWidth() || this.height != that.getHeight()) {
       throw new IllegalArgumentException("Image size not match");
     }
     RGBPixel[][] resultPixels = new RGBPixel[height][width];
@@ -378,7 +416,7 @@ public class MyImage extends Image {
     }
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        resultPixels[i][j] = resultPixels[i][j].addition(that.pixels[i][j]);
+        resultPixels[i][j] = resultPixels[i][j].addition(((MyImage) that).getPixel(i, j));
       }
     }
 
@@ -398,19 +436,21 @@ public class MyImage extends Image {
     if (projectMatrix.length != 2 || projectMatrix[0].length != 3 || projectMatrix[1].length != 3) {
       throw new IllegalArgumentException("Project matrix should be 2x3 for MyImage");
     }
-    int[][][] projectResult = projectCoordinateCal(projectMatrix);
     RGBPixel[][] resultPixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         resultPixels[i][j] = new RGBPixel(0, 0, 0);
       }
     }
+    //coordinate is reverse of row/column
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        int newX = projectResult[i][j][1];
-        int newY = projectResult[i][j][0];
+        int newX = projectMatrix[0][0] * j + projectMatrix[0][1] * i + projectMatrix[0][2];
+        int newY = projectMatrix[1][0] * j + projectMatrix[1][1] * i + projectMatrix[1][2];
         if (newY < height && newX < width && newY >= 0 && newX >= 0) {
-          resultPixels[newY][newX] = (RGBPixel) pixels[i][j];
+          int x = j;
+          int y = i;
+          resultPixels[newY][newX] = pixels[y][x];
         }
       }
     }
@@ -452,9 +492,13 @@ public class MyImage extends Image {
    * @param compressor the given compressor
    * @param ratio      the compress ration ([0,1])
    * @return the compressed image
+   * @throws IllegalArgumentException when given argument is illegal
    */
   @Override
-  public Image compress(Compressor compressor, float ratio) {
+  public MyImage compress(Compressor compressor, float ratio) {
+    if (compressor == null) {
+      throw new IllegalArgumentException("The given compressor is null");
+    }
     if (ratio < 0 || ratio > 1) {
       throw new IllegalArgumentException("Ratio cannot be smaller than 0 or larger than 1.");
     }
@@ -469,11 +513,11 @@ public class MyImage extends Image {
       }
     }
     float[][] redPixelsCompressed =
-        compressor.decompress2D(compressor.compress2D(redPixels, ratio));
-    float[][] greenPixelsCompressed = compressor.decompress2D(compressor.compress2D(greenPixels,
+        compressor.decompress(compressor.compress(redPixels, ratio));
+    float[][] greenPixelsCompressed = compressor.decompress(compressor.compress(greenPixels,
         ratio));
     float[][] bluePixelsCompressed =
-        compressor.decompress2D(compressor.compress2D(bluePixels, ratio));
+        compressor.decompress(compressor.compress(bluePixels, ratio));
     // restore as original size and discard the padding.
     RGBPixel[][] pixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
@@ -487,18 +531,22 @@ public class MyImage extends Image {
   }
 
   /**
-   * Split the images to 2 images according to the given percentage.
+   * Split the images to 2 images according to the given percentage on the given axis.
    *
    * @param percentage the split percentage ([0,1], the first part will be of that percentage)
    * @param axis       the axis to split (X means a vertical line split the images to 2 images
    *                   horizontally with the same height)
    * @return the split images (always with length 2, if one is empty when percentage is 0 or 1, that
    *     object will be null)
+   * @throws IllegalArgumentException when given arguments are illegal
    */
   @Override
-  public MyImage[] split(float percentage, Axis axis) {
+  public MyImage[] split(float percentage, Axis axis) throws IllegalArgumentException {
     if (percentage < 0 || percentage > 1) {
       throw new IllegalArgumentException("The split percentage should be within [0,1]");
+    }
+    if (axis == null) {
+      throw new IllegalArgumentException("Split axis cannot be null");
     }
     MyImage[] result = new MyImage[2];
     int wholeLength = (axis == Axis.X) ? width : height;
@@ -559,9 +607,13 @@ public class MyImage extends Image {
    * @param other the other images to combine with this one
    * @param axis  the axis to combine on (X means combine two images with same height horizontally)
    * @return the combined image
+   * @throws IllegalArgumentException when given argument is illegal
    */
   @Override
-  public MyImage combineImages(Image other, Axis axis) {
+  public MyImage combineImages(Image other, Axis axis) throws IllegalArgumentException {
+    if (axis == null) {
+      throw new IllegalArgumentException("Combine axis cannot be null");
+    }
     if (other == null) {
       return this;
     }
@@ -579,9 +631,10 @@ public class MyImage extends Image {
               getPixel(i, j).getBlue());
         }
         for (int j = 0; j < other.getWidth(); j++) {
-          newPixels[i][width + j] = new RGBPixel(((RGBPixel) other.getPixel(i, j)).getRed(),
-              ((RGBPixel) other.getPixel(i, j)).getGreen(),
-              ((RGBPixel) other.getPixel(i, j)).getBlue());
+          newPixels[i][width + j] =
+              new RGBPixel((((MyImage) other).getPixel(i, j)).getRed(),
+                  (((MyImage) other).getPixel(i, j)).getGreen(),
+                  (((MyImage) other).getPixel(i, j)).getBlue());
         }
       }
       return new MyImage(newPixels);
@@ -597,9 +650,9 @@ public class MyImage extends Image {
               getPixel(i, j).getBlue());
         }
         for (int i = 0; i < other.getHeight(); i++) {
-          newPixels[height + i][j] = new RGBPixel(((RGBPixel) other.getPixel(i, j)).getRed(),
-              ((RGBPixel) other.getPixel(i, j)).getGreen(),
-              ((RGBPixel) other.getPixel(i, j)).getBlue());
+          newPixels[height + i][j] = new RGBPixel((((MyImage) other).getPixel(i, j)).getRed(),
+              (((MyImage) other).getPixel(i, j)).getGreen(),
+              (((MyImage) other).getPixel(i, j)).getBlue());
         }
       }
       return new MyImage(newPixels);
@@ -610,15 +663,7 @@ public class MyImage extends Image {
    * Get appearance frequency of colors in the image.
    */
   private float[][] getFrequency() {
-//    float[][] greyscale = new float[][]{
-//        {0.2126f, 0.7152f, 0.0722f},
-//        {0.2126f, 0.7152f, 0.0722f},
-//        {0.2126f, 0.7152f, 0.0722f}
-//    };
     int length = 1 << RGBPixel.bitDepth;
-//    MyImage redGreyscale = (MyImage) channelSplit(Channel.RED).matrixMultiplication(greyscale);
-//    MyImage greenGreyscale = (MyImage) channelSplit(Channel.GREEN).matrixMultiplication(greyscale);
-//    MyImage blueGreyscale = (MyImage) channelSplit(Channel.BLUE).matrixMultiplication(greyscale);
     float[] redCount = new float[length];
     float[] greenCount = new float[length];
     float[] blueCount = new float[length];
@@ -638,7 +683,7 @@ public class MyImage extends Image {
     return new float[][]{redCount, greenCount, blueCount};
   }
 
-  private float getMax(float... nums) {
+  private float getMax(float... nums) throws IllegalArgumentException{
     if (nums == null || nums.length == 0) {
       throw new IllegalArgumentException("Nums are null or empty");
     }
@@ -649,19 +694,6 @@ public class MyImage extends Image {
     }
 
     return max;
-  }
-
-  private float getMin(float... nums) {
-    if (nums == null || nums.length == 0) {
-      throw new IllegalArgumentException("Nums are null or empty");
-    }
-    float min = Float.POSITIVE_INFINITY;
-
-    for (float value : nums) {
-      min = Math.min(min, value);
-    }
-
-    return min;
   }
 
   private int findIndexOf(float value, float[] arr) {
@@ -698,14 +730,10 @@ public class MyImage extends Image {
       greenIndices[i] = dimension - 1 - Math.round(greenFreq[i] / gap);
       blueIndices[i] = dimension - 1 - Math.round(blueFreq[i] / gap);
     }
-    System.out.println(Arrays.toString(redIndices));
-    System.out.println(Arrays.toString(greenIndices));
-    System.out.println(Arrays.toString(blueIndices));
     for (int x = 0; x < dimension; x++) {
       int redIndex = redIndices[x];
       int greenIndex = greenIndices[x];
       int blueIndex = blueIndices[x];
-      //todo: overlap with the second color or blend/mix?
       //the final one
       if (x == dimension - 1) {
         histogramPixels[redIndex][x] = new RGBPixel(255, 0, 0);
@@ -779,7 +807,7 @@ public class MyImage extends Image {
    * @throws IllegalArgumentException when given arguments is illegal (outside the range [0,255])
    */
   @Override
-  public MyImage levelAdjustment(float black, float mid, float white) {
+  public MyImage levelAdjustment(float black, float mid, float white) throws IllegalArgumentException {
     if (black < 0 || black > (1 << RGBPixel.bitDepth) || mid < 0 || mid > (1 << RGBPixel.bitDepth)
         || white < 0 || white > (1 << RGBPixel.bitDepth)) {
       throw new IllegalArgumentException("Black, mid and white should all be in range [0, 255]");
@@ -849,5 +877,23 @@ public class MyImage extends Image {
     int result = Objects.hash(height, width);
     result = 31 * result + Arrays.deepHashCode(pixels);
     return result;
+  }
+
+  /**
+   * Returns a string representation of the object.
+   *
+   * @return a string representation of the object.
+   */
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        sb.append(pixels[y][x].toString());
+        sb.append("   ");
+      }
+      sb.append("\n");
+    }
+    return sb.toString();
   }
 }

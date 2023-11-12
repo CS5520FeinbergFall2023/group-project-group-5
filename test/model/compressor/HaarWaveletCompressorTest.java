@@ -46,7 +46,7 @@ public class HaarWaveletCompressorTest {
         {7, 8, 9}
     };
     float targetRatio = 0f;
-    float[][] result = instance.compress2D(originalMatrix, targetRatio);
+    float[][] result = instance.compress(originalMatrix, targetRatio);
     float[][] expected = new float[][]
         {
             {11.25f, 2.25f, -1.5f / HaarWaveletCompressor.sqrt2, 9 / HaarWaveletCompressor.sqrt2},
@@ -64,7 +64,7 @@ public class HaarWaveletCompressorTest {
         {4, 5, 6}
     };
     float targetRatio = 0f;
-    float[][] result = instance.compress2D(originalMatrix, targetRatio);
+    float[][] result = instance.compress(originalMatrix, targetRatio);
     float[][] expected = new float[][]{
         {10.5f / HaarWaveletCompressor.sqrt2, 1.5f / HaarWaveletCompressor.sqrt2, -1f, 4.5f},
         {-4.5f / HaarWaveletCompressor.sqrt2, -1.5f / HaarWaveletCompressor.sqrt2, 0, -1.5f}
@@ -81,7 +81,7 @@ public class HaarWaveletCompressorTest {
         {7, 8}
     };
     float targetRatio = 0f;
-    float[][] result = instance.compress2D(originalMatrix, targetRatio);
+    float[][] result = instance.compress(originalMatrix, targetRatio);
     float[][] expected = new float[][]
         {
             {13.5f / HaarWaveletCompressor.sqrt2, -1.5f / HaarWaveletCompressor.sqrt2},
@@ -102,7 +102,7 @@ public class HaarWaveletCompressorTest {
         {13, 14, 15, 16}
     };
     float targetRatio = 0f;
-    float[][] result = instance.compress2D(originalMatrix, targetRatio);
+    float[][] result = instance.compress(originalMatrix, targetRatio);
     float[][] expected = new float[][]{
         {34, -4, -HaarWaveletCompressor.sqrt2, -HaarWaveletCompressor.sqrt2},
         {-16, 0, 0, 0},
@@ -111,7 +111,7 @@ public class HaarWaveletCompressorTest {
     };
     assertTrue(if2DArraysEqual(expected, result, 0.001f));
 
-    result = instance.compress2D(originalMatrix, 1);
+    result = instance.compress(originalMatrix, 1);
     expected = new float[][]{
         {0, 0, 0, 0},
         {0, 0, 0, 0},
@@ -120,7 +120,7 @@ public class HaarWaveletCompressorTest {
     };
     assertTrue(if2DArraysEqual(expected, result, 0.001f));
 
-    result = instance.compress2D(originalMatrix, 0.5f);
+    result = instance.compress(originalMatrix, 0.5f);
     expected = new float[][]{
         {34, -4, -HaarWaveletCompressor.sqrt2, -HaarWaveletCompressor.sqrt2},
         {-16, 0, 0, 0},
@@ -141,7 +141,7 @@ public class HaarWaveletCompressorTest {
         {11, 12}
     };
     float targetRatio = 0f;
-    float[][] result = instance.compress2D(originalMatrix, targetRatio);
+    float[][] result = instance.compress(originalMatrix, targetRatio);
     float[][] expected = new float[][]{
         {19.5f, -1.5f},
         {-1.5f, -0.5f},
@@ -162,7 +162,7 @@ public class HaarWaveletCompressorTest {
         {7, 8, 9, 10, 11, 12},
     };
     float targetRatio = 0f;
-    float[][] result = instance.compress2D(originalMatrix, targetRatio);
+    float[][] result = instance.compress(originalMatrix, targetRatio);
     float[][] expected = new float[][]{
         {19.5f, 2.5f, -4 / HaarWaveletCompressor.sqrt2, 17 / HaarWaveletCompressor.sqrt2, -1, -1,
             -1, 0},
@@ -175,12 +175,12 @@ public class HaarWaveletCompressorTest {
   //-----------------2D decompress-----------------------------
   @Test(expected = IllegalArgumentException.class)
   public void testDecompressSizeZero() {
-    instance.decompress2D(new float[][]{});
+    instance.decompress(new float[][]{});
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testDecompressSizeOddWidth() {
-    instance.decompress2D(new float[][]{
+    instance.decompress(new float[][]{
         {1, 2, 3},
         {4, 5, 6}
     });
@@ -188,7 +188,7 @@ public class HaarWaveletCompressorTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testDecompressSizeOddHeight() {
-    instance.decompress2D(new float[][]{
+    instance.decompress(new float[][]{
         {1, 2},
         {4, 5},
         {7, 8}
@@ -197,7 +197,7 @@ public class HaarWaveletCompressorTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testDecompressSizeOdd() {
-    instance.decompress2D(new float[][]{
+    instance.decompress(new float[][]{
         {1, 2, 3},
         {4, 5, 6},
         {7, 8, 9}
@@ -206,7 +206,7 @@ public class HaarWaveletCompressorTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testDecompressSizeEvenNotPow() {
-    instance.decompress2D(new float[][]{
+    instance.decompress(new float[][]{
         {1, 2, 3, 4, 5, 6},
         {1, 2, 3, 4, 5, 6},
         {1, 2, 3, 4, 5, 6},
@@ -225,7 +225,7 @@ public class HaarWaveletCompressorTest {
         {-8f / HaarWaveletCompressor.sqrt2, 0, 0, 0},
         {-8f / HaarWaveletCompressor.sqrt2, 0, 0, 0}
     };
-    float[][] decompressed = instance.decompress2D(compressed);
+    float[][] decompressed = instance.decompress(compressed);
     float[][] originalMatrix = new float[][]{
         {1, 2, 3, 4},
         {5, 6, 7, 8},
@@ -257,7 +257,7 @@ public class HaarWaveletCompressorTest {
         {0, 0},
         {0, 0}
     };
-    float[][] decompressed = instance.decompress2D(compressed);
+    float[][] decompressed = instance.decompress(compressed);
     assertTrue(if2DArraysEqual(originalMatrix, decompressed, 0.001f));
   }
 
@@ -272,7 +272,7 @@ public class HaarWaveletCompressorTest {
         {1, 2, 3, 4, 5, 6, 0, 0},
         {7, 8, 9, 10, 11, 12, 0, 0},
     };
-    float[][] decompressed = instance.decompress2D(compressed);
+    float[][] decompressed = instance.decompress(compressed);
     assertTrue(if2DArraysEqual(originalMatrix, decompressed, 0.001f));
   }
 
@@ -290,7 +290,7 @@ public class HaarWaveletCompressorTest {
         {7, 8},
         {0, 0}
     };
-    float[][] decompressed = instance.decompress2D(compressed);
+    float[][] decompressed = instance.decompress(compressed);
     assertTrue(if2DArraysEqual(originalMatrix, decompressed, 0.001f));
   }
 
@@ -304,7 +304,7 @@ public class HaarWaveletCompressorTest {
         {1, 2, 3, 0},
         {4, 5, 6, 0}
     };
-    float[][] decompressed = instance.decompress2D(compressed);
+    float[][] decompressed = instance.decompress(compressed);
     assertTrue(if2DArraysEqual(originalMatrix, decompressed, 0.001f));
   }
 
@@ -317,7 +317,7 @@ public class HaarWaveletCompressorTest {
             {-4.5f / HaarWaveletCompressor.sqrt2, -1.5f / HaarWaveletCompressor.sqrt2, 0, -1.5f},
             {12 / HaarWaveletCompressor.sqrt2, 3 / HaarWaveletCompressor.sqrt2, -0.5f, 4.5f}
         };
-    float[][] decompressed = instance.decompress2D(compressed);
+    float[][] decompressed = instance.decompress(compressed);
     float[][] originalMatrix = new float[][]{
         {1, 2, 3, 0},
         {4, 5, 6, 0},
@@ -336,7 +336,7 @@ public class HaarWaveletCompressorTest {
             {0, 0, 0, 0},
             {0, 0, 0, 0}
         };
-    float[][] decompressed = instance.decompress2D(compressed);
+    float[][] decompressed = instance.decompress(compressed);
     float[][] originalMatrix = new float[][]{
         {0, 0, 0, 0},
         {0, 0, 0, 0},
@@ -354,7 +354,7 @@ public class HaarWaveletCompressorTest {
         {0, 0, 0, 0},
         {0, 0, 0, 0}
     };
-    float[][] decompressed = instance.decompress2D(compressed);
+    float[][] decompressed = instance.decompress(compressed);
     float[][] originalMatrix = new float[][]{
         {8.5f, 8.5f, 8.5f, 8.5f},
         {8.5f, 8.5f, 8.5f, 8.5f},

@@ -21,6 +21,9 @@ src/
 ├─ controller/
 │  ├─ ImageController.java
 ├─ model/
+│  ├─ compressor/
+│  │  ├─ Compressor.java
+│  │  ├─ HaarWaveletCompressor.java
 │  ├─ image/
 │  │  ├─ Image.java
 │  │  ├─ MyImage.java
@@ -59,17 +62,12 @@ The package structure is as follows:
 
 Other interfaces and design purpose is further explained down below.
 
-## Abstract class
+## Interface
 
 ### Pixel
 
 #### Purpose
 This interface is used to describe pixels. All pixels use a map to store the channels it has and the values in the corresponding channel.
-
-#### Fields
-
-- Map<Channel, Integer> channels
-    - Represents every channel and value of each channel in the pixel.
 
 #### Methods
 
@@ -121,44 +119,27 @@ The key design here is to categorize image operations according to the mechanism
 | sharpen   | filtering    |
 | sepia   | matrix multiplication    |
 
-#### Fields
-- Pixel[][] pixels
-    - 2D Pixel array that represents every pixel in the image
-- int height
-    - int that represents the height of the image
-- int width
-    - int that represents the width of the image
-
 #### Methods
-- public abstract void save(String path) throws IllegalArgumentException;
+- void save(String path) throws IllegalArgumentException;
     - Save image to local file.
-- public int getHeight()
+- int getHeight();
     - Get height of the image.
-- public int getWidth()
+- int getWidth();
     - Get width of the image.
 
-- Pixel getPixel(int x, int y) throws IllegalArgumentException
-    - Package-private method to get pixel at certain position.
-
-- void setPixel(int x, int y, Pixel pixel) throws IllegalArgumentException
-    - Package-private method to set pixel at certain position.
-
-- public boolean isGreyscale()
-    - Check if an image is greyscale by checking if all of its pixels are greyscale. 
-
-- public Image matrixMultiplication(float[][] matrix) throws IllegalArgumentException
+- Image matrixMultiplication(float[][] matrix) throws IllegalArgumentException;
     - Perform matrix multiplication on each of the pixel in the image and return image with the result pixels. This fuction achived by making use of mapElement(pixel -> pixel.linearTransformation(matrix)). Please see down below for introduction to function mapElement.
 
-- public abstract Image channelSplit(Channel channel) throws IllegalArgumentException;
+- Image channelSplit(Channel channel) throws IllegalArgumentException;
     - Split image of the given channel (resulted in one colored image).
 
-- public abstract Image filtering(float[][] kernel);
+- Image filtering(float[][] kernel);
     - Perform filtering on the image
 
-- public abstract Image mapElement(Function<Pixel, Pixel> function);
+- Image mapElement(Function<Pixel, Pixel> function);
     - Gets a new image that is resulted from performing the same function to every pixel in the original image in the corresponding position through row and column traverse. This fuction helps with code reuse when many image operations are traversing all pixels in the image and doing the same thing to each of the pixel. 
 
-- public abstract Image projectCoordinate(int[][] projectMatrix);
+- Image projectCoordinate(int[][] projectMatrix);
     - Project coordinate of the original component element and actually move the pixels. For example,
 
         1 0 w
@@ -168,22 +149,49 @@ The key design here is to categorize image operations according to the mechanism
     
         projects (x,y) to (x+w,-y+h), and project accordingly pixels in the old image to the new one.
 
-- int[][][] projectCoordinateCal(int[][] projectMatrix) throws IllegalArgumentException
-    - Project coordinate of the original component element but only calculate the coordinate projection relations. projectResult[y][x] = [newY,newX]. Though abstract class can not really make new instances, this function has shared code about coordinate projection and can be used by concrete-class-implemented projectCoordinate to help return projected image.
-
-- public abstract Image addition(Image that);
+- Image addition(Image that) throws IllegalArgumentException;
     - Perform addition with another image.
 
-- public Image imgArrayAddition(float[] matrix)
+- Image imgArrayAddition(float[] matrix) throws IllegalArgumentException;
     - Perform array addition an image with given matrix. This is acheived by performing array addition on every pixel, by utilizing mapElement(pixel -> pixel.addition(matrix))
 
-- public abstract Channel[] getChannels()
+- Channel[] getChannels();
     - Get channels of pixels in the image.
 
-- public String toString()
-    - Returns a string representation of the object.
+- Image[] split(float percentage, Axis axis) throws IllegalArgumentException;
+    - Split the images to 2 images according to the given percentage on the given axis.
 
-## Interface
+- Image combineImages(Image other, Axis axis) throws IllegalArgumentException;
+    - Combine two images together on the given axis.
+
+- Image getHistogram();
+    - Get histogram of the current image.
+
+- Image colorCorrect();
+    - Color-correct an image by aligning the meaningful peaks of its histogram.
+
+- Image levelAdjustment(float black, float mid, float highlight);
+    - Perform level adjustment on the image.
+
+
+
+
+### Compressor
+This interface represents compressors that can compress and decompress given data. It currently has the following overriding methods to deal with 1D and 2D arrays.
+
+#### Methods
+
+- float[][] compress(float[][] matrix, float ratio);
+    - Compress a 2D float array with given ratio.
+
+- float[] compress(float[] nums, float ratio);
+    - Compress an 1D float array.
+    
+- float[][] decompress(float[][] compressed);
+    - Decompress a 2D float array with given ratio.
+
+- float[] decompress(float[] compressed);
+    - Decompress an 1D float array.
 
 ## Enums
 
@@ -252,27 +260,22 @@ This class represents RGB pixels, that is, pixels with and only with RGB channel
 This class represents 8 bit depth RGB images that is consisted of RGBPixels. It extends the Image abstract class.
 
 #### Fields
-- RGBPixel[][] pixels
+- private final RGBPixel[][] pixels
     - 2D RGBPixel array that represents every pixel in the image
-- int height
+- private final int height
     - int that represents the height of the image
-- int width
+- private final int width
     - int that represents the width of the image
 
 #### Methods
 -  public MyImage(int height, int width)
     - Construct all black image with given height and width.
+
 -  private MyImage(Pixel[][] pixels)
     - Private constructor that takes 2d array of pixels and checks if the type are RGBPixels and construct with given pixels array.
 
 -  public MyImage(String path) throws IllegalArgumentException
-    - Construct an image with given local path. It calls different tool functions to read from local file according to the extension.
-
--  private void loadPPM(String path) throws IOException, IllegalArgumentException
-    - Private helper functions that loads from local PPM file.
-
--  private void loadJPGPNG(String path) throws IOException, IllegalArgumentException
-    - Private helper functions that loads from local JPG/PNG file.
+    - Construct an image with given local path. It uses bufferedImage if given image is JPG or PNG, and directly parses the file if the image is PPM.
 
 -  public void save(String path) throws IllegalArgumentException
     - Save image to local file. It calls different tool functions to save to local file according to the extension.
@@ -283,11 +286,14 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
 -  private void saveJPGPNG(String path, String format)
     -Private helper functions that saves MyImage to local JPG/PNG file. 
 
--  void setPixel(int x, int y, Pixel pixel)
+-  private void setPixel(int x, int y, Pixel pixel)
     - Set pixel at position x, y in this image to the given pixel.
 
--   RGBPixel getPixel(int x, int y)
-    - Gets the pixel at x,y
+-  RGBPixel getPixel(int x, int y)
+    - Gets the pixel at x,y.
+
+- boolean isGreyscale();
+    - Check if an image is greyscale by checking if all of its pixels are greyscale. 
 
 -  public MyImage filtering(float[][] kernel) throws IllegalArgumentException
     - Perform filtering an image with given matrix. By traversing and putting the center of the kernel to each position on the image and calculates the area it covers, it adds the values when corresponding pixel and kernel element multiply to make the final result of the pixel where the kernel now lies.
@@ -302,7 +308,7 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
     - Perform addition with another image by adding every pair of pixels.
 
 -  public MyImage projectCoordinate(int[][] projectMatrix)
-    - Project coordinate of the original component element. For example, 1 0 w 0 -1 h projects (x,y) to (x+w,-y+h), and project accordingly pixels in the old image to the new one. It made use of the parent's projectCoordinateCal tool function and projects the pixels to the result new image.
+    - Project coordinate of the original component element. For example, 1 0 w 0 -1 h projects (x,y) to (x+w,-y+h), and project accordingly pixels in the old image to the new one. 
 
 -  public MyImage mapElement(Function<Pixel, Pixel> function)
     - Map all pixels in the image with given pixel function with traversal.
@@ -310,12 +316,43 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
 -  public Channel[] getChannels()
     - Get channels of pixels in the image. For this case, Channel.RED, Channel.GREEN and Channel.BLUE
 
+- public MyImage compress(Compressor compressor, float ratio)
+    - Compress the image by calling compress on the value array of red channel, green channel and blue channel of the image first, and then call decompress on them and truncate the result to make sure the result image is of the same size as the original one.
+
+- public MyImage[] split(float percentage, Axis axis) throws IllegalArgumentException
+    - Split the images to 2 images according to the given percentage by calculating the size(round to the nearest integer) of the two parts and traversing the original image. The result will always be a MyImage[2] and if the side length of one part is 0, it will be put as a null.
+
+- public MyImage combineImages(Image other, Axis axis) throws IllegalArgumentException
+    - Combine two images together on the given axis by creating a new image with disired added size and interating and assigning pixels with same rgb values on the corresponding position on the original images.
+    
+-  private float[][] getFrequency()
+    - Get appearance frequency of colors in the image by interating all pixels and counting the apearances of each color in three channels respectively and finally get the frequency by deviding the count with the image size (total pixel number). The result is float[3][256], representing the 3 channels and frquency of each of the 256 values.
+
+- private float getMax(float... nums)
+    - Find the max among the given numbers by iteration.
+
+- private int findIndexOf(float value, float[] arr)
+    - Find index of the first occurance of given value in the given array by traversing.
+
+- public MyImage getHistogram();
+    - Get histogram of the current image. It calls getFrequency to get frequency of the three channels, draw a vertical line from one value to the next one by just setting the pixels on the result image. Finally, make the rest space on the result image white by checking if there're null in the pixel 2d array.
+
+- public MyImage colorCorrect();
+    - Color-correct an image by aligning the meaningful peaks of its histogram. It uses getFrequency to get frequency of the three channels, excluding color values less or equal to 10 and more or equal to 250. Then it calls getMax and findIndexOf to get the indices of the first peak in the 3 channels, calculate the average and the gap/delta, and adds the delta to all values in thie channel by calling imgArrayAddition method.
+- public MyImage levelAdjustment(float black, float mid, float white) throws IllegalArgumentException
+
+    - Perform level adjustment on the image. It fits the curve ax^2_bx+c with the given points, calculates new red, new green and new blue values using the curve which makes the final new result image.
+
 -  public boolean equals(Object o)
     - Check if two objects are identical.
 
 -  public int hashCode()
     - Returns a hash code value for the object. It takes into consideration height, width and the pixel array.
 
+- public String toString()
+    - Returns a string representation of the object by printing out all the pixels.
+
+### HaarWaveletCompressor
 
 ### ImageService
 
@@ -330,17 +367,20 @@ None
     - Get one certain channel of the image (result in one colored image) by calling image.channelSplit(channel).
 
 - public Image blur(Image image) throws IllegalArgumentException
-    - Blur the image by using the blur matrix in image.filtering(blur)
+    - Split the image with the given percentage and axis, and blur the first image by using the blur matrix in image.filtering(blur)
         ```
         {{0.0625f, 0.125f, 0.0625f},
         {0.125f, 0.25f, 0.125f},
         {0.0625f, 0.125f, 0.0625f}}
         ```
+    and combine them back together.
+
 - public Image getValue(Image image) throws IllegalArgumentException 
     - Get value of the image by calling image.mapElement(Pixel::max).
 
 - public Image getIntensity(Image image) throws IllegalArgumentException
     - Get intensity of the image by calling image.mapElement(Pixel::avg).
+
 - public Image getLuma(Image image) throws IllegalArgumentException
     - Get luma of an image by using the luma matrix in image.filtering(blur).
     ```
@@ -374,8 +414,9 @@ None
 
 - public Image combineChannels(Channel[] channels, Image[] images) throws IllegalArgumentException
     - Combine greyscale images each representing one channel to one multicolor image by first splitting the greyscale images and get single channel images, than add them all using Arrays.stream(splits).reduce(Image::addition) .
-- public Image sharpen(Image image) throws IllegalArgumentException
-    - Sharpen an image with image.filtering(sharpen), where sharpen matrix is
+
+- public Image sharpen(Image image, float percentage, Axis splitAxis) throws IllegalArgumentException
+    - Split the image with the given percentage and axis, and sharpen the first image with image.filtering(sharpen), where sharpen matrix is
     ```
     {
         {-0.125f, -0.125f, -0.125f, -0.125f, -0.125f},
@@ -383,12 +424,44 @@ None
         {-0.125f, 0.25f, 1f, 0.25f, -0.125f},
         {-0.125f, 0.25f, 0.25f, 0.25f, -0.125f},
         {-0.125f, -0.125f, -0.125f, -0.125f, -0.125f},
+    }
+    ```
+    and combine them back together.
+    
+- public Image getSepia(Image image) throws IllegalArgumentException
+    - Split the image with the given percentage and axis, and get sepia version of the image with image.matrixMultiplication(sepia), where the sepia matrix is 
+    ```
+            {
+            {0.393f, 0.769f, 0.189f},
+            {0.349f, 0.686f, 0.168f},
+            {0.272f, 0.534f, 0.131f}
+        }
+    ```
+    and combine them back together.
+
+- public Image greyscale(Image image, float percentage, Axis splitAxis) throws IllegalArgumentException
+    - Split the image with the given percentage and axis, and greyscale the first image with image.matrixMultiplication(greyscale), where greyscale matrix is
+    ```
+    {
+        {0.2126f, 0.7152f, 0.0722f},
+        {0.2126f, 0.7152f, 0.0722f},
+        {0.2126f, 0.7152f, 0.0722f}
     };
     ```
-    .
-- public Image getSepia(Image image) throws IllegalArgumentException
-    -
+    and combine them back together.
 
+- public Image haarWaveletCompress(Image image, float ratio) throws IllegalArgumentException 
+    - Compress the image with HaarWaveletCompressor by calling the image's compress method.
+
+- public Image getHistogram(Image image) throws IllegalArgumentException
+    - Get histogram of the image by calling the getHistogram method on the image.
+
+- public Image colorCorrect(Image image, float percentage, Axis splitAxis)
+    - Split the image with the given percentage and axis, and call colorCorrect method on the first part, and combine them back together.
+
+- public Image levelAdjustment(Image image, float black, float mid, float white, float percentage,Axis splitAxis) throws IllegalArgumentException 
+    - Split the image with the given percentage and axis, and call levelAdjustment method on the first part, and combine them back together.
+    
 ### ImageView
 
 #### Purpose
@@ -511,3 +584,16 @@ brighten 50 koala-red koala-red
 rgb-combine koala-red-tint koala-red koala-green koala-blue
 save images/koala-red-tint.ppm koala-red-tint
 ```
+
+## Change Notes
+- Adding Compressor interface and HaarWaveletCompressor class for the compress functionality.
+- Change Pixel and Image abstract class to interface. Followed by related necessary modifications like moving some methods implementations to the concrete class.
+    - I've actually tried both and struggled with my final decision in Assignment 4. Originally I chose abstract class over interface because 1. The situation is an "is-a" relationship 2. Some common methods can be extracted and the method body can be put in the abstract class for max code reuse.
+    - However, these common methods require accessing fields. This prevents me from making the fields all private (because concrete subclass needs to access them. I went for package-private and setting packages because it is stricter in Java than protected and the closest I can get to a C++ protected which seems more "protected".) and all final (similarly, concrete class needs to access them. There're some type-specefic initializations that can't all be put in the abstract class).
+    - After last code walk, I try to rethink and balance this visibility issue with code reuse and decided that I will choose a more strict visibility policy. I understand that there's not the absolute perfact design and try to follow the TA's advice of making final fields.
+- As a result of making the fields static, loadPPM and loadPNGJPG had to be removed and all image read-in logic has to be put in the constructor.
+- Add split and combineImages methods in Image interface and MyImage class. They split and image into two, and combine two images back together, respectively. 
+- Modify previous methods that now require performing operations on split views. Add percentage and axis in the arguments and achive the new functionality by spliting the image first, perform operation on the first part, and combine them back together.
+- Add new methods for the histogram, color correct, and level adjustment functionalities. For better layering architecture, I still make separate functions in ImageService and MyImage/Image even if some of them is just calling the function in the bottom layer.
+    - Including private tool methods like getFrequency, getMax, findIndexOf in MyImage, and direct methods like getHistogram, colorCorrect and levelAdjustment in MyImage.
+    - Methods like getHistogram, colorCorrect and levelAdjustment in ImageService that made use of methods of the same name in MyImage/Image.
