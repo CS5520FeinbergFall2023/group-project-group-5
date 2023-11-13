@@ -82,7 +82,7 @@ save images/koala-red-tint.ppm koala-red-tint
 
 ## **Usage-Assignment-5**
 
-Add five new commands for the program to execute, the user still can input these commands directly on the console like
+Add five new commands for the program to execute, the user can input these commands directly on the console like
 
 ```bash
 compress percentage image-name dest-image-name
@@ -156,6 +156,8 @@ levels-adjust 20 100 255 koala koala-levels-adjust split 0.655
 save images/koala-greyscale.ppm koala-greyscale
 ```
 
-Conditions in Assignment-5:
-1.  
+Common conditions:
+
+load command should be executed before all image operation commands (such as blur, sepia, brighten...).
+ 
 
