@@ -3,7 +3,9 @@ package model.compressor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class represents a compressor that uses Haar Wavelet Transform.
@@ -24,9 +26,22 @@ public class HaarWaveletCompressor implements Compressor {
     return instance;
   }
 
+  /**
+   * Compress a 3D float array with given ratio.
+   *
+   * @param matrix the given 3D float array to compress
+   * @return the compressed result
+   * @throws IllegalArgumentException when given arguments are illegal
+   */
   @Override
   public float[][][] compress(float[][][] matrix, float ratio) throws IllegalArgumentException {
+    if (ratio < 0 || ratio > 1) {
+      throw new IllegalArgumentException("Ratio cannot be smaller than 0 or larger than 1.");
+    }
     int length = matrix.length;
+    if (length == 0) {
+      throw new IllegalArgumentException("The given matrix to compress is empty");
+    }
     float[][][] result = new float[length][][];
     for (int i = 0; i < length; i++) {
       result[i] = compress(matrix[i], 0);
@@ -44,9 +59,20 @@ public class HaarWaveletCompressor implements Compressor {
     return result;
   }
 
+  /**
+   * Decompress a 3D float array.
+   *
+   * @param compressed the given 3D array to decompress
+   * @return the decompressed result
+   * @throws IllegalArgumentException when given argument is illegal (array empty or sub array
+   * not with 2^n side length)
+   */
   @Override
   public float[][][] decompress(float[][][] compressed) throws IllegalArgumentException {
     int length = compressed.length;
+    if (length == 0) {
+      throw new IllegalArgumentException("The given array to decompress is empty");
+    }
     float[][][] result = new float[length][][];
     for (int i = 0; i < length; i++) {
       result[i] = decompress(compressed[i]);
@@ -255,7 +281,7 @@ public class HaarWaveletCompressor implements Compressor {
     return result;
   }
 
-  public float getThreshold(Object numsArray, float ratio) throws IllegalArgumentException {
+  private float getThreshold(Object numsArray, float ratio) throws IllegalArgumentException {
     if (ratio < 0 || ratio > 1) {
       throw new IllegalArgumentException("Ratio cannot be smaller than 0 or larger than 1.");
     }
@@ -263,7 +289,7 @@ public class HaarWaveletCompressor implements Compressor {
       throw new IllegalArgumentException(
           "The argument needs to be an array of arbitrary dimension.");
     }
-    List<Float> flattenedList = flattenAbsoluteArray(numsArray);
+    List<Float> flattenedList = new ArrayList<>(flattenAbsoluteArray(numsArray));
     if (flattenedList.isEmpty()) {
       return 0;
     }
@@ -275,17 +301,17 @@ public class HaarWaveletCompressor implements Compressor {
     return flattenedList.get(index);
   }
 
-  private List<Float> flattenAbsoluteArray(Object array) throws IllegalArgumentException {
-    List<Float> flattenedList = new ArrayList<>();
+  private Set<Float> flattenAbsoluteArray(Object array) throws IllegalArgumentException {
+    Set<Float> flattenedSet = new HashSet<>();
     if (array.getClass().isArray()) {
       int length = java.lang.reflect.Array.getLength(array);
       for (int i = 0; i < length; i++) {
         Object element = java.lang.reflect.Array.get(array, i);
         if (element.getClass().isArray()) {
-          flattenedList.addAll(flattenAbsoluteArray(element));
+          flattenedSet.addAll(flattenAbsoluteArray(element));
         } else {
           if ((float) element != 0) {
-            flattenedList.add(Math.abs((float) element));
+            flattenedSet.add(Math.abs((float) element));
           }
         }
       }
@@ -293,7 +319,7 @@ public class HaarWaveletCompressor implements Compressor {
       throw new IllegalArgumentException(
           "The argument needs to be an array of arbitrary dimension.");
     }
-    return flattenedList;
+    return flattenedSet;
   }
 
   private float[] invert(float[] nums) {

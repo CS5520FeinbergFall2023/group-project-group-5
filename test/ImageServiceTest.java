@@ -2098,6 +2098,8 @@ public class ImageServiceTest {
     assertTrue(MyImageTest.checkHistogramLines(path, redPoints, greenPoints, bluePoints));
   }
 
+  //todo: compress 0, compress 30, 50, 70
+
   @Test
   public void test()
   {

@@ -261,7 +261,6 @@ public class ImageControllerTest {
     assertTrue(output.contains("Get the value-component"));
 
     Image executeValue = valueController.loadedImages.get("black_value");
-    System.out.println(executeValue);
 
     Image targetImage = new MyImage("test/img/monochromatic/black.ppm");
     assertTrue(output.contains(targetImage.hashCode() + ""));
