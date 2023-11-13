@@ -59,7 +59,7 @@ public class MockImageService extends ImageService {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to be blurred, now start to blur.");
     //return new MyImage("test/img/cupcake_blurOnce.png");
-    return new MyImage("halfBlurCupcake.png");
+    return new MyImage("res/cupcake-blur-50%.png");
   }
 
   /**
@@ -178,7 +178,7 @@ public class MockImageService extends ImageService {
   public Image sharpen(Image image, float percentage, Axis splitAxis) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to be sharpened, now start to sharpen.");
-    return new MyImage("test/img/cupcake_sharpenOnce.png");
+    return new MyImage("res/cupcake-sharpen-50%.png");
   }
 
   /**
@@ -191,39 +191,35 @@ public class MockImageService extends ImageService {
   public Image getSepia(Image image, float percentage, Axis splitAxis) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to get its sepia, now start to do that.");
-    //todo: add the image path
-    return new MyImage("test/img/city_small_sepia.png");
+    return new MyImage("res/cupcake-sepia-50%.png");
   }
 
   @Override
   public Image greyscale(Image image, float percentage, Axis splitAxis) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to get its greyscale, now start to greyscale");
-    //todo: add the image path
-    return new MyImage("test/img/monochromatic/red_grayScale_b.ppm");
+    return new MyImage("res/cupcake-greyscale-50%.png");
   }
 
   @Override
   public Image haarWaveletCompress(Image image, float ratio) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to compress, now start to compress");
-    return new MyImage("test/img/car_compress.jpg");
+    return new MyImage("res/car_compress.jpg");
   }
 
   @Override
   public Image getHistogram(Image image) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to get histogram, now start to get histogram");
-    //todo: add the image path
-    return new MyImage("histogram.png");
+    return new MyImage("res/city-histogram.png");
   }
 
   @Override
   public Image colorCorrect(Image image, float percentage, Axis splitAxis) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to do the color-correct, now start to correct the color");
-    //todo: add the image path
-    return new MyImage("histogram-color-correct.png");
+    return new MyImage("res/city_small_colored_after_color_correct.png");
   }
 
   @Override
@@ -231,8 +227,7 @@ public class MockImageService extends ImageService {
                                Axis splitAxis) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to level-adjustment, now start to adjust the level");
-    //todo: add the image path
-    return new MyImage("level-adjustment.png");
+    return new MyImage("res/city-level_adjustment-20-100-255.png");
   }
 
 
