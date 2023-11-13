@@ -13,57 +13,59 @@ greyscale cupcake cupcake-greyscale
 greyscale cupcake cupcake-greyscale-50% split 0.5
 
 
-#load another picture
+#load another picture.
 load city_small.png city_small
-#get value operation
+#get value operation.
 value-component city_small city_small_value
-#get intensity operation
+#get intensity operation.
 intensity-component city_small city_small_intensity
-#get luma operation
+#get luma operation.
 luma-component city_small city_small_luma
-#get sepia operation
+#get sepia operation.
 sepia city_small city_small_sepia
-#get red component operation
+#get red component operation.
 red-component city_small city_small_red_channel_greyscale
-#get green component operation
+#get green component operation.
 green-component city_small city_small_green_channel_greyscale
-#get blue component operation
+#get blue component operation.
 blue-component city_small city_small_blue_channel_greyscale
-#brighten operation (increase)
+#brighten operation (increase).
 brighten 40 city_small city_small+40
-#brighten operation(decrease)
+#brighten operation(decrease).
 brighten -40 city_small city_small-40
 
 
-#load a picture and test color correct operation
+#load a picture and test color correct operation.
 load city_small_colored_before_color_correct.png city_small_colored_before_color_correct
+#get the histogram of the picture.
+histogram city_small_colored_before_color_correct city_small_colored_before_color_correct_histogram
+#color-correct operation.
 color-correct city_small_colored_before_color_correct city_small_colored_after_color_correct
-color-correct city_small_colored_before_color_correct city_small_colored_after_color_correct split 0.5
+#get the histogram of the picture after the color-correct.
+histogram city_small_colored_after_color_correct city_small_colored_after_color_correct_histogram
 
-#load another picture
+#load another picture.
 load car.png car
-#flip the car vertically
+#flip the car vertically.
 vertical-flip car car_verticallyFlipped
-#flip the car horizontally
+#flip the car horizontally.
 horizontal-flip car car_horizontallyFlipped
-#double flip the car
+#double flip the car.
 horizontal-flip car_verticallyFlipped car_doubleFlipped
-#compress the car
+#compress the car.
 compress 0.5 car car_compress
 
-#load another picture
+#load another picture.
 load rose.png rose
-#do the rgb-split operation
+#do the rgb-split operation.
 rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue
 
-#do the rgb-combine operation
+#do the rgb-combine operation.
 rgb-combine rose_1 rose_onlyRed rose_onlyGreen rose_onlyBlue
 
-#load another picture
+#load another picture.
 load city.png city
-#get the histogram of the city
-histogram city city-histogram
-#test levels-adjustment operation
+#test levels-adjustment operation.
 levels-adjust 20 100 255 city city-level_adjustment-20-100-255
 levels-adjust 20 100 255 city city-level_adjustment-20-100-255 split 0.5
 

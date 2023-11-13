@@ -548,99 +548,22 @@ This class deals with user's input commands or on the command-file and inteprets
     - Starts processing commands from a provided file. Each line in the file is treated as a command which gets executed one after the other. Similar to the direct interaction, commands starting with "#" are considered comments and thus ignored. If the file contains the "exit" command, the processing stops.
 - `public void executeCommand(String command)`  
     - Processes and executes commands related to image operations. It first parses the provided command, then performs the specified image operation based on the command's name. The results or status messages are displayed to the user via the imageView. In the event of an invalid command or if a referenced image is not found, error messages are displayed.
-
-
-
-## **Usage**
-
-After running the program, the user can either input image operation commands directly on the console like
-
-```bash
-load image-path image-name
-#Load an image from the specified path and refer it to henceforth in the program by the given image name.
-
-save image-path image-name
-# Save the image with the given name to the specified path which should include the name of the file.
-
-red-component image-name dest-image-name 
-# Create an image with the red-component of the image with the given name, and refer to it henceforth in the program by the given destination name. Similar commands for green, blue, value, luma, intensity components should be supported. Note that the images for value, luma and intensity will be greyscale images.
-
-horizontal-flip image-name dest-image-name
-# Flip an image horizontally to create a new image, referred to henceforth by the given destination name.
-
-vertical-flip image-name dest-image-name
-# Flip an image vertically to create a new image, referred to henceforth by the given destination name.
-
-brighten increment image-name dest-image-name
-# brighten the image by the given increment to create a new image, referred to henceforth by the given destination name. The increment may be positive (brightening) or negative (darkening).
-
-rgb-split image-name dest-image-name-red dest-image-name-green dest-image-name-blue
-# split the given image into three images containing its red, green and blue components respectively. These would be the same images that would be individually produced with the red-component, green-component and blue-component commands.
-
-rgb-combine image-name red-image green-image blue-image
-# Combine the three greyscale images into a single image that gets its red, green and blue components from the three images respectively.
-
-blur image-name dest-image-name
-# blur the given image and store the result in another image with the given name.
-
-sharpen image-name dest-image-name
-# sharpen the given image and store the result in another image with the given name.
-
-sepia image-name dest-image-name
-# produce a sepia-toned version of the given image and store the result in another image with the given name.
-
-run script-file
-# Load and run the script commands in the specified file. The file has similar syntax as the above command line commands and supports single-line commands.
-```
-
-an example of the the script file can be
-
-```
-#load koala.ppm and call it 'koala'
-load images/koala.ppm koala
-
-#brighten koala by adding 10  
-brighten 10 koala koala-brighter 
-
-#flip koala vertically
-vertical-flip koala koala-vertical
-
-#flip the vertically flipped koala horizontally
-horizontal-flip koala-vertical koala-vertical-horizontal
-
-#create a greyscale using only the value component, as an image koala-greyscale
-value-component koala koala-greyscale
-
-#save koala-brighter
-save images/koala-brighter.ppm koala-brighter
-
-#save koala-greyscale
-save images/koala-gs.ppm koala-greyscale
-
-#overwrite koala with another file
-load images/upper.ppm koala
-
-#give the koala a red tint
-rgb-split koala koala-red koala-green koala-blue
-
-#brighten just the red image
-brighten 50 koala-red koala-red
-
-#combine them back, but by using the brightened red we get a red tint
-rgb-combine koala-red-tint koala-red koala-green koala-blue
-save images/koala-red-tint.ppm koala-red-tint
-```
-
+  
+  
 ## Change Notes For Assignment 5:
 - Adding Compressor interface and HaarWaveletCompressor class for the compress functionality.
 - Change Pixel and Image abstract class to interface. Followed by related necessary modifications like moving some methods implementations to the concrete class.
     - I've actually tried both and struggled with my final decision in Assignment 4. Originally I chose abstract class over interface because 1. The situation is an "is-a" relationship 2. Some common methods can be extracted and the method body can be put in the abstract class for max code reuse.
     - However, these common methods require accessing fields. This prevents me from making the fields all private (because concrete subclass needs to access them. I went for package-private and setting packages because it is stricter in Java than protected and the closest I can get to a C++ protected which seems more "protected".) and all final (similarly, concrete class needs to access them. There're some type-specefic initializations that can't all be put in the abstract class).
-    - After last code walk, I try to rethink and balance this visibility issue with code reuse and decided that I will choose a more strict visibility policy. I understand that there's not the absolute perfact design and try to follow the TA's advice of making final fields.
+    - After last code walk, I try to rethink and balance this visibility issue with code reuse and decided that I will choose a more strict visibility policy. I understand that there's not the absolute perfect design and try to follow the TA's advice of making final fields.
 - As a result of making the fields static, loadPPM and loadPNGJPG had to be removed and all image read-in logic has to be put in the constructor.
 - Add split and combineImages methods in Image interface and MyImage class. They split and image into two, and combine two images back together, respectively. 
-- Modify previous methods that now require performing operations on split views. Add percentage and axis in the arguments and achive the new functionality by spliting the image first, perform operation on the first part, and combine them back together.
+- Modify previous methods that now require performing operations on split views. Add percentage and axis in the arguments and achieve the new functionality by spliting the image first, perform operation on the first part, and combine them back together.
 - Add new methods for the histogram, color correct, and level adjustment functionalities. For better layering architecture, I still make separate functions in ImageService and MyImage/Image even if some of them is just calling the function in the bottom layer.
     - Including private tool methods like getFrequency, getMax, findIndexOf in MyImage, and direct methods like getHistogram, colorCorrect and levelAdjustment in MyImage.
     - Methods like getHistogram, colorCorrect and levelAdjustment in ImageService that made use of methods of the same name in MyImage/Image.
-- Add   
+- Add four cases to the executeCommand() method in ImageController. These four cases respectively correspond to the 4 newly added commands that can be implemented by the program: compress, histogram, color-correct and levels-adjust.
+- Modify the previous logic for parsing blur, sharpen and sepia commands in the ImageController's executeCommand function so that it can correctly parse the value of split percentage and axis.
+- Modify the main function in ImageUtil so that it parses the command line arguments and performs different actions based on those arguments. 
+    - If the first argument is "-file" followed by the file name, the program will enter script file execution mode.
+    - If without any command line arguments, the program interacts with the user at the console as before to get the script commands entered by the user.
