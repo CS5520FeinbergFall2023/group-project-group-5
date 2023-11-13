@@ -336,6 +336,7 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
 
 - public MyImage getHistogram();
     - Get histogram of the current image. It calls getFrequency to get frequency of the three channels, draw a vertical line from one value to the next one by just setting the pixels on the result image. Finally, make the rest space on the result image white by checking if there're null in the pixel 2d array.
+    - Do note that colors overlay instead of mix (as shown in the instructions) in the order of red, green and blue. For examples, blue lines overlays green and red lines if they do appear in the same position.
 
 - public MyImage colorCorrect();
     - Color-correct an image by aligning the meaningful peaks of its histogram. It uses getFrequency to get frequency of the three channels, excluding color values less or equal to 10 and more or equal to 250. Then it calls getMax and findIndexOf to get the indices of the first peak in the 3 channels, calculate the average and the gap/delta, and adds the delta to all values in thie channel by calling imgArrayAddition method.
@@ -461,7 +462,7 @@ None
 
 - public Image levelAdjustment(Image image, float black, float mid, float white, float percentage,Axis splitAxis) throws IllegalArgumentException 
     - Split the image with the given percentage and axis, and call levelAdjustment method on the first part, and combine them back together.
-    
+
 ### ImageView
 
 #### Purpose
