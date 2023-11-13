@@ -25,9 +25,9 @@ public class HaarWaveletCompressor implements Compressor {
   }
 
   /**
-   * Compress a 2D float matrix.
+   * Compress a 2D float array.
    *
-   * @param matrix the given 2D float matrix to compress
+   * @param matrix the given 2D float array to compress
    * @param ratio  the compression ratio ([0,1])
    * @return the compressed result
    * @throws IllegalArgumentException when given matrix or ratio is illegal
@@ -40,38 +40,39 @@ public class HaarWaveletCompressor implements Compressor {
     if (ratio < 0 || ratio > 1) {
       throw new IllegalArgumentException("Ratio cannot be smaller than 0 or larger than 1.");
     }
-    int height = matrix.length;
-    if (!isPowerOfTwo(matrix.length)) {
-      height = 1 << ((int) Math.ceil(log2(matrix.length)));
+    int length = Math.max(matrix.length, matrix[0].length);
+    if (!isPowerOfTwo(length)) {
+      length = 1 << ((int) Math.ceil(log2(length)));
     }
     int originalWidth = matrix[0].length;
-    int width = originalWidth;
-    if (!isPowerOfTwo(width)) {
-      width = 1 << ((int) Math.ceil(log2(width)));
-    }
     //copy the original values. default values are 0.0
-    float[][] result = new float[height][width];
+    float[][] result = new float[length][length];
     for (int i = 0; i < matrix.length; i++) {
       if (matrix[i].length != originalWidth) {
         throw new IllegalArgumentException("The given matrix to compress is not rectangle.");
       }
       System.arraycopy(matrix[i], 0, result[i], 0, matrix[i].length);
     }
-    //compress the rows
-    for (int i = 0; i < height; i++) {
-      //discard small items after finished transforming the whole matrix.
-      result[i] = compress(result[i], 0);
-    }
-    //then compress the columns
-    for (int j = 0; j < width; j++) {
-      float[] tmp = new float[height];
-      for (int i = 0; i < height; i++) {
-        tmp[i] = result[i][j];
+    int c = length;
+    while (c > 1) {
+      //row
+      for (int row = 0; row < c; row++) {
+        float[] tmp = Arrays.copyOfRange(result[row], 0, c);
+        tmp = transform(tmp);
+        System.arraycopy(tmp, 0, result[row], 0, c);
       }
-      tmp = compress(tmp, 0);
-      for (int i = 0; i < height; i++) {
-        result[i][j] = tmp[i];
+      //column
+      for (int col = 0; col < c; col++) {
+        float[] tmp = new float[c];
+        for (int i = 0; i < c; i++) {
+          tmp[i] = result[i][col];
+        }
+        tmp = transform(tmp);
+        for (int i = 0; i < c; i++) {
+          result[i][col] = tmp[i];
+        }
       }
+      c /= 2;
     }
     if (ratio > 0) {
       float threshold = getThreshold(result, ratio);
@@ -92,32 +93,39 @@ public class HaarWaveletCompressor implements Compressor {
    *
    * @param compressed the given 2D array to decompress
    * @return the decompressed result
+   * @throws IllegalArgumentException when given matrix's size is illegal
    */
   @Override
-  public float[][] decompress(float[][] compressed) {
+  public float[][] decompress(float[][] compressed) throws IllegalArgumentException {
     if (compressed.length == 0) {
       throw new IllegalArgumentException("The given matrix to compress is empty.");
     }
     int height = compressed.length;
     int width = compressed[0].length;
-    if (!isPowerOfTwo(height) || !isPowerOfTwo(width)) {
+    if (!isPowerOfTwo(height) || !(height == width)) {
       throw new IllegalArgumentException("The given compressed matrix is malformed.");
     }
     float[][] result = new float[height][width];
-    //first decompress the columns
-    for (int j = 0; j < width; j++) {
-      float[] tmp = new float[height];
-      for (int i = 0; i < height; i++) {
-        tmp[i] = compressed[i][j];
+    int c = 2;
+    while (c <= height) {
+      for (int col = 0; col < c; col++) {
+        float[] tmp = new float[c];
+        for (int i = 0; i < c; i++) {
+          tmp[i] = compressed[i][col];
+        }
+        tmp = invert(tmp);
+        for (int i = 0; i < c; i++) {
+          result[i][col] = tmp[i];
+        }
       }
-      tmp = decompress(tmp);
-      for (int i = 0; i < height; i++) {
-        result[i][j] = tmp[i];
+      for (int row = 0; row < c; row++) {
+        for (int i = 0; i < row; i++) {
+          float[] tmp = Arrays.copyOfRange(result[row], 0, c);
+          tmp = invert(tmp);
+          System.arraycopy(tmp, 0, result[row], 0, c);
+        }
       }
-    }
-    //then decompress the rows
-    for (int i = 0; i < height; i++) {
-      result[i] = decompress(result[i]);
+      c *= 2;
     }
     return result;
   }
@@ -146,7 +154,7 @@ public class HaarWaveletCompressor implements Compressor {
     System.arraycopy(nums, 0, result, 0, nums.length);
     int m = result.length;
     while (m > 1) {
-      float[] tmp = transform(Arrays.copyOfRange(result, 0, m), ratio);
+      float[] tmp = transform(Arrays.copyOfRange(result, 0, m));
       System.arraycopy(tmp, 0, result, 0, m);
       m /= 2;
     }
@@ -166,7 +174,7 @@ public class HaarWaveletCompressor implements Compressor {
     return (n > 0) && ((n & (n - 1)) == 0);
   }
 
-  private float[] transform(float[] nums, float ratio) {
+  private float[] transform(float[] nums) {
     if (nums.length == 0) {
       throw new IllegalArgumentException("The given list to transform is empty.");
     }
@@ -193,9 +201,10 @@ public class HaarWaveletCompressor implements Compressor {
    *
    * @param compressed the 1D compressed array to decompress
    * @return the decompressed result
+   * @throws IllegalArgumentException when given array's size is illegal
    */
   @Override
-  public float[] decompress(float[] compressed) {
+  public float[] decompress(float[] compressed) throws IllegalArgumentException {
     if (compressed.length == 0) {
       throw new IllegalArgumentException("The given list to decompress is empty.");
     }
@@ -237,7 +246,9 @@ public class HaarWaveletCompressor implements Compressor {
         if (element.getClass().isArray()) {
           flattenedList.addAll(flattenAbsoluteArray(element));
         } else {
-          flattenedList.add(Math.abs((float) element));
+          if ((float) element != 0) {
+            flattenedList.add(Math.abs((float) element));
+          }
         }
       }
     } else {

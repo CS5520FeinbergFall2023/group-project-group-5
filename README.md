@@ -355,6 +355,51 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
 
 ### HaarWaveletCompressor
 
+#### Fields
+- public static final float sqrt2 = (float) Math.sqrt(2)
+    - To help ease the calculation representations.
+
+- private static HaarWaveletCompressor instance = new HaarWaveletCompressor();
+    - Singleton design pattern to share one instance of the compressor across the program.
+
+#### Methods
+-  private HaarWaveletCompressor() {}
+    - Private empty constructor.
+
+-   public static HaarWaveletCompressor getInstance()
+    - Get the singleton instance of the compressor.
+
+- public float[][] compress(float[][] matrix, float ratio) throws IllegalArgumentException
+    - Compress a 2D float array. It just follows the algorithm in the instructions. Finally it calls getThreshold to get the threshold and set those below the theshold (in terms of absolute value) to zero.
+
+- public float[] compress(float[] nums, float ratio) throws IllegalArgumentException
+    - Compress a 1D float array. It just follows the algorithm in the instructions. Finally it calls getThreshold to get the threshold and set those below the theshold (in terms of absolute value) to zero.
+
+- public float[][] decompress(float[][] compressed) throws IllegalArgumentException
+    - Decompress a 2D float array. It just follows the algorithm in the instructions.
+
+- public float[] decompress(float[] compressed) throws IllegalArgumentException
+    - Decompress an 1D float array. It just follows the algorithm in the instructions.
+
+- private float[] transform(float[] nums)
+    - Transform an float array by averaging and differencing as the instructions. 
+
+- private float[] invert(float[] nums)
+    - Revert the transform made to a float array.
+
+- private boolean isPowerOfTwo(int n)
+    - Check if the given number is power of two.
+
+- private float getThreshold(Object numsArray, float ratio) throws IllegalArgumentException
+    - Calculate the threshold with the given ratio. It can work with arbitary dimension array. It calls flattenAbsoluteArray to flatten the array to 1D with all numbers in their absolute values and already neglecting the zeros, sort them in ascending order, return the element at the corresponding index (total non-zero value length*ratio-1).
+
+- private List<Float> flattenAbsoluteArray(Object array) throws IllegalArgumentException
+    - Flatten given array to 1D with all numbers in their absolute values.
+
+- private float log2(float number)
+    - Calcute log base 2 of the number.
+
+
 ### ImageService
 
 #### Purpose
