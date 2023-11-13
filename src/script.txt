@@ -1,3 +1,0 @@
-load D:\23Fall\PDP\Projects\CS5010_Assignment_Image-Manipulation-and-Enhancement\test\img\city.png city
-blur city city-blurred
-rgb-split city city-red city-green city-blue

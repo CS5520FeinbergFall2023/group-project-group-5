@@ -1,5 +1,5 @@
-# **CS5010_Assignment4**
-CS5010 Assignment4 Image Manipulation and Enhancement
+# **CS5010_Assignment_Image-Manipulation-and-Enhancement**
+CS5010 Assignment Image Manipulation and Enhancement
 
 ## **Overview**
 
@@ -367,7 +367,7 @@ None
 - public Image splitComponent(Image image, Channel channel) throws IllegalArgumentException
     - Get one certain channel of the image (result in one colored image) by calling image.channelSplit(channel).
 
-- public Image blur(Image image) throws IllegalArgumentException
+- public Image blur(Image image, float percentage, Axis splitAxis) throws IllegalArgumentException
     - Split the image with the given percentage and axis, and blur the first image by using the blur matrix in image.filtering(blur)
         ```
         {{0.0625f, 0.125f, 0.0625f},
@@ -429,7 +429,7 @@ None
     ```
     and combine them back together.
     
-- public Image getSepia(Image image) throws IllegalArgumentException
+- public Image getSepia(Image image, float percentage, Axis splitAxis) throws IllegalArgumentException
     - Split the image with the given percentage and axis, and get sepia version of the image with image.matrixMultiplication(sepia), where the sepia matrix is 
     ```
             {
@@ -586,7 +586,7 @@ rgb-combine koala-red-tint koala-red koala-green koala-blue
 save images/koala-red-tint.ppm koala-red-tint
 ```
 
-## Change Notes
+## Change Notes For Assignment 5:
 - Adding Compressor interface and HaarWaveletCompressor class for the compress functionality.
 - Change Pixel and Image abstract class to interface. Followed by related necessary modifications like moving some methods implementations to the concrete class.
     - I've actually tried both and struggled with my final decision in Assignment 4. Originally I chose abstract class over interface because 1. The situation is an "is-a" relationship 2. Some common methods can be extracted and the method body can be put in the abstract class for max code reuse.
@@ -598,3 +598,4 @@ save images/koala-red-tint.ppm koala-red-tint
 - Add new methods for the histogram, color correct, and level adjustment functionalities. For better layering architecture, I still make separate functions in ImageService and MyImage/Image even if some of them is just calling the function in the bottom layer.
     - Including private tool methods like getFrequency, getMax, findIndexOf in MyImage, and direct methods like getHistogram, colorCorrect and levelAdjustment in MyImage.
     - Methods like getHistogram, colorCorrect and levelAdjustment in ImageService that made use of methods of the same name in MyImage/Image.
+- Add   
