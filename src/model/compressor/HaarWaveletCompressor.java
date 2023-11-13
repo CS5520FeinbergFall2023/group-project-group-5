@@ -24,6 +24,37 @@ public class HaarWaveletCompressor implements Compressor {
     return instance;
   }
 
+  @Override
+  public float[][][] compress(float[][][] matrix, float ratio) throws IllegalArgumentException {
+    int length = matrix.length;
+    float[][][] result = new float[length][][];
+    for (int i = 0; i < length; i++) {
+      result[i] = compress(matrix[i], 0);
+    }
+    float threshold = getThreshold(result, ratio);
+    for (int i = 0; i < length; i++) {
+      for (int j = 0; j < result[i].length; j++) {
+        for (int k = 0; k < result[i][j].length; k++) {
+          if (Math.abs(result[i][j][k]) <= threshold) {
+            result[i][j][k] = 0;
+          }
+        }
+      }
+    }
+    return result;
+  }
+
+  @Override
+  public float[][][] decompress(float[][][] compressed) throws IllegalArgumentException {
+    int length = compressed.length;
+    float[][][] result = new float[length][][];
+    for (int i = 0; i < length; i++) {
+      result[i] = decompress(compressed[i]);
+    }
+    return result;
+  }
+
+
   /**
    * Compress a 2D float array.
    *
@@ -106,12 +137,15 @@ public class HaarWaveletCompressor implements Compressor {
       throw new IllegalArgumentException("The given compressed matrix is malformed.");
     }
     float[][] result = new float[height][width];
+    for (int i = 0; i < height; i++) {
+      System.arraycopy(compressed[i], 0, result[i], 0, width);
+    }
     int c = 2;
     while (c <= height) {
       for (int col = 0; col < c; col++) {
         float[] tmp = new float[c];
         for (int i = 0; i < c; i++) {
-          tmp[i] = compressed[i][col];
+          tmp[i] = result[i][col];
         }
         tmp = invert(tmp);
         for (int i = 0; i < c; i++) {
@@ -119,11 +153,9 @@ public class HaarWaveletCompressor implements Compressor {
         }
       }
       for (int row = 0; row < c; row++) {
-        for (int i = 0; i < row; i++) {
-          float[] tmp = Arrays.copyOfRange(result[row], 0, c);
-          tmp = invert(tmp);
-          System.arraycopy(tmp, 0, result[row], 0, c);
-        }
+        float[] tmp = Arrays.copyOfRange(result[row], 0, c);
+        tmp = invert(tmp);
+        System.arraycopy(tmp, 0, result[row], 0, c);
       }
       c *= 2;
     }
@@ -223,7 +255,7 @@ public class HaarWaveletCompressor implements Compressor {
     return result;
   }
 
-  private float getThreshold(Object numsArray, float ratio) throws IllegalArgumentException {
+  public float getThreshold(Object numsArray, float ratio) throws IllegalArgumentException {
     if (ratio < 0 || ratio > 1) {
       throw new IllegalArgumentException("Ratio cannot be smaller than 0 or larger than 1.");
     }
@@ -232,8 +264,14 @@ public class HaarWaveletCompressor implements Compressor {
           "The argument needs to be an array of arbitrary dimension.");
     }
     List<Float> flattenedList = flattenAbsoluteArray(numsArray);
+    if (flattenedList.isEmpty()) {
+      return 0;
+    }
     Collections.sort(flattenedList);
     int index = (int) Math.ceil(flattenedList.size() * ratio) - 1;
+    if (index < 0) {
+      return 0;
+    }
     return flattenedList.get(index);
   }
 
