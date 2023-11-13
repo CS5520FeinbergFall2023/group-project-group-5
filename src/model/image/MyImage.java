@@ -502,29 +502,22 @@ public class MyImage implements Image {
     if (ratio < 0 || ratio > 1) {
       throw new IllegalArgumentException("Ratio cannot be smaller than 0 or larger than 1.");
     }
-    float[][] redPixels = new float[height][width];
-    float[][] greenPixels = new float[height][width];
-    float[][] bluePixels = new float[height][width];
+    float[][][] pixelValues = new float[3][height][width];
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        redPixels[i][j] = getPixel(i, j).getRed();
-        greenPixels[i][j] = getPixel(i, j).getGreen();
-        bluePixels[i][j] = getPixel(i, j).getBlue();
+        pixelValues[0][i][j] = getPixel(i, j).getRed();
+        pixelValues[1][i][j] = getPixel(i, j).getGreen();
+        pixelValues[2][i][j] = getPixel(i, j).getBlue();
       }
     }
-    float[][] redPixelsCompressed =
-        compressor.decompress(compressor.compress(redPixels, ratio));
-    float[][] greenPixelsCompressed = compressor.decompress(compressor.compress(greenPixels,
-        ratio));
-    float[][] bluePixelsCompressed =
-        compressor.decompress(compressor.compress(bluePixels, ratio));
+    pixelValues = compressor.decompress(compressor.compress(pixelValues, ratio));
     // restore as original size and discard the padding.
     RGBPixel[][] pixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        pixels[i][j] = new RGBPixel(Math.round(redPixelsCompressed[i][j]),
-            Math.round(greenPixelsCompressed[i][j]),
-            Math.round(bluePixelsCompressed[i][j]));
+        pixels[i][j] = new RGBPixel(Math.round(pixelValues[0][i][j]),
+            Math.round(pixelValues[1][i][j]),
+            Math.round(pixelValues[2][i][j]));
       }
     }
     return new MyImage(pixels);
@@ -683,7 +676,7 @@ public class MyImage implements Image {
     return new float[][]{redCount, greenCount, blueCount};
   }
 
-  private float getMax(float... nums) throws IllegalArgumentException{
+  private float getMax(float... nums) throws IllegalArgumentException {
     if (nums == null || nums.length == 0) {
       throw new IllegalArgumentException("Nums are null or empty");
     }
@@ -807,7 +800,8 @@ public class MyImage implements Image {
    * @throws IllegalArgumentException when given arguments is illegal (outside the range [0,255])
    */
   @Override
-  public MyImage levelAdjustment(float black, float mid, float white) throws IllegalArgumentException {
+  public MyImage levelAdjustment(float black, float mid, float white)
+      throws IllegalArgumentException {
     if (black < 0 || black > (1 << RGBPixel.bitDepth) || mid < 0 || mid > (1 << RGBPixel.bitDepth)
         || white < 0 || white > (1 << RGBPixel.bitDepth)) {
       throw new IllegalArgumentException("Black, mid and white should all be in range [0, 255]");

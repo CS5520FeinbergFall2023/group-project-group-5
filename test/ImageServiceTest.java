@@ -2101,8 +2101,9 @@ public class ImageServiceTest {
   @Test
   public void test()
   {
-    MyImage testImage = new MyImage("res/city_small.png");
-    testImage.compress(HaarWaveletCompressor.getInstance(),0.5f).save("res/city-small-compress-50%"
+    MyImage testImage = new MyImage("manhattan-small.png");
+    testImage.compress(HaarWaveletCompressor.getInstance(),0.5f).save("manhattan-small-compress"
+                                                                      + "-50%"
                                                                       + ".png");
   }
 }
