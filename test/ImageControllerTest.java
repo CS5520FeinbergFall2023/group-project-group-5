@@ -147,7 +147,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testBlurWithInvalidPCommand() {
-    String blurCommand = "load test/img/cupcake.png cupcake\n "
+    String blurCommand = "load res/cupcake.png cupcake\n "
                          + "blur cupcake halfBlurCupcake split 1.2 \n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
@@ -166,7 +166,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testBlurWithInvalidSplitCommand() {
-    String blurCommand = "load test/img/cupcake.png cupcake\n "
+    String blurCommand = "load res/cupcake.png cupcake\n "
                          + "blur cupcake halfBlurCupcake 1.2 \n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
@@ -185,7 +185,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testBlurWithSplitNoPCommand() {
-    String blurCommand = "load test/img/cupcake.png cupcake\n "
+    String blurCommand = "load res/cupcake.png cupcake\n "
                          + "blur cupcake halfBlurCupcake split \n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
@@ -224,7 +224,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testValueComponent() {
-    String valueCommand = "load test/img/monochromatic/black.ppm black\n "
+    String valueCommand = "load test/img/black.ppm black\n "
                           + "value-component black black_value\n exit";
     StringReader valueReader = new StringReader(valueCommand);
     StringWriter valueWriter = new StringWriter();
@@ -238,7 +238,7 @@ public class ImageControllerTest {
 
     Image executeValue = valueController.loadedImages.get("black_value");
 
-    Image targetImage = new MyImage("test/img/monochromatic/black.ppm");
+    Image targetImage = new MyImage("test/img/black.ppm");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
@@ -265,7 +265,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testIntensityComponent() {
-    String intensityCommand = "load test/img/monochromatic/black.ppm black\n "
+    String intensityCommand = "load test/img/black.ppm black\n "
                               + "intensity-component black black_intensity\n exit";
     StringReader intensityReader = new StringReader(intensityCommand);
     StringWriter intensityWriter = new StringWriter();
@@ -280,7 +280,7 @@ public class ImageControllerTest {
     Image executeIntensity = intensityController.loadedImages.get("black_intensity");
     Image expectIntensity = new MyImage("res/city_small_intensity.png");
     assertEquals(expectIntensity, executeIntensity);
-    assertTrue(output.contains(new MyImage("test/img/monochromatic/black.ppm").hashCode() + ""));
+    assertTrue(output.contains(new MyImage("test/img/black.ppm").hashCode() + ""));
   }
 
   /**
@@ -305,7 +305,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testLumaComponent() {
-    String lumaCommand = "load test/img/monochromatic/black.ppm black\n "
+    String lumaCommand = "load test/img/black.ppm black\n "
                          + "luma-component black black_luma\n exit";
     StringReader lumaReader = new StringReader(lumaCommand);
     StringWriter lumaWriter = new StringWriter();
@@ -320,7 +320,7 @@ public class ImageControllerTest {
 
     Image executeLuma = lumaController.loadedImages.get("black_luma");
     Image expectLuma = new MyImage("res/city_small_luma.png");
-    assertTrue(output.contains(new MyImage("test/img/monochromatic/black.ppm").hashCode() + ""));
+    assertTrue(output.contains(new MyImage("test/img/black.ppm").hashCode() + ""));
 
     assertEquals(expectLuma, executeLuma);
   }
@@ -351,9 +351,9 @@ public class ImageControllerTest {
   @Test
   public void testRGBCombine() {
 
-    String combineCommand = "load test/img/split/rose_onlyRed.jpg rose_onlyRed\n "
-                            + "load test/img/split/rose_onlyGreen.jpg rose_onlyGreen\n"
-                            + "load test/img/split/rose_onlyBlue.jpg rose_onlyBlue\n"
+    String combineCommand = "load res/rose_onlyRed.png rose_onlyRed\n "
+                            + "load res/rose_onlyGreen.png rose_onlyGreen\n"
+                            + "load res/rose_onlyBlue.png rose_onlyBlue\n"
                             + "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader combineReader = new StringReader(combineCommand);
     StringWriter combineWriter = new StringWriter();
@@ -367,11 +367,11 @@ public class ImageControllerTest {
     assertTrue(output.contains("Images combined successfully"));
 
     Image executeCombine = combineController.loadedImages.get("rose");
-    Image expectCombine = new MyImage("test/img/split/rose.ppm");
+    Image expectCombine = new MyImage("test/img/rose.ppm");
 
-    Image targetImageR = new MyImage("test/img/split/rose_onlyRed.jpg");
-    Image targetImageG = new MyImage("test/img/split/rose_onlyGreen.jpg");
-    Image targetImageB = new MyImage("test/img/split/rose_onlyBlue.jpg");
+    Image targetImageR = new MyImage("res/rose_onlyRed.png");
+    Image targetImageG = new MyImage("res/rose_onlyGreen.png");
+    Image targetImageB = new MyImage("res/rose_onlyBlue.png");
 
     assertEquals(expectCombine, executeCombine);
     assertTrue(output.contains(targetImageR.hashCode() + ""));
@@ -404,7 +404,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testRGBSplit() {
-    String splitCommand = "load test/img/split/rose.jpg rose\n"
+    String splitCommand = "load test/img/rose.jpg rose\n"
                           + "rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
@@ -422,15 +422,15 @@ public class ImageControllerTest {
     splitImages[1] = controller.loadedImages.get("rose_onlyGreen");
     splitImages[2] = controller.loadedImages.get("rose_onlyBlue");
 
-    Image myImage1 = new MyImage("test/img/split/rose_onlyRed.jpg");
-    Image myImage2 = new MyImage("test/img/split/rose_onlyGreen.jpg");
-    Image myImage3 = new MyImage("test/img/split/rose_onlyBlue.jpg");
+    Image myImage1 = new MyImage("res/rose_onlyRed.png");
+    Image myImage2 = new MyImage("res/rose_onlyGreen.png");
+    Image myImage3 = new MyImage("res/rose_onlyBlue.png");
 
     assertEquals(myImage1, splitImages[0]);
     assertEquals(myImage2, splitImages[1]);
     assertEquals(myImage3, splitImages[2]);
 
-    Image targetImage = new MyImage("test/img/split/rose.jpg");
+    Image targetImage = new MyImage("test/img/rose.jpg");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
@@ -457,7 +457,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testSplitComponent() {
-    String splitCommand = "load test/img/trichromatic/simple.ppm simple\n "
+    String splitCommand = "load test/img/simple.ppm simple\n "
                           + "red-component simple simple_greyScale_r\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
@@ -475,7 +475,7 @@ public class ImageControllerTest {
 
     assertEquals(expectSplit, executeSplit);
 
-    Image targetImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image targetImage = new MyImage("test/img/simple.ppm");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
@@ -550,7 +550,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testBrighten() {
-    String brightenCommand = "load test/img/trichromatic/simple.ppm simple\n "
+    String brightenCommand = "load test/img/simple.ppm simple\n "
                              + "brighten -4 simple simple-4 \n exit";
     StringReader brightenReader = new StringReader(brightenCommand);
     StringWriter brightenWriter = new StringWriter();
@@ -565,11 +565,11 @@ public class ImageControllerTest {
     assertTrue(output.contains("Decrease the brightness of the image"));
 
     Image executeIncrease = brightenController.loadedImages.get("simple-4");
-    Image expectIncrease = new MyImage("test/img/trichromatic/simple-4.ppm");
+    Image expectIncrease = new MyImage("test/img/simple-4.ppm");
 
     assertEquals(expectIncrease, executeIncrease);
 
-    Image targetImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image targetImage = new MyImage("test/img/simple.ppm");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
@@ -862,7 +862,8 @@ public class ImageControllerTest {
   @Test
   public void testColorCorrectWithSplitCommand() {
     String colorCorrectCommand = "load res/city_small.png city_small\n "
-                                 + "color-correct city_small city_small_colored_after_color_correct split 1\n exit";
+                                 + "color-correct city_small "
+                                 + "city_small_colored_after_color_correct split 1\n exit";
     StringReader colorCorrectReader = new StringReader(colorCorrectCommand);
     StringWriter colorCorrectWriter = new StringWriter();
     PrintWriter colorCorrectPrintWriter = new PrintWriter(colorCorrectWriter);
@@ -952,7 +953,8 @@ public class ImageControllerTest {
   @Test
   public void testLevelAdjustment() {
     String levelAdjustCommand = "load res/city.png city\n "
-                                + "levels-adjust 20 100 255 city city-level-adjustment-20-100-255\n exit";
+                                + "levels-adjust 20 100 255 city "
+                                + "city-level-adjustment-20-100-255\n exit";
     StringReader levelAdjustReader = new StringReader(levelAdjustCommand);
     StringWriter levelAdjustWriter = new StringWriter();
     PrintWriter levelAdjustPrintWriter = new PrintWriter(levelAdjustWriter);
@@ -979,7 +981,8 @@ public class ImageControllerTest {
   @Test
   public void testLevelAdjustmentWithSplitCommand() {
     String levelAdjustCommand = "load res/city.png city\n "
-                                + "levels-adjust 20 100 255 city city-level-adjustment-20-100-255 split 1\n exit";
+                                + "levels-adjust 20 100 255 city "
+                                + "city-level-adjustment-20-100-255 split 1\n exit";
     StringReader levelAdjustReader = new StringReader(levelAdjustCommand);
     StringWriter levelAdjustWriter = new StringWriter();
     PrintWriter levelAdjustPrintWriter = new PrintWriter(levelAdjustWriter);
@@ -1005,7 +1008,7 @@ public class ImageControllerTest {
    */
   @Test
   public void testInvalidCommand() {
-    StringReader input = new StringReader("loae test/img/mall.jpg mall\n exit");
+    StringReader input = new StringReader("loae test/img/car.jpg car\n exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
 

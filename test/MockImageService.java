@@ -141,9 +141,9 @@ public class MockImageService extends ImageService {
   public Image[] splitChannel(Image image) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to be split, now start to split.");
-    Image myImage1 = new MyImage("test/img/split/rose_onlyRed.jpg");
-    Image myImage2 = new MyImage("test/img/split/rose_onlyGreen.jpg");
-    Image myImage3 = new MyImage("test/img/split/rose_onlyBlue.jpg");
+    Image myImage1 = new MyImage("res/rose_onlyRed.png");
+    Image myImage2 = new MyImage("res/rose_onlyGreen.png");
+    Image myImage3 = new MyImage("res/rose_onlyBlue.png");
     Image[] result = new Image[3];
     result[0] = myImage1;
     result[1] = myImage2;

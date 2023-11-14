@@ -1,3 +1,3 @@
-load test/img/coffee.png coffee
-# blur the coffee
-blor coffee coffee-blurred
+load res/car.png car
+# blur the car
+blor car car-blurred

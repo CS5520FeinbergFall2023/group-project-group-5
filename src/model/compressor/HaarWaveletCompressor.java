@@ -11,7 +11,7 @@ import java.util.Set;
  * This class represents a compressor that uses Haar Wavelet Transform.
  */
 public class HaarWaveletCompressor implements Compressor {
-  public static final float sqrt2 = (float) Math.sqrt(2);
+  public static final float SQRT_2 = (float) Math.sqrt(2);
 
   //singleton
   private static final HaarWaveletCompressor instance = new HaarWaveletCompressor();
@@ -197,8 +197,9 @@ public class HaarWaveletCompressor implements Compressor {
     }
     int height = compressed.length;
     int width = compressed[0].length;
-    if (!isPowerOfTwo(height) || !(height == width)) {
-      throw new IllegalArgumentException("The given compressed matrix is malformed.");
+    if (!isPowerOfTwo(height) || (height != width)) {
+      throw new IllegalArgumentException("The given compressed matrix is malformed. It should be "
+                                         + "a square with length the power of 2.");
     }
     float[][] result = new float[height][width];
     for (int i = 0; i < height; i++) {
@@ -265,16 +266,16 @@ public class HaarWaveletCompressor implements Compressor {
     int groupCount = (int) Math.ceil(nums.length / 2.0f);
     float[] compressed = new float[2 * groupCount];
     for (int i = 0; i < groupCount - 1; i++) {
-      compressed[i] = (nums[2 * i] + nums[2 * i + 1]) / sqrt2;
-      compressed[i + groupCount] = ((nums[2 * i] - nums[2 * i + 1]) / sqrt2);
+      compressed[i] = (nums[2 * i] + nums[2 * i + 1]) / SQRT_2;
+      compressed[i + groupCount] = ((nums[2 * i] - nums[2 * i + 1]) / SQRT_2);
     }
     if (nums.length % 2 == 0) {
       compressed[groupCount - 1] =
-          (nums[nums.length - 2] + nums[nums.length - 1]) / sqrt2;
-      compressed[2 * groupCount - 1] = (nums[nums.length - 2] - nums[nums.length - 1]) / sqrt2;
+          (nums[nums.length - 2] + nums[nums.length - 1]) / SQRT_2;
+      compressed[2 * groupCount - 1] = (nums[nums.length - 2] - nums[nums.length - 1]) / SQRT_2;
     } else {
-      compressed[groupCount - 1] = nums[nums.length - 1] / sqrt2;
-      compressed[2 * groupCount - 1] = nums[nums.length - 1] / sqrt2;
+      compressed[groupCount - 1] = nums[nums.length - 1] / SQRT_2;
+      compressed[2 * groupCount - 1] = nums[nums.length - 1] / SQRT_2;
     }
     return compressed;
   }
@@ -332,8 +333,8 @@ public class HaarWaveletCompressor implements Compressor {
     for (int i = 0; i < groupCount; i++) {
       float base = nums[i];
       float diff = nums[i + groupCount];
-      inverted[2 * i] = (base + diff) / sqrt2;
-      inverted[2 * i + 1] = (base - diff) / sqrt2;
+      inverted[2 * i] = (base + diff) / SQRT_2;
+      inverted[2 * i + 1] = (base - diff) / SQRT_2;
     }
     return inverted;
   }

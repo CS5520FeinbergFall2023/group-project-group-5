@@ -67,7 +67,7 @@ Other interfaces and design purpose is further explained down below.
 ### Pixel
 
 #### Purpose
-This interface is used to describe pixels. All pixels use a map to store the channels it has and the values in the corresponding channel.
+This interface is used to describe pixels. All pixels use a map to store the channelsMap it has and the values in the corresponding channel.
 
 #### Methods
 
@@ -83,18 +83,18 @@ This interface is used to describe pixels. All pixels use a map to store the cha
     - Adds two pixels. E.g. calculate [r,g,b] + [r',g',b'] for two RGB pixels.
 
 - abstract Pixel getChannelComponent(Channel channel);
-    - Get certain channel component of the pixel, which means the result pixel has same value as the original one on the given channel, but with 0 on the other channels.
+    - Get certain channel component of the pixel, which means the result pixel has same value as the original one on the given channel, but with 0 on the other channelsMap.
 
 - public abstract Pixel max();
-    - Calculate the max value among all channels of the pixel and get a pixel with all channels this value.
+    - Calculate the max value among all channelsMap of the pixel and get a pixel with all channelsMap this value.
 
 - public abstract Pixel avg();
-    - Calculate the average value among all channels of the pixel and get a pixel with all channels this value.
+    - Calculate the average value among all channelsMap of the pixel and get a pixel with all channelsMap this value.
 - public boolean isGreyscale()
-    - Check if this pixel is greyscale by checking if each channel has the same value. The default implementation traverse all values in channels to see if they are all same.
+    - Check if this pixel is greyscale by checking if each channel has the same value. The default implementation traverse all values in channelsMap to see if they are all same.
 
 - public String toString()
-    - Returns a string representation of the pixel by printing out the channels and corresponding values.
+    - Returns a string representation of the pixel by printing out the channelsMap and corresponding values.
 
 
 ### Image
@@ -112,7 +112,7 @@ The key design here is to categorize image operations according to the mechanism
 | intensity    | matrix multiplication    |
 | greyscale    | matrix multiplication    |
 | flip    | affine transformation (project coordinates according to matrix and move pixel at (x,y) to the projected position (x',y'))    |
-| brighten    | pixel addition (adding values to channels)    |
+| brighten    | pixel addition (adding values to channelsMap)    |
 | darken    | pixel addition    |
 | combine   | pixel addition    |
 | blur   | filtering (on the whole image)    |
@@ -156,7 +156,7 @@ The key design here is to categorize image operations according to the mechanism
     - Perform array addition an image with given matrix. This is acheived by performing array addition on every pixel, by utilizing mapElement(pixel -> pixel.addition(matrix))
 
 - Channel[] getChannels();
-    - Get channels of pixels in the image.
+    - Get channelsMap of pixels in the image.
 
 - Image[] split(float percentage, Axis axis) throws IllegalArgumentException;
     - Split the images to 2 images according to the given percentage on the given axis.
@@ -203,27 +203,27 @@ This enum is used to represent axis. Currently we only deal with 2D images, so w
 ### Channel
 
 #### Purpose
-This enum is used to represent channels. Currently we only deal with RGB images, so we only have three channels, RED, GREEN, and BLUE.
+This enum is used to represent channelsMap. Currently we only deal with RGB images, so we only have three channelsMap, RED, GREEN, and BLUE.
 
 ## Classes
 
 ### RGBPixel 
 
 #### Purpose
-This class represents RGB pixels, that is, pixels with and only with RGB channels. It extends the Pixel abstract class.
+This class represents RGB pixels, that is, pixels with and only with RGB channelsMap. It extends the Pixel abstract class.
 
 #### Fields
-- Besides the inhereted Map<Channel, Integer> channels, it also has a constant private final int bitDepth = 8.
+- Besides the inhereted Map<Channel, Integer> channelsMap, it also has a constant private final int bitDepth = 8.
 
 #### Methods
 - public RGBPixel(int red, int green, int blue)
     - Constructor with red, green and blue values. It will automatically clamp the values, i.e., set value to zero if it's negative, and set value to 2^bitDepth-1 if it's larger than that. It also uses EnumMap to store this channel-value relation ship which makes operation quicker.
-- private RGBPixel(Map<Channel, Integer> channels)
-    - Private constructor that takes given channels map.
+- private RGBPixel(Map<Channel, Integer> channelsMap)
+    - Private constructor that takes given channelsMap map.
 - public boolean isGreyscale()
     - Check if this pixel is greyscale by checking if the rgb channel values are all same.
 - public Pixel getChannelComponent(Channel channel) throws IllegalArgumentException
-    - Get certain channel component of the pixel by traversing all channels and put corresponding value to corresponding channel in the result pixel while keeping other channels zero.
+    - Get certain channel component of the pixel by traversing all channelsMap and put corresponding value to corresponding channel in the result pixel while keeping other channelsMap zero.
 - public RGBPixel linearTransformation(float[][] matrix) throws IllegalArgumentException
     - Calculate 3x3 matrix * [r,g,b] following matrix operation definition.
 - public RGBPixel addition(float[] matrix) throws IllegalArgumentException
@@ -233,10 +233,10 @@ This class represents RGB pixels, that is, pixels with and only with RGB channel
     - Calculate pixel[r,g,b] + pixel[r',g',b']
 
 - public RGBPixel max()
-    -  Calculate the max value among all channels of the pixel and get a pixel with all channels this value.
+    -  Calculate the max value among all channelsMap of the pixel and get a pixel with all channelsMap this value.
 
 - public RGBPixel avg()
-    -  Calculate the average value among all channels of the pixel and get a pixel with all channels this value.
+    -  Calculate the average value among all channelsMap of the pixel and get a pixel with all channelsMap this value.
 
 - public int getRed()
     - Get the value of the red channel by getting from the EnumMap.
@@ -248,7 +248,7 @@ This class represents RGB pixels, that is, pixels with and only with RGB channel
     - Get the value of the red channel by getting from the EnumMap.
 
 - public boolean equals(Object o)
-    - Compare if two objects are equal. If both are RGB pixel, compare the channels.
+    - Compare if two objects are equal. If both are RGB pixel, compare the channelsMap.
 
 - public int hashCode()
     - Get the hashcode of the object.
@@ -299,7 +299,7 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
     - Perform filtering an image with given matrix. By traversing and putting the center of the kernel to each position on the image and calculates the area it covers, it adds the values when corresponding pixel and kernel element multiply to make the final result of the pixel where the kernel now lies.
 
 -  public MyImage channelSplit(Channel channel) throws IllegalArgumentException
-    - Split channels of the given image by making use of the pixel's getChannelComponent function.
+    - Split channelsMap of the given image by making use of the pixel's getChannelComponent function.
 
 -  public MyImage imgArrayAddition(float[] matrix) throws IllegalArgumentException
     - Perform array addition an image with given matrix.
@@ -314,7 +314,7 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
     - Map all pixels in the image with given pixel function with traversal.
 
 -  public Channel[] getChannels()
-    - Get channels of pixels in the image. For this case, Channel.RED, Channel.GREEN and Channel.BLUE
+    - Get channelsMap of pixels in the image. For this case, Channel.RED, Channel.GREEN and Channel.BLUE
 
 - public MyImage compress(Compressor compressor, float ratio)
     - Compress the image by calling compress on the 3D value array of red channel, green channel and blue channel of the image first, and then call decompress on them and truncate the result to make sure the result image is of the same size as the original one (remove the paddings).
@@ -326,7 +326,7 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
     - Combine two images together on the given axis by creating a new image with disired added size and interating and assigning pixels with same rgb values on the corresponding position on the original images.
     
 -  private float[][] getFrequency()
-    - Get appearance frequency of colors in the image by interating all pixels and counting the apearances of each color in three channels respectively and finally get the frequency by deviding the count with the image size (total pixel number). The result is float[3][256], representing the 3 channels and frquency of each of the 256 values.
+    - Get appearance frequency of colors in the image by interating all pixels and counting the apearances of each color in three channelsMap respectively and finally get the frequency by deviding the count with the image size (total pixel number). The result is float[3][256], representing the 3 channelsMap and frquency of each of the 256 values.
 
 - private float getMax(float... nums)
     - Find the max among the given numbers by iteration.
@@ -335,11 +335,11 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
     - Find index of the first occurance of given value in the given array by traversing.
 
 - public MyImage getHistogram();
-    - Get histogram of the current image. It calls getFrequency to get frequency of the three channels, draw a vertical line from one value to the next one by just setting the pixels on the result image. Finally, make the rest space on the result image white by checking if there're null in the pixel 2d array.
+    - Get histogram of the current image. It calls getFrequency to get frequency of the three channelsMap, draw a vertical line from one value to the next one by just setting the pixels on the result image. Finally, make the rest space on the result image white by checking if there're null in the pixel 2d array.
     - Do note that colors overlay instead of mix (as shown in the instructions) in the order of red, green and blue. For examples, blue lines overlays green and red lines if they do appear in the same position.
 
 - public MyImage colorCorrect();
-    - Color-correct an image by aligning the meaningful peaks of its histogram. It uses getFrequency to get frequency of the three channels, excluding color values less or equal to 10 and more or equal to 250. Then it calls getMax and findIndexOf to get the indices of the first peak in the 3 channels, calculate the average and the gap/delta, and adds the delta to all values in thie channel by calling imgArrayAddition method.
+    - Color-correct an image by aligning the meaningful peaks of its histogram. It uses getFrequency to get frequency of the three channelsMap, excluding color values less or equal to 10 and more or equal to 250. Then it calls getMax and findIndexOf to get the indices of the first peak in the 3 channelsMap, calculate the average and the gap/delta, and adds the delta to all values in thie channel by calling imgArrayAddition method.
 - public MyImage levelAdjustment(float black, float mid, float white) throws IllegalArgumentException
 
     - Perform level adjustment on the image. It fits the curve ax^2_bx+c with the given points, calculates new red, new green and new blue values using the curve which makes the final new result image.
@@ -462,9 +462,9 @@ None
     return image.imgArrayAddition(matrix) with matrix = {delta, delta, delta}.
 
 - public Image[] splitChannel(Image image) throws IllegalArgumentException
-    - Split image channels and result in $channelCount greyscale images by calling channelSplit first then multiply by a matrix whose column index corresponds to each channel (like column 0 for red in rgb) is one (other than that is 0).
+    - Split image channelsMap and result in $channelCount greyscale images by calling channelSplit first then multiply by a matrix whose column index corresponds to each channel (like column 0 for red in rgb) is one (other than that is 0).
 
-- public Image combineChannels(Channel[] channels, Image[] images) throws IllegalArgumentException
+- public Image combineChannels(Channel[] channelsMap, Image[] images) throws IllegalArgumentException
     - Combine greyscale images each representing one channel to one multicolor image by first splitting the greyscale images and get single channel images, than add them all using Arrays.stream(splits).reduce(Image::addition) .
 
 - public Image sharpen(Image image, float percentage, Axis splitAxis) throws IllegalArgumentException

@@ -12,7 +12,7 @@ import model.Channel;
  */
 public class RGBPixel implements Pixel {
   public static final int bitDepth = 8;
-  private final Map<Channel, Integer> channels;
+  private final Map<Channel, Integer> channelsMap;
 
   /**
    * Construct an RGB pixel. Every value of the channel is in the range of [0,1]. If the input is
@@ -32,14 +32,14 @@ public class RGBPixel implements Pixel {
     red = Math.min(red, (1 << bitDepth) - 1);
     green = Math.min(green, (1 << bitDepth) - 1);
     blue = Math.min(blue, (1 << bitDepth) - 1);
-    channels = new EnumMap<>(Channel.class);
-    channels.put(Channel.RED, red);
-    channels.put(Channel.GREEN, green);
-    channels.put(Channel.BLUE, blue);
+    channelsMap = new EnumMap<>(Channel.class);
+    channelsMap.put(Channel.RED, red);
+    channelsMap.put(Channel.GREEN, green);
+    channelsMap.put(Channel.BLUE, blue);
   }
 
-  private RGBPixel(Map<Channel, Integer> channels) {
-    this.channels = channels;
+  private RGBPixel(Map<Channel, Integer> channelsMap) {
+    this.channelsMap = channelsMap;
   }
 
   /**
@@ -49,7 +49,7 @@ public class RGBPixel implements Pixel {
    * @return if the pixel has the given channel
    */
   public boolean containsChannel(Channel channel) {
-    return channels.containsKey(channel);
+    return channelsMap.containsKey(channel);
   }
 
   /**
@@ -75,9 +75,9 @@ public class RGBPixel implements Pixel {
       throw new IllegalArgumentException("The pixel does not contain the channel");
     }
     Map<Channel, Integer> channels = new EnumMap<>(Channel.class);
-    for (Channel key : this.channels.keySet()) {
+    for (Channel key : this.channelsMap.keySet()) {
       if (key == channel) {
-        channels.put(channel, this.channels.get(channel));
+        channels.put(channel, this.channelsMap.get(channel));
       } else {
         channels.put(key, 0);
       }
@@ -95,9 +95,9 @@ public class RGBPixel implements Pixel {
   public RGBPixel linearTransformation(float[][] matrix) throws IllegalArgumentException {
     if (matrix.length == 3 && matrix[0].length == 3 && matrix[1].length == 3
         && matrix[2].length == 3) {
-      int red = channels.get(Channel.RED);
-      int green = channels.get(Channel.GREEN);
-      int blue = channels.get(Channel.BLUE);
+      int red = channelsMap.get(Channel.RED);
+      int green = channelsMap.get(Channel.GREEN);
+      int blue = channelsMap.get(Channel.BLUE);
       return new RGBPixel(
           Math.round(red * matrix[0][0] + green * matrix[0][1] + blue * matrix[0][2]),
           Math.round(red * matrix[1][0] + green * matrix[1][1] + blue * matrix[1][2]),
@@ -117,9 +117,9 @@ public class RGBPixel implements Pixel {
   @Override
   public RGBPixel addition(float[] matrix) throws IllegalArgumentException {
     if (matrix.length == 3) {
-      int red = channels.get(Channel.RED);
-      int green = channels.get(Channel.GREEN);
-      int blue = channels.get(Channel.BLUE);
+      int red = channelsMap.get(Channel.RED);
+      int green = channelsMap.get(Channel.GREEN);
+      int blue = channelsMap.get(Channel.BLUE);
       return new RGBPixel(Math.round(red + matrix[0]), Math.round(green + matrix[1]),
           Math.round(blue + matrix[2]));
     } else {
@@ -138,9 +138,9 @@ public class RGBPixel implements Pixel {
     if (!(pixel instanceof RGBPixel)) {
       throw new IllegalArgumentException("Addition between pixels require them to be of same type");
     }
-    int red = channels.get(Channel.RED);
-    int green = channels.get(Channel.GREEN);
-    int blue = channels.get(Channel.BLUE);
+    int red = channelsMap.get(Channel.RED);
+    int green = channelsMap.get(Channel.GREEN);
+    int blue = channelsMap.get(Channel.BLUE);
     int thatRed = ((RGBPixel) pixel).getRed();
     int thatGreen = ((RGBPixel) pixel).getGreen();
     int thatBlue = ((RGBPixel) pixel).getBlue();
@@ -149,16 +149,16 @@ public class RGBPixel implements Pixel {
   }
 
   /**
-   * Calculate the max value among all channels of the pixel and get a pixel with all channels this
+   * Calculate the max value among all channelsMap of the pixel and get a pixel with all channelsMap this
    * value.
    *
-   * @return a pixel with all channels the max value among all channels
+   * @return a pixel with all channelsMap the max value among all channelsMap
    */
   @Override
   public RGBPixel max() {
     int max = 0;
-    for (Channel channel : channels.keySet()) {
-      int tmp = this.channels.getOrDefault(channel, 0);
+    for (Channel channel : channelsMap.keySet()) {
+      int tmp = this.channelsMap.getOrDefault(channel, 0);
       if (tmp > max) {
         max = tmp;
       }
@@ -167,16 +167,16 @@ public class RGBPixel implements Pixel {
   }
 
   /**
-   * Calculate the average value among all channels of the pixel and get a pixel with all channels
+   * Calculate the average value among all channelsMap of the pixel and get a pixel with all channelsMap
    * this value.
    *
-   * @return a pixel with all channels the average value among all channels
+   * @return a pixel with all channelsMap the average value among all channelsMap
    */
   @Override
   public RGBPixel avg() {
     int sum = 0;
-    for (Channel channel : channels.keySet()) {
-      int tmp = this.channels.getOrDefault(channel, 0);
+    for (Channel channel : channelsMap.keySet()) {
+      int tmp = this.channelsMap.getOrDefault(channel, 0);
       sum += tmp;
     }
     return new RGBPixel(Math.round(sum / 3f), Math.round(sum / 3f), Math.round(sum / 3f));
@@ -188,7 +188,7 @@ public class RGBPixel implements Pixel {
    * @return the value of the red channel of the image
    */
   public int getRed() {
-    return channels.get(Channel.RED);
+    return channelsMap.get(Channel.RED);
   }
 
   /**
@@ -197,7 +197,7 @@ public class RGBPixel implements Pixel {
    * @return the value of the blue channel of the image
    */
   public int getBlue() {
-    return channels.get(Channel.BLUE);
+    return channelsMap.get(Channel.BLUE);
   }
 
   /**
@@ -206,14 +206,14 @@ public class RGBPixel implements Pixel {
    * @return the value of the green channel of the image
    */
   public int getGreen() {
-    return channels.get(Channel.GREEN);
+    return channelsMap.get(Channel.GREEN);
   }
 
 
   /**
    * Compare if two objects are equal.
    *
-   * @param o the othe object to compare to
+   * @param o the other object to compare to
    * @return if the objects are equal
    */
   @Override
@@ -225,7 +225,7 @@ public class RGBPixel implements Pixel {
       return false;
     }
     RGBPixel rgbPixel = (RGBPixel) o;
-    return Objects.equals(channels, rgbPixel.channels);
+    return Objects.equals(channelsMap, rgbPixel.channelsMap);
   }
 
 
@@ -236,7 +236,7 @@ public class RGBPixel implements Pixel {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(channels);
+    return Objects.hash(channelsMap);
   }
 
   /**
@@ -247,10 +247,10 @@ public class RGBPixel implements Pixel {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    for (Channel channel : channels.keySet()) {
+    for (Channel channel : channelsMap.keySet()) {
       sb.append(channel);
       sb.append(":");
-      sb.append(channels.get(channel));
+      sb.append(channelsMap.get(channel));
       sb.append(" ");
     }
     return sb.toString();

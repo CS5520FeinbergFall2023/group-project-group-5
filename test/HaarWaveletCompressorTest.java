@@ -1,7 +1,7 @@
-package model.compressor;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import model.compressor.HaarWaveletCompressor;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -14,7 +14,7 @@ public class HaarWaveletCompressorTest {
   HaarWaveletCompressor instance;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     instance = HaarWaveletCompressor.getInstance();
   }
 
@@ -832,7 +832,8 @@ public class HaarWaveletCompressorTest {
     float[] result = instance.compress(originalArr, 0.5f);
     assertArrayEquals(new float[]{3, 0, 0, 0}, result, 0.001f);
     result = instance.compress(originalArr, 0f);
-    assertArrayEquals(new float[]{3, 1, -HaarWaveletCompressor.sqrt2, HaarWaveletCompressor.sqrt2},
+    assertArrayEquals(
+        new float[]{3, 1, -HaarWaveletCompressor.SQRT_2, HaarWaveletCompressor.SQRT_2},
         result, 0.001f);
   }
 
@@ -849,9 +850,9 @@ public class HaarWaveletCompressorTest {
     float[] originalArr = new float[]{1, 3, 2, 4, 5, 7};
     float[] result = instance.compress(originalArr, 0f);
     assertArrayEquals(
-        new float[]{11 / HaarWaveletCompressor.sqrt2, -1 / HaarWaveletCompressor.sqrt2,
-            -1, 6, -HaarWaveletCompressor.sqrt2, -HaarWaveletCompressor.sqrt2,
-            -HaarWaveletCompressor.sqrt2, 0}, result, 0.001f);
+        new float[]{11 / HaarWaveletCompressor.SQRT_2, -1 / HaarWaveletCompressor.SQRT_2,
+            -1, 6, -HaarWaveletCompressor.SQRT_2, -HaarWaveletCompressor.SQRT_2,
+            -HaarWaveletCompressor.SQRT_2, 0}, result, 0.001f);
   }
 
   @Test
@@ -860,7 +861,7 @@ public class HaarWaveletCompressorTest {
     float targetRatio = 0f;
     float[] result = instance.compress(originalArr, targetRatio);
     assertArrayEquals(
-        new float[]{5, -1, -HaarWaveletCompressor.sqrt2, -HaarWaveletCompressor.sqrt2}, result,
+        new float[]{5, -1, -HaarWaveletCompressor.SQRT_2, -HaarWaveletCompressor.SQRT_2}, result,
         0.001f);
   }
 
@@ -910,8 +911,8 @@ public class HaarWaveletCompressorTest {
   //decompress from a zero compress ratio compression
   @Test
   public void testDecompressRatioZero() {
-    float[] result = instance.decompress(new float[]{5, -1, -HaarWaveletCompressor.sqrt2,
-        -HaarWaveletCompressor.sqrt2});
+    float[] result = instance.decompress(new float[]{5, -1, -HaarWaveletCompressor.SQRT_2,
+        -HaarWaveletCompressor.SQRT_2});
     assertArrayEquals(new float[]{1, 3, 2, 4}, result, 0.001f);
   }
 

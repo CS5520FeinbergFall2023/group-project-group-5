@@ -806,31 +806,36 @@ public class MyImage implements Image {
         || white < 0 || white > (1 << RGBPixel.bitDepth)) {
       throw new IllegalArgumentException("Black, mid and white should all be in range [0, 255]");
     }
-    //fitting the curve y = ax^2+bx+c
-    float A =
-        black * black * (mid - white) - black * (mid * mid - white * white) + white * mid * mid
-        - mid * white * white;
-    float aa = -black * (128 - 255) + 128 * white - 255 * mid;
-    float ab = black * black * (128 - 255) + 255 * mid * mid - 128 * white * white;
-    float ac =
-        black * black * (255 * mid - 128 * white) - black * (255 * mid * mid - 128 * white * white);
-    float a = aa / A;
-    float b = ab / A;
-    float c = ac / A;
-    RGBPixel[][] newPixels = new RGBPixel[height][width];
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        RGBPixel pixel = getPixel(i, j);
-        int originalRed = pixel.getRed();
-        int originalGreen = pixel.getGreen();
-        int originalBlue = pixel.getBlue();
-        int newRed = Math.round(a * originalRed * originalRed + b * originalRed + c);
-        int newGreen = Math.round(a * originalGreen * originalGreen + b * originalGreen + c);
-        int newBlue = Math.round(a * originalBlue * originalBlue + b * originalBlue + c);
-        newPixels[i][j] = new RGBPixel(newRed, newGreen, newBlue);
+    if ((white > mid) && (mid > black)) {
+      //fitting the curve y = ax^2+bx+c
+      float denominator =
+          black * black * (mid - white) - black * (mid * mid - white * white) + white * mid * mid
+          - mid * white * white;
+      float aa = -black * (128 - 255) + 128 * white - 255 * mid;
+      float ab = black * black * (128 - 255) + 255 * mid * mid - 128 * white * white;
+      float ac =
+          black * black * (255 * mid - 128 * white) - black * (255 * mid * mid
+                                                               - 128 * white * white);
+      float a = aa / denominator;
+      float b = ab / denominator;
+      float c = ac / denominator;
+      RGBPixel[][] newPixels = new RGBPixel[height][width];
+      for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+          RGBPixel pixel = getPixel(i, j);
+          int originalRed = pixel.getRed();
+          int originalGreen = pixel.getGreen();
+          int originalBlue = pixel.getBlue();
+          int newRed = Math.round(a * originalRed * originalRed + b * originalRed + c);
+          int newGreen = Math.round(a * originalGreen * originalGreen + b * originalGreen + c);
+          int newBlue = Math.round(a * originalBlue * originalBlue + b * originalBlue + c);
+          newPixels[i][j] = new RGBPixel(newRed, newGreen, newBlue);
+        }
       }
+      return new MyImage(newPixels);
+    } else {
+      throw new IllegalArgumentException("It needs to be white > mid >black.");
     }
-    return new MyImage(newPixels);
   }
 
   /**

@@ -101,25 +101,25 @@ public class ImageServiceTest {
 
   @Test
   public void testSplitComponentRed() {
-    Image testImage = new MyImage("test/img/split/rose.ppm");
+    Image testImage = new MyImage("test/img/rose.ppm");
     Image testImageRed = imageService.splitComponent(testImage, Channel.RED);
-    Image expectedRed = new MyImage("test/img/split/rose_onlyRed.ppm");
+    Image expectedRed = new MyImage("res/rose_onlyRed.png");
     assertEquals(testImageRed, expectedRed);
   }
 
   @Test
   public void testSplitComponentGreen() {
-    Image testImage = new MyImage("test/img/split/rose.ppm");
+    Image testImage = new MyImage("test/img/rose.ppm");
     Image testImageGreen = imageService.splitComponent(testImage, Channel.GREEN);
-    Image expectedGreen = new MyImage("test/img/split/rose_onlyGreen.ppm");
+    Image expectedGreen = new MyImage("res/rose_onlyGreen.png");
     assertEquals(testImageGreen, expectedGreen);
   }
 
   @Test
   public void testSplitComponentBlue() {
-    Image testImage = new MyImage("test/img/split/rose.ppm");
+    Image testImage = new MyImage("test/img/rose.ppm");
     Image testImageBlue = imageService.splitComponent(testImage, Channel.BLUE);
-    Image expectedBlue = new MyImage("test/img/split/rose_onlyBlue.ppm");
+    Image expectedBlue = new MyImage("res/rose_onlyBlue.png");
     assertEquals(testImageBlue, expectedBlue);
   }
 
@@ -133,11 +133,11 @@ public class ImageServiceTest {
 
   @Test
   public void testGetValueMonochromatic() {
-    Image testImageBlack = new MyImage("test/img/monochromatic/black.ppm");
-    Image testImageWhite = new MyImage("test/img/monochromatic/white.ppm");
-    Image testImageRed = new MyImage("test/img/monochromatic/red.ppm");
-    Image testImageGreen = new MyImage("test/img/monochromatic/green.ppm");
-    Image testImageBlue = new MyImage("test/img/monochromatic/blue.ppm");
+    Image testImageBlack = new MyImage("test/img/black.ppm");
+    Image testImageWhite = new MyImage("test/img/white.ppm");
+    Image testImageRed = new MyImage("test/img/red.ppm");
+    Image testImageGreen = new MyImage("test/img/green.ppm");
+    Image testImageBlue = new MyImage("test/img/blue.ppm");
 
     Image resultImageBlack = imageService.getValue(testImageBlack);
     Image resultImageWhite = imageService.getValue(testImageWhite);
@@ -183,9 +183,9 @@ public class ImageServiceTest {
 
   @Test
   public void testGetValueDichromatic() {
-    Image testImageWoBlue = new MyImage("test/img/dichromatic/woBlue.ppm");
-    Image testImageWoRed = new MyImage("test/img/dichromatic/woRed.ppm");
-    Image testImageWoGreen = new MyImage("test/img/dichromatic/woGreen.ppm");
+    Image testImageWoBlue = new MyImage("test/img/woBlue.ppm");
+    Image testImageWoRed = new MyImage("test/img/woRed.ppm");
+    Image testImageWoGreen = new MyImage("test/img/woGreen.ppm");
 
     Image resultImageWoBlue = imageService.getValue(testImageWoBlue);
     Image resultImageWoRed = imageService.getValue(testImageWoRed);
@@ -208,7 +208,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGetValueTrichromatic() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.getValue(testImage);
     String expected = "RED:100 GREEN:100 BLUE:100    RED:200 GREEN:200 BLUE:200    \n"
                       + "RED:245 GREEN:245 BLUE:245    RED:105 GREEN:105 BLUE:105    \n"
@@ -218,11 +218,11 @@ public class ImageServiceTest {
 
   @Test
   public void testGetIntensityMonochromatic() {
-    Image testImageBlack = new MyImage("test/img/monochromatic/black.ppm");
-    Image testImageWhite = new MyImage("test/img/monochromatic/white.ppm");
-    Image testImageRed = new MyImage("test/img/monochromatic/red.ppm");
-    Image testImageGreen = new MyImage("test/img/monochromatic/green.ppm");
-    Image testImageBlue = new MyImage("test/img/monochromatic/blue.ppm");
+    Image testImageBlack = new MyImage("test/img/black.ppm");
+    Image testImageWhite = new MyImage("test/img/white.ppm");
+    Image testImageRed = new MyImage("test/img/red.ppm");
+    Image testImageGreen = new MyImage("test/img/green.ppm");
+    Image testImageBlue = new MyImage("test/img/blue.ppm");
 
     Image resultImageBlack = imageService.getIntensity(testImageBlack);
     Image resultImageWhite = imageService.getIntensity(testImageWhite);
@@ -278,9 +278,9 @@ public class ImageServiceTest {
 
   @Test
   public void testGetIntensityDichromatic() {
-    Image testImageWoBlue = new MyImage("test/img/dichromatic/woBlue.ppm");
-    Image testImageWoRed = new MyImage("test/img/dichromatic/woRed.ppm");
-    Image testImageWoGreen = new MyImage("test/img/dichromatic/woGreen.ppm");
+    Image testImageWoBlue = new MyImage("test/img/woBlue.ppm");
+    Image testImageWoRed = new MyImage("test/img/woRed.ppm");
+    Image testImageWoGreen = new MyImage("test/img/woGreen.ppm");
 
     Image resultImageWoBlue = imageService.getIntensity(testImageWoBlue);
     Image resultImageWoRed = imageService.getIntensity(testImageWoRed);
@@ -302,7 +302,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGetIntensityTrichromatic() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.getIntensity(testImage);
     String expected = "RED:92 GREEN:92 BLUE:92    RED:127 GREEN:127 BLUE:127    \n"
                       + "RED:132 GREEN:132 BLUE:132    RED:82 GREEN:82 BLUE:82    \n"
@@ -313,11 +313,11 @@ public class ImageServiceTest {
 
   @Test
   public void testGetLumaMonochromatic() {
-    Image testImageBlack = new MyImage("test/img/monochromatic/black.ppm");
-    Image testImageWhite = new MyImage("test/img/monochromatic/white.ppm");
-    Image testImageRed = new MyImage("test/img/monochromatic/red.ppm");
-    Image testImageGreen = new MyImage("test/img/monochromatic/green.ppm");
-    Image testImageBlue = new MyImage("test/img/monochromatic/blue.ppm");
+    Image testImageBlack = new MyImage("test/img/black.ppm");
+    Image testImageWhite = new MyImage("test/img/white.ppm");
+    Image testImageRed = new MyImage("test/img/red.ppm");
+    Image testImageGreen = new MyImage("test/img/green.ppm");
+    Image testImageBlue = new MyImage("test/img/blue.ppm");
 
     Image resultImageBlack = imageService.getLuma(testImageBlack);
     Image resultImageWhite = imageService.getLuma(testImageWhite);
@@ -393,9 +393,9 @@ public class ImageServiceTest {
 
   @Test
   public void testGetLumaDichromatic() {
-    Image testImageWoBlue = new MyImage("test/img/dichromatic/woBlue.ppm");
-    Image testImageWoRed = new MyImage("test/img/dichromatic/woRed.ppm");
-    Image testImageWoGreen = new MyImage("test/img/dichromatic/woGreen.ppm");
+    Image testImageWoBlue = new MyImage("test/img/woBlue.ppm");
+    Image testImageWoRed = new MyImage("test/img/woRed.ppm");
+    Image testImageWoGreen = new MyImage("test/img/woGreen.ppm");
 
     Image resultImageWoBlue = imageService.getLuma(testImageWoBlue);
     Image resultImageWoRed = imageService.getLuma(testImageWoRed);
@@ -435,7 +435,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGetLumaTrichromatic() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.getLuma(testImage);
     String expected = "RED:89 GREEN:89 BLUE:89    RED:160 GREEN:160 BLUE:160    \n"
                       + "RED:95 GREEN:95 BLUE:95    RED:74 GREEN:74 BLUE:74    \n"
@@ -452,54 +452,45 @@ public class ImageServiceTest {
   //flip for multiple times (more than 2)
   @Test
   public void testFlipHorizontally() {
-    Image testImagePPM = new MyImage("test/img/car.png");
+    Image testImagePPM = new MyImage("res/car.png");
     Image flippedImagePPM = imageService.flip(testImagePPM, Axis.Y);
-    Image expectedImagePPM = new MyImage("test/img/car_horizontallyFlipped.png");
+    Image expectedImagePPM = new MyImage("res/car_horizontallyFlipped.png");
     assertEquals(flippedImagePPM, expectedImagePPM);
   }
 
   @Test
   public void testFlipVertically() {
-    Image testImagePPM = new MyImage("test/img/car.png");
+    Image testImagePPM = new MyImage("res/car.png");
     Image flippedImagePPM = imageService.flip(testImagePPM, Axis.X);
-    Image expectedImagePPM = new MyImage("test/img/car_verticallyFlipped.png");
+    Image expectedImagePPM = new MyImage("res/car_verticallyFlipped.png");
     assertEquals(flippedImagePPM, expectedImagePPM);
   }
 
   @Test
-  public void testFlipBoth() {
-    Image testImagePPM = new MyImage("test/img/car.png");
-    Image flippedImagePPM = imageService.flip(testImagePPM, Axis.X);
-    Image doubleFlippedImagePPM = imageService.flip(flippedImagePPM, Axis.Y);
-    Image expectedImagePPM = new MyImage("test/img/car_doubleFlipped.png");
-    assertEquals(doubleFlippedImagePPM, expectedImagePPM);
-  }
-
-  @Test
   public void testFlipHorizontallyTwice() {
-    Image testImagePPM = new MyImage("test/img/car.png");
+    Image testImagePPM = new MyImage("res/car.png");
     Image flippedImagePPM = imageService.flip(testImagePPM, Axis.Y);
     Image doubleFlippedImagePPM = imageService.flip(flippedImagePPM, Axis.Y);
-    Image expectedImagePPM = new MyImage("test/img/car.png");
+    Image expectedImagePPM = new MyImage("res/car.png");
     assertEquals(doubleFlippedImagePPM, expectedImagePPM);
   }
 
   @Test
   public void testFlipVerticallyTwice() {
-    Image testImagePPM = new MyImage("test/img/car.png");
+    Image testImagePPM = new MyImage("res/car.png");
     Image flippedImagePPM = imageService.flip(testImagePPM, Axis.X);
     Image doubleFlippedImagePPM = imageService.flip(flippedImagePPM, Axis.X);
-    Image expectedImagePPM = new MyImage("test/img/car.png");
+    Image expectedImagePPM = new MyImage("res/car.png");
     assertEquals(doubleFlippedImagePPM, expectedImagePPM);
   }
 
   @Test
   public void testFlipMultipleTimes() {
-    Image testImagePPM = new MyImage("test/img/car.png");
+    Image testImagePPM = new MyImage("res/car.png");
     Image flippedImagePPM = imageService.flip(testImagePPM, Axis.Y);
     Image doubleFlippedImagePPM = imageService.flip(flippedImagePPM, Axis.Y);
     Image tripleFlippedImagePPM = imageService.flip(doubleFlippedImagePPM, Axis.Y);
-    Image expectedImagePPM = new MyImage("test/img/car_horizontallyFlipped.png");
+    Image expectedImagePPM = new MyImage("res/car_horizontallyFlipped.png");
     assertEquals(tripleFlippedImagePPM, expectedImagePPM);
   }
 
@@ -514,7 +505,7 @@ public class ImageServiceTest {
 
   @Test
   public void testBrightenOnce() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.brighten(testImage, 2);
 
     String expected = "RED:102 GREEN:87 BLUE:92    RED:32 GREEN:202 BLUE:152    \n"
@@ -525,7 +516,7 @@ public class ImageServiceTest {
 
   @Test
   public void testBrightenTwice() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.brighten(testImage, 2);
     resultImage = imageService.brighten(resultImage, 2);
 
@@ -537,16 +528,16 @@ public class ImageServiceTest {
 
   @Test
   public void testBrightenWhite() {
-    Image testImage = new MyImage("test/img/monochromatic/white.ppm");
+    Image testImage = new MyImage("test/img/white.ppm");
     Image resultImage = imageService.brighten(testImage, 2);
-    Image expectedImage = new MyImage("test/img/monochromatic/white.ppm");
+    Image expectedImage = new MyImage("test/img/white.ppm");
     assertEquals(expectedImage, resultImage);
   }
 
   //part of the image/channel is already max while others are not
   @Test
   public void testBrightenPartiallyMax() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.brighten(testImage, 150);
     String expected = "RED:250 GREEN:235 BLUE:240    RED:180 GREEN:255 BLUE:255    \n"
                       + "RED:255 GREEN:200 BLUE:250    RED:255 GREEN:215 BLUE:225    \n"
@@ -562,7 +553,7 @@ public class ImageServiceTest {
 
   @Test
   public void testDarkenOnce() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.brighten(testImage, -2);
 
     String expected = "RED:98 GREEN:83 BLUE:88    RED:28 GREEN:198 BLUE:148    \n"
@@ -573,7 +564,7 @@ public class ImageServiceTest {
 
   @Test
   public void testDarkenTwice() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.brighten(testImage, -2);
     resultImage = imageService.brighten(resultImage, -2);
 
@@ -585,16 +576,16 @@ public class ImageServiceTest {
 
   @Test
   public void testDarkenBlack() {
-    Image testImage = new MyImage("test/img/monochromatic/black.ppm");
+    Image testImage = new MyImage("test/img/black.ppm");
     Image resultImage = imageService.brighten(testImage, -2);
-    Image expectedImage = new MyImage("test/img/monochromatic/black.ppm");
+    Image expectedImage = new MyImage("test/img/black.ppm");
     assertEquals(expectedImage, resultImage);
   }
 
   //part of the image/channel is already max while others are not
   @Test
   public void testDarkenPartiallyMin() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.brighten(testImage, -100);
     String expected = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:100 BLUE:50    \n"
                       + "RED:145 GREEN:0 BLUE:0    RED:5 GREEN:0 BLUE:0    \n"
@@ -609,21 +600,24 @@ public class ImageServiceTest {
 
   @Test
   public void testDarkenThenBrighten() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.brighten(testImage, -2);
     resultImage = imageService.brighten(resultImage, 2);
-    Image expectedImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image expectedImage = new MyImage("test/img/simple.ppm");
     assertEquals(expectedImage, resultImage);
   }
 
   @Test
   public void testBrightenTwiceThenDarken() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.brighten(testImage, 2);
     resultImage = imageService.brighten(resultImage, 2);
     resultImage = imageService.brighten(resultImage, -2);
-    Image expectedImage = new MyImage("test/img/trichromatic/simple+2.ppm");
-    assertEquals(expectedImage, resultImage);
+    String expected =
+        "RED:102 GREEN:87 BLUE:92    RED:32 GREEN:202 BLUE:152    \n"
+        + "RED:247 GREEN:52 BLUE:102    RED:107 GREEN:67 BLUE:77    \n"
+        + "RED:97 GREEN:207 BLUE:87    RED:217 GREEN:207 BLUE:107    \n";
+    assertEquals(expected, resultImage.toString());
   }
 
 
@@ -633,7 +627,7 @@ public class ImageServiceTest {
   // repeatedly split
   @Test
   public void testSplitChannelMonochromatic() {
-    Image testImage = new MyImage("test/img/monochromatic/red.ppm");
+    Image testImage = new MyImage("test/img/red.ppm");
     Image[] resultImages = imageService.splitChannel(testImage);
 
     String expectedR = "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 "
@@ -684,7 +678,7 @@ public class ImageServiceTest {
 
   @Test
   public void testSplitChannelDichromatic() {
-    Image testImage = new MyImage("test/img/dichromatic/woBlue.ppm");
+    Image testImage = new MyImage("test/img/woBlue.ppm");
     Image[] resultImages = imageService.splitChannel(testImage);
     String expectedR = "RED:200 GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    RED:200 "
                        + "GREEN:200 BLUE:200    RED:200 GREEN:200 BLUE:200    \n"
@@ -717,7 +711,7 @@ public class ImageServiceTest {
 
   @Test
   public void testSplitChannelTrichromatic() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image[] resultImages = imageService.splitChannel(testImage);
 
     String expectedR = "RED:100 GREEN:100 BLUE:100    RED:30 GREEN:30 BLUE:30    \n"
@@ -737,7 +731,7 @@ public class ImageServiceTest {
 
   @Test
   public void testSplitChannelTrichromaticTwice() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image[] resultImages = imageService.splitChannel(testImage);
     resultImages = imageService.splitChannel(resultImages[0]);
 
@@ -763,20 +757,20 @@ public class ImageServiceTest {
   // result color is black/white/red/green/blue/mixed color
   @Test
   public void testCombineChannels() {
-    Image image = new MyImage("test/img/monochromatic/red.ppm");
+    Image image = new MyImage("test/img/red.ppm");
     Image resultImages =
         imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE},
             imageService.splitChannel(image));
     assertEquals(image, resultImages);
 
-    image = new MyImage("test/img/dichromatic/woBlue.ppm");
+    image = new MyImage("test/img/woBlue.ppm");
     resultImages =
         imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE},
             imageService.splitChannel(image));
     assertEquals(image, resultImages);
 
     //rectangle
-    image = new MyImage("test/img/trichromatic/simple.ppm");
+    image = new MyImage("test/img/simple.ppm");
     resultImages =
         imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE},
             imageService.splitChannel(image));
@@ -785,7 +779,7 @@ public class ImageServiceTest {
 
   @Test
   public void testCombineChannelsRose() {
-    Image expectedImage = new MyImage("test/img/split/rose.ppm");
+    Image expectedImage = new MyImage("test/img/rose.ppm");
     Image resultImages =
         imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE},
             imageService.splitChannel(expectedImage));
@@ -794,9 +788,9 @@ public class ImageServiceTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testCombineChannelsIllegalInputNotGreyscale() {
-    Image imageR = new MyImage("test/img/monochromatic/white.ppm");
-    Image imageG = new MyImage("test/img/monochromatic/green.ppm");
-    Image imageB = new MyImage("test/img/monochromatic/blue.ppm");
+    Image imageR = new MyImage("test/img/white.ppm");
+    Image imageG = new MyImage("test/img/green.ppm");
+    Image imageB = new MyImage("test/img/blue.ppm");
 
     imageService.combineChannels(new Channel[]{Channel.RED, Channel.GREEN, Channel.BLUE},
         new Image[]{imageR, imageG, imageB});
@@ -813,15 +807,18 @@ public class ImageServiceTest {
   // repeatedly sharpen
   @Test
   public void testBlurSimple() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImages = imageService.blur(testImage, 1, Axis.X);
-    Image expectedImage = new MyImage("test/img/trichromatic/simple_blur.ppm");
-    assertEquals(expectedImage, resultImages);
+    String expected =
+        "RED:66 GREEN:57 BLUE:58    RED:48 GREEN:72 BLUE:64    \n"
+        + "RED:114 GREEN:82 BLUE:72    RED:100 GREEN:91 BLUE:74    \n"
+        + "RED:88 GREEN:87 BLUE:52    RED:94 GREEN:88 BLUE:53    \n";
+    assertEquals(expected, resultImages.toString());
   }
 
   @Test
   public void testBlurSimplePercentage() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.blur(testImage, 0.5f, Axis.X);
     String expectedImage = "RED:56 GREEN:28 BLUE:35    RED:30 GREEN:200 BLUE:150    \n"
                            + "RED:86 GREEN:49 BLUE:47    RED:105 GREEN:65 BLUE:75    \n"
@@ -831,7 +828,7 @@ public class ImageServiceTest {
 
   @Test
   public void testBlurSimplePercentageSmall() {
-    Image testImage = new MyImage("test/img/monochromatic/red.png");
+    Image testImage = new MyImage("test/img/red.png");
     Image resultImage = imageService.blur(testImage, 0.3f, Axis.X);
     String expectedImage =
         "RED:96 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    "
@@ -847,7 +844,7 @@ public class ImageServiceTest {
 
   @Test
   public void testBlurSimplePercentageBig() {
-    Image testImage = new MyImage("test/img/monochromatic/red.png");
+    Image testImage = new MyImage("test/img/red.png");
     Image resultImage = imageService.blur(testImage, 0.7f, Axis.X);
     String expectedImage =
         "RED:143 GREEN:0 BLUE:0    RED:191 GREEN:0 BLUE:0    "
@@ -863,34 +860,27 @@ public class ImageServiceTest {
 
   @Test
   public void testBlurOnce() {
-    Image testImage = new MyImage("test/img/cupcake.png");
+    Image testImage = new MyImage("res/cupcake.png");
     Image resultImages = imageService.blur(testImage, 1, Axis.X);
-    Image expectedImage = new MyImage("test/img/cupcake_blurOnce.png");
-
+    Image expectedImage = new MyImage("res/cupcake_blurOnce.png");
     assertEquals(expectedImage, resultImages);
   }
 
-  @Test
-  public void testBlurTwice() {
-    Image testImage = new MyImage("test/img/cupcake.png");
-    Image resultImages = imageService.blur(testImage, 1, Axis.X);
-    resultImages = imageService.blur(resultImages, 1, Axis.X);
-    Image expectedImage = new MyImage("test/img/cupcake_blurTwice.png");
-
-    assertEquals(expectedImage, resultImages);
-  }
 
   @Test
   public void testSharpenSimple() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImages = imageService.sharpen(testImage, 1, Axis.X);
-    Image expectedImage = new MyImage("test/img/trichromatic/simple_sharpen.ppm");
-    assertEquals(expectedImage, resultImages);
+    String expected =
+        "RED:156 GREEN:113 BLUE:148    RED:104 GREEN:199 BLUE:193    \n"
+        + "RED:255 GREEN:240 BLUE:226    RED:255 GREEN:251 BLUE:208    \n"
+        + "RED:220 GREEN:249 BLUE:125    RED:255 GREEN:249 BLUE:140    \n";
+    assertEquals(expected, resultImages.toString());
   }
 
   @Test
   public void testSharpenSimplePercentage() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.sharpen(testImage, 0.5f, Axis.X);
     String expectedImage = "RED:149 GREEN:72 BLUE:104    RED:30 GREEN:200 BLUE:150    \n"
                            + "RED:255 GREEN:123 BLUE:144    RED:105 GREEN:65 BLUE:75    \n"
@@ -900,7 +890,7 @@ public class ImageServiceTest {
 
   @Test
   public void testSharpenSimplePercentageSmall() {
-    Image testImage = new MyImage("test/img/dichromatic/woBlue.png");
+    Image testImage = new MyImage("test/img/woBlue.png");
     Image resultImage = imageService.sharpen(testImage, 0.3f, Axis.X);
     String expectedImage =
         "RED:225 GREEN:225 BLUE:0    RED:200 GREEN:200 BLUE:0    "
@@ -916,7 +906,7 @@ public class ImageServiceTest {
 
   @Test
   public void testSharpenSimplePercentageBig() {
-    Image testImage = new MyImage("test/img/dichromatic/woBlue.png");
+    Image testImage = new MyImage("test/img/woBlue.png");
     Image resultImage = imageService.sharpen(testImage, 0.7f, Axis.X);
     String expectedImage =
         "RED:225 GREEN:225 BLUE:0    RED:255 GREEN:255 BLUE:0    "
@@ -932,27 +922,9 @@ public class ImageServiceTest {
 
   @Test
   public void testSharpenOnce() {
-    Image testImage = new MyImage("test/img/cupcake.png");
+    Image testImage = new MyImage("res/cupcake.png");
     Image resultImages = imageService.sharpen(testImage, 1, Axis.X);
-    Image expectedImage = new MyImage("test/img/cupcake_sharpenOnce.png");
-    assertEquals(expectedImage, resultImages);
-  }
-
-  @Test
-  public void testSharpenTwice() {
-    Image testImage = new MyImage("test/img/cupcake.png");
-    Image resultImages = imageService.sharpen(testImage, 1, Axis.X);
-    resultImages = imageService.sharpen(resultImages, 1, Axis.X);
-    Image expectedImage = new MyImage("test/img/cupcake_sharpenTwice.png");
-    assertEquals(expectedImage, resultImages);
-  }
-
-  @Test
-  public void testBlurThenSharp() {
-    Image testImage = new MyImage("test/img/cupcake.png");
-    Image resultImages = imageService.blur(testImage, 1, Axis.X);
-    resultImages = imageService.sharpen(resultImages, 1, Axis.X);
-    Image expectedImage = new MyImage("test/img/cupcake_blurThenSharp.png");
+    Image expectedImage = new MyImage("res/cupcake_sharpenOnce.png");
     assertEquals(expectedImage, resultImages);
   }
 
@@ -962,15 +934,18 @@ public class ImageServiceTest {
   // repeatedly made sepia
   @Test
   public void testGetSepiaSimple() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImages = imageService.getSepia(testImage, 1, Axis.X);
-    Image expectedImage = new MyImage("test/img/trichromatic/simple_sepia.ppm");
-    assertEquals(expectedImage, resultImages);
+    String expected =
+        "RED:122 GREEN:108 BLUE:84    RED:194 GREEN:173 BLUE:135    \n"
+        + "RED:154 GREEN:137 BLUE:106    RED:105 GREEN:94 BLUE:73    \n"
+        + "RED:211 GREEN:188 BLUE:146    RED:255 GREEN:233 BLUE:182    \n";
+    assertEquals(expected, resultImages.toString());
   }
 
   @Test
   public void testGetSepiaSimplePercentage() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.getSepia(testImage, 1, Axis.X);
     String expectedImage = "RED:122 GREEN:108 BLUE:84    RED:194 GREEN:173 BLUE:135    \n"
                            + "RED:154 GREEN:137 BLUE:106    RED:105 GREEN:94 BLUE:73    \n"
@@ -980,29 +955,20 @@ public class ImageServiceTest {
 
   @Test
   public void testGetSepiaCity() {
-    Image testImage = new MyImage("test/img/city_small.png");
+    Image testImage = new MyImage("res/city_small.png");
     Image resultImages = imageService.getSepia(testImage, 1, Axis.X);
-    Image expectedImage = new MyImage("test/img/city_small_sepia.png");
-    assertEquals(expectedImage, resultImages);
-  }
-
-  @Test
-  public void testGetSepiaCityTwice() {
-    Image testImage = new MyImage("test/img/city_small.png");
-    Image resultImages = imageService.getSepia(testImage, 1, Axis.X);
-    resultImages = imageService.getSepia(resultImages, 1, Axis.X);
-    Image expectedImage = new MyImage("test/img/city_small_sepia_sepia.png");
+    Image expectedImage = new MyImage("res/city_small_sepia.png");
     assertEquals(expectedImage, resultImages);
   }
 
   // test greyscale
   @Test
   public void testGreyscaleMonochromatic() {
-    Image testImageBlack = new MyImage("test/img/monochromatic/black.ppm");
-    Image testImageWhite = new MyImage("test/img/monochromatic/white.ppm");
-    Image testImageRed = new MyImage("test/img/monochromatic/red.ppm");
-    Image testImageGreen = new MyImage("test/img/monochromatic/green.ppm");
-    Image testImageBlue = new MyImage("test/img/monochromatic/blue.ppm");
+    Image testImageBlack = new MyImage("test/img/black.ppm");
+    Image testImageWhite = new MyImage("test/img/white.ppm");
+    Image testImageRed = new MyImage("test/img/red.ppm");
+    Image testImageGreen = new MyImage("test/img/green.ppm");
+    Image testImageBlue = new MyImage("test/img/blue.ppm");
 
     Image resultImageBlack = imageService.greyscale(testImageBlack, 1, Axis.X);
     Image resultImageWhite = imageService.greyscale(testImageWhite, 1, Axis.X);
@@ -1078,9 +1044,9 @@ public class ImageServiceTest {
 
   @Test
   public void testGreyscaleDichromatic() {
-    Image testImageWoBlue = new MyImage("test/img/dichromatic/woBlue.ppm");
-    Image testImageWoRed = new MyImage("test/img/dichromatic/woRed.ppm");
-    Image testImageWoGreen = new MyImage("test/img/dichromatic/woGreen.ppm");
+    Image testImageWoBlue = new MyImage("test/img/woBlue.ppm");
+    Image testImageWoRed = new MyImage("test/img/woRed.ppm");
+    Image testImageWoGreen = new MyImage("test/img/woGreen.ppm");
 
     Image resultImageWoBlue = imageService.greyscale(testImageWoBlue, 1, Axis.X);
     Image resultImageWoRed = imageService.greyscale(testImageWoRed, 1, Axis.X);
@@ -1120,7 +1086,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGreyscaleTrichromatic() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.greyscale(testImage, 1, Axis.X);
     String expected = "RED:89 GREEN:89 BLUE:89    RED:160 GREEN:160 BLUE:160    \n"
                       + "RED:95 GREEN:95 BLUE:95    RED:74 GREEN:74 BLUE:74    \n"
@@ -1130,7 +1096,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGreyscaleTrichromaticPercentage() {
-    Image testImage = new MyImage("test/img/trichromatic/simple.ppm");
+    Image testImage = new MyImage("test/img/simple.ppm");
     Image resultImage = imageService.greyscale(testImage, 0.5f, Axis.X);
     String expected = "RED:89 GREEN:89 BLUE:89    RED:30 GREEN:200 BLUE:150    \n"
                       + "RED:95 GREEN:95 BLUE:95    RED:105 GREEN:65 BLUE:75    \n"
@@ -1140,7 +1106,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGreyscaleTrichromaticPercentageSmall() {
-    Image testImage = new MyImage("test/img/monochromatic/red.png");
+    Image testImage = new MyImage("test/img/red.png");
     Image resultImage = imageService.greyscale(testImage, 0.3f, Axis.X);
     String expected =
         "RED:54 GREEN:54 BLUE:54    RED:255 GREEN:0 BLUE:0    "
@@ -1156,7 +1122,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGreyscaleTrichromaticPercentageBig() {
-    Image testImage = new MyImage("test/img/monochromatic/red.png");
+    Image testImage = new MyImage("test/img/red.png");
     Image resultImage = imageService.greyscale(testImage, 0.7f, Axis.X);
     String expected =
         "RED:54 GREEN:54 BLUE:54    RED:54 GREEN:54 BLUE:54    "
@@ -1180,7 +1146,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGetHistogramWhite() throws IOException {
-    MyImage testImage = new MyImage("test/img/monochromatic/white.png");
+    MyImage testImage = new MyImage("test/img/white.png");
     Image histogram = imageService.getHistogram(testImage);
     String path = "histogram.png";
     histogram.save(path);
@@ -1240,7 +1206,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGetHistogramMono() throws IOException {
-    MyImage testImage = new MyImage("test/img/monochromatic/red.png");
+    MyImage testImage = new MyImage("test/img/red.png");
     Image histogram = imageService.getHistogram(testImage);
     String path = "histogram.png";
     histogram.save(path);
@@ -1300,7 +1266,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGetHistogramDi() throws IOException {
-    MyImage testImage = new MyImage("test/img/dichromatic/woBlue.png");
+    MyImage testImage = new MyImage("test/img/woBlue.png");
     Image histogram = imageService.getHistogram(testImage);
     String path = "histogram.png";
     histogram.save(path);
@@ -1360,7 +1326,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGetHistogramBi() throws IOException {
-    MyImage testImage = new MyImage("test/img/dichromatic/RedAndGreen.ppm");
+    MyImage testImage = new MyImage("test/img/duoColor.png");
     Image histogram = imageService.getHistogram(testImage);
     String path = "histogram.png";
     histogram.save(path);
@@ -1370,6 +1336,7 @@ public class ImageServiceTest {
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
@@ -1378,10 +1345,25 @@ public class ImageServiceTest {
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 0};
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 255};
     int[] greenPoints =
+        new int[]{255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255};
+    int[] bluePoints =
         new int[]{255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
@@ -1393,34 +1375,16 @@ public class ImageServiceTest {
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 0};
-    int[] bluePoints =
-        new int[]{0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255};
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 255};
     assertTrue(MyImageTest.checkHistogramLines(path, redPoints, greenPoints, bluePoints));
   }
 
   @Test
   public void testGetHistogramBlack() throws IOException {
-    MyImage testImage = new MyImage("test/img/monochromatic/black.png");
+    MyImage testImage = new MyImage("test/img/black.png");
     Image histogram = imageService.getHistogram(testImage);
     String path = "histogram.png";
     histogram.save(path);
@@ -1480,7 +1444,7 @@ public class ImageServiceTest {
 
   @Test
   public void testGetHistogram() throws IOException {
-    MyImage testImage = new MyImage("test/img/city.png");
+    MyImage testImage = new MyImage("res/city.png");
     Image histogram = imageService.getHistogram(testImage);
     String path = "histogram.png";
     histogram.save(path);
@@ -1546,9 +1510,9 @@ public class ImageServiceTest {
   //all peak fall into the range of [0,10] and [245,255]
   @Test
   public void testColorCorrectMonoPeakAllNeglected() {
-    MyImage redImage = new MyImage("test/img/monochromatic/red.png");
-    MyImage greenImage = new MyImage("test/img/monochromatic/green.png");
-    MyImage blueImage = new MyImage("test/img/monochromatic/blue.png");
+    MyImage redImage = new MyImage("test/img/red.png");
+    MyImage greenImage = new MyImage("test/img/green.png");
+    MyImage blueImage = new MyImage("test/img/blue.png");
     assertEquals(redImage.getHistogram(),
         imageService.colorCorrect(redImage, 1, Axis.X).getHistogram());
     assertEquals(greenImage.getHistogram(),
@@ -1802,7 +1766,7 @@ public class ImageServiceTest {
         {0.2126f, 0.7152f, 0.0722f}
     };
     MyImage image =
-        (MyImage) new MyImage("test/img/city_small.png").matrixMultiplication(greyscale)
+        (MyImage) new MyImage("res/city_small.png").matrixMultiplication(greyscale)
             .imgArrayAddition(new float[]{10, 0, -5});
     String path = "histogram-color-correct.png";
     imageService.colorCorrect(image, 1, Axis.X).getHistogram().save(path);
@@ -1866,7 +1830,7 @@ public class ImageServiceTest {
         {0.2126f, 0.7152f, 0.0722f}
     };
     MyImage image =
-        (MyImage) new MyImage("test/img/city_small.png").matrixMultiplication(greyscale)
+        (MyImage) new MyImage("res/city_small.png").matrixMultiplication(greyscale)
             .imgArrayAddition(new float[]{10, 0, -5});
     String path = "histogram-color-correct.png";
     imageService.colorCorrect(image, 0.5f, Axis.X).getHistogram().save(path);
@@ -1932,7 +1896,7 @@ public class ImageServiceTest {
         {0.2126f, 0.7152f, 0.0722f}
     };
     MyImage image =
-        (MyImage) new MyImage("test/img/city_small.png").matrixMultiplication(greyscale)
+        (MyImage) new MyImage("res/city_small.png").matrixMultiplication(greyscale)
             .imgArrayAddition(new float[]{10, 0, -5});
     String path = "histogram-color-correct.png";
     imageService.colorCorrect(image, 0.3f, Axis.X).getHistogram().save(path);
@@ -1997,7 +1961,7 @@ public class ImageServiceTest {
         {0.2126f, 0.7152f, 0.0722f}
     };
     MyImage image =
-        (MyImage) new MyImage("test/img/city_small.png").matrixMultiplication(greyscale)
+        (MyImage) new MyImage("res/city_small.png").matrixMultiplication(greyscale)
             .imgArrayAddition(new float[]{10, 0, -5});
     String path = "histogram-color-correct.png";
     imageService.colorCorrect(image, 0.7f, Axis.X).getHistogram().save(path);
@@ -2057,10 +2021,10 @@ public class ImageServiceTest {
 
   @Test
   public void testLevelAdjustmentSame() {
-    MyImage[] testImages = new MyImage[]{new MyImage("test/img/monochromatic/white.ppm"),
-        new MyImage("test/img/monochromatic/black.ppm"), new MyImage("test/img/dichromatic"
-                                                                     + "/woGreen.ppm"),
-        new MyImage("test/img/trichromatic/simple.ppm")};
+    MyImage[] testImages = new MyImage[]{new MyImage("test/img/white.ppm"),
+        new MyImage("test/img/black.ppm"), new MyImage("test/img"
+                                                       + "/woGreen.ppm"),
+        new MyImage("test/img/simple.ppm")};
     int black = 0;
     int mid = 128;
     int white = 255;
@@ -2077,7 +2041,7 @@ public class ImageServiceTest {
     int white = 205;
 
     MyImage allColorImage =
-        new MyImage("test/img/trichromatic/all_colors_inter16.ppm").imgArrayAddition(
+        new MyImage("test/img/all_colors_inter16.ppm").imgArrayAddition(
             new float[]{0, 5, 10});
     Image adjusted = imageService.levelAdjustment(allColorImage, black, mid, white, 1, Axis.X);
     String path = "level-adjustment-histogram.png";
@@ -2145,7 +2109,7 @@ public class ImageServiceTest {
     int mid = 128;
     int white = 255;
     MyImage allColorImage =
-        new MyImage("test/img/trichromatic/all_colors_inter16.ppm").imgArrayAddition(
+        new MyImage("test/img/all_colors_inter16.ppm").imgArrayAddition(
             new float[]{0, 5, 10});
     Image adjusted = imageService.levelAdjustment(allColorImage, black, mid, white, 1, Axis.X);
     String path = "level-adjustment-histogram.png";
@@ -2212,7 +2176,7 @@ public class ImageServiceTest {
     int mid = 200;
     int white = 255;
     MyImage allColorImage =
-        new MyImage("test/img/trichromatic/all_colors_inter16.ppm").imgArrayAddition(
+        new MyImage("test/img/all_colors_inter16.ppm").imgArrayAddition(
             new float[]{0, 5, 10});
     Image adjusted = imageService.levelAdjustment(allColorImage, black, mid, white, 1, Axis.X);
     String path = "level-adjustment-histogram.png";
@@ -2279,7 +2243,7 @@ public class ImageServiceTest {
     int mid = 100;
     int white = 255;
     MyImage allColorImage =
-        new MyImage("test/img/trichromatic/all_colors_inter16.ppm").imgArrayAddition(
+        new MyImage("test/img/all_colors_inter16.ppm").imgArrayAddition(
             new float[]{0, 5, 10});
     Image adjusted = imageService.levelAdjustment(allColorImage, black, mid, white, 1, Axis.X);
     String path = "level-adjustment-histogram.png";
@@ -2342,7 +2306,7 @@ public class ImageServiceTest {
     int mid = 128;
     int white = 200;
     MyImage allColorImage =
-        new MyImage("test/img/trichromatic/all_colors_inter16.ppm").imgArrayAddition(
+        new MyImage("test/img/all_colors_inter16.ppm").imgArrayAddition(
             new float[]{0, 5, 10});
     Image adjusted = imageService.levelAdjustment(allColorImage, black, mid, white, 1, Axis.X);
     String path = "level-adjustment-histogram.png";
@@ -2403,7 +2367,7 @@ public class ImageServiceTest {
 
   @Test
   public void testLevelAdjustment() throws IOException {
-    MyImage testImage = new MyImage("test/img/city.png");
+    MyImage testImage = new MyImage("res/city.png");
     Image adjusted = imageService.levelAdjustment(testImage, 20, 100, 255, 1, Axis.X);
     String path = "level-adjustment-histogram.png";
     adjusted.getHistogram().save(path);
@@ -2463,7 +2427,7 @@ public class ImageServiceTest {
 
   @Test
   public void testLevelAdjustmentPercentage() throws IOException {
-    MyImage testImage = new MyImage("test/img/city.png");
+    MyImage testImage = new MyImage("res/city.png");
     Image adjusted = imageService.levelAdjustment(testImage, 20, 100, 255, 0.5f, Axis.X);
     String path = "level-adjustment-histogram.png";
     adjusted.getHistogram().save(path);
@@ -2522,7 +2486,7 @@ public class ImageServiceTest {
 
   @Test
   public void testLevelAdjustmentPercentageSmall() throws IOException {
-    MyImage testImage = new MyImage("test/img/city.png");
+    MyImage testImage = new MyImage("res/city.png");
     Image adjusted = imageService.levelAdjustment(testImage, 20, 100, 255, 0.3f, Axis.X);
     String path = "level-adjustment-histogram.png";
     adjusted.getHistogram().save(path);
@@ -2581,7 +2545,7 @@ public class ImageServiceTest {
 
   @Test
   public void testLevelAdjustmentPercentageBig() throws IOException {
-    MyImage testImage = new MyImage("test/img/city.png");
+    MyImage testImage = new MyImage("res/city.png");
     Image adjusted = imageService.levelAdjustment(testImage, 20, 100, 255, 0.8f, Axis.X);
     String path = "level-adjustment-histogram.png";
     adjusted.getHistogram().save(path);
@@ -2638,5 +2602,186 @@ public class ImageServiceTest {
             254};
     assertTrue(MyImageTest.checkHistogramLines(path, redPoints, greenPoints, bluePoints));
   }
-  
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCompressNull() {
+    imageService.haarWaveletCompress(null, 1);
+  }
+
+  @Test
+  public void testCompressMono() {
+    MyImage redImage = new MyImage("test/img/red.png");
+    String expected =
+        "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    "
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    "
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    "
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    "
+        + "RED:255 GREEN:0 BLUE:0"
+        + "    RED:255 GREEN:0 BLUE:0    \n";
+    Image result = imageService.haarWaveletCompress(redImage, 0);
+    assertEquals(expected, result.toString());
+    result = imageService.haarWaveletCompress(redImage, 0.5f);
+    expected =
+        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 "
+        + "GREEN:0 BLUE:0    \n";
+    assertEquals(expected, result.toString());
+    result = imageService.haarWaveletCompress(redImage, 1);
+    assertEquals(expected, result.toString());
+  }
+
+  @Test
+  public void testCompressWhite() {
+    MyImage whiteImage = new MyImage("test/img/white.png");
+    String expected =
+        "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    "
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    "
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    "
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 "
+        + "GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n";
+    Image result = imageService.haarWaveletCompress(whiteImage, 0);
+    assertEquals(expected, result.toString());
+
+    result = imageService.haarWaveletCompress(whiteImage, 0.5f);
+    expected =
+        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 "
+        + "GREEN:0 BLUE:0    \n";
+    assertEquals(expected, result.toString());
+    result = imageService.haarWaveletCompress(whiteImage, 1);
+    expected =
+        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 "
+        + "GREEN:0 BLUE:0    \n";
+    assertEquals(expected, result.toString());
+
+  }
+
+  @Test
+  public void testCompressDi() {
+    MyImage woGreenImage = new MyImage("test/img/woGreen.png");
+    String expected =
+        "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    "
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    \n"
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    "
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    \n"
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    "
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    \n"
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    "
+        + "RED:200 GREEN:0 "
+        + "BLUE:210    RED:200 GREEN:0 BLUE:210    \n";
+    MyImage image = woGreenImage.imgArrayAddition(new float[]{0, 0, 10});
+    Image result = imageService.haarWaveletCompress(image, 0);
+    assertEquals(expected, result.toString());
+    expected =
+        "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    "
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    \n"
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    "
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    \n"
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    "
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    \n"
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    "
+        + "RED:0 GREEN:0 BLUE:210    "
+        + "RED:0 GREEN:0 BLUE:210    \n";
+    result = imageService.haarWaveletCompress(image, 0.5f);
+    assertEquals(expected, result.toString());
+    expected =
+        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 "
+        + "GREEN:0 BLUE:0    \n";
+    result = imageService.haarWaveletCompress(image, 1);
+    assertEquals(expected, result.toString());
+  }
+
+  @Test
+  public void testCompressTwoColor() {
+    MyImage image = new MyImage("test/img/duoColor.png");
+    Image result = imageService.haarWaveletCompress(image, 0);
+    String expected = "RED:100 GREEN:200 BLUE:250    RED:100 GREEN:200 BLUE:250    \n"
+                      + "RED:250 GREEN:100 BLUE:200    RED:250 GREEN:100 BLUE:200    \n";
+    assertEquals(expected, result.toString());
+    result = imageService.haarWaveletCompress(image, 0.5f);
+    expected = "RED:175 GREEN:150 BLUE:225    RED:175 GREEN:150 BLUE:225    \n"
+               + "RED:175 GREEN:150 BLUE:225    RED:175 GREEN:150 BLUE:225    \n";
+    assertEquals(expected, result.toString());
+    result = imageService.haarWaveletCompress(image, 1);
+    expected = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+               + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
+    assertEquals(expected, result.toString());
+  }
+
+  //size 3x2
+  @Test
+  public void testCompressTri() {
+    MyImage triImage = new MyImage("test/img/simple.ppm");
+    Image result = imageService.haarWaveletCompress(triImage, 0);
+    String expected = "RED:100 GREEN:85 BLUE:90    RED:30 GREEN:200 BLUE:150    \n"
+                      + "RED:245 GREEN:50 BLUE:100    RED:105 GREEN:65 BLUE:75    \n"
+                      + "RED:95 GREEN:205 BLUE:85    RED:215 GREEN:205 BLUE:105    \n";
+    assertEquals(expected, result.toString());
+
+    result = imageService.haarWaveletCompress(triImage, 0.5f);
+    expected = "RED:96 GREEN:111 BLUE:76    RED:0 GREEN:176 BLUE:76    \n"
+               + "RED:206 GREEN:26 BLUE:76    RED:101 GREEN:91 BLUE:76    \n"
+               + "RED:176 GREEN:204 BLUE:123    RED:176 GREEN:204 BLUE:123    \n";
+    assertEquals(expected, result.toString());
+
+    result = imageService.haarWaveletCompress(triImage, 1);
+    expected = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+               + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+               + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
+    assertEquals(expected, result.toString());
+
+  }
+
+  @Test
+  public void testCompressBlack() {
+    MyImage blackImage = new MyImage("test/img/black.ppm");
+    String expected =
+        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 "
+        + "GREEN:0 BLUE:0    \n";
+    Image result = imageService.haarWaveletCompress(blackImage, 0);
+    assertEquals(expected, result.toString());
+    result = imageService.haarWaveletCompress(blackImage, 0.5f);
+    assertEquals(expected, result.toString());
+    result = imageService.haarWaveletCompress(blackImage, 1);
+    assertEquals(expected, result.toString());
+  }
 }

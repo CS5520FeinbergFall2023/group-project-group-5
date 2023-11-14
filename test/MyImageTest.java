@@ -96,15 +96,15 @@ public class MyImageTest extends ImageTest {
    */
   @Before
   public void setUp() {
-    whiteImage = new MyImage("test/img/monochromatic/white.ppm");
-    blackImage = new MyImage("test/img/monochromatic/black.ppm");
-    redImage = new MyImage("test/img/monochromatic/red.ppm");
-    greenImage = new MyImage("test/img/monochromatic/green.ppm");
-    blueImage = new MyImage("test/img/monochromatic/blue.ppm");
-    woGreenImage = new MyImage("test/img/dichromatic/woGreen.ppm");
-    woRedImage = new MyImage("test/img/dichromatic/woRed.ppm");
-    woBlueImage = new MyImage("test/img/dichromatic/woBlue.ppm");
-    triImage = new MyImage("test/img/trichromatic/simple.ppm");
+    whiteImage = new MyImage("test/img/white.ppm");
+    blackImage = new MyImage("test/img/black.ppm");
+    redImage = new MyImage("test/img/red.ppm");
+    greenImage = new MyImage("test/img/green.ppm");
+    blueImage = new MyImage("test/img/blue.ppm");
+    woGreenImage = new MyImage("test/img/woGreen.ppm");
+    woRedImage = new MyImage("test/img/woRed.ppm");
+    woBlueImage = new MyImage("test/img/woBlue.ppm");
+    triImage = new MyImage("test/img/simple.ppm");
     testImages =
         new MyImage[]{whiteImage, blackImage, redImage, greenImage, blueImage, woGreenImage,
             woRedImage, woBlueImage, triImage};
@@ -124,7 +124,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testMyImagePathPNGWithBlanks() {
     try {
-      testImage = new MyImage("test/img/split/rose copy.png");
+      testImage = new MyImage("test/img/rose copy.png");
     } catch (IllegalArgumentException e) {
       fail("Load supported jpg file should not throw exception");
     }
@@ -133,7 +133,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testMyImagePathPPMWithBlanks() {
     try {
-      testImage = new MyImage("test/img/trichromatic/simple copy.ppm");
+      testImage = new MyImage("test/img/simple copy.ppm");
     } catch (IllegalArgumentException e) {
       fail("Load supported jpg file should not throw exception");
     }
@@ -152,7 +152,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testMyImagePathPNG() {
     try {
-      testImage = new MyImage("test/img/city.png");
+      testImage = new MyImage("res/city.png");
     } catch (IllegalArgumentException e) {
       fail("Load supported png file should not throw exception");
     }
@@ -161,7 +161,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testMyImagePathPPM() {
     try {
-      testImage = new MyImage("test/img/split/rose.ppm");
+      testImage = new MyImage("test/img/rose.ppm");
     } catch (IllegalArgumentException e) {
       fail("Load supported ppm file should not throw exception");
     }
@@ -170,21 +170,21 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testMyImagePathMonochromatic() {
     try {
-      testImage = new MyImage("test/img/monochromatic/black.jpg");
-      testImage = new MyImage("test/img/monochromatic/black.png");
-      testImage = new MyImage("test/img/monochromatic/black.ppm");
-      testImage = new MyImage("test/img/monochromatic/blue.jpg");
-      testImage = new MyImage("test/img/monochromatic/blue.png");
-      testImage = new MyImage("test/img/monochromatic/blue.ppm");
-      testImage = new MyImage("test/img/monochromatic/green.jpg");
-      testImage = new MyImage("test/img/monochromatic/green.png");
-      testImage = new MyImage("test/img/monochromatic/green.ppm");
-      testImage = new MyImage("test/img/monochromatic/red.jpg");
-      testImage = new MyImage("test/img/monochromatic/red.png");
-      testImage = new MyImage("test/img/monochromatic/red.ppm");
-      testImage = new MyImage("test/img/monochromatic/white.jpg");
-      testImage = new MyImage("test/img/monochromatic/white.png");
-      testImage = new MyImage("test/img/monochromatic/white.ppm");
+      testImage = new MyImage("test/img/black.jpg");
+      testImage = new MyImage("test/img/black.png");
+      testImage = new MyImage("test/img/black.ppm");
+      testImage = new MyImage("test/img/blue.jpg");
+      testImage = new MyImage("test/img/blue.png");
+      testImage = new MyImage("test/img/blue.ppm");
+      testImage = new MyImage("test/img/green.jpg");
+      testImage = new MyImage("test/img/green.png");
+      testImage = new MyImage("test/img/green.ppm");
+      testImage = new MyImage("test/img/red.jpg");
+      testImage = new MyImage("test/img/red.png");
+      testImage = new MyImage("test/img/red.ppm");
+      testImage = new MyImage("test/img/white.jpg");
+      testImage = new MyImage("test/img/white.png");
+      testImage = new MyImage("test/img/white.ppm");
     } catch (IllegalArgumentException e) {
       fail("Load supported monochromatic file should not throw exception");
     }
@@ -193,15 +193,15 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testMyImagePathDichromatic() {
     try {
-      testImage = new MyImage("test/img/dichromatic/woBlue.jpg");
-      testImage = new MyImage("test/img/dichromatic/woBlue.png");
-      testImage = new MyImage("test/img/dichromatic/woBlue.ppm");
-      testImage = new MyImage("test/img/dichromatic/woGreen.jpg");
-      testImage = new MyImage("test/img/dichromatic/woGreen.png");
-      testImage = new MyImage("test/img/dichromatic/woGreen.ppm");
-      testImage = new MyImage("test/img/dichromatic/woRed.jpg");
-      testImage = new MyImage("test/img/dichromatic/woRed.png");
-      testImage = new MyImage("test/img/dichromatic/woRed.ppm");
+      testImage = new MyImage("test/img/woBlue.jpg");
+      testImage = new MyImage("test/img/woBlue.png");
+      testImage = new MyImage("test/img/woBlue.ppm");
+      testImage = new MyImage("test/img/woGreen.jpg");
+      testImage = new MyImage("test/img/woGreen.png");
+      testImage = new MyImage("test/img/woGreen.ppm");
+      testImage = new MyImage("test/img/woRed.jpg");
+      testImage = new MyImage("test/img/woRed.png");
+      testImage = new MyImage("test/img/woRed.ppm");
     } catch (IllegalArgumentException e) {
       fail("Load supported dichromatic file should not throw exception");
     }
@@ -210,9 +210,9 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testMyImagePathTrichromatic() {
     try {
-      testImage = new MyImage("test/img/trichromatic/all_colors_inter16.jpg");
-      testImage = new MyImage("test/img/trichromatic/all_colors_inter16.png");
-      testImage = new MyImage("test/img/trichromatic/all_colors_inter16.ppm");
+      testImage = new MyImage("test/img/all_colors_inter16.jpg");
+      testImage = new MyImage("test/img/all_colors_inter16.png");
+      testImage = new MyImage("test/img/all_colors_inter16.ppm");
     } catch (IllegalArgumentException e) {
       fail("Load supported trichromatic file should not throw exception");
     }
@@ -284,7 +284,7 @@ public class MyImageTest extends ImageTest {
     assertTrue(testSave(testImage, "testSave.ppm"));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test(expected = AssertionError.class)
   public void testSaveInvalidExtension() {
     testImage = new MyImage(3, 3);
     assertTrue(testSave(testImage, "testSave.wbep"));
@@ -712,7 +712,7 @@ public class MyImageTest extends ImageTest {
     assertTrue(super.testProjectCoordinate(triImage, matrix, expected));
 
     matrix = new int[][]{{2, 0, 0}, {0, 1, 0}};
-    expected = "RED:215 GREEN:205 BLUE:105    RED:0 GREEN:0 BLUE:0    \n"
+    expected = "RED:100 GREEN:85 BLUE:90    RED:0 GREEN:0 BLUE:0    \n"
                + "RED:245 GREEN:50 BLUE:100    RED:0 GREEN:0 BLUE:0    \n"
                + "RED:95 GREEN:205 BLUE:85    RED:0 GREEN:0 BLUE:0    \n";
     assertTrue(super.testProjectCoordinate(triImage, matrix, expected));
@@ -722,7 +722,7 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testProjectCoordinateOnlyTranslation() {
     int[][] matrix = new int[][]{{1, 1, 1}, {1, 1, -1}};
-    String expected = "RED:215 GREEN:205 BLUE:105    RED:0 GREEN:0 BLUE:0    \n"
+    String expected = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
     assertTrue(super.testProjectCoordinate(triImage, matrix, expected));
@@ -732,19 +732,19 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testProjectCoordinate() {
     int[][] matrix = new int[][]{{1, 0, 1}, {0, -1, -1}};
-    String expected = "RED:215 GREEN:205 BLUE:105    RED:0 GREEN:0 BLUE:0    \n"
+    String expected = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
                       + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
     assertTrue(super.testProjectCoordinate(triImage, matrix, expected));
 
     matrix = new int[][]{{-1, 0, -1}, {0, 1, 2}};
-    expected = "RED:215 GREEN:205 BLUE:105    RED:0 GREEN:0 BLUE:0    \n"
+    expected = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
                + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
                + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
     assertTrue(super.testProjectCoordinate(triImage, matrix, expected));
 
     matrix = new int[][]{{1, 0, 2}, {0, -1, 0}};
-    expected = "RED:215 GREEN:205 BLUE:105    RED:0 GREEN:0 BLUE:0    \n"
+    expected = "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
                + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
                + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n";
     assertTrue(super.testProjectCoordinate(triImage, matrix, expected));
@@ -1298,7 +1298,7 @@ public class MyImageTest extends ImageTest {
 
   @Test
   public void testGetHistogramBi() throws IOException {
-    MyImage histogram = new MyImage("test/img/dichromatic/RedAndGreen.ppm").getHistogram();
+    MyImage histogram = new MyImage("test/img/duoColor.png").getHistogram();
     String path = "histogram.png";
     histogram.save(path);
     int[] redPoints =
@@ -1307,6 +1307,7 @@ public class MyImageTest extends ImageTest {
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
@@ -1315,10 +1316,25 @@ public class MyImageTest extends ImageTest {
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 0};
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 255};
     int[] greenPoints =
+        new int[]{255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255};
+    int[] bluePoints =
         new int[]{255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
@@ -1330,28 +1346,10 @@ public class MyImageTest extends ImageTest {
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 0};
-    int[] bluePoints =
-        new int[]{0, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
-            255};
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 255, 255, 255, 255, 255};
     assertTrue(checkHistogramLines(path, redPoints, greenPoints, bluePoints));
 
   }
@@ -1418,7 +1416,7 @@ public class MyImageTest extends ImageTest {
 
   @Test
   public void testGetHistogram() throws IOException {
-    MyImage histogram = new MyImage("test/img/city.png").getHistogram();
+    MyImage histogram = new MyImage("res/city.png").getHistogram();
     String path = "histogram.png";
     histogram.save(path);
     int[] redPoints =
@@ -1727,7 +1725,7 @@ public class MyImageTest extends ImageTest {
         {0.2126f, 0.7152f, 0.0722f}
     };
     MyImage image =
-        (MyImage) new MyImage("test/img/city_small.png").matrixMultiplication(greyscale)
+        (MyImage) new MyImage("res/city_small.png").matrixMultiplication(greyscale)
             .imgArrayAddition(new float[]{10, 0, -5});
     String path = "histogram-color-correct.png";
     image.colorCorrect().getHistogram().save(path);
@@ -1803,7 +1801,7 @@ public class MyImageTest extends ImageTest {
     int white = 205;
 
     MyImage allColorImage =
-        new MyImage("test/img/trichromatic/all_colors_inter16.ppm").imgArrayAddition(
+        new MyImage("test/img/all_colors_inter16.ppm").imgArrayAddition(
             new float[]{0, 5, 10});
     MyImage adjusted = allColorImage.levelAdjustment(black, mid, white);
     String path = "level-adjustment-histogram.png";
@@ -1871,7 +1869,7 @@ public class MyImageTest extends ImageTest {
     int mid = 128;
     int white = 255;
     MyImage allColorImage =
-        new MyImage("test/img/trichromatic/all_colors_inter16.ppm").imgArrayAddition(
+        new MyImage("test/img/all_colors_inter16.ppm").imgArrayAddition(
             new float[]{0, 5, 10});
     MyImage adjusted = allColorImage.levelAdjustment(black, mid, white);
     String path = "level-adjustment-histogram.png";
@@ -1938,7 +1936,7 @@ public class MyImageTest extends ImageTest {
     int mid = 200;
     int white = 255;
     MyImage allColorImage =
-        new MyImage("test/img/trichromatic/all_colors_inter16.ppm").imgArrayAddition(
+        new MyImage("test/img/all_colors_inter16.ppm").imgArrayAddition(
             new float[]{0, 5, 10});
     MyImage adjusted = allColorImage.levelAdjustment(black, mid, white);
     String path = "level-adjustment-histogram.png";
@@ -2005,7 +2003,7 @@ public class MyImageTest extends ImageTest {
     int mid = 100;
     int white = 255;
     MyImage allColorImage =
-        new MyImage("test/img/trichromatic/all_colors_inter16.ppm").imgArrayAddition(
+        new MyImage("test/img/all_colors_inter16.ppm").imgArrayAddition(
             new float[]{0, 5, 10});
     MyImage adjusted = allColorImage.levelAdjustment(black, mid, white);
     String path = "level-adjustment-histogram.png";
@@ -2068,7 +2066,7 @@ public class MyImageTest extends ImageTest {
     int mid = 128;
     int white = 200;
     MyImage allColorImage =
-        new MyImage("test/img/trichromatic/all_colors_inter16.ppm").imgArrayAddition(
+        new MyImage("test/img/all_colors_inter16.ppm").imgArrayAddition(
             new float[]{0, 5, 10});
     MyImage adjusted = allColorImage.levelAdjustment(black, mid, white);
     String path = "level-adjustment-histogram.png";
@@ -2129,7 +2127,7 @@ public class MyImageTest extends ImageTest {
 
   @Test
   public void testLevelAdjustment() throws IOException {
-    MyImage testImage = new MyImage("test/img/city.png");
+    MyImage testImage = new MyImage("res/city.png");
     MyImage adjusted = testImage.levelAdjustment(20, 100, 255);
     String path = "city-level-adjustment-histogram.png";
     adjusted.save("city-level_adjustment-20-100-255.png");
@@ -2190,8 +2188,8 @@ public class MyImageTest extends ImageTest {
 
   @Test
   public void testEquals() {
-    MyImage image1 = new MyImage("test/img/trichromatic/simple.ppm");
-    MyImage image2 = new MyImage("test/img/trichromatic/simple.ppm");
+    MyImage image1 = new MyImage("test/img/simple.ppm");
+    MyImage image2 = new MyImage("test/img/simple.ppm");
     assertEquals(image1, image2);
     image1 = new MyImage(3, 3);
     image2 = new MyImage(3, 3);
