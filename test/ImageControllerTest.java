@@ -78,7 +78,7 @@ public class ImageControllerTest {
     controller.start();
     String output = stringWriter.toString();
     assertTrue(output.contains(
-        "Argument number not right. Use double or single quotes for path with space."));
+          "Argument number not right. Use double or single quotes for path with space."));
   }
 
   @Test
@@ -93,7 +93,7 @@ public class ImageControllerTest {
     controller.start();
     String output = stringWriter.toString();
     assertTrue(output.contains(
-        "Argument number not right. Use double or single quotes for path with space."));
+          "Argument number not right. Use double or single quotes for path with space."));
   }
 
   /**
@@ -123,7 +123,7 @@ public class ImageControllerTest {
   @Test
   public void testBlurWithSplitCommand() {
     String blurCommand = "load res/cupcake.png cupcake\n "
-                         + "blur cupcake cupcake-blur-50% split 0.5 \n exit";
+          + "blur cupcake cupcake-blur-50% split 0.5 \n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
     PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
@@ -148,7 +148,7 @@ public class ImageControllerTest {
   @Test
   public void testBlurWithInvalidPCommand() {
     String blurCommand = "load res/cupcake.png cupcake\n "
-                         + "blur cupcake halfBlurCupcake split 1.2 \n exit";
+          + "blur cupcake halfBlurCupcake split 1.2 \n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
     PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
@@ -167,7 +167,7 @@ public class ImageControllerTest {
   @Test
   public void testBlurWithInvalidSplitCommand() {
     String blurCommand = "load res/cupcake.png cupcake\n "
-                         + "blur cupcake halfBlurCupcake 1.2 \n exit";
+          + "blur cupcake halfBlurCupcake 1.2 \n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
     PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
@@ -186,7 +186,7 @@ public class ImageControllerTest {
   @Test
   public void testBlurWithSplitNoPCommand() {
     String blurCommand = "load res/cupcake.png cupcake\n "
-                         + "blur cupcake halfBlurCupcake split \n exit";
+          + "blur cupcake halfBlurCupcake split \n exit";
     StringReader blurReader = new StringReader(blurCommand);
     StringWriter blurWriter = new StringWriter();
     PrintWriter blurPrintWriter = new PrintWriter(blurWriter);
@@ -224,8 +224,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testValueComponent() {
-    String valueCommand = "load test/img/black.ppm black\n "
-                          + "value-component black black_value\n exit";
+    String valueCommand = "load res/city_small.png city_small\n "
+          + "value-component city_small city_small_value\n exit";
     StringReader valueReader = new StringReader(valueCommand);
     StringWriter valueWriter = new StringWriter();
     PrintWriter valuePrintWriter = new PrintWriter(valueWriter);
@@ -236,9 +236,12 @@ public class ImageControllerTest {
     String output = valueWriter.toString();
     assertTrue(output.contains("Get the value-component"));
 
-    Image executeValue = valueController.loadedImages.get("black_value");
+    Image executeValue = valueController.loadedImages.get("city_small_value");
+    Image expectValue = new MyImage("res/city_small_value.png");
+    assertEquals(expectValue, executeValue);
 
-    Image targetImage = new MyImage("test/img/black.ppm");
+
+    Image targetImage = new MyImage("res/city_small.png");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
@@ -265,8 +268,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testIntensityComponent() {
-    String intensityCommand = "load test/img/black.ppm black\n "
-                              + "intensity-component black black_intensity\n exit";
+    String intensityCommand = "load res/city_small.png city_small\n "
+          + "intensity-component city_small city_small_intensity\n exit";
     StringReader intensityReader = new StringReader(intensityCommand);
     StringWriter intensityWriter = new StringWriter();
     PrintWriter intensityPrintWriter = new PrintWriter(intensityWriter);
@@ -277,10 +280,10 @@ public class ImageControllerTest {
     intensityController.start();
     String output = intensityWriter.toString();
     assertTrue(output.contains("Get the intensity-component"));
-    Image executeIntensity = intensityController.loadedImages.get("black_intensity");
+    Image executeIntensity = intensityController.loadedImages.get("city_small_intensity");
     Image expectIntensity = new MyImage("res/city_small_intensity.png");
     assertEquals(expectIntensity, executeIntensity);
-    assertTrue(output.contains(new MyImage("test/img/black.ppm").hashCode() + ""));
+    assertTrue(output.contains(new MyImage("res/city_small.png").hashCode() + ""));
   }
 
   /**
@@ -305,8 +308,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testLumaComponent() {
-    String lumaCommand = "load test/img/black.ppm black\n "
-                         + "luma-component black black_luma\n exit";
+    String lumaCommand = "load res/city_small.png city_small\n "
+          + "luma-component city_small city_small_luma\n exit";
     StringReader lumaReader = new StringReader(lumaCommand);
     StringWriter lumaWriter = new StringWriter();
     PrintWriter lumaPrintWriter = new PrintWriter(lumaWriter);
@@ -318,9 +321,9 @@ public class ImageControllerTest {
     String output = lumaWriter.toString();
     assertTrue(output.contains("Get the luma-component"));
 
-    Image executeLuma = lumaController.loadedImages.get("black_luma");
+    Image executeLuma = lumaController.loadedImages.get("city_small_luma");
     Image expectLuma = new MyImage("res/city_small_luma.png");
-    assertTrue(output.contains(new MyImage("test/img/black.ppm").hashCode() + ""));
+    assertTrue(output.contains(new MyImage("res/city_small.png").hashCode() + ""));
 
     assertEquals(expectLuma, executeLuma);
   }
@@ -352,9 +355,9 @@ public class ImageControllerTest {
   public void testRGBCombine() {
 
     String combineCommand = "load res/rose_onlyRed.png rose_onlyRed\n "
-                            + "load res/rose_onlyGreen.png rose_onlyGreen\n"
-                            + "load res/rose_onlyBlue.png rose_onlyBlue\n"
-                            + "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
+          + "load res/rose_onlyGreen.png rose_onlyGreen\n"
+          + "load res/rose_onlyBlue.png rose_onlyBlue\n"
+          + "rgb-combine rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader combineReader = new StringReader(combineCommand);
     StringWriter combineWriter = new StringWriter();
     PrintWriter combinePrintWriter = new PrintWriter(combineWriter);
@@ -405,7 +408,7 @@ public class ImageControllerTest {
   @Test
   public void testRGBSplit() {
     String splitCommand = "load test/img/rose.jpg rose\n"
-                          + "rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
+          + "rgb-split rose rose_onlyRed rose_onlyGreen rose_onlyBlue\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
@@ -444,7 +447,7 @@ public class ImageControllerTest {
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
     ImageView splitImageView = new ImageView(splitReader,
-        splitPrintWriter);
+          splitPrintWriter);
     MockImageService mockImageService = new MockImageService(splitPrintWriter);
     ImageController splitController = new ImageController(mockImageService, splitImageView);
     splitController.start();
@@ -458,12 +461,12 @@ public class ImageControllerTest {
   @Test
   public void testSplitComponent() {
     String splitCommand = "load test/img/simple.ppm simple\n "
-                          + "red-component simple simple_greyScale_r\n exit";
+          + "red-component simple simple_greyScale_r\n exit";
     StringReader splitReader = new StringReader(splitCommand);
     StringWriter splitWriter = new StringWriter();
     PrintWriter splitPrintWriter = new PrintWriter(splitWriter);
     ImageView splitImageView = new ImageView(splitReader,
-        splitPrintWriter);
+          splitPrintWriter);
     MockImageService mockImageService = new MockImageService(splitPrintWriter);
     ImageController splitController = new ImageController(mockImageService, splitImageView);
     splitController.start();
@@ -504,7 +507,7 @@ public class ImageControllerTest {
   @Test
   public void testHoizontalFlip() {
     String flipCommand = "load res/car.png car\n "
-                         + "horizontal-flip car car_doubleFlipped\n exit";
+          + "horizontal-flip car car_doubleFlipped\n exit";
     StringReader flipReader = new StringReader(flipCommand);
     StringWriter flipWriter = new StringWriter();
     PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
@@ -565,7 +568,7 @@ public class ImageControllerTest {
     ImageView brightenImageView = new ImageView(brightenReader, brightenPrintWriter);
     MockImageService mockImageService = new MockImageService(brightenPrintWriter);
     ImageController brightenController = new ImageController(mockImageService,
-        brightenImageView);
+          brightenImageView);
     brightenController.start();
 
     String output = brightenWriter.toString();
@@ -625,7 +628,7 @@ public class ImageControllerTest {
   @Test
   public void testSharpenWithSplitCommand() {
     String sharpenCommand = "load res/cupcake.png cupcake\n "
-                            + "sharpen cupcake cupcake-sharpen-50% split 0.5 \n exit";
+          + "sharpen cupcake cupcake-sharpen-50% split 0.5 \n exit";
     StringReader sharpenReader = new StringReader(sharpenCommand);
     StringWriter sharpenWriter = new StringWriter();
     PrintWriter sharpenPrintWriter = new PrintWriter(sharpenWriter);
@@ -668,7 +671,7 @@ public class ImageControllerTest {
   @Test
   public void testSepiaWithSplitCommand() {
     String sepiaCommand = "load res/cupcake.png cupcake\n "
-                          + "sepia cupcake cupcake-sepia-50% split 0.5\n exit";
+          + "sepia cupcake cupcake-sepia-50% split 0.5\n exit";
     StringReader sepiaReader = new StringReader(sepiaCommand);
     StringWriter sepiaWriter = new StringWriter();
     PrintWriter sepiaPrintWriter = new PrintWriter(sepiaWriter);
@@ -712,7 +715,7 @@ public class ImageControllerTest {
   @Test
   public void testGreyscaleWithSplitCommand() {
     String greyscaleCommand = "load res/cupcake.png cupcake\n "
-                              + "greyscale cupcake cupcake-greyscale-50% split 0.5 \n exit";
+          + "greyscale cupcake cupcake-greyscale-50% split 0.5 \n exit";
     StringReader greyscaleReader = new StringReader(greyscaleCommand);
     StringWriter greyscaleWriter = new StringWriter();
     PrintWriter greyscalePrintWriter = new PrintWriter(greyscaleWriter);
@@ -775,7 +778,7 @@ public class ImageControllerTest {
   @Test
   public void testCompressCommand() {
     String compressCommand = "load res/city.png city\n "
-                             + "compress 0.5 city city-compress-50%\n exit";
+          + "compress 0.5 city city-compress-50%\n exit";
     StringReader compressReader = new StringReader(compressCommand);
     StringWriter compressWriter = new StringWriter();
     PrintWriter compressPrintWriter = new PrintWriter(compressWriter);
@@ -819,7 +822,7 @@ public class ImageControllerTest {
   @Test
   public void testHistogram() {
     String histogramCommand = "load res/city.png city\n "
-                              + "histogram city city-histogram\n exit";
+          + "histogram city city-histogram\n exit";
     StringReader histogramReader = new StringReader(histogramCommand);
     StringWriter histogramWriter = new StringWriter();
     PrintWriter histogramPrintWriter = new PrintWriter(histogramWriter);
@@ -851,7 +854,7 @@ public class ImageControllerTest {
     ImageView colorCorrectImageView = new ImageView(colorCorrectReader, colorCorrectPrintWriter);
     MockImageService mockImageService = new MockImageService(colorCorrectPrintWriter);
     ImageController colorCorrectController = new ImageController(mockImageService,
-        colorCorrectImageView);
+          colorCorrectImageView);
     colorCorrectController.start();
     String output = colorCorrectWriter.toString();
     assertTrue(output.contains("No image loaded"));
@@ -863,7 +866,7 @@ public class ImageControllerTest {
   @Test
   public void testColorCorrect() {
     String colorCorrectCommand = "load res/city_small.png city_small\n "
-                                 + "color-correct city_small city_small_colored_after_color_correct\n exit";
+          + "color-correct city_small city_small_colored_after_color_correct\n exit";
     StringReader colorCorrectReader = new StringReader(colorCorrectCommand);
     StringWriter colorCorrectWriter = new StringWriter();
     PrintWriter colorCorrectPrintWriter = new PrintWriter(colorCorrectWriter);
@@ -871,12 +874,12 @@ public class ImageControllerTest {
     ImageView colorCorrectImageView = new ImageView(colorCorrectReader, colorCorrectPrintWriter);
     MockImageService mockImageService = new MockImageService(colorCorrectPrintWriter);
     ImageController colorCorrectController =
-        new ImageController(mockImageService, colorCorrectImageView);
+          new ImageController(mockImageService, colorCorrectImageView);
     colorCorrectController.start();
     String output = colorCorrectWriter.toString();
     assertTrue(output.contains("Color-Correct image"));
     Image executeColorCorrect =
-        colorCorrectController.loadedImages.get("city_small_colored_after_color_correct");
+          colorCorrectController.loadedImages.get("city_small_colored_after_color_correct");
     Image expectColorCorrect = new MyImage("res/city_small_colored_after_color_correct.png");
 
     assertEquals(expectColorCorrect, executeColorCorrect);
@@ -890,8 +893,8 @@ public class ImageControllerTest {
   @Test
   public void testColorCorrectWithSplitCommand() {
     String colorCorrectCommand = "load res/city_small.png city_small\n "
-                                 + "color-correct city_small "
-                                 + "city_small_colored_after_color_correct split 1\n exit";
+          + "color-correct city_small "
+          + "city_small_colored_after_color_correct split 1\n exit";
     StringReader colorCorrectReader = new StringReader(colorCorrectCommand);
     StringWriter colorCorrectWriter = new StringWriter();
     PrintWriter colorCorrectPrintWriter = new PrintWriter(colorCorrectWriter);
@@ -899,12 +902,12 @@ public class ImageControllerTest {
     ImageView colorCorrectImageView = new ImageView(colorCorrectReader, colorCorrectPrintWriter);
     MockImageService mockImageService = new MockImageService(colorCorrectPrintWriter);
     ImageController colorCorrectController =
-        new ImageController(mockImageService, colorCorrectImageView);
+          new ImageController(mockImageService, colorCorrectImageView);
     colorCorrectController.start();
     String output = colorCorrectWriter.toString();
     assertTrue(output.contains("Color-Correct image"));
     Image executeColorCorrect =
-        colorCorrectController.loadedImages.get("city_small_colored_after_color_correct");
+          colorCorrectController.loadedImages.get("city_small_colored_after_color_correct");
     Image expectColorCorrect = new MyImage("res/city_small_colored_after_color_correct.png");
 
     assertEquals(expectColorCorrect, executeColorCorrect);
@@ -923,10 +926,10 @@ public class ImageControllerTest {
     PrintWriter levelAdjustPrintWriter = new PrintWriter(levelAdjustWriter);
 
     ImageView levelAdjustImageView = new ImageView(levelAdjustReader,
-        levelAdjustPrintWriter);
+          levelAdjustPrintWriter);
     MockImageService mockImageService = new MockImageService(levelAdjustPrintWriter);
     ImageController levelAdjustController = new ImageController(mockImageService,
-        levelAdjustImageView);
+          levelAdjustImageView);
     levelAdjustController.start();
     String output = levelAdjustWriter.toString();
     assertTrue(output.contains("No image loaded"));
@@ -938,20 +941,20 @@ public class ImageControllerTest {
   @Test
   public void testInvalidOrderLevelAdjustment() {
     String levelAdjustCommand = "load res/city.png city\n "
-                                + "levels-adjust 54 220 125 city city_levels_adjust\n exit";
+          + "levels-adjust 54 220 125 city city_levels_adjust\n exit";
     StringReader levelAdjustReader = new StringReader(levelAdjustCommand);
     StringWriter levelAdjustWriter = new StringWriter();
     PrintWriter levelAdjustPrintWriter = new PrintWriter(levelAdjustWriter);
 
     ImageView levelAdjustImageView = new ImageView(levelAdjustReader,
-        levelAdjustPrintWriter);
+          levelAdjustPrintWriter);
     MockImageService mockImageService = new MockImageService(levelAdjustPrintWriter);
     ImageController levelAdjustController = new ImageController(mockImageService,
-        levelAdjustImageView);
+          levelAdjustImageView);
     levelAdjustController.start();
     String output = levelAdjustWriter.toString();
     assertTrue(output.contains("Invalid values. m,w,b must in ascending order and within "
-                               + "0 to 255."));
+          + "0 to 255."));
   }
 
   /**
@@ -960,16 +963,16 @@ public class ImageControllerTest {
   @Test
   public void testInvalidFormatLevelAdjustment() {
     String levelAdjustCommand = "load test/img/car.jpg car\n "
-                                + "levels-adjust 54 89.5 188 car car_levels_adjust\n exit";
+          + "levels-adjust 54 89.5 188 car car_levels_adjust\n exit";
     StringReader levelAdjustReader = new StringReader(levelAdjustCommand);
     StringWriter levelAdjustWriter = new StringWriter();
     PrintWriter levelAdjustPrintWriter = new PrintWriter(levelAdjustWriter);
 
     ImageView levelAdjustImageView = new ImageView(levelAdjustReader,
-        levelAdjustPrintWriter);
+          levelAdjustPrintWriter);
     MockImageService mockImageService = new MockImageService(levelAdjustPrintWriter);
     ImageController levelAdjustController = new ImageController(mockImageService,
-        levelAdjustImageView);
+          levelAdjustImageView);
     levelAdjustController.start();
     String output = levelAdjustWriter.toString();
     assertTrue(output.contains("Black, mid or white values must be integers."));
@@ -981,8 +984,8 @@ public class ImageControllerTest {
   @Test
   public void testLevelAdjustment() {
     String levelAdjustCommand = "load res/city.png city\n "
-                                + "levels-adjust 20 100 255 city "
-                                + "city-level-adjustment-20-100-255\n exit";
+          + "levels-adjust 20 100 255 city "
+          + "city-level-adjustment-20-100-255\n exit";
     StringReader levelAdjustReader = new StringReader(levelAdjustCommand);
     StringWriter levelAdjustWriter = new StringWriter();
     PrintWriter levelAdjustPrintWriter = new PrintWriter(levelAdjustWriter);
@@ -990,12 +993,12 @@ public class ImageControllerTest {
     ImageView levelAdjustImageView = new ImageView(levelAdjustReader, levelAdjustPrintWriter);
     MockImageService mockImageService = new MockImageService(levelAdjustPrintWriter);
     ImageController levelAdjustController = new ImageController(mockImageService,
-        levelAdjustImageView);
+          levelAdjustImageView);
     levelAdjustController.start();
     String output = levelAdjustWriter.toString();
     assertTrue(output.contains("Levels-adjust image"));
     Image executeLevelAdjust =
-        levelAdjustController.loadedImages.get("city-level-adjustment-20-100-255");
+          levelAdjustController.loadedImages.get("city-level-adjustment-20-100-255");
     Image expectLevelAdjust = new MyImage("res/city-level_adjustment-20-100-255.png");
 
     assertEquals(expectLevelAdjust, executeLevelAdjust);
@@ -1009,8 +1012,8 @@ public class ImageControllerTest {
   @Test
   public void testLevelAdjustmentWithSplitCommand() {
     String levelAdjustCommand = "load res/city.png city\n "
-                                + "levels-adjust 20 100 255 city "
-                                + "city-level-adjustment-20-100-255 split 1\n exit";
+          + "levels-adjust 20 100 255 city "
+          + "city-level-adjustment-20-100-255 split 1\n exit";
     StringReader levelAdjustReader = new StringReader(levelAdjustCommand);
     StringWriter levelAdjustWriter = new StringWriter();
     PrintWriter levelAdjustPrintWriter = new PrintWriter(levelAdjustWriter);
@@ -1018,12 +1021,12 @@ public class ImageControllerTest {
     ImageView levelAdjustImageView = new ImageView(levelAdjustReader, levelAdjustPrintWriter);
     MockImageService mockImageService = new MockImageService(levelAdjustPrintWriter);
     ImageController levelAdjustController = new ImageController(mockImageService,
-        levelAdjustImageView);
+          levelAdjustImageView);
     levelAdjustController.start();
     String output = levelAdjustWriter.toString();
     assertTrue(output.contains("Levels-adjust image"));
     Image executeLevelAdjust =
-        levelAdjustController.loadedImages.get("city-level-adjustment-20-100-255");
+          levelAdjustController.loadedImages.get("city-level-adjustment-20-100-255");
     Image expectLevelAdjust = new MyImage("res/city-level_adjustment-20-100-255.png");
 
     assertEquals(expectLevelAdjust, executeLevelAdjust);
@@ -1057,7 +1060,7 @@ public class ImageControllerTest {
   @Test
   public void testSingleCommentSingleCommand() {
     StringReader input = new StringReader("# This is a comment\n "
-                                          + "load test\\img\\car.jpg car\n exit");
+          + "load test\\img\\car.jpg car\n exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
 
@@ -1078,8 +1081,8 @@ public class ImageControllerTest {
   @Test
   public void testMultipleCommands() {
     StringReader input = new StringReader("load test\\img\\car.jpg car\n "
-                                          + "blur car car-blurred\n brighten 2 car car-brighten\n"
-                                          + " exit");
+          + "blur car car-blurred\n brighten 2 car car-brighten\n"
+          + " exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
 
@@ -1105,10 +1108,10 @@ public class ImageControllerTest {
   @Test
   public void testMultipleCommentsAndCommands() {
     StringReader input = new StringReader("load test\\img\\car.jpg car\n "
-                                          + "# want to blur the car\n blur car car-blurred\n "
-                                          + "# want to change the image's brightness\n "
-                                          + "brighten 2 car car-brighten\n "
-                                          + "exit");
+          + "# want to blur the car\n blur car car-blurred\n "
+          + "# want to change the image's brightness\n "
+          + "brighten 2 car car-brighten\n "
+          + "exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
 
@@ -1135,12 +1138,12 @@ public class ImageControllerTest {
   @Test
   public void testContinousCommentsAndCommands() {
     StringReader input = new StringReader("# I want to load a beautiful image\n "
-                                          + "# This image is about a car\n"
-                                          + " load test\\img\\car.jpg car\n"
-                                          + " # want to blur the car\n "
-                                          + "blur car car-blurred\n"
-                                          + " # want to change the image's brightness\n "
-                                          + "brighten 2 car car-brighten\n exit");
+          + "# This image is about a car\n"
+          + " load test\\img\\car.jpg car\n"
+          + " # want to blur the car\n "
+          + "blur car car-blurred\n"
+          + " # want to change the image's brightness\n "
+          + "brighten 2 car car-brighten\n exit");
     StringWriter output = new StringWriter();
     PrintWriter printWriter = new PrintWriter(output, true);
 

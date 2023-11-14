@@ -10,7 +10,7 @@ The example images displayed in res/ are all photographs taken by Jiaming Xu, wh
 In this document, an overview of the components of the code will be given, and our design will be explained.
 
 ## **Classes and Interfaces**
-![](src-diagram.png)
+![](res/src-diagram.png)
 
 ```
 src/
