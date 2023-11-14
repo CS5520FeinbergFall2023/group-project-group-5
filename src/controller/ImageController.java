@@ -714,8 +714,8 @@ public class ImageController {
             if (blackValue < 0 || blackValue > 255 || midValue < 0 || midValue > 255
                   || whiteValue < 0 || whiteValue > 255
                   || !(blackValue < midValue && midValue < whiteValue)) {
-              imageView.displayMessage("Invalid values. m,w,b must in ascending order and within " +
-                    "0 to 255.");
+              imageView.displayMessage("Invalid values. m,w,b must in ascending order and within "
+                                       + "0 to 255.");
               break;
             }
             String imageAliasAdjust = tokenizer.nextToken();

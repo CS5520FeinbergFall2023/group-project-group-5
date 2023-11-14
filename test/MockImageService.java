@@ -218,7 +218,8 @@ public class MockImageService extends ImageService {
   @Override
   public Image colorCorrect(Image image, float percentage, Axis splitAxis) {
     displayMessage(image.hashCode() + "");
-    displayMessage("Receive the image need to do the color-correct, now start to correct the color");
+    displayMessage(
+        "Receive the image need to do the color-correct, now start to correct the color");
     return new MyImage("res/city_small_colored_after_color_correct.png");
   }
 

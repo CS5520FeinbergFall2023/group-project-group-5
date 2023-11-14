@@ -37,6 +37,63 @@ public class MyImageTest extends ImageTest {
 
   private HaarWaveletCompressor instance;
 
+  /**
+   * Check if there's line spanning between every pair of points with the given color in the
+   * histogram.
+   *
+   * @param imagePath   the path of the histogram
+   * @param redPoints   the expected indices of red points
+   * @param greenPoints the expected indices of green points
+   * @param bluePoints  the expected indices of blue points
+   * @return if the check passed
+   * @throws IOException if there's problem reading in the histogram
+   */
+  public static boolean checkHistogramLines(String imagePath, int[] redPoints, int[] greenPoints,
+                                            int[] bluePoints) throws IOException {
+    File file = new File(imagePath);
+    if (!file.isAbsolute()) {
+      file = new File(System.getProperty("user.dir"), imagePath);
+    }
+    BufferedImage histogram = ImageIO.read(file);
+    for (int i = 0; i < 255; i++) {
+      for (int j = 0; j < 256; j++) {
+        int pixel = histogram.getRGB(i, j);
+        int red = (pixel >> 16) & 0xFF;
+        int green = (pixel >> 8) & 0xFF;
+        int blue = pixel & 0xFF;
+        int redLower = Math.min(redPoints[i], redPoints[i + 1]);
+        int redHigher = Math.max(redPoints[i], redPoints[i + 1]);
+        int greenLower = Math.min(greenPoints[i], greenPoints[i + 1]);
+        int greenHigher = Math.max(greenPoints[i], greenPoints[i + 1]);
+        int blueLower = Math.min(bluePoints[i], bluePoints[i + 1]);
+        int blueHigher = Math.max(bluePoints[i], bluePoints[i + 1]);
+        if (j >= blueLower && j <= blueHigher) {
+          if (!(blue == 255 && green == 0 && red == 0)) {
+            return false;
+          }
+        } else if (j >= greenLower && j <= greenHigher) {
+          if (!(blue == 0 && green == 255 && red == 0)) {
+            return false;
+          }
+        } else if (j >= redLower && j <= redHigher) {
+          if (!(blue == 0 && green == 0 && red == 255)) {
+            return false;
+          }
+        } else {
+          if (!(blue == 255 && green == 255 && red == 255)) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
+  //  -------------------Constructor Tests----------------------------
+
+  /**
+   * Set up before test methods start.
+   */
   @Before
   public void setUp() {
     whiteImage = new MyImage("test/img/monochromatic/white.ppm");
@@ -53,8 +110,6 @@ public class MyImageTest extends ImageTest {
             woRedImage, woBlueImage, triImage};
     instance = HaarWaveletCompressor.getInstance();
   }
-
-  //  -------------------Constructor Tests----------------------------
 
   @Test
   public void testMyImagePathJPGWithBlanks() {
@@ -251,7 +306,6 @@ public class MyImageTest extends ImageTest {
                                    + "Paradigm\\Assignment4\\CS5010_Assignment4"
                                    + "\\testSave.ppm"));
   }
-
 
   @Test
   public void testGetHeight() {
@@ -536,7 +590,6 @@ public class MyImageTest extends ImageTest {
     testImage = new MyImage(3, 3);
     testImage.addition(new MyImage(3, 4));
   }
-
 
   @Test(expected = IllegalArgumentException.class)
   public void testAdditionSizeNotMatchDiffHeight() {
@@ -895,19 +948,27 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testCompressMono() {
     String expected =
-        "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
-        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
-        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
-        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0"
+        "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    "
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    "
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    "
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    \n"
+        + "RED:255 GREEN:0 BLUE:0    RED:255 GREEN:0 BLUE:0    "
+        + "RED:255 GREEN:0 BLUE:0"
         + "    RED:255 GREEN:0 BLUE:0    \n";
     MyImage result = redImage.compress(instance, 0);
     assertEquals(expected, result.toString());
     result = redImage.compress(instance, 0.5f);
     expected =
-        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 "
+        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 "
         + "GREEN:0 BLUE:0    \n";
     assertEquals(expected, result.toString());
     result = redImage.compress(instance, 1);
@@ -917,9 +978,12 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testCompressWhite() {
     String expected =
-        "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
-        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
-        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
+        "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    "
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    "
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    "
+        + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n"
         + "RED:255 GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    RED:255 "
         + "GREEN:255 BLUE:255    RED:255 GREEN:255 BLUE:255    \n";
     MyImage result = whiteImage.compress(instance, 0);
@@ -927,48 +991,67 @@ public class MyImageTest extends ImageTest {
 
     result = whiteImage.compress(instance, 0.5f);
     expected =
-        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 "
+        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 "
         + "GREEN:0 BLUE:0    \n";
     assertEquals(expected, result.toString());
     result = whiteImage.compress(instance, 1);
     expected =
-        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 "
+        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 "
         + "GREEN:0 BLUE:0    \n";
     assertEquals(expected, result.toString());
 
   }
 
-
   @Test
   public void testCompressDi() {
     String expected =
-        "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    \n"
-        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    \n"
-        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    \n"
-        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 "
+        "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    "
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    \n"
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    "
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    \n"
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    "
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    \n"
+        + "RED:200 GREEN:0 BLUE:210    RED:200 GREEN:0 BLUE:210    "
+        + "RED:200 GREEN:0 "
         + "BLUE:210    RED:200 GREEN:0 BLUE:210    \n";
     MyImage image = woGreenImage.imgArrayAddition(new float[]{0, 0, 10});
     MyImage result = image.compress(instance, 0);
     assertEquals(expected, result.toString());
     expected =
-        "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    \n"
-        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    \n"
-        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    \n"
-        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    "
+        "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    "
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    \n"
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    "
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    \n"
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    "
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    \n"
+        + "RED:0 GREEN:0 BLUE:210    RED:0 GREEN:0 BLUE:210    "
+        + "RED:0 GREEN:0 BLUE:210    "
         + "RED:0 GREEN:0 BLUE:210    \n";
     result = image.compress(instance, 0.5f);
     assertEquals(expected, result.toString());
     expected =
-        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 "
+        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 "
         + "GREEN:0 BLUE:0    \n";
     result = image.compress(instance, 1);
     assertEquals(expected, result.toString());
@@ -1017,10 +1100,14 @@ public class MyImageTest extends ImageTest {
   @Test
   public void testCompressBlack() {
     String expected =
-        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
-        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    RED:0 "
+        "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    \n"
+        + "RED:0 GREEN:0 BLUE:0    RED:0 GREEN:0 BLUE:0    "
+        + "RED:0 GREEN:0 BLUE:0    RED:0 "
         + "GREEN:0 BLUE:0    \n";
     MyImage result = blackImage.compress(instance, 0);
     assertEquals(expected, result.toString());
@@ -1028,59 +1115,6 @@ public class MyImageTest extends ImageTest {
     assertEquals(expected, result.toString());
     result = blackImage.compress(instance, 1);
     assertEquals(expected, result.toString());
-  }
-
-
-  /**
-   * Check if there's line spanning between every pair of points with the given color in the
-   * histogram.
-   *
-   * @param imagePath   the path of the histogram
-   * @param redPoints   the expected indices of red points
-   * @param greenPoints the expected indices of green points
-   * @param bluePoints  the expected indices of blue points
-   * @return if the check passed
-   * @throws IOException if there's problem reading in the histogram
-   */
-  public static boolean checkHistogramLines(String imagePath, int[] redPoints, int[] greenPoints,
-                                            int[] bluePoints) throws IOException {
-    File file = new File(imagePath);
-    if (!file.isAbsolute()) {
-      file = new File(System.getProperty("user.dir"), imagePath);
-    }
-    BufferedImage histogram = ImageIO.read(file);
-    for (int i = 0; i < 255; i++) {
-      for (int j = 0; j < 256; j++) {
-        int pixel = histogram.getRGB(i, j);
-        int red = (pixel >> 16) & 0xFF;
-        int green = (pixel >> 8) & 0xFF;
-        int blue = pixel & 0xFF;
-        int redLower = Math.min(redPoints[i], redPoints[i + 1]);
-        int redHigher = Math.max(redPoints[i], redPoints[i + 1]);
-        int greenLower = Math.min(greenPoints[i], greenPoints[i + 1]);
-        int greenHigher = Math.max(greenPoints[i], greenPoints[i + 1]);
-        int blueLower = Math.min(bluePoints[i], bluePoints[i + 1]);
-        int blueHigher = Math.max(bluePoints[i], bluePoints[i + 1]);
-        if (j >= blueLower && j <= blueHigher) {
-          if (!(blue == 255 && green == 0 && red == 0)) {
-            return false;
-          }
-        } else if (j >= greenLower && j <= greenHigher) {
-          if (!(blue == 0 && green == 255 && red == 0)) {
-            return false;
-          }
-        } else if (j >= redLower && j <= redHigher) {
-          if (!(blue == 0 && green == 0 && red == 255)) {
-            return false;
-          }
-        } else {
-          if (!(blue == 255 && green == 255 && red == 255)) {
-            return false;
-          }
-        }
-      }
-    }
-    return true;
   }
 
   @Test
@@ -1666,8 +1700,8 @@ public class MyImageTest extends ImageTest {
         255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
         255, 255, 255, 255, 255, 255, 255, 255};
     int[] bluePoints =
-        new int[]{255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255
-            , 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+        new int[]{255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+            255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
             255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,

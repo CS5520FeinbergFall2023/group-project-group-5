@@ -141,9 +141,9 @@ public class RGBPixel implements Pixel {
     int red = channels.get(Channel.RED);
     int green = channels.get(Channel.GREEN);
     int blue = channels.get(Channel.BLUE);
-    int thatRed = ((RGBPixel)pixel).getRed();
-    int thatGreen = ((RGBPixel)pixel).getGreen();
-    int thatBlue = ((RGBPixel)pixel).getBlue();
+    int thatRed = ((RGBPixel) pixel).getRed();
+    int thatGreen = ((RGBPixel) pixel).getGreen();
+    int thatBlue = ((RGBPixel) pixel).getBlue();
     return new RGBPixel(red + thatRed, green + thatGreen,
         blue + thatBlue);
   }

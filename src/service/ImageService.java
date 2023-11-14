@@ -317,7 +317,7 @@ public class ImageService {
   }
 
   /**
-   * Compress images with Haar Wavelet compressor
+   * Compress images with Haar Wavelet compressor.
    *
    * @param image the image to compress
    * @param ratio the compress ratio ([0,1])

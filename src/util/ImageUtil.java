@@ -32,7 +32,7 @@ public class ImageUtil {
       controller.startFromFile(scriptFileName);
     } else {
       imageView.displayMessage("Please select which mode you want to input the commands: "
-            + "1. Console 2. From file 3. Exit");
+                               + "1. Console 2. From file 3. Exit");
       while (true) {
         int choice = imageView.getModeChoice();
         switch (choice) {

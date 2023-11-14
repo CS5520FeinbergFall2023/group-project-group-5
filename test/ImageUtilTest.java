@@ -68,7 +68,8 @@ public class ImageUtilTest {
     ImageUtil.main(args);
 
     String output = outContent.toString();
-    assertTrue(output.contains("Please select which mode you want to input the commands: 1. Console"));
+    assertTrue(
+        output.contains("Please select which mode you want to input the commands: 1. Console"));
   }
 
   /**

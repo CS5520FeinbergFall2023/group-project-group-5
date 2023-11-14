@@ -1,7 +1,5 @@
 package model.pixel;
 
-import java.util.Map;
-
 import model.Channel;
 
 /**
@@ -16,7 +14,7 @@ public interface Pixel {
    * @param channel the channel to check.
    * @return if the pixel has the given channel
    */
-  public boolean containsChannel(Channel channel);
+  boolean containsChannel(Channel channel);
 
   /**
    * Perform linear transformation. E.g. calculate 3x3 matrix * [r,g,b].

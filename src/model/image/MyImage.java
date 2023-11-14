@@ -79,26 +79,6 @@ public class MyImage implements Image {
   }
 
   /**
-   * Get height of the image.
-   *
-   * @return height of the image
-   */
-  @Override
-  public int getHeight() {
-    return this.height;
-  }
-
-  /**
-   * Get width of the image.
-   *
-   * @return width of the image
-   */
-  @Override
-  public int getWidth() {
-    return this.width;
-  }
-
-  /**
    * Construct an image with given local path.
    *
    * @param path the local image path
@@ -183,6 +163,26 @@ public class MyImage implements Image {
   }
 
   /**
+   * Get height of the image.
+   *
+   * @return height of the image
+   */
+  @Override
+  public int getHeight() {
+    return this.height;
+  }
+
+  /**
+   * Get width of the image.
+   *
+   * @return width of the image
+   */
+  @Override
+  public int getWidth() {
+    return this.width;
+  }
+
+  /**
    * Save image to local file.
    *
    * @param path the file path
@@ -226,7 +226,7 @@ public class MyImage implements Image {
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        RGBPixel pixel = (RGBPixel) pixels[y][x];
+        RGBPixel pixel = pixels[y][x];
         writer.write(pixel.getRed() + " " + pixel.getGreen() + " " + pixel.getBlue() + " ");
       }
       writer.write("\n");
@@ -243,9 +243,9 @@ public class MyImage implements Image {
         BufferedImage.TYPE_INT_RGB);
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        int rgb = (((RGBPixel) pixels[y][x]).getRed() << 16)
-                  | (((RGBPixel) pixels[y][x]).getGreen() << 8)
-                  | ((RGBPixel) pixels[y][x]).getBlue();
+        int rgb = (pixels[y][x].getRed() << 16)
+                  | (pixels[y][x].getGreen() << 8)
+                  | pixels[y][x].getBlue();
         bufferedImage.setRGB(x, y, rgb);
       }
     }
@@ -411,7 +411,7 @@ public class MyImage implements Image {
     RGBPixel[][] resultPixels = new RGBPixel[height][width];
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        resultPixels[i][j] = (RGBPixel) this.pixels[i][j];
+        resultPixels[i][j] = this.pixels[i][j];
       }
     }
     for (int i = 0; i < height; i++) {

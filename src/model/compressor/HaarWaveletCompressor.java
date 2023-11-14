@@ -14,7 +14,7 @@ public class HaarWaveletCompressor implements Compressor {
   public static final float sqrt2 = (float) Math.sqrt(2);
 
   //singleton
-  private static HaarWaveletCompressor instance = new HaarWaveletCompressor();
+  private static final HaarWaveletCompressor instance = new HaarWaveletCompressor();
 
   private HaarWaveletCompressor() {
   }
@@ -55,27 +55,6 @@ public class HaarWaveletCompressor implements Compressor {
           }
         }
       }
-    }
-    return result;
-  }
-
-  /**
-   * Decompress a 3D float array.
-   *
-   * @param compressed the given 3D array to decompress
-   * @return the decompressed result
-   * @throws IllegalArgumentException when given argument is illegal (array empty or sub array
-   * not with 2^n side length)
-   */
-  @Override
-  public float[][][] decompress(float[][][] compressed) throws IllegalArgumentException {
-    int length = compressed.length;
-    if (length == 0) {
-      throw new IllegalArgumentException("The given array to decompress is empty");
-    }
-    float[][][] result = new float[length][][];
-    for (int i = 0; i < length; i++) {
-      result[i] = decompress(compressed[i]);
     }
     return result;
   }
@@ -144,6 +123,65 @@ public class HaarWaveletCompressor implements Compressor {
     return result;
   }
 
+  /**
+   * Compress an 1D float array.
+   *
+   * @param nums  the given 1D float array to compress
+   * @param ratio the compression ratio ([0,1])
+   * @return the compressed result
+   * @throws IllegalArgumentException when given array or ratio is illegal
+   */
+  @Override
+  public float[] compress(float[] nums, float ratio) throws IllegalArgumentException {
+    if (nums.length == 0) {
+      throw new IllegalArgumentException("The given list to compress is empty.");
+    }
+    if (ratio < 0 || ratio > 1) {
+      throw new IllegalArgumentException("Ratio cannot be smaller than 0 or larger than 1.");
+    }
+    int desiredLength = nums.length;
+    if (!isPowerOfTwo(nums.length)) {
+      desiredLength = 1 << ((int) Math.ceil(log2(nums.length)));
+    }
+    float[] result = new float[desiredLength];
+    System.arraycopy(nums, 0, result, 0, nums.length);
+    int m = result.length;
+    while (m > 1) {
+      float[] tmp = transform(Arrays.copyOfRange(result, 0, m));
+      System.arraycopy(tmp, 0, result, 0, m);
+      m /= 2;
+    }
+    if (ratio > 0) {
+      float threshold = getThreshold(result, ratio);
+      for (int i = 0; i < result.length; i++) {
+        if (result[i] <= threshold) {
+          result[i] = 0.0f;
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Decompress a 3D float array.
+   *
+   * @param compressed the given 3D array to decompress
+   * @return the decompressed result
+   * @throws IllegalArgumentException when given argument is illegal (array empty or sub array not
+   *                                  with 2^n side length)
+   */
+  @Override
+  public float[][][] decompress(float[][][] compressed) throws IllegalArgumentException {
+    int length = compressed.length;
+    if (length == 0) {
+      throw new IllegalArgumentException("The given array to decompress is empty");
+    }
+    float[][][] result = new float[length][][];
+    for (int i = 0; i < length; i++) {
+      result[i] = decompress(compressed[i]);
+    }
+    return result;
+  }
 
   /**
    * Decompress a 2D float array.
@@ -189,41 +227,29 @@ public class HaarWaveletCompressor implements Compressor {
   }
 
   /**
-   * Compress an 1D float array.
+   * Decompress an 1D float array.
    *
-   * @param nums  the given 1D float array to compress
-   * @param ratio the compression ratio ([0,1])
-   * @return the compressed result
-   * @throws IllegalArgumentException when given array or ratio is illegal
+   * @param compressed the 1D compressed array to decompress
+   * @return the decompressed result
+   * @throws IllegalArgumentException when given array's size is illegal
    */
   @Override
-  public float[] compress(float[] nums, float ratio) throws IllegalArgumentException {
-    if (nums.length == 0) {
-      throw new IllegalArgumentException("The given list to compress is empty.");
+  public float[] decompress(float[] compressed) throws IllegalArgumentException {
+    if (compressed.length == 0) {
+      throw new IllegalArgumentException("The given list to decompress is empty.");
     }
-    if (ratio < 0 || ratio > 1) {
-      throw new IllegalArgumentException("Ratio cannot be smaller than 0 or larger than 1.");
+    if (!isPowerOfTwo(compressed.length)) {
+      throw new IllegalArgumentException("The given list is not properly compressed with length "
+                                         + "power of 2.");
     }
-    int desiredLength = nums.length;
-    if (!isPowerOfTwo(nums.length)) {
-      desiredLength = 1 << ((int) Math.ceil(log2(nums.length)));
-    }
-    float[] result = new float[desiredLength];
-    System.arraycopy(nums, 0, result, 0, nums.length);
-    int m = result.length;
-    while (m > 1) {
-      float[] tmp = transform(Arrays.copyOfRange(result, 0, m));
+    float[] result = Arrays.copyOfRange(compressed, 0, compressed.length);
+    int m = 2;
+    while (m <= compressed.length) {
+      float[] tmp = invert(Arrays.copyOfRange(result, 0, m));
       System.arraycopy(tmp, 0, result, 0, m);
-      m /= 2;
+      m *= 2;
     }
-    if (ratio > 0) {
-      float threshold = getThreshold(result, ratio);
-      for (int i = 0; i < result.length; i++) {
-        if (result[i] <= threshold) {
-          result[i] = 0.0f;
-        }
-      }
-    }
+
     return result;
   }
 
@@ -251,34 +277,6 @@ public class HaarWaveletCompressor implements Compressor {
       compressed[2 * groupCount - 1] = nums[nums.length - 1] / sqrt2;
     }
     return compressed;
-  }
-
-
-  /**
-   * Decompress an 1D float array.
-   *
-   * @param compressed the 1D compressed array to decompress
-   * @return the decompressed result
-   * @throws IllegalArgumentException when given array's size is illegal
-   */
-  @Override
-  public float[] decompress(float[] compressed) throws IllegalArgumentException {
-    if (compressed.length == 0) {
-      throw new IllegalArgumentException("The given list to decompress is empty.");
-    }
-    if (!isPowerOfTwo(compressed.length)) {
-      throw new IllegalArgumentException("The given list is not properly compressed with length "
-                                         + "power of 2.");
-    }
-    float[] result = Arrays.copyOfRange(compressed, 0, compressed.length);
-    int m = 2;
-    while (m <= compressed.length) {
-      float[] tmp = invert(Arrays.copyOfRange(result, 0, m));
-      System.arraycopy(tmp, 0, result, 0, m);
-      m *= 2;
-    }
-
-    return result;
   }
 
   private float getThreshold(Object numsArray, float ratio) throws IllegalArgumentException {

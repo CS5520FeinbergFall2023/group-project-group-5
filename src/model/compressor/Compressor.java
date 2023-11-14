@@ -1,7 +1,7 @@
 package model.compressor;
 
 /**
- * This abstract class represents compressors
+ * This abstract class represents compressors.
  */
 public interface Compressor {
 

@@ -3,8 +3,6 @@ package model.compressor;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -72,10 +70,11 @@ public class HaarWaveletCompressorTest {
   //one channel
   @Test
   public void testCompress3DOne() {
-    float[][][] originalMatrix = new float[][][]{{
-        {1, 2},
-        {3, 4},
-    }
+    float[][][] originalMatrix = new float[][][]{
+        {
+            {1, 2},
+            {3, 4},
+        }
     };
     float targetRatio = 0f;
     float[][][] result = instance.compress(originalMatrix, targetRatio);

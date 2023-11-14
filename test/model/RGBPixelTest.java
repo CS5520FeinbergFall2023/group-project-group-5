@@ -31,6 +31,9 @@ public class RGBPixelTest {
 
   RGBPixel[] allTestPixels;
 
+  /**
+   * Set up before test methods start.
+   */
   @Before
   public void setUp() {
     whitePixel = new RGBPixel(0, 0, 0);

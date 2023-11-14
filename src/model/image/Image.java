@@ -6,7 +6,6 @@ import model.Axis;
 import model.Channel;
 import model.compressor.Compressor;
 import model.pixel.Pixel;
-import model.pixel.RGBPixel;
 
 /**
  * This interface represents images, that has height, width, and 2d array of pixels.
@@ -169,8 +168,6 @@ public interface Image {
    * @return the adjusted image
    */
   Image levelAdjustment(float black, float mid, float highlight);
-
-
 
 
 }
