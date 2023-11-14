@@ -2101,11 +2101,11 @@ public class ImageServiceTest {
   //todo: compress 0, compress 30, 50, 70
 
   @Test
-  public void test()
+ public void test()
   {
-    MyImage testImage = new MyImage("manhattan-small.png");
-    testImage.compress(HaarWaveletCompressor.getInstance(),0.5f).save("manhattan-small-compress"
-                                                                      + "-50%"
-                                                                      + ".png");
+    MyImage testImage = new MyImage("res/city_small_colored_before_color_correct.png");
+    imageService.colorCorrect(testImage,0.5f,Axis.X).save("res"
+                                                                      +
+                                                                      "/city_small_colored_before_color_correct-50%.png");
   }
 }

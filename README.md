@@ -317,7 +317,7 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
     - Get channels of pixels in the image. For this case, Channel.RED, Channel.GREEN and Channel.BLUE
 
 - public MyImage compress(Compressor compressor, float ratio)
-    - Compress the image by calling compress on the value array of red channel, green channel and blue channel of the image first, and then call decompress on them and truncate the result to make sure the result image is of the same size as the original one.
+    - Compress the image by calling compress on the 3D value array of red channel, green channel and blue channel of the image first, and then call decompress on them and truncate the result to make sure the result image is of the same size as the original one (remove the paddings).
 
 - public MyImage[] split(float percentage, Axis axis) throws IllegalArgumentException
     - Split the images to 2 images according to the given percentage by calculating the size(round to the nearest integer) of the two parts and traversing the original image. The result will always be a MyImage[2] and if the side length of one part is 0, it will be put as a null.
@@ -368,6 +368,12 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
 
 -   public static HaarWaveletCompressor getInstance()
     - Get the singleton instance of the compressor.
+
+- public float[][][] compress(float[][][] matrix, float ratio) throws IllegalArgumentException
+    - Compress a 3D float array with given ratio. It follows the algorithm in the instructions to perform 2D compress on each 2D element in the matrix. Then it calculates threshold from all the values by calling flattenAbsoluteArray and getThreshold. Finally it sets all values smaller than or equal to the threshold as 0.
+
+- public float[][][] decompress(float[][][] compressed) throws IllegalArgumentException
+    - Decompress a 3D float by performing 2D decompressing on each 2D element.
 
 - public float[][] compress(float[][] matrix, float ratio) throws IllegalArgumentException
     - Compress a 2D float array. It just follows the algorithm in the instructions. Finally it calls getThreshold to get the threshold and set those below the theshold (in terms of absolute value) to zero.
