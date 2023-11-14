@@ -2089,10 +2089,9 @@ public class ImageServiceTest {
     MyImage image = new MyImage(4, 4);
     imageService.levelAdjustment(image, 10, 10, 10, 2, Axis.X);
   }
-  
+
   @Test
-  public void testLevelAdjustmentLinearPercentage()
-  {
+  public void testLevelAdjustmentLinearPercentage() {
     int black = 50;
     int mid = 128;
     int white = 205;
@@ -2100,10 +2099,11 @@ public class ImageServiceTest {
     MyImage image =
         new MyImage("res/city_small_colored_before_color_correct.png");
     Image adjusted = imageService.levelAdjustment(image, black, mid, white, 0.5f, Axis.X);
-    Image[] expectedParted=image.split(0.5f,Axis.X);
-    Image expected=expectedParted[0].levelAdjustment(black,mid,white).combineImages(expectedParted[1],
-        Axis.X);
-    assertEquals(expected,adjusted);
+    Image[] expectedParted = image.split(0.5f, Axis.X);
+    Image expected =
+        expectedParted[0].levelAdjustment(black, mid, white).combineImages(expectedParted[1],
+            Axis.X);
+    assertEquals(expected, adjusted);
   }
 
   @Test
