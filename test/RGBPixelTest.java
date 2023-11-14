@@ -1,8 +1,7 @@
-package model;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import model.Channel;
 import model.pixel.Pixel;
 import model.pixel.RGBPixel;
 

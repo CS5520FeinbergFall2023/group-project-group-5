@@ -1,5 +1,3 @@
-package model;
-
 import java.io.File;
 
 import model.image.Image;

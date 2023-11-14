@@ -1,5 +1,3 @@
-package model;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,6 +7,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import model.Axis;
+import model.Channel;
 import model.compressor.HaarWaveletCompressor;
 import model.image.Image;
 import model.image.MyImage;
