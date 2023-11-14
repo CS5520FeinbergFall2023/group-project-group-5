@@ -367,7 +367,7 @@ public class ImageControllerTest {
     assertTrue(output.contains("Images combined successfully"));
 
     Image executeCombine = combineController.loadedImages.get("rose");
-    Image expectCombine = new MyImage("test/img/rose.ppm");
+    Image expectCombine = new MyImage("res/rose.png");
 
     Image targetImageR = new MyImage("res/rose_onlyRed.png");
     Image targetImageG = new MyImage("res/rose_onlyGreen.png");
@@ -499,12 +499,12 @@ public class ImageControllerTest {
   }
 
   /**
-   * Test the flip command.
+   * Test the flip command(horizontally).
    */
   @Test
-  public void testFlip() {
+  public void testHoizontalFlip() {
     String flipCommand = "load res/car.png car\n "
-                         + "horizontal-flip car car_horizontallyFlipped\n exit";
+                         + "horizontal-flip car car_doubleFlipped\n exit";
     StringReader flipReader = new StringReader(flipCommand);
     StringWriter flipWriter = new StringWriter();
     PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
@@ -516,7 +516,34 @@ public class ImageControllerTest {
     String output = flipWriter.toString();
     assertTrue(output.contains("Flip the image horizontally"));
 
-    Image execute = flipController.loadedImages.get("car_horizontallyFlipped");
+    Image execute = flipController.loadedImages.get("car_doubleFlipped");
+    Image expect = new MyImage("res/car_doubleFlipped.png");
+
+    assertEquals(expect, execute);
+
+    Image targetImage = new MyImage("res/car.png");
+    assertTrue(output.contains(targetImage.hashCode() + ""));
+  }
+
+  /**
+   * Test the flip command(vertically).
+   */
+  @Test
+  public void testVerticalFlip() {
+    String flipCommand = "load res/car.png car\n "
+          + "vertical-flip car car_doubleFlipped\n exit";
+    StringReader flipReader = new StringReader(flipCommand);
+    StringWriter flipWriter = new StringWriter();
+    PrintWriter flipPrintWriter = new PrintWriter(flipWriter);
+
+    ImageView flipImageView = new ImageView(flipReader, flipPrintWriter);
+    MockImageService mockImageService = new MockImageService(flipPrintWriter);
+    ImageController flipController = new ImageController(mockImageService, flipImageView);
+    flipController.start();
+    String output = flipWriter.toString();
+    assertTrue(output.contains("Flip the image vertically"));
+
+    Image execute = flipController.loadedImages.get("car_doubleFlipped");
     Image expect = new MyImage("res/car_doubleFlipped.png");
 
     assertEquals(expect, execute);
@@ -549,9 +576,9 @@ public class ImageControllerTest {
    * Test the brighten command when there exist a image.
    */
   @Test
-  public void testBrighten() {
-    String brightenCommand = "load test/img/simple.ppm simple\n "
-                             + "brighten -4 simple simple-4 \n exit";
+  public void testIncreaseDecreaseBrighten() {
+    String brightenCommand = "load res/city_small.png city_small\n "
+          + "brighten 40 city_small city_small+40\n brighten -40 city_small+40 city_small\n exit";
     StringReader brightenReader = new StringReader(brightenCommand);
     StringWriter brightenWriter = new StringWriter();
     PrintWriter brightenPrintWriter = new PrintWriter(brightenWriter);
@@ -559,17 +586,18 @@ public class ImageControllerTest {
     ImageView brightenImageView = new ImageView(brightenReader, brightenPrintWriter);
     MockImageService mockImageService = new MockImageService(brightenPrintWriter);
     ImageController brightenController = new ImageController(mockImageService,
-        brightenImageView);
+          brightenImageView);
     brightenController.start();
     String output = brightenWriter.toString();
+    assertTrue(output.contains("Increase the brightness of the image"));
     assertTrue(output.contains("Decrease the brightness of the image"));
 
-    Image executeIncrease = brightenController.loadedImages.get("simple-4");
-    Image expectIncrease = new MyImage("test/img/simple-4.ppm");
+    Image executeIncrease = brightenController.loadedImages.get("city_small");
+    Image expectIncrease = new MyImage("res/city_small.png");
 
     assertEquals(expectIncrease, executeIncrease);
 
-    Image targetImage = new MyImage("test/img/simple.ppm");
+    Image targetImage = new MyImage("res/city_small.png");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
@@ -746,8 +774,8 @@ public class ImageControllerTest {
    */
   @Test
   public void testCompressCommand() {
-    String compressCommand = "load res/car.png car\n "
-                             + "compress 0.5 car car_compress\n exit";
+    String compressCommand = "load res/city.png city\n "
+                             + "compress 0.5 city city-compress-50%\n exit";
     StringReader compressReader = new StringReader(compressCommand);
     StringWriter compressWriter = new StringWriter();
     PrintWriter compressPrintWriter = new PrintWriter(compressWriter);
@@ -759,11 +787,11 @@ public class ImageControllerTest {
     String output = compressWriter.toString();
     assertTrue(output.contains("Compress image"));
 
-    Image executeCompress = compressController.loadedImages.get("car_compress");
-    Image expectCompress = new MyImage("res/car_compress.jpg");
+    Image executeCompress = compressController.loadedImages.get("city-compress-50%");
+    Image expectCompress = new MyImage("res/city-compress-50%.png");
 
     assertEquals(expectCompress, executeCompress);
-    Image targetImage = new MyImage("res/car.png");
+    Image targetImage = new MyImage("res/city.png");
     assertTrue(output.contains(targetImage.hashCode() + ""));
   }
 
@@ -1211,10 +1239,10 @@ public class ImageControllerTest {
     controller.startFromFile(filePath);
     String outputFile = output.toString();
 
-    assertTrue(outputFile.contains("Loading new image: car"));
-    assertTrue(outputFile.contains("Image blurred"));
-    assertTrue(outputFile.contains("Increase the brightness of the image"));
-    assertTrue(outputFile.contains("Decrease the brightness of the image"));
+    assertTrue(outputFile.contains("Loading new image: city_small"));
+    assertTrue(outputFile.contains("Get the intensity-component"));
+    assertTrue(outputFile.contains("Get the value-component"));
+    assertTrue(outputFile.contains("Get the luma-component"));
 
   }
 
@@ -1280,7 +1308,7 @@ public class ImageControllerTest {
     controller.startFromFile(filePath);
     String outputFile = output.toString();
 
-    assertTrue(outputFile.contains("Loading new image: mall"));
+    assertTrue(outputFile.contains("Loading new image: car"));
   }
 
   /**

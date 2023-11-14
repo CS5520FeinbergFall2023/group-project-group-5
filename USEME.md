@@ -1,5 +1,10 @@
 # **CS5010_Assignment_Image-Manipulation-and-Enhancement-Usage**
 
+The example images displayed in res/ are all photographs taken by Jiaming Xu, who authorized the use of the images as examples in the assignment.
+
+Common conditions:
+- load command should be executed before all image operation commands (such as blur, sepia, brighten...).
+
 ## **Usage-Assignment-4**
 
 After running the program, the user can either input image operation commands directly on the console like
@@ -42,42 +47,18 @@ run script-file
 # Load and run the script commands in the specified file. The file has similar syntax as the above command line commands and supports single-line commands.
 ```
 
-an example of the script file can be:
+Examples of the script file are under the test/file folder. After the user choosing to enter the file path in console, they can enter the path of the file, the program will correctly parse the commands in the file and execute the operations. 
+One of the script file(commandWithMultipleComments.txt) is like:
 
 ```
-#load koala.ppm and call it 'koala'
-load images/koala.ppm koala
-
-#brighten koala by adding 10  
-brighten 10 koala koala-brighter 
-
-#flip koala vertically
-vertical-flip koala koala-vertical
-
-#flip the vertically flipped koala horizontally
-horizontal-flip koala-vertical koala-vertical-horizontal
-
-#create a greyscale using only the value component, as an image koala-greyscale
-value-component koala koala-greyscale
-
-#save koala-brighter
-save images/koala-brighter.ppm koala-brighter
-
-#save koala-greyscale
-save images/koala-gs.ppm koala-greyscale
-
-#overwrite koala with another file
-load images/upper.ppm koala
-
-#give the koala a red tint
-rgb-split koala koala-red koala-green koala-blue
-
-#brighten just the red image
-brighten 50 koala-red koala-red
-
-#combine them back, but by using the brightened red we get a red tint
-rgb-combine koala-red-tint koala-red koala-green koala-blue
-save images/koala-red-tint.ppm koala-red-tint
+load res/city_small.png city_small
+# get the city_small intensity
+intensity-component city_small city_small_intensity
+# get the city_small value
+value-component city_small city_small_value
+# get the city_small luma
+luma-component city_small city_small_luma
+exit
 ```
 
 ## **Usage-Assignment-5**
@@ -123,41 +104,46 @@ levels-adjust b m w image-name dest-image-name split p
 # Execute the levels-adjust operation where 'p' is a percentage of the width.
 ```
 
-an example of the script file can be:
+Examples of the script file are scriptJar.txt and scriptTerminal.txt, which both located under the res/folder. The only difference between these two files is that the path to load the required image is different. scriptJar.txt needs to use image's path from content root, and the scriptTerminal.txt only needs to use the image's name. 
+User can directly run the jar file and the ImageUtil.class(main class) to let transfer the scriptJar.txt file to program. Or, enter the "java -jar CS5010_Assignment4.jar -file scriptTerminal.txt" command in console to transfer scriptTerminal.txt file to program. 
+One of the script file(scriptJar.txt) is like:
 
 ```
-#load koala.ppm and call it 'koala'
-load images/koala.ppm koala
+load res\cupcake.png cupcake
+# then I want to blur the image.
+blur cupcake cupcake_blurOnce
+# want to see the difference between original picture and blurred picture.
+blur cupcake cupcake-blur-50% split 0.5
+#test sepia operation.
+sepia cupcake cupcake-sepia-50% split 0.5
+#test sharpen operation.
+sharpen cupcake cupcake_sharpenOnce
+sharpen cupcake cupcake-sharpen-50% split 0.5
+#test greyscale operation.
+greyscale cupcake cupcake-greyscale
+greyscale cupcake cupcake-greyscale-50% split 0.5
 
-#blur the koala and split in half of the image width.  
-blur koala koala-blurred split 0.5 
-
-#sharpen the koala and split in 80% of the image width.
-sharpen koala koala-sharpen split 0.8
-
-#color correct the koala image.
-color-correct koala koala-color-correct
-
-#compress the koala image which is after the color correct operation, the percentage is 40%.
-compress 0.4 koala-color-correct koala-color-corrrect-compress-0.4
-
-#do the greyscale operation and split in 70% of the image width.
-greyscale koala koala-greyscale split 0.7;
-
-#sepia the koala and split in 30% of the image width.
-sepia koala koala-sepia split 0.3
-
-#acquire the histogram of the koala.
-histogram koala koala-histogram 
-
-#do the level-adjust operation, b equals to 20, m equals to 100, w equals to 255 and split in 65.5% of the image width.
-levels-adjust 20 100 255 koala koala-levels-adjust split 0.655
-
-save images/koala-greyscale.ppm koala-greyscale
+#load another picture.
+load res\city_small.png city_small
+#get value operation.
+value-component city_small city_small_value
+#get intensity operation.
+intensity-component city_small city_small_intensity
+#get luma operation.
+luma-component city_small city_small_luma
+#get sepia operation.
+sepia city_small city_small_sepia
+#get red component operation.
+red-component city_small city_small_red_channel_greyscale
+#get green component operation.
+green-component city_small city_small_green_channel_greyscale
+#get blue component operation.
+blue-component city_small city_small_blue_channel_greyscale
+#brighten operation (increase).
+brighten 40 city_small city_small+40
+#brighten operation(decrease).
+brighten -40 city_small city_small-40
+....
 ```
-
-Common conditions:
-
-load command should be executed before all image operation commands (such as blur, sepia, brighten...).
  
 

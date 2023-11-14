@@ -573,3 +573,6 @@ This class deals with user's input commands or on the command-file and inteprets
 - Modify the main function in ImageUtil so that it parses the command line arguments and performs different actions based on those arguments. 
     - If the first argument is "-file" followed by the file name, the program will enter script file execution mode.
     - If without any command line arguments, the program interacts with the user at the console as before to get the script commands entered by the user.
+- Add a correct JAR file in the res/folder and edit the jar file's configuration (add program argument: -file res/scriptJar.txt). When user run the jar file in res/folder, the program will directly start to parse the commands inside of scriptJar.txt file in res/folder. 
+- Edit the ImageUtil.class's configuration as well (add program argument: -file res/scriptJar.txt) so that when user run the ImageUtil.class, the program will directly parse the command in scriptJar.txt file. If user want to input their command or another file path, they need to edit the configuration and delete the program argument. 
+- Also, the user can enter the "java -jar CS5010_Assignment4.jar -file scriptTerminal.txt" in terminal to transfer the file to program.("CS5010_Assignment4.jar" is our jar file's name.)

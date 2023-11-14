@@ -128,7 +128,7 @@ public class MockImageService extends ImageService {
   public Image brighten(Image image, float delta) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to be brightened, now start to brighten.");
-    return new MyImage("test/img/trichromatic/simple-4.ppm");
+    return new MyImage("res/city_small.png");
   }
 
   /**
@@ -165,7 +165,7 @@ public class MockImageService extends ImageService {
       displayMessage(images[i].hashCode() + "");
     }
     displayMessage("Receive three images need to combine together, now start to combine.");
-    return new MyImage("test/img/split/rose.ppm");
+    return new MyImage("res/rose.png");
   }
 
   /**
@@ -205,7 +205,7 @@ public class MockImageService extends ImageService {
   public Image haarWaveletCompress(Image image, float ratio) {
     displayMessage(image.hashCode() + "");
     displayMessage("Receive the image need to compress, now start to compress");
-    return new MyImage("res/car_compress.jpg");
+    return new MyImage("res/city-compress-50%.png");
   }
 
   @Override

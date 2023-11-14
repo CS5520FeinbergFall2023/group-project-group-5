@@ -48,12 +48,12 @@ public class ImageUtilTest {
    */
   @Test
   public void testMainWithCommandLineArgs() {
-    String[] args = {"-file", "test/file/script.txt"};
+    String[] args = {"-file", "test\\file\\script.txt"};
     ImageUtil.main(args);
     String output = outContent.toString();
-    assertTrue(output.contains("Loading new image: city"));
+    assertTrue(output.contains("Loading new image: cupcake"));
     assertTrue(output.contains("Image blurred"));
-    assertTrue(output.contains("Split the image"));
+    assertTrue(output.contains("Sharpen image"));
   }
 
   /**
