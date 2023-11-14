@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import model.Axis;
 import model.Channel;
-import model.MyImageTest;
 import model.image.Image;
 import model.image.MyImage;
 import service.ImageService;
