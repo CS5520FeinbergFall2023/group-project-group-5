@@ -1783,6 +1783,61 @@ public class MyImageTest extends ImageTest {
   }
 
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentBlackTooSmall() {
+    redImage.levelAdjustment(-10, 20, 30);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentMidTooSmall() {
+    redImage.levelAdjustment(10, -20, 30);
+
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentWhiteTooSmall() {
+    redImage.levelAdjustment(10, 20, -30);
+
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentBlackTooBig() {
+    redImage.levelAdjustment(280, 20, 30);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentBlackBiggerThanMid() {
+    redImage.levelAdjustment(25, 20, 30);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentBlackBiggerThanWhite() {
+    redImage.levelAdjustment(40, 20, 30);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentMidTooBig() {
+    redImage.levelAdjustment(10, 280, 30);
+
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentMidWrongSizeOrder() {
+    redImage.levelAdjustment(10, 50, 30);
+
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentWhiteTooBig() {
+    redImage.levelAdjustment(10, 20, 280);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentSameValue() {
+    redImage.levelAdjustment(10, 10, 10);
+  }
+
+  //f(x)=x
   @Test
   public void testLevelAdjustmentSame() {
     int black = 0;

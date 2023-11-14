@@ -2018,6 +2018,94 @@ public class ImageServiceTest {
     assertTrue(MyImageTest.checkHistogramLines(path, redPoints, greenPoints, bluePoints));
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentBlackTooSmall() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, -10, 20, 30, 1, Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentMidTooSmall() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, 10, -20, 30, 1, Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentWhiteTooSmall() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, 10, 20, -30, 1, Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentBlackTooBig() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, 280, 20, 30, 1, Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentBlackBiggerThanMid() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, 25, 20, 30, 1, Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentBlackBiggerThanWhite() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, 40, 20, 30, 1, Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentMidTooBig() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, 10, 280, 30, 1, Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentMidWrongSizeOrder() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, 10, 50, 30, 1, Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentWhiteTooBig() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, 10, 20, 280, 1, Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentSameValue() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, 10, 10, 10, 1, Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentPercentageTooSmall() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, 10, 10, 10, -1, Axis.X);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLevelAdjustmentPercentageTooLarge() {
+    MyImage image = new MyImage(4, 4);
+    imageService.levelAdjustment(image, 10, 10, 10, 2, Axis.X);
+  }
+  
+  @Test
+  public void testLevelAdjustmentLinearPercentage()
+  {
+    int black = 50;
+    int mid = 128;
+    int white = 205;
+
+    MyImage image =
+        new MyImage("res/city_small_colored_before_color_correct.png");
+    Image adjusted = imageService.levelAdjustment(image, black, mid, white, 0.5f, Axis.X);
+    Image[] expectedParted=image.split(0.5f,Axis.X);
+    Image expected=expectedParted[0].levelAdjustment(black,mid,white).combineImages(expectedParted[1],
+        Axis.X);
+    assertEquals(expected,adjusted);
+  }
+
   @Test
   public void testLevelAdjustmentSame() {
     MyImage[] testImages = new MyImage[]{new MyImage("test/img/white.ppm"),
@@ -2028,7 +2116,7 @@ public class ImageServiceTest {
     int mid = 128;
     int white = 255;
     for (MyImage image : testImages) {
-      MyImage adjusted = image.levelAdjustment(black, mid, white);
+      Image adjusted = imageService.levelAdjustment(image, black, mid, white, 1, Axis.X);
       assertEquals(adjusted, image);
     }
   }
