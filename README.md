@@ -213,7 +213,7 @@ This enum is used to represent channelsMap. Currently we only deal with RGB imag
 This class represents RGB pixels, that is, pixels with and only with RGB channelsMap. It extends the Pixel abstract class.
 
 #### Fields
-- Besides the inhereted Map<Channel, Integer> channelsMap, it also has a constant private final int bitDepth = 8.
+- Besides the inhereted Map<Channel, Integer> channelsMap, it also has a constant private final int BIT_DEPTH = 8.
 
 #### Methods
 - public RGBPixel(int red, int green, int blue)
@@ -356,7 +356,7 @@ This class represents 8 bit depth RGB images that is consisted of RGBPixels. It 
 ### HaarWaveletCompressor
 
 #### Fields
-- public static final float sqrt2 = (float) Math.sqrt(2)
+- public static final float SQRT_2 = (float) Math.sqrt(2)
     - To help ease the calculation representations.
 
 - private static HaarWaveletCompressor instance = new HaarWaveletCompressor();

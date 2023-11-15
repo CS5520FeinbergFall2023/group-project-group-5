@@ -2254,6 +2254,4 @@ public class MyImageTest extends ImageTest {
     assertEquals(image1, image2);
 
   }
-
-
 }
