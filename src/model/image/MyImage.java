@@ -656,7 +656,7 @@ public class MyImage implements Image {
    * Get appearance frequency of colors in the image.
    */
   private float[][] getFrequency() {
-    int length = 1 << RGBPixel.bitDepth;
+    int length = 1 << RGBPixel.BIT_DEPTH;
     float[] redCount = new float[length];
     float[] greenCount = new float[length];
     float[] blueCount = new float[length];
@@ -705,7 +705,7 @@ public class MyImage implements Image {
    */
   @Override
   public MyImage getHistogram() {
-    int dimension = 1 << RGBPixel.bitDepth;
+    int dimension = 1 << RGBPixel.BIT_DEPTH;
     RGBPixel[][] histogramPixels = new RGBPixel[dimension][dimension];
     float[][] freq = getFrequency();
     float[] redFreq = freq[0];
@@ -802,8 +802,8 @@ public class MyImage implements Image {
   @Override
   public MyImage levelAdjustment(float black, float mid, float white)
       throws IllegalArgumentException {
-    if (black < 0 || black > (1 << RGBPixel.bitDepth) || mid < 0 || mid > (1 << RGBPixel.bitDepth)
-        || white < 0 || white > (1 << RGBPixel.bitDepth)) {
+    if (black < 0 || black > (1 << RGBPixel.BIT_DEPTH) || mid < 0 || mid > (1 << RGBPixel.BIT_DEPTH)
+        || white < 0 || white > (1 << RGBPixel.BIT_DEPTH)) {
       throw new IllegalArgumentException("Black, mid and white should all be in range [0, 255]");
     }
     if ((white > mid) && (mid > black)) {
