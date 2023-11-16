@@ -36,13 +36,13 @@ brighten -40 city_small city_small-40
 
 
 #load a picture and test color correct operation.
-load city_small_colored_before_color_correct.png city_small_colored_before_color_correct
+load city_small_colored_before_color_correct1.png city_small_colored_before_color_correct1
 #get the histogram of the picture.
-histogram city_small_colored_before_color_correct city_small_colored_before_color_correct_histogram
+histogram city_small_colored_before_color_correct1 city_small_colored_before_color_correct_histogram1
 #color-correct operation.
-color-correct city_small_colored_before_color_correct city_small_colored_after_color_correct
+color-correct city_small_colored_before_color_correct1 city_small_colored_after_color_correct1
 #get the histogram of the picture after the color-correct.
-histogram city_small_colored_after_color_correct city_small_colored_after_color_correct_histogram
+histogram city_small_colored_after_color_correct1 city_small_colored_after_color_correct_histogram1
 
 #load another picture.
 load car.png car

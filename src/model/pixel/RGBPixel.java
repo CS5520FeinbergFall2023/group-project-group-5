@@ -19,7 +19,7 @@ public class RGBPixel implements Pixel {
    * Construct an RGB pixel. Every value of the channel is in the range of [0,1]. If the input is
    * larger than 2^-1, the corresponding channel will be automatically set to 2^-1;
    * if the input is  smaller than 0, the corresponding channel will be automatically set to 0
-   * 
+   *
    *
    * @param red   the value of the red channel
    * @param green the value of the green channel

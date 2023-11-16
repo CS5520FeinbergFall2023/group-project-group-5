@@ -866,7 +866,7 @@ public class ImageControllerTest {
   @Test
   public void testColorCorrect() {
     String colorCorrectCommand = "load res/city_small.png city_small\n "
-          + "color-correct city_small city_small_colored_after_color_correct\n exit";
+          + "color-correct city_small city_small_colored_after_color_correct1\n exit";
     StringReader colorCorrectReader = new StringReader(colorCorrectCommand);
     StringWriter colorCorrectWriter = new StringWriter();
     PrintWriter colorCorrectPrintWriter = new PrintWriter(colorCorrectWriter);
@@ -879,8 +879,8 @@ public class ImageControllerTest {
     String output = colorCorrectWriter.toString();
     assertTrue(output.contains("Color-Correct image"));
     Image executeColorCorrect =
-          colorCorrectController.loadedImages.get("city_small_colored_after_color_correct");
-    Image expectColorCorrect = new MyImage("res/city_small_colored_after_color_correct.png");
+          colorCorrectController.loadedImages.get("city_small_colored_after_color_correct1");
+    Image expectColorCorrect = new MyImage("res/city_small_colored_after_color_correct1.png");
 
     assertEquals(expectColorCorrect, executeColorCorrect);
     Image targetImage = new MyImage("res/city_small.png");
@@ -894,7 +894,7 @@ public class ImageControllerTest {
   public void testColorCorrectWithSplitCommand() {
     String colorCorrectCommand = "load res/city_small.png city_small\n "
           + "color-correct city_small "
-          + "city_small_colored_after_color_correct split 1\n exit";
+          + "city_small_colored_after_color_correct1 split 1\n exit";
     StringReader colorCorrectReader = new StringReader(colorCorrectCommand);
     StringWriter colorCorrectWriter = new StringWriter();
     PrintWriter colorCorrectPrintWriter = new PrintWriter(colorCorrectWriter);
@@ -907,8 +907,8 @@ public class ImageControllerTest {
     String output = colorCorrectWriter.toString();
     assertTrue(output.contains("Color-Correct image"));
     Image executeColorCorrect =
-          colorCorrectController.loadedImages.get("city_small_colored_after_color_correct");
-    Image expectColorCorrect = new MyImage("res/city_small_colored_after_color_correct.png");
+          colorCorrectController.loadedImages.get("city_small_colored_after_color_correct1");
+    Image expectColorCorrect = new MyImage("res/city_small_colored_after_color_correct1.png");
 
     assertEquals(expectColorCorrect, executeColorCorrect);
     Image targetImage = new MyImage("res/city_small.png");
