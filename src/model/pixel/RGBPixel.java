@@ -11,12 +11,12 @@ import model.Channel;
  * pixel in each channel (red, green, blue).
  */
 public class RGBPixel implements Pixel {
-  public static final int bitDepth = 8;
+  public static final int BITDEPTH = 8;
   private final Map<Channel, Integer> channelsMap;
 
   /**
    * Construct an RGB pixel. Every value of the channel is in the range of [0,1]. If the input is
-   * larger than 2^bitDepth-1, the corresponding channel will be automatically set to 2^bitDepth-1;
+   * larger than 2^-1, the corresponding channel will be automatically set to 2^-1;
    * if the input is  smaller than 0, the corresponding channel will be automatically set to 0
    *
    * @param red   the value of the red channel
@@ -29,9 +29,9 @@ public class RGBPixel implements Pixel {
     red = Math.max(red, 0);
     green = Math.max(green, 0);
     blue = Math.max(blue, 0);
-    red = Math.min(red, (1 << bitDepth) - 1);
-    green = Math.min(green, (1 << bitDepth) - 1);
-    blue = Math.min(blue, (1 << bitDepth) - 1);
+    red = Math.min(red, (1 << BITDEPTH ) - 1);
+    green = Math.min(green, (1 << BITDEPTH ) - 1);
+    blue = Math.min(blue, (1 << BITDEPTH ) - 1);
     channelsMap = new EnumMap<>(Channel.class);
     channelsMap.put(Channel.RED, red);
     channelsMap.put(Channel.GREEN, green);
@@ -149,8 +149,8 @@ public class RGBPixel implements Pixel {
   }
 
   /**
-   * Calculate the max value among all channelsMap of the pixel and get a pixel with all channelsMap this
-   * value.
+   * Calculate the max value among all channelsMap of the pixel and get a pixel with all channelsMap
+   * this value.
    *
    * @return a pixel with all channelsMap the max value among all channelsMap
    */
@@ -167,8 +167,8 @@ public class RGBPixel implements Pixel {
   }
 
   /**
-   * Calculate the average value among all channelsMap of the pixel and get a pixel with all channelsMap
-   * this value.
+   * Calculate the average value among all channelsMap of the pixel and get a pixel with all
+   * channelsMap this value.
    *
    * @return a pixel with all channelsMap the average value among all channelsMap
    */
