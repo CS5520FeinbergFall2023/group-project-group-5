@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,27 +29,28 @@ public class CompressDialog extends JFrame {
    * @throws HeadlessException if GraphicsEnvironment.isHeadless() returns true.
    */
   public CompressDialog() throws HeadlessException {
-    JPanel mainPanel = new JPanel(new BorderLayout());
+    JPanel mainPanel = new JPanel();
+    mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
     setTitle("Choose Compression Ratio");
     setSize(800, 200);
-    //Create the label.
-    JLabel sliderLabel =
-        new JLabel("The ratio indicates the size by which the image is reduced. ", JLabel.CENTER);
+
+    // Create the label.
+    JLabel sliderLabel = new JLabel("The ratio indicates the size by which the image is reduced.", JLabel.CENTER);
     sliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-    sliderLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-    //Set the slider
+    sliderLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+
+    // Set the slider
     JSlider compressionSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
     compressionSlider.setMajorTickSpacing(10);
     compressionSlider.setMinorTickSpacing(1);
     compressionSlider.setPaintTrack(true);
     compressionSlider.setPaintTicks(true);
     compressionSlider.setPaintLabels(true);
-    compressionSlider.setBorder(
-        BorderFactory.createEmptyBorder(0, 10, 0, 10));
+    compressionSlider.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
     compressionSlider.setAlignmentX(Component.CENTER_ALIGNMENT);
-    // show the rate user picked
-    JLabel valueLabel = new JLabel("Compression ratio: " + compressionSlider.getValue() + "%",
-        JLabel.CENTER);
+
+    // Show the rate user picked
+    JLabel valueLabel = new JLabel("Compression ratio: " + compressionSlider.getValue() + "%", JLabel.CENTER);
     compressionSlider.addChangeListener(new ChangeListener() {
       @Override
       public void stateChanged(ChangeEvent e) {
@@ -59,17 +61,20 @@ public class CompressDialog extends JFrame {
     valueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     valueLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-    JButton button=new JButton("Confirm");
+    JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
-    JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
+    JPanel bottomPanel = new JPanel();
+    bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);
 
-    mainPanel.add(sliderLabel, BorderLayout.NORTH);
-    mainPanel.add(compressionSlider, BorderLayout.CENTER);
-    mainPanel.add(valueLabel, BorderLayout.SOUTH);
-    mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+    mainPanel.add(sliderLabel);
+    mainPanel.add(compressionSlider);
+    mainPanel.add(valueLabel);
+    mainPanel.add(bottomPanel);
 
     add(mainPanel);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
   }
 }
