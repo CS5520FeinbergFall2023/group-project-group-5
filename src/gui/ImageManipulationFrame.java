@@ -24,6 +24,8 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import gui.dialog.CompressDialog;
+
 import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 
 /**
@@ -35,6 +37,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener {
   private final JMenuItem quitMenuItem;
   private final JMenuItem aboutMenuItem;
   private final JMenuItem instructionMenuItem;
+  private final ButtonActionListener buttonActionListener = new ButtonActionListener();
 
   /**
    * Constructs an ImageManipulationFrame.
@@ -42,7 +45,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener {
   public ImageManipulationFrame() {
     super();
     setTitle("Image Manipulation");
-    setSize(400, 400);
+    setSize(800, 800);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     JPanel mainPanel = new JPanel(new BorderLayout());
 
@@ -103,7 +106,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener {
     for (String operationName : operations.keySet()) {
       JButton button = createOperationCellButton(operationName, operations.get(operationName));
       gridPanel.add(button);
-      button.addActionListener(this);
+      button.addActionListener(buttonActionListener);
     }
     leftPanel.add(gridPanel, BorderLayout.CENTER);
 
@@ -134,6 +137,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener {
     JButton button = new JButton(name, imageIcon);
     button.setVerticalTextPosition(SwingConstants.BOTTOM);
     button.setHorizontalTextPosition(SwingConstants.CENTER);
+    button.setActionCommand(name);
     button.setBorderPainted(false); // Remove border for better appearance
     button.setContentAreaFilled(false); // Remove content area for better appearance
     return button;
@@ -171,6 +175,26 @@ public class ImageManipulationFrame extends JFrame implements ActionListener {
                                           + "more details on the bottom bar. \n",
           "Usage",
           JOptionPane.PLAIN_MESSAGE);
+    } else {
+      //do nothing
+    }
+  }
+
+
+  private static class ButtonActionListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      String command = e.getActionCommand();
+      System.out.println(command);
+      switch (command) {
+        case "Compress":
+          CompressDialog compressDialog = new CompressDialog();
+          compressDialog.setVisible(true);
+          break;
+        case "Level Adjustment":
+          break;
+        default:
+      }
     }
   }
 }
