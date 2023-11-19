@@ -61,9 +61,10 @@ public class CompressDialog extends JFrame {
     valueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     valueLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
+    //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
-
+    button.addActionListener(e -> dispose());
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);

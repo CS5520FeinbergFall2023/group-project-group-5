@@ -24,6 +24,7 @@ import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
 
 import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
@@ -191,7 +192,9 @@ public class ImageManipulationFrame extends JFrame implements ActionListener {
           CompressDialog compressDialog = new CompressDialog();
           compressDialog.setVisible(true);
           break;
-        case "Level Adjustment":
+        case "Color Component":
+          ColorComponentDialog colorComponentDialog=new ColorComponentDialog();
+          colorComponentDialog.setVisible(true);
           break;
         default:
       }
