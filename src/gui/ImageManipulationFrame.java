@@ -1,10 +1,25 @@
 package gui;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Image;
+
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JSplitPane;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 /**
  * This class represents the frame for the image manipulation GUI.
@@ -22,7 +37,10 @@ public class ImageManipulationFrame extends JFrame {
     JMenuBar menuBar = new JMenuBar();
     JMenu fileMenu = new JMenu("File");
     JMenuItem openMenuItem = new JMenuItem("Open");
-    JMenuItem saveMenuItem = new JMenuItem("Save As...");
+    JMenu saveMenuItem = new JMenu("Save As...");
+    saveMenuItem.add(new JMenuItem("JPG"));
+    saveMenuItem.add(new JMenuItem("PNG"));
+    saveMenuItem.add(new JMenuItem("PPM"));
     JMenuItem quitMenuItem = new JMenuItem("Quit");
     fileMenu.add(openMenuItem);
     fileMenu.add(saveMenuItem);
@@ -42,7 +60,7 @@ public class ImageManipulationFrame extends JFrame {
     leftPanel.setPreferredSize(new Dimension(221, 600));
 
     JPanel imagePanel = new JPanel();
-    ImageIcon imageIcon = new ImageIcon("res/city-histogram.png"); // Replace with your image path
+    ImageIcon imageIcon = new ImageIcon("res/city-histogram.png");
     JLabel imageView = new JLabel(imageIcon);
     imagePanel.add(imageView);
     leftPanel.add(imagePanel, BorderLayout.NORTH);
@@ -70,7 +88,7 @@ public class ImageManipulationFrame extends JFrame {
       JLabel label = new JLabel(operationName, SwingConstants.CENTER);
       ImageIcon imageIconOperation =
           new ImageIcon(
-              new ImageIcon(operations.get(operationName)).getImage().getScaledInstance(20, 20,
+              new ImageIcon(operations.get(operationName)).getImage().getScaledInstance(30, 30,
                   Image.SCALE_DEFAULT));
       JLabel imageLabel = new JLabel(imageIconOperation);
       cellPanel.add(imageLabel, BorderLayout.CENTER);
@@ -80,10 +98,22 @@ public class ImageManipulationFrame extends JFrame {
     leftPanel.add(gridPanel, BorderLayout.CENTER);
 
     JScrollPane scrollPane = new JScrollPane();
+    ImageIcon imageIconProcessing = new ImageIcon("res/city.png");
+    // path
+    JLabel imageViewProcessing = new JLabel(imageIconProcessing);
+    scrollPane.setViewportView(imageViewProcessing);
+
     splitPane.setLeftComponent(leftPanel);
     splitPane.setRightComponent(scrollPane);
 
     mainPanel.add(splitPane, BorderLayout.CENTER);
+
+    JLabel statusLabel = new JLabel("The bottom status bar will show instructions when mouse "
+                                    + "hovers on components.");
+    statusLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+    statusLabel.setBorder(new EmptyBorder(5,0,5,10));
+    mainPanel.add(statusLabel,BorderLayout.SOUTH);
+
     add(mainPanel);
   }
 }
