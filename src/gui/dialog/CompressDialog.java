@@ -22,9 +22,7 @@ import javax.swing.event.ChangeListener;
 public class CompressDialog extends JFrame {
   /**
    * Constructs a new frame that is initially invisible.
-   * <p>
    * This constructor sets the component's locale property to the value returned by
-   * <code>JComponent.getDefaultLocale</code>.
    *
    * @throws HeadlessException if GraphicsEnvironment.isHeadless() returns true.
    */

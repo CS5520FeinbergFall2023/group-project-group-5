@@ -26,6 +26,7 @@ import javax.swing.border.EmptyBorder;
 
 import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
+import gui.dialog.LevelAdjustmentDialog;
 
 import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 
@@ -38,7 +39,6 @@ public class ImageManipulationFrame extends JFrame implements ActionListener {
   private final JMenuItem quitMenuItem;
   private final JMenuItem aboutMenuItem;
   private final JMenuItem instructionMenuItem;
-  private final ButtonActionListener buttonActionListener = new ButtonActionListener();
 
   /**
    * Constructs an ImageManipulationFrame.
@@ -107,6 +107,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener {
     for (String operationName : operations.keySet()) {
       JButton button = createOperationCellButton(operationName, operations.get(operationName));
       gridPanel.add(button);
+      ButtonActionListener buttonActionListener = new ButtonActionListener();
       button.addActionListener(buttonActionListener);
     }
     leftPanel.add(gridPanel, BorderLayout.CENTER);
@@ -193,9 +194,12 @@ public class ImageManipulationFrame extends JFrame implements ActionListener {
           compressDialog.setVisible(true);
           break;
         case "Color Component":
-          ColorComponentDialog colorComponentDialog=new ColorComponentDialog();
+          ColorComponentDialog colorComponentDialog = new ColorComponentDialog();
           colorComponentDialog.setVisible(true);
           break;
+        case "Level Adjustment":
+          LevelAdjustmentDialog levelAdjustmentDialog = new LevelAdjustmentDialog();
+          levelAdjustmentDialog.setVisible(true);
         default:
       }
     }
