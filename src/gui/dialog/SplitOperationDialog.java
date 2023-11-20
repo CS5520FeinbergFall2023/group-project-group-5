@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 
 public class SplitOperationDialog extends JFrame {
@@ -51,8 +52,12 @@ public class SplitOperationDialog extends JFrame {
     slider.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
     slider.setAlignmentX(Component.CENTER_ALIGNMENT);
     // the split view image
-    imageViewProcessing = new JLabel(splitViewImage);
+    //the image under process
+    JScrollPane scrollPane = new JScrollPane();
+    ImageIcon imageIconProcessing = new ImageIcon("res/city-level-adjustment-100-150-200.png");
+    JLabel imageViewProcessing = new JLabel(imageIconProcessing);
     imageViewProcessing.setAlignmentX(Component.CENTER_ALIGNMENT);
+    scrollPane.setViewportView(imageViewProcessing);
     //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
@@ -63,7 +68,7 @@ public class SplitOperationDialog extends JFrame {
     // add everything to the main panel
     mainPanel.add(sliderLabel);
     mainPanel.add(slider);
-    mainPanel.add(imageViewProcessing);
+    mainPanel.add(scrollPane);
     mainPanel.add(bottomPanel);
 
     add(mainPanel);

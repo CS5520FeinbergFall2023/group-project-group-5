@@ -1,6 +1,5 @@
 package gui.dialog;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.HeadlessException;
@@ -21,8 +20,8 @@ import javax.swing.event.ChangeListener;
  */
 public class CompressDialog extends JFrame {
   /**
-   * Constructs a new frame that is initially invisible.
-   * This constructor sets the component's locale property to the value returned by
+   * Constructs a new frame that is initially invisible. This constructor sets the component's
+   * locale property to the value returned by
    *
    * @throws HeadlessException if GraphicsEnvironment.isHeadless() returns true.
    */
@@ -33,7 +32,8 @@ public class CompressDialog extends JFrame {
     setSize(800, 200);
 
     // Create the label.
-    JLabel sliderLabel = new JLabel("The ratio indicates the size by which the image is reduced.", JLabel.CENTER);
+    JLabel sliderLabel =
+        new JLabel("The ratio indicates the size by which the image is reduced.", JLabel.CENTER);
     sliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     sliderLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
@@ -48,7 +48,8 @@ public class CompressDialog extends JFrame {
     compressionSlider.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     // Show the rate user picked
-    JLabel valueLabel = new JLabel("Compression ratio: " + compressionSlider.getValue() + "%", JLabel.CENTER);
+    JLabel valueLabel =
+        new JLabel("Compression ratio: " + compressionSlider.getValue() + "%", JLabel.CENTER);
     compressionSlider.addChangeListener(new ChangeListener() {
       @Override
       public void stateChanged(ChangeEvent e) {

@@ -17,10 +17,13 @@ import java.awt.geom.GeneralPath;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
@@ -44,7 +47,7 @@ public class LevelAdjustmentDialog extends JFrame {
    */
   public LevelAdjustmentDialog() throws HeadlessException {
     JPanel mainPanel = new JPanel();
-    mainPanel.setLayout(new BorderLayout());
+    mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
     setTitle("Level Adjustment");
     setResizable(false);
     controlPoints[0] = new Point(0, 0);
@@ -53,9 +56,11 @@ public class LevelAdjustmentDialog extends JFrame {
 
 
     JLabel label = new JLabel("<html>Control the curve that manipulated the image's "
-                              + "histogram<br> by "
-                              + "setting (Black,0), (Middle,128) and (White,255).</html>",
+                              + "histogram<br> by setting (Black,0), (Middle,128) and (White,255)."
+                              + "<br>Use the slider to check the effect in split view.<br> "
+                              + "It will not be saved until you press confirm. </html>",
         JLabel.CENTER);
+    label.setAlignmentX(Component.CENTER_ALIGNMENT);
     label.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
     JPanel valuesPanel = new JPanel();
@@ -123,6 +128,27 @@ public class LevelAdjustmentDialog extends JFrame {
 //    layeredPane.add(imagePanel);
 //    layeredPane.add(curvePanel);
 
+    JPanel curveControlPanel = new JPanel();
+    curveControlPanel.setLayout(new BorderLayout());
+    curveControlPanel.add(valuesPanel, BorderLayout.WEST);
+    curveControlPanel.add(curvePanel, BorderLayout.CENTER);
+
+    //the slider to control split view percentage
+    JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
+    slider.setMajorTickSpacing(10);
+    slider.setMinorTickSpacing(1);
+    slider.setPaintTrack(true);
+    slider.setPaintTicks(true);
+    slider.setPaintLabels(true);
+    slider.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+    slider.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    //the image under process
+    JScrollPane scrollPane = new JScrollPane();
+    ImageIcon imageIconProcessing = new ImageIcon("res/city-level-adjustment-100-150-200.png");
+    JLabel imageViewProcessing = new JLabel(imageIconProcessing);
+    scrollPane.setViewportView(imageViewProcessing);
+
     //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
@@ -131,10 +157,11 @@ public class LevelAdjustmentDialog extends JFrame {
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);
 
-    mainPanel.add(label, BorderLayout.NORTH);
-    mainPanel.add(curvePanel, BorderLayout.CENTER);
-    mainPanel.add(valuesPanel, BorderLayout.WEST);
-    mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+    mainPanel.add(label);
+    mainPanel.add(curveControlPanel);
+    mainPanel.add(slider);
+    mainPanel.add(scrollPane);
+    mainPanel.add(bottomPanel);
     add(mainPanel);
     pack();
     setLocationRelativeTo(null); // Center the frame on the screen
@@ -206,6 +233,7 @@ public class LevelAdjustmentDialog extends JFrame {
         }
         path.lineTo(x + padding, 255 - y + padding);
       }
+      System.out.println(y);
       g2d.setColor(Color.BLACK);
       g2d.draw(path);
     }
