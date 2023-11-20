@@ -180,10 +180,6 @@ public class LevelAdjustmentDialog extends JFrame {
       double b = ab / denominator;
       double c = ac / denominator;
 
-//      g2d.draw(new QuadCurve2D.Float(
-//          controlPoints[0].x + padding, 255-controlPoints[0].y + padding,
-//          controlPoints[1].x + padding, 255-controlPoints[1].y + padding,
-//          controlPoints[2].x + padding, 255-controlPoints[2].y + padding));
       GeneralPath path = new GeneralPath();
       double x = black;
       double y = 0;
@@ -197,8 +193,6 @@ public class LevelAdjustmentDialog extends JFrame {
         if (y > 255) {
           y = 255;
         }
-        // Adjust coordinates for Java Swing painting
-//        double adjustedY = getHeight() - y; // Assuming top-left is (0, 0)
         path.lineTo(x + padding, 255 - y + padding);
       }
       g2d.setColor(Color.BLACK);
