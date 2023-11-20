@@ -74,6 +74,6 @@ public class CompressDialog extends JFrame {
 
     add(mainPanel);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+    setLocationRelativeTo(null); // Center the frame on the screen
   }
 }

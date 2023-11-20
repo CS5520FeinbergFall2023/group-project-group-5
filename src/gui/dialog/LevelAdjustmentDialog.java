@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.HeadlessException;
@@ -16,6 +17,7 @@ import java.awt.geom.GeneralPath;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -121,9 +123,18 @@ public class LevelAdjustmentDialog extends JFrame {
 //    layeredPane.add(imagePanel);
 //    layeredPane.add(curvePanel);
 
+    //confirm button
+    JButton button = new JButton("Confirm");
+    button.setActionCommand("Confirm");
+    button.addActionListener(e -> dispose());
+    JPanel bottomPanel = new JPanel();
+    bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+    bottomPanel.add(button);
+
     mainPanel.add(label, BorderLayout.NORTH);
     mainPanel.add(curvePanel, BorderLayout.CENTER);
     mainPanel.add(valuesPanel, BorderLayout.WEST);
+    mainPanel.add(bottomPanel, BorderLayout.SOUTH);
     add(mainPanel);
     pack();
     setLocationRelativeTo(null); // Center the frame on the screen

@@ -28,10 +28,12 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
 import gui.dialog.LevelAdjustmentDialog;
+import gui.dialog.SplitOperationDialog;
 
 import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 
@@ -41,7 +43,13 @@ import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 public class ImageManipulationFrame extends JFrame implements ActionListener, MouseListener {
   private final JMenu fileMenu;
   private final JMenu helpMenu;
-  private final JMenuItem saveMenuItem;
+  private final JMenu saveMenu;
+
+  private final JMenuItem saveJPGItem;
+
+  private final JMenuItem savePNGItem;
+
+  private final JMenuItem savePPMItem;
   private final JMenuItem openMenuItem;
   private final JMenuItem quitMenuItem;
   private final JMenuItem aboutMenuItem;
@@ -77,14 +85,24 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     openMenuItem = new JMenuItem("Open");
     openMenuItem.addActionListener(this);
     openMenuItem.addMouseListener(this);
-    saveMenuItem = new JMenuItem("Save As");
-    saveMenuItem.addActionListener(this);
-    saveMenuItem.addMouseListener(this);
+    saveMenu = new JMenu("Save As...");
+    saveJPGItem = new JMenuItem("JPG");
+    saveJPGItem.addActionListener(this);
+    savePNGItem = new JMenuItem("PNG");
+    savePNGItem.addActionListener(this);
+    savePPMItem = new JMenuItem("PPM");
+    savePPMItem.addActionListener(this);
+    openMenuItem.addActionListener(this);
+    openMenuItem.addActionListener(this);
+    saveMenu.add(saveJPGItem);
+    saveMenu.add(savePNGItem);
+    saveMenu.add(savePPMItem);
+    saveMenu.addMouseListener(this);
     quitMenuItem = new JMenuItem("Quit");
     quitMenuItem.addActionListener(this);
     quitMenuItem.addMouseListener(this);
     fileMenu.add(openMenuItem);
-    fileMenu.add(saveMenuItem);
+    fileMenu.add(saveMenu);
     fileMenu.add(quitMenuItem);
     helpMenu = new JMenu("Help");
     helpMenu.addMouseListener(this);
@@ -196,7 +214,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
       statusLabel.setText("Open or save an image file or exit the program.");
     } else if (e.getSource() == helpMenu) {
       statusLabel.setText("Learn more about the program and how to use it.");
-    } else if (e.getSource() == saveMenuItem) {
+    } else if (e.getSource() == saveMenu) {
       statusLabel.setText("Save the image as jpg, png or ppm.");
     } else if (e.getSource() == openMenuItem) {
       statusLabel.setText("Open an image. This will replace the current image you're working on.");
@@ -224,7 +242,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
    */
   @Override
   public void mouseClicked(MouseEvent e) {
-
+    //do nothing
   }
 
   /**
@@ -234,7 +252,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
    */
   @Override
   public void mousePressed(MouseEvent e) {
-
+    //do nothing
   }
 
   /**
@@ -244,7 +262,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
    */
   @Override
   public void mouseReleased(MouseEvent e) {
-
+    //do nothing
   }
 
   /**
@@ -261,16 +279,39 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == saveMenuItem) {
+    if (e.getSource() == saveJPGItem) {
       final JFileChooser fc = new JFileChooser();
       fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-      fc.setDialogTitle("Save as");
+      fc.setDialogTitle("Save as JPG");
+      FileNameExtensionFilter filter = new FileNameExtensionFilter("jpg", "jpg");
+      fc.setAcceptAllFileFilterUsed(false);
+      fc.setFileFilter(filter);
+      fc.showSaveDialog(this);
+    } else if (e.getSource() == savePNGItem) {
+      final JFileChooser fc = new JFileChooser();
+      fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+      fc.setDialogTitle("Save as PNG");
+      FileNameExtensionFilter filter = new FileNameExtensionFilter("png", "png");
+      fc.setAcceptAllFileFilterUsed(false);
+      fc.setFileFilter(filter);
+      fc.showSaveDialog(this);
+    } else if (e.getSource() == savePPMItem) {
+      final JFileChooser fc = new JFileChooser();
+      fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+      fc.setDialogTitle("Save as PPM");
+      FileNameExtensionFilter filter = new FileNameExtensionFilter("ppm", "ppm");
+      fc.setAcceptAllFileFilterUsed(false);
+      fc.setFileFilter(filter);
       fc.showSaveDialog(this);
     } else if (e.getSource() == openMenuItem) {
       final JFileChooser fc = new JFileChooser();
       fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
       fc.setDialogTitle("Open");
-      fc.showSaveDialog(this);
+      FileNameExtensionFilter filter = new FileNameExtensionFilter("Image (jpg,png,ppm)", "jpg",
+          "png", "ppm", "jpeg");
+      fc.setAcceptAllFileFilterUsed(false);
+      fc.setFileFilter(filter);
+      fc.showOpenDialog(this);
     } else if (e.getSource() == quitMenuItem) {
       //todo:check if the file has been saved, if not, show warning dialog
       JOptionPane.showConfirmDialog(null, "Are you sure to quit without saving?",
@@ -312,7 +353,39 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
         case "Level Adjustment":
           LevelAdjustmentDialog levelAdjustmentDialog = new LevelAdjustmentDialog();
           levelAdjustmentDialog.setVisible(true);
+          break;
+        case "Sepia":
+          ImageIcon imageSepia = new ImageIcon("res/cupcake-sepia-50%.png");
+          SplitOperationDialog sepiaDialog =
+              new SplitOperationDialog("Sepia", imageSepia);
+          sepiaDialog.setVisible(true);
+          break;
+        case "Blur":
+          ImageIcon imageBlur = new ImageIcon("res/cupcake-blur-50%.png");
+          SplitOperationDialog blurDialog =
+              new SplitOperationDialog("Blur", imageBlur);
+          blurDialog.setVisible(true);
+          break;
+        case "Greyscale":
+          ImageIcon imageGreyscale = new ImageIcon("res/cupcake-greyscale-50%.png");
+          SplitOperationDialog greyscaleDialog =
+              new SplitOperationDialog("Greyscale", imageGreyscale);
+          greyscaleDialog.setVisible(true);
+          break;
+        case "Sharpen":
+          ImageIcon imageSharpen = new ImageIcon("res/cupcake-sharpen-50%.png");
+          SplitOperationDialog sharpenDialog =
+              new SplitOperationDialog("Sharpen", imageSharpen);
+          sharpenDialog.setVisible(true);
+          break;
+        case "Color Correct":
+          ImageIcon imageColorCorrect = new ImageIcon("res/cupcake-sharpen-50%.png");
+          SplitOperationDialog sharpenColorCorrectDialog =
+              new SplitOperationDialog("Correct", imageColorCorrect);
+          sharpenColorCorrectDialog.setVisible(true);
+          break;
         default:
+
       }
     }
   }

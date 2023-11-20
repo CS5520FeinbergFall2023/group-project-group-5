@@ -83,6 +83,7 @@ public class ColorComponentDialog extends JFrame implements ActionListener {
     add(picture, BorderLayout.CENTER);
     add(bottomPanel, BorderLayout.SOUTH);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    setLocationRelativeTo(null); // Center the frame on the screen
 
   }
 
