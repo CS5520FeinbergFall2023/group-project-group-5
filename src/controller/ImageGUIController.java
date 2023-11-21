@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 import gui.ImageManipulationFrame;
+import gui.dialog.CompressDialog;
 import model.image.MyImage;
 import model.pixel.RGBPixel;
 import service.ImageService;
@@ -50,7 +51,35 @@ public class ImageGUIController implements ActionListener {
       if (response == JOptionPane.YES_OPTION) {
         System.exit(0);
       }
-
+    } else if (e.getSource() == imageManipulationFrame.getButtonListener()) {
+      String command = e.getActionCommand();
+      switch (command) {
+        case "Compress":
+//          CompressDialog compressDialog = new CompressDialog();
+//          compressDialog.setCompressionListener(compressionValue -> {
+//            java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+//            MyImage myImage = convertToMyImage(currentImage);
+//            MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(myImage, compressionValue);
+//            imageManipulationFrame.updateImageViewProcessing(compressedImage);
+//          });
+//          compressDialog.setVisible(true);
+          //compressOperation(value);
+          break;
+        case "Color Component":
+          break;
+        case "Level Adjustment":
+          break;
+        case "Sepia":
+          break;
+        case "Blur":
+          break;
+        case "Greyscale":
+          break;
+        case "Sharpen":
+          break;
+        case "Color Correct":
+          break;
+      }
     }
 
   }
@@ -58,8 +87,8 @@ public class ImageGUIController implements ActionListener {
   public void loadImage() {
     String filePath = imageManipulationFrame.getSelectedFilePath();
     if (filePath != null && !filePath.isEmpty()) {
-      ImageIcon imageIcon = new ImageIcon(filePath);
-      imageManipulationFrame.updateImageViewProcessing(imageIcon);
+      MyImage myImage = new MyImage(filePath);
+      imageManipulationFrame.updateImageViewProcessing(myImage);
     }
   }
 
@@ -101,6 +130,13 @@ public class ImageGUIController implements ActionListener {
       }
     }
     return myImage;
+  }
+
+  public void compressOperation(int compressionValue) {
+    java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+    MyImage myImage = convertToMyImage(currentImage);
+    MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(myImage, compressionValue);
+    imageManipulationFrame.updateImageViewProcessing(compressedImage);
   }
 
 }

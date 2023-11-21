@@ -17,12 +17,15 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import controller.ImageController;
 import controller.ImageGUIController;
 import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
 import gui.dialog.LevelAdjustmentDialog;
 
 import gui.dialog.SplitOperationDialog;
+import model.image.MyImage;
+import model.pixel.RGBPixel;
 
 import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 
@@ -53,7 +56,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
 
   //todo:why it can be final
   private JLabel statusLabel;
-  private ButtonListener buttonListener = new ButtonListener();
+  private ButtonListener buttonListener = new ButtonListener(controller);
 
   /**
    * Constructs an ImageManipulationFrame.
@@ -388,11 +391,11 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     return saveFilePath;
   }
 
-  public void updateImageViewProcessing(ImageIcon imageIcon) {
-    imageViewProcessing.setIcon(imageIcon);
-    imageViewProcessing.revalidate();
-    imageViewProcessing.repaint();
-  }
+//  public void updateImageViewProcessing(ImageIcon imageIcon) {
+//    imageViewProcessing.setIcon(imageIcon);
+//    imageViewProcessing.revalidate();
+//    imageViewProcessing.repaint();
+//  }
 
   public Image getCurrentDisplayedImage() {
     Icon icon = imageViewProcessing.getIcon();
@@ -402,31 +405,44 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     return null;
   }
 
-//  public void updateImageViewProcessing(MyImage myImage) {
-//    BufferedImage bufferedImage = convertToBufferedImage(myImage);
-//    ImageIcon imageIcon = new ImageIcon(bufferedImage);
-//    imageViewProcessing.setIcon(imageIcon);
-//    imageViewProcessing.revalidate();
-//    imageViewProcessing.repaint();
-//
-//  }
+  public void updateImageViewProcessing(MyImage myImage) {
+    BufferedImage bufferedImage = convertToBufferedImage(myImage);
+    ImageIcon imageIcon = new ImageIcon(bufferedImage);
+    imageViewProcessing.setIcon(imageIcon);
+    imageViewProcessing.revalidate();
+    imageViewProcessing.repaint();
 
-//  private BufferedImage convertToBufferedImage(MyImage myImage) {
-//    int width = myImage.getWidth();
-//    int height = myImage.getHeight();
-//    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-//
-//    for (int y = 0; y < height; y++) {
-//      for (int x = 0; x < width; x++) {
-//        RGBPixel pixel = myImage.getPixel(x,y);
-//        int rgb = (pixel.getRed() << 16) | (pixel.getGreen() << 8) | pixel.getBlue();
-//        bufferedImage.setRGB(x, y, rgb);
-//      }
-//    }
-//    return bufferedImage;
-//  }
+  }
+
+  private BufferedImage convertToBufferedImage(MyImage myImage) {
+    if (myImage == null) {
+      return null;
+    }
+    int width = myImage.getWidth();
+    int height = myImage.getHeight();
+    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        RGBPixel pixel = myImage.getPixel(y,x);
+        int red = pixel.getRed();
+        int green = pixel.getGreen();
+        int blue = pixel.getBlue();
+        int alpha = 255;
+        int argb = (alpha << 24 ) | (red << 16) | (green << 8) | blue;
+        bufferedImage.setRGB(x, y, argb);
+      }
+    }
+    return bufferedImage;
+  }
 
   private static class ButtonListener implements ActionListener {
+    private ImageGUIController controller;
+
+    public ButtonListener(ImageGUIController controller) {
+      this.controller = controller;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
       String command = e.getActionCommand();
@@ -434,6 +450,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
         case "Compress":
           CompressDialog compressDialog = new CompressDialog();
           compressDialog.setVisible(true);
+          controller.actionPerformed(e);
           break;
         case "Color Component":
           ColorComponentDialog colorComponentDialog = new ColorComponentDialog();

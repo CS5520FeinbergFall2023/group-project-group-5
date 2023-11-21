@@ -1,8 +1,6 @@
 package gui.dialog;
 
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.HeadlessException;
+import java.awt.*;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -14,11 +12,24 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import controller.ImageGUIController;
+
 /**
  * This class represents the dialog windows that pops up when user trys to perform image
  * compression.
  */
 public class CompressDialog extends JFrame {
+
+  private CompressionListener compressionListener;
+  private ImageGUIController imageGUIController;
+
+  public ImageGUIController getImageGUIController() {
+    return imageGUIController;
+  }
+
+  public void setCompressionListener(CompressionListener listener) {
+    this.compressionListener = listener;
+  }
   /**
    * Constructs a new frame that is initially invisible. This constructor sets the component's
    * locale property to the value returned by
@@ -63,7 +74,17 @@ public class CompressDialog extends JFrame {
     //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
-    button.addActionListener(e -> dispose());
+    //button.addActionListener(e -> dispose());
+    button.addActionListener(e-> {
+      int compressionValue = compressionSlider.getValue();
+//      if (compressionListener != null) {
+//        compressionListener.onCompressionConfirmed(compressionValue);
+//      }
+      ImageGUIController controller = getImageGUIController();
+
+      controller.compressOperation(compressionValue);
+      this.dispose();
+    });
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);
@@ -77,4 +98,9 @@ public class CompressDialog extends JFrame {
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setLocationRelativeTo(null); // Center the frame on the screen
   }
+
+  public interface CompressionListener {
+    void onCompressionConfirmed(int compressionValue);
+  }
+
 }
