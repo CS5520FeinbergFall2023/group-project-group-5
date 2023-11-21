@@ -42,7 +42,7 @@ public class LevelAdjustmentDialog extends JFrame implements CurveInterface, Ima
   private int padding = 5;
 
   private CurvePanel curvePanel;
-
+  private JLabel imageViewProcessing;
 
   /**
    * Constructs a new frame that is initially invisible. This constructor sets the component's
@@ -157,7 +157,7 @@ public class LevelAdjustmentDialog extends JFrame implements CurveInterface, Ima
 //    ImageIcon imageIconProcessing = new ImageIcon("resources/icons/sofa-purple-living-room-with"
 //                                                  + "-copy-space.jpg");
     ImageIcon imageIconProcessing = new ImageIcon("res/city-level-adjustment-100-150-200.png");
-    JLabel imageViewProcessing = new JLabel(imageIconProcessing);
+    imageViewProcessing = new JLabel(imageIconProcessing);
     scrollPane.setViewportView(imageViewProcessing);
     splitViewPanel.add(slider);
     splitViewPanel.add(scrollPane);
@@ -275,7 +275,7 @@ public class LevelAdjustmentDialog extends JFrame implements CurveInterface, Ima
    */
   @Override
   public void updateProcessingImage(BufferedImage image) {
-
+    imageViewProcessing.setIcon(new ImageIcon(image));
   }
 
   /**

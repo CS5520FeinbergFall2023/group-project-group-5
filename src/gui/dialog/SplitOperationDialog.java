@@ -19,7 +19,7 @@ import javax.swing.JSlider;
 import model.image.MyImage;
 
 public class SplitOperationDialog extends JFrame implements PercentageInterface,ImageUpdateInterface{
-  private ImageIcon splitViewImage;
+//  private ImageIcon splitViewImage;
   private JLabel imageViewProcessing;
 
   /**
@@ -34,7 +34,7 @@ public class SplitOperationDialog extends JFrame implements PercentageInterface,
   public SplitOperationDialog(String title, ImageIcon splitViewImage)
       throws HeadlessException {
     super(title);
-    this.splitViewImage = splitViewImage;
+//    this.splitViewImage = splitViewImage;
 
     JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -57,8 +57,7 @@ public class SplitOperationDialog extends JFrame implements PercentageInterface,
     // the split view image
     //the image under process
     JScrollPane scrollPane = new JScrollPane();
-    ImageIcon imageIconProcessing = new ImageIcon("res/city-level-adjustment-100-150-200.png");
-    JLabel imageViewProcessing = new JLabel(imageIconProcessing);
+    imageViewProcessing = new JLabel(splitViewImage);
     imageViewProcessing.setAlignmentX(Component.CENTER_ALIGNMENT);
     scrollPane.setViewportView(imageViewProcessing);
     //confirm button
@@ -87,6 +86,7 @@ public class SplitOperationDialog extends JFrame implements PercentageInterface,
    */
   @Override
   public void updateProcessingImage(BufferedImage image) {
+    imageViewProcessing.setIcon(new ImageIcon(image));
 
   }
 
@@ -107,7 +107,8 @@ public class SplitOperationDialog extends JFrame implements PercentageInterface,
    */
   @Override
   public void updateDiagram(BufferedImage diagram) {
-
+    // do nothing
+    return;
   }
 
   /**
