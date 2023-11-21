@@ -38,6 +38,8 @@ public class LevelAdjustmentDialog extends JFrame {
   private Point[] controlPoints = new Point[3];
   private int padding = 5;
 
+  private CurvePanel curvePanel;
+
 
   /**
    * Constructs a new frame that is initially invisible. This constructor sets the component's
@@ -49,10 +51,9 @@ public class LevelAdjustmentDialog extends JFrame {
     JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
     setTitle("Level Adjustment");
-    setResizable(false);
+    setSize(800, 800);
     controlPoints[0] = new Point(0, 0);
-//    controlPoints[1] = new Point(128, 128);
-    controlPoints[1] = new Point(230, 128);
+    controlPoints[1] = new Point(128, 128);
     controlPoints[2] = new Point(255, 255);
 
 
@@ -64,6 +65,7 @@ public class LevelAdjustmentDialog extends JFrame {
     label.setAlignmentX(Component.CENTER_ALIGNMENT);
     label.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
+    //control points
     JPanel valuesPanel = new JPanel();
     valuesPanel.setLayout(new BoxLayout(valuesPanel, BoxLayout.Y_AXIS));
     SpinnerNumberModel blackSpinnerNumberModel = new SpinnerNumberModel(0.0, 0.0, 255.0, 1.0);
@@ -80,6 +82,7 @@ public class LevelAdjustmentDialog extends JFrame {
           blackSpinnerNumberModel.setValue((double) midSpinnerNumberModel.getNumber() - 1);
         }
         controlPoints[0].setLocation((double) blackSpinnerNumberModel.getNumber(), 0);
+        curvePanel.repaint();
       }
     });
 
@@ -95,6 +98,8 @@ public class LevelAdjustmentDialog extends JFrame {
           midSpinnerNumberModel.setValue((double) whiteSpinnerNumberModel.getNumber() - 1);
         }
         controlPoints[1].setLocation((double) midSpinnerNumberModel.getNumber(), 128);
+        curvePanel.repaint();
+
       }
     });
 
@@ -109,10 +114,13 @@ public class LevelAdjustmentDialog extends JFrame {
           whiteSpinnerNumberModel.setValue((double) midSpinnerNumberModel.getNumber() + 1);
         }
         controlPoints[2].setLocation((double) whiteSpinnerNumberModel.getNumber(), 255);
+        curvePanel.repaint();
+
       }
     });
 
-
+    curvePanel = new CurvePanel();
+    valuesPanel.add(curvePanel);
     addLabeledSpinner(valuesPanel, "Black", blackSpinnerNumberModel);
     addLabeledSpinner(valuesPanel, "Middle", midSpinnerNumberModel);
     addLabeledSpinner(valuesPanel, "White", whiteSpinnerNumberModel);
@@ -122,18 +130,15 @@ public class LevelAdjustmentDialog extends JFrame {
 //    ImageIcon imageIcon = new ImageIcon("res/city-histogram.png");
 //    JLabel imageView = new JLabel(imageIcon);
 //    imagePanel.add(imageView);
-    CurvePanel curvePanel = new CurvePanel();
 
 //    JLayeredPane layeredPane = new JLayeredPane();
 //    layeredPane.setLayout(new BorderLayout());
 //    layeredPane.add(imagePanel);
 //    layeredPane.add(curvePanel);
 
-    JPanel curveControlPanel = new JPanel();
-    curveControlPanel.setLayout(new BorderLayout());
-    curveControlPanel.add(valuesPanel, BorderLayout.WEST);
-    curveControlPanel.add(curvePanel, BorderLayout.CENTER);
 
+    JPanel splitViewPanel=new JPanel();
+    splitViewPanel.setLayout(new BoxLayout(splitViewPanel, BoxLayout.Y_AXIS));
     //the slider to control split view percentage
     JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
     slider.setMajorTickSpacing(10);
@@ -146,10 +151,17 @@ public class LevelAdjustmentDialog extends JFrame {
 
     //the image under process
     JScrollPane scrollPane = new JScrollPane();
+//    ImageIcon imageIconProcessing = new ImageIcon("resources/icons/sofa-purple-living-room-with"
+//                                                  + "-copy-space.jpg");
     ImageIcon imageIconProcessing = new ImageIcon("res/city-level-adjustment-100-150-200.png");
     JLabel imageViewProcessing = new JLabel(imageIconProcessing);
     scrollPane.setViewportView(imageViewProcessing);
+    splitViewPanel.add(slider);
+    splitViewPanel.add(scrollPane);
 
+    JPanel operationPanel=new JPanel(new BorderLayout());
+    operationPanel.add(valuesPanel,BorderLayout.WEST);
+    operationPanel.add(splitViewPanel,BorderLayout.CENTER);
     //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
@@ -159,12 +171,12 @@ public class LevelAdjustmentDialog extends JFrame {
     bottomPanel.add(button);
 
     mainPanel.add(label);
-    mainPanel.add(curveControlPanel);
-    mainPanel.add(slider);
-    mainPanel.add(scrollPane);
+//    mainPanel.add(valuesPanel);
+//    mainPanel.add(slider);
+//    mainPanel.add(scrollPane);
+    mainPanel.add(operationPanel);
     mainPanel.add(bottomPanel);
     add(mainPanel);
-    pack();
     setLocationRelativeTo(null); // Center the frame on the screen
   }
 
@@ -173,7 +185,10 @@ public class LevelAdjustmentDialog extends JFrame {
     c.add(l);
     JSpinner spinner = new JSpinner(model);
     l.setLabelFor(spinner);
-    c.add(spinner);
+    JPanel spinnerPanel = new JPanel();
+    spinnerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+    spinnerPanel.add(spinner);
+    c.add(spinnerPanel);
     return spinner;
   }
 
@@ -187,8 +202,8 @@ public class LevelAdjustmentDialog extends JFrame {
       setBackground(Color.white);
 //      setOpaque(false);
       setSize(256 + 2 * padding, 256 + 2 * padding);
-      setAlignmentX(Component.CENTER_ALIGNMENT);
-      setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+//      setAlignmentX(Component.CENTER_ALIGNMENT);
+//      setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
       super.paintComponent(g);
       Graphics2D g2d = (Graphics2D) g;
       g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

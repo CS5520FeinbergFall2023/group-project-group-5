@@ -430,7 +430,6 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     @Override
     public void actionPerformed(ActionEvent e) {
       String command = e.getActionCommand();
-      System.out.println(command);
       switch (command) {
         case "Compress":
           CompressDialog compressDialog = new CompressDialog();
