@@ -260,14 +260,14 @@ public class MyImage implements Image {
     ImageIO.write(bufferedImage, format, file);
   }
 
-  RGBPixel getPixel(int x, int y) {
+  public RGBPixel getPixel(int x, int y) {
     if (x < 0 || x > this.height || y < 0 || y > this.width) {
       throw new IllegalArgumentException("The x or y is out of bound.");
     }
     return pixels[x][y];
   }
 
-  private void setPixel(int x, int y, Pixel pixel) {
+  public void setPixel(int x, int y, Pixel pixel) {
     if (pixel == null) {
       throw new IllegalArgumentException("The pixel cannot be null.");
     }

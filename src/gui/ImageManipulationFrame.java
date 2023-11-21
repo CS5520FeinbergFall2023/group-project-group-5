@@ -1,37 +1,27 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.SwingConstants;
+import javax.imageio.stream.ImageInputStreamImpl;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import controller.ImageGUIController;
 import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
 import gui.dialog.LevelAdjustmentDialog;
+import model.image.MyImage;
+import model.pixel.RGBPixel;
 
 import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 
@@ -49,6 +39,10 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
 
   private JLabel imageViewHistogram;
   private JLabel imageViewProcessing;
+
+  private ImageGUIController controller;
+  private String selectedFilePath;
+  private String saveFilePath;
 
   //todo:why it can be final
   private JLabel statusLabel;
@@ -177,6 +171,10 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     add(mainPanel);
   }
 
+  public void setController(ImageGUIController controller) {
+    this.controller = controller;
+  }
+
   private JButton createOperationCellButton(String name, String iconPath) {
     ImageIcon imageIcon =
         new ImageIcon(new ImageIcon(iconPath).getImage().getScaledInstance(30, 30,
@@ -263,14 +261,25 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == saveMenuItem) {
       final JFileChooser fc = new JFileChooser();
-      fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+      fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
       fc.setDialogTitle("Save as");
-      fc.showSaveDialog(this);
+      int savePath = fc.showSaveDialog(this);
+      if (savePath == JFileChooser.APPROVE_OPTION) {
+        saveFilePath = fc.getSelectedFile().getAbsolutePath();
+        controller.actionPerformed(e);
+      };
     } else if (e.getSource() == openMenuItem) {
       final JFileChooser fc = new JFileChooser();
       fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
       fc.setDialogTitle("Open");
-      fc.showSaveDialog(this);
+      int returnPath = fc.showSaveDialog(this);
+      if (returnPath == JFileChooser.APPROVE_OPTION) {
+        selectedFilePath = fc.getSelectedFile().getAbsolutePath();
+        controller.actionPerformed(e);
+//        File file = fc.getSelectedFile();
+//        ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath());
+//        updateImageViewProcessing(imageIcon);
+      }
     } else if (e.getSource() == quitMenuItem) {
       //todo:check if the file has been saved, if not, show warning dialog
       JOptionPane.showConfirmDialog(null, "Are you sure to quit without saving?",
@@ -294,6 +303,76 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     }
   }
 
+  // add getter methods.
+  public JMenuItem getSaveMenuItem() {
+    return saveMenuItem;
+  }
+
+  public JMenuItem getOpenMenuItem() {
+    return openMenuItem;
+  }
+
+  public JMenuItem getQuitMenuItem() {
+    return quitMenuItem;
+  }
+
+  public JLabel getImageViewHistogram() {
+    return imageViewHistogram;
+  }
+
+  public JLabel getImageViewProcessing() {
+    return imageViewProcessing;
+  }
+
+  public ButtonListener getButtonListener() {
+    return buttonListener;
+  }
+
+  public String getSelectedFilePath() {
+    return selectedFilePath;
+  }
+
+  public String getSaveFilePath() {
+    return saveFilePath;
+  }
+
+  public void updateImageViewProcessing(ImageIcon imageIcon) {
+    imageViewProcessing.setIcon(imageIcon);
+    imageViewProcessing.revalidate();
+    imageViewProcessing.repaint();
+  }
+
+  public Image getCurrentDisplayedImage() {
+    Icon icon = imageViewProcessing.getIcon();
+    if (icon instanceof ImageIcon) {
+      return (((ImageIcon) icon).getImage());
+    }
+    return null;
+  }
+
+//  public void updateImageViewProcessing(MyImage myImage) {
+//    BufferedImage bufferedImage = convertToBufferedImage(myImage);
+//    ImageIcon imageIcon = new ImageIcon(bufferedImage);
+//    imageViewProcessing.setIcon(imageIcon);
+//    imageViewProcessing.revalidate();
+//    imageViewProcessing.repaint();
+//
+//  }
+
+//  private BufferedImage convertToBufferedImage(MyImage myImage) {
+//    int width = myImage.getWidth();
+//    int height = myImage.getHeight();
+//    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//
+//    for (int y = 0; y < height; y++) {
+//      for (int x = 0; x < width; x++) {
+//        RGBPixel pixel = myImage.getPixel(x,y);
+//        int rgb = (pixel.getRed() << 16) | (pixel.getGreen() << 8) | pixel.getBlue();
+//        bufferedImage.setRGB(x, y, rgb);
+//      }
+//    }
+//    return bufferedImage;
+//  }
 
   private static class ButtonListener implements ActionListener {
     @Override
