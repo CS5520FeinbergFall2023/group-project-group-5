@@ -3,8 +3,10 @@ package gui.dialog;
 import java.awt.image.BufferedImage;
 
 /**
- * For those that needs to update an image.
+ * This interface represents windows that needs to update images.
  */
 public interface ImageInterface {
-  void updateImage(BufferedImage image);
+  void updateProcessingImage(BufferedImage image);
+
+  void updateDiagram(BufferedImage diagram);
 }
