@@ -116,7 +116,7 @@ public class SplitOperationDialog extends JFrame implements PercentageInterface,
    * @return the percentage value
    */
   @Override
-  public int getPercentage() {
+  public float getPercentage() {
     return 0;
   }
 }

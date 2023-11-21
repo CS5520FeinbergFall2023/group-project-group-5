@@ -22,7 +22,8 @@ public class ImageGUI {
     ImageManipulationFrame.setDefaultLookAndFeelDecorated(false);
     ImageManipulationFrame frame = new ImageManipulationFrame();
     ImageService imageService = new ImageService();
-    ImageGUIController imageGUIController = new ImageGUIController(imageService, frame);
+    ImageGUIController imageGUIController = new ImageGUIController(imageService);
+    imageGUIController.setImageManipulationFrame(frame);
     frame.setController(imageGUIController);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);

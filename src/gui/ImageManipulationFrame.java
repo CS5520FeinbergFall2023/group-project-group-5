@@ -50,19 +50,18 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
   private JLabel imageViewProcessing;
 
   private ImageGUIController controller;
+  private Map<String, JButton> operationButtons = new HashMap<>();
   private String selectedFilePath;
   private String saveFilePath;
 
   //todo:why it can be final
   private JLabel statusLabel;
-  //private ButtonListener buttonListener;
 
   /**
    * Constructs an ImageManipulationFrame.
    */
   public ImageManipulationFrame() {
     super();
-    ButtonListener buttonListener = new ButtonListener(controller);
     setTitle("Image Manipulation");
     setSize(800, 800);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -160,6 +159,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     for (String operationName : operations.keySet()) {
       JButton button = createOperationCellButton(operationName, operations.get(operationName));
       gridPanel.add(button);
+      operationButtons.put(operationName, button);
       button.getModel().addChangeListener(new ChangeListener() {
         @Override
         public void stateChanged(ChangeEvent e) {
@@ -172,7 +172,6 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
           }
         }
       });
-      button.addActionListener(buttonListener);
     }
     leftPanel.add(gridPanel, BorderLayout.CENTER);
 
@@ -189,10 +188,6 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     add(mainPanel);
   }
 
-  public void setController(ImageGUIController controller) {
-    this.controller = controller;
-  }
-
   private JButton createOperationCellButton(String name, String iconPath) {
     ImageIcon imageIcon =
         new ImageIcon(new ImageIcon(iconPath).getImage().getScaledInstance(30, 30,
@@ -204,6 +199,19 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     button.setBorderPainted(false); // Remove border for better appearance
     button.setContentAreaFilled(false); // Remove content area for better appearance
     return button;
+  }
+
+  /**
+   * Delay the button's listener setting until the ImageGUIController is injected.
+   *
+   * @param controller the ImageGUIController.
+   */
+  public void setController(ImageGUIController controller) {
+    this.controller = controller;
+    ActionListener buttonListener = controller.getButtonListener();
+    for (JButton button : operationButtons.values()) {
+      button.addActionListener(buttonListener);
+    }
   }
 
   @Override
@@ -379,9 +387,6 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     return imageViewProcessing;
   }
 
-//  public ButtonListener getButtonListener() {
-//    return buttonListener;
-//  }
 
   public String getSelectedFilePath() {
     return selectedFilePath;
@@ -391,11 +396,6 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     return saveFilePath;
   }
 
-//  public void updateImageViewProcessing(ImageIcon imageIcon) {
-//    imageViewProcessing.setIcon(imageIcon);
-//    imageViewProcessing.revalidate();
-//    imageViewProcessing.repaint();
-//  }
 
   public Image getCurrentDisplayedImage() {
     Icon icon = imageViewProcessing.getIcon();
@@ -434,71 +434,6 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
       }
     }
     return bufferedImage;
-  }
-
-  private static class ButtonListener implements ActionListener {
-    private ImageGUIController controller;
-
-    public ButtonListener(ImageGUIController controller) {
-      this.controller = controller;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-      String command = e.getActionCommand();
-      switch (command) {
-        case "Compress":
-          CompressDialog compressDialog = new CompressDialog();
-          compressDialog.setVisible(true);
-          compressDialog.setActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-              controller.actionPerformed(e);
-            }
-          });
-          break;
-        case "Color Component":
-          ColorComponentDialog colorComponentDialog = new ColorComponentDialog();
-          colorComponentDialog.setVisible(true);
-          break;
-        case "Level Adjustment":
-          LevelAdjustmentDialog levelAdjustmentDialog = new LevelAdjustmentDialog();
-          levelAdjustmentDialog.setVisible(true);
-          break;
-        case "Sepia":
-          ImageIcon imageSepia = new ImageIcon("res/cupcake-sepia-50%.png");
-          SplitOperationDialog sepiaDialog =
-              new SplitOperationDialog("Sepia", imageSepia);
-          sepiaDialog.setVisible(true);
-          break;
-        case "Blur":
-          ImageIcon imageBlur = new ImageIcon("res/cupcake-blur-50%.png");
-          SplitOperationDialog blurDialog =
-              new SplitOperationDialog("Blur", imageBlur);
-          blurDialog.setVisible(true);
-          break;
-        case "Greyscale":
-          ImageIcon imageGreyscale = new ImageIcon("res/cupcake-greyscale-50%.png");
-          SplitOperationDialog greyscaleDialog =
-              new SplitOperationDialog("Greyscale", imageGreyscale);
-          greyscaleDialog.setVisible(true);
-          break;
-        case "Sharpen":
-          ImageIcon imageSharpen = new ImageIcon("res/cupcake-sharpen-50%.png");
-          SplitOperationDialog sharpenDialog =
-              new SplitOperationDialog("Sharpen", imageSharpen);
-          sharpenDialog.setVisible(true);
-          break;
-        case "Color Correct":
-          ImageIcon imageColorCorrect = new ImageIcon("res/cupcake-sharpen-50%.png");
-          SplitOperationDialog colorCorrectDialog =
-              new SplitOperationDialog("Correct", imageColorCorrect);
-          colorCorrectDialog.setVisible(true);
-          break;
-        default:
-
-      }
-    }
   }
 
   /**

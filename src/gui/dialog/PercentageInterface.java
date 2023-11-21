@@ -9,5 +9,5 @@ public interface PercentageInterface {
    *
    * @return the percentage value
    */
-  int getPercentage();
+  float getPercentage();
 }

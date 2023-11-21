@@ -8,6 +8,10 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 import gui.ImageManipulationFrame;
+import gui.dialog.ColorComponentDialog;
+import gui.dialog.CompressDialog;
+import gui.dialog.LevelAdjustmentDialog;
+import gui.dialog.SplitOperationDialog;
 import model.image.MyImage;
 import model.pixel.RGBPixel;
 import service.ImageService;
@@ -18,12 +22,22 @@ import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 public class ImageGUIController implements ActionListener {
 
   private final ImageService imageService;
-  private final ImageManipulationFrame imageManipulationFrame;
+  private ImageManipulationFrame imageManipulationFrame;
+  public ButtonListener buttonListener;
 
-  public ImageGUIController (ImageService imageService, ImageManipulationFrame imageManipulationFrame) {
+//  public ImageGUIController (ImageService imageService, ImageManipulationFrame imageManipulationFrame) {
+//    this.imageService = imageService;
+//    this.imageManipulationFrame = imageManipulationFrame;
+//    this.buttonListener = new ButtonListener();
+//    imageManipulationFrame.setController(this);
+//  }
+
+  public ImageGUIController(ImageService imageService) {
     this.imageService = imageService;
-    this.imageManipulationFrame = imageManipulationFrame;
-    imageManipulationFrame.setController(this);
+  }
+  public void setImageManipulationFrame(ImageManipulationFrame frame) {
+    this.imageManipulationFrame = frame;
+    this.buttonListener = new ButtonListener();
   }
 
   /**
@@ -50,43 +64,11 @@ public class ImageGUIController implements ActionListener {
       if (response == JOptionPane.YES_OPTION) {
         System.exit(0);
       }
-    } else if (e.getActionCommand().equals("Compress")) {
-      float compressionValue = (Float) e.getSource();
-      compressOperation(compressionValue);
     }
-//    else if (e.getSource() == imageManipulationFrame.getButtonListener()) {
-//      String command = e.getActionCommand();
-//      switch (command) {
-//        case "Compress":
-////          CompressDialog compressDialog = new CompressDialog();
-////          compressDialog.setCompressionListener(compressionValue -> {
-////            java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
-////            MyImage myImage = convertToMyImage(currentImage);
-////            MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(myImage, compressionValue);
-////            imageManipulationFrame.updateImageViewProcessing(compressedImage);
-////          });
-////          compressDialog.setVisible(true);
-//          //compressOperation(value);
-//          float compressionValue = (Float) e.getSource();
-//          compressOperation(compressionValue);
-//          break;
-//        case "Color Component":
-//          break;
-//        case "Level Adjustment":
-//          break;
-//        case "Sepia":
-//          break;
-//        case "Blur":
-//          break;
-//        case "Greyscale":
-//          break;
-//        case "Sharpen":
-//          break;
-//        case "Color Correct":
-//          break;
-//      }
-//    }
+  }
 
+  public ActionListener getButtonListener() {
+    return buttonListener;
   }
 
   public void loadImage() {
@@ -137,11 +119,67 @@ public class ImageGUIController implements ActionListener {
     return myImage;
   }
 
-  public void compressOperation(float compressionValue) {
-    java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
-    MyImage myImage = convertToMyImage(currentImage);
-    MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(myImage, compressionValue);
-    imageManipulationFrame.updateImageViewProcessing(compressedImage);
+  private static class ButtonListener implements ActionListener {
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      String command = e.getActionCommand();
+      switch (command) {
+        case "Compress":
+          CompressDialog compressDialog = new CompressDialog();
+          compressDialog.setVisible(true);
+          break;
+        case "Color Component":
+          ColorComponentDialog colorComponentDialog = new ColorComponentDialog();
+          colorComponentDialog.setVisible(true);
+          break;
+        case "Level Adjustment":
+          LevelAdjustmentDialog levelAdjustmentDialog = new LevelAdjustmentDialog();
+          levelAdjustmentDialog.setVisible(true);
+          break;
+        case "Sepia":
+          ImageIcon imageSepia = new ImageIcon("res/cupcake-sepia-50%.png");
+          SplitOperationDialog sepiaDialog =
+                new SplitOperationDialog("Sepia", imageSepia);
+          sepiaDialog.setVisible(true);
+          break;
+        case "Blur":
+          ImageIcon imageBlur = new ImageIcon("res/cupcake-blur-50%.png");
+          SplitOperationDialog blurDialog =
+                new SplitOperationDialog("Blur", imageBlur);
+          blurDialog.setVisible(true);
+          break;
+        case "Greyscale":
+          ImageIcon imageGreyscale = new ImageIcon("res/cupcake-greyscale-50%.png");
+          SplitOperationDialog greyscaleDialog =
+                new SplitOperationDialog("Greyscale", imageGreyscale);
+          greyscaleDialog.setVisible(true);
+          break;
+        case "Sharpen":
+          ImageIcon imageSharpen = new ImageIcon("res/cupcake-sharpen-50%.png");
+          SplitOperationDialog sharpenDialog =
+                new SplitOperationDialog("Sharpen", imageSharpen);
+          sharpenDialog.setVisible(true);
+          break;
+        case "Color Correct":
+          ImageIcon imageColorCorrect = new ImageIcon("res/cupcake-sharpen-50%.png");
+          SplitOperationDialog colorCorrectDialog =
+                new SplitOperationDialog("Correct", imageColorCorrect);
+          colorCorrectDialog.setVisible(true);
+          break;
+        default:
+
+      }
+    }
   }
+
+//  public void compressOperation(float compressionValue) {
+//    java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+//    MyImage myImage = convertToMyImage(currentImage);
+//    MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(myImage, compressionValue);
+//    imageManipulationFrame.updateImageViewProcessing(compressedImage);
+//  }
+
+
 
 }
