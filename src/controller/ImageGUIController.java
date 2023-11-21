@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 import gui.ImageManipulationFrame;
-import gui.dialog.CompressDialog;
 import model.image.MyImage;
 import model.pixel.RGBPixel;
 import service.ImageService;
@@ -41,7 +40,7 @@ public class ImageGUIController implements ActionListener {
       saveFile(pathJPG);
     } else if (e.getSource() == imageManipulationFrame.getSavePNGItem()) {
       String pathPNG = imageManipulationFrame.getSaveFilePath() + ".png";
-      saveFile(pathPNG);;
+      saveFile(pathPNG);
     } else if (e.getSource() == imageManipulationFrame.getSavePPMItem()) {
       String pathPPM = imageManipulationFrame.getSaveFilePath() + ".ppm";
       saveFile(pathPPM);
@@ -51,36 +50,42 @@ public class ImageGUIController implements ActionListener {
       if (response == JOptionPane.YES_OPTION) {
         System.exit(0);
       }
-    } else if (e.getSource() == imageManipulationFrame.getButtonListener()) {
-      String command = e.getActionCommand();
-      switch (command) {
-        case "Compress":
-//          CompressDialog compressDialog = new CompressDialog();
-//          compressDialog.setCompressionListener(compressionValue -> {
-//            java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
-//            MyImage myImage = convertToMyImage(currentImage);
-//            MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(myImage, compressionValue);
-//            imageManipulationFrame.updateImageViewProcessing(compressedImage);
-//          });
-//          compressDialog.setVisible(true);
-          //compressOperation(value);
-          break;
-        case "Color Component":
-          break;
-        case "Level Adjustment":
-          break;
-        case "Sepia":
-          break;
-        case "Blur":
-          break;
-        case "Greyscale":
-          break;
-        case "Sharpen":
-          break;
-        case "Color Correct":
-          break;
-      }
+    } else if (e.getActionCommand().equals("Compress")) {
+      float compressionValue = (Float) e.getSource();
+      compressOperation(compressionValue);
     }
+//    else if (e.getSource() == imageManipulationFrame.getButtonListener()) {
+//      String command = e.getActionCommand();
+//      switch (command) {
+//        case "Compress":
+////          CompressDialog compressDialog = new CompressDialog();
+////          compressDialog.setCompressionListener(compressionValue -> {
+////            java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+////            MyImage myImage = convertToMyImage(currentImage);
+////            MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(myImage, compressionValue);
+////            imageManipulationFrame.updateImageViewProcessing(compressedImage);
+////          });
+////          compressDialog.setVisible(true);
+//          //compressOperation(value);
+//          float compressionValue = (Float) e.getSource();
+//          compressOperation(compressionValue);
+//          break;
+//        case "Color Component":
+//          break;
+//        case "Level Adjustment":
+//          break;
+//        case "Sepia":
+//          break;
+//        case "Blur":
+//          break;
+//        case "Greyscale":
+//          break;
+//        case "Sharpen":
+//          break;
+//        case "Color Correct":
+//          break;
+//      }
+//    }
 
   }
 
@@ -132,7 +137,7 @@ public class ImageGUIController implements ActionListener {
     return myImage;
   }
 
-  public void compressOperation(int compressionValue) {
+  public void compressOperation(float compressionValue) {
     java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
     MyImage myImage = convertToMyImage(currentImage);
     MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(myImage, compressionValue);

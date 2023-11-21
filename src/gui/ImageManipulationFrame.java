@@ -6,21 +6,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.imageio.stream.ImageInputStreamImpl;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import controller.ImageController;
 import controller.ImageGUIController;
 import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
+import gui.dialog.ImageUpdateInterface;
 import gui.dialog.LevelAdjustmentDialog;
 
 import gui.dialog.SplitOperationDialog;
@@ -32,7 +30,8 @@ import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 /**
  * This class represents the frame for the image manipulation GUI.
  */
-public class ImageManipulationFrame extends JFrame implements ActionListener, MouseListener {
+public class ImageManipulationFrame extends JFrame implements ActionListener, MouseListener,
+    ImageUpdateInterface {
   private final JMenu fileMenu;
   private final JMenu helpMenu;
   private final JMenu saveMenu;
@@ -56,13 +55,14 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
 
   //todo:why it can be final
   private JLabel statusLabel;
-  private ButtonListener buttonListener = new ButtonListener(controller);
+  //private ButtonListener buttonListener;
 
   /**
    * Constructs an ImageManipulationFrame.
    */
   public ImageManipulationFrame() {
     super();
+    ButtonListener buttonListener = new ButtonListener(controller);
     setTitle("Image Manipulation");
     setSize(800, 800);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -379,9 +379,9 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     return imageViewProcessing;
   }
 
-  public ButtonListener getButtonListener() {
-    return buttonListener;
-  }
+//  public ButtonListener getButtonListener() {
+//    return buttonListener;
+//  }
 
   public String getSelectedFilePath() {
     return selectedFilePath;
@@ -450,7 +450,12 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
         case "Compress":
           CompressDialog compressDialog = new CompressDialog();
           compressDialog.setVisible(true);
-          controller.actionPerformed(e);
+          compressDialog.setActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+              controller.actionPerformed(e);
+            }
+          });
           break;
         case "Color Component":
           ColorComponentDialog colorComponentDialog = new ColorComponentDialog();
@@ -486,13 +491,33 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
           break;
         case "Color Correct":
           ImageIcon imageColorCorrect = new ImageIcon("res/cupcake-sharpen-50%.png");
-          SplitOperationDialog sharpenColorCorrectDialog =
+          SplitOperationDialog colorCorrectDialog =
               new SplitOperationDialog("Correct", imageColorCorrect);
-          sharpenColorCorrectDialog.setVisible(true);
+          colorCorrectDialog.setVisible(true);
           break;
         default:
 
       }
     }
+  }
+
+  /**
+   * Update the image that is currently being processed.
+   *
+   * @param image the new image that is currently being processed
+   */
+  @Override
+  public void updateProcessingImage(BufferedImage image) {
+
+  }
+
+  /**
+   * Update the current image diagram.
+   *
+   * @param diagram the new image diagram
+   */
+  @Override
+  public void updateDiagram(BufferedImage diagram) {
+
   }
 }

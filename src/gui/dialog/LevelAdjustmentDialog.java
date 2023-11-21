@@ -14,6 +14,7 @@ import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.geom.GeneralPath;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -30,11 +31,13 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import model.image.MyImage;
+
 /**
- * This class represents the dialog windows that pops up when user trys to performs level
+ * This class represents the dialog windows that pops up when user try to performs level
  * adjustment.
  */
-public class LevelAdjustmentDialog extends JFrame {
+public class LevelAdjustmentDialog extends JFrame implements CurveInterface,ImageUpdateInterface{
   private Point[] controlPoints = new Point[3];
   private int padding = 5;
 
@@ -254,5 +257,44 @@ public class LevelAdjustmentDialog extends JFrame {
     }
   }
 
+  /**
+   * Get the control point values of a curve.
+   *
+   * @return the control point values of a curve
+   */
+  @Override
+  public float[] getControlPointValues() {
+    return new float[0];
+  }
+
+  /**
+   * Update the image that is currently being processed.
+   *
+   * @param image the new image that is currently being processed
+   */
+  @Override
+  public void updateProcessingImage(BufferedImage image) {
+
+  }
+
+  /**
+   * Update the image that is currently being processed.
+   *
+   * @param myImage the new image that is currently being processed
+   */
+  @Override
+  public void updateImageViewProcessing(MyImage myImage) {
+
+  }
+
+  /**
+   * Update the current image diagram.
+   *
+   * @param diagram the new image diagram
+   */
+  @Override
+  public void updateDiagram(BufferedImage diagram) {
+
+  }
 }
 
