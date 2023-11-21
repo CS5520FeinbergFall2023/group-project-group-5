@@ -51,7 +51,8 @@ public class LevelAdjustmentDialog extends JFrame {
     setTitle("Level Adjustment");
     setResizable(false);
     controlPoints[0] = new Point(0, 0);
-    controlPoints[1] = new Point(128, 128);
+//    controlPoints[1] = new Point(128, 128);
+    controlPoints[1] = new Point(230, 128);
     controlPoints[2] = new Point(255, 255);
 
 
@@ -222,8 +223,8 @@ public class LevelAdjustmentDialog extends JFrame {
       double x = black;
       double y = 0;
       path.moveTo(x + padding, 255 - y + padding);
-      for (double t = 0.0; t <= 1.0; t += 0.01) {
-        x = black + t * (white - black);
+      for (int t = 0; t <= 100; t++) {
+        x = black + t * (white - black) / 100.0;
         y = a * x * x + b * x + c;
         if (y < 0) {
           y = 0;
@@ -233,7 +234,6 @@ public class LevelAdjustmentDialog extends JFrame {
         }
         path.lineTo(x + padding, 255 - y + padding);
       }
-      System.out.println(y);
       g2d.setColor(Color.BLACK);
       g2d.draw(path);
     }
