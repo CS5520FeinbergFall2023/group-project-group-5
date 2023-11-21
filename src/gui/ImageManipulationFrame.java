@@ -421,7 +421,6 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
     int width = myImage.getWidth();
     int height = myImage.getHeight();
     BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         RGBPixel pixel = myImage.getPixel(y,x);

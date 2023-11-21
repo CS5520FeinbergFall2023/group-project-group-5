@@ -37,7 +37,7 @@ import model.image.MyImage;
  * This class represents the dialog windows that pops up when user try to performs level
  * adjustment.
  */
-public class LevelAdjustmentDialog extends JFrame implements CurveInterface,ImageUpdateInterface{
+public class LevelAdjustmentDialog extends JFrame implements CurveInterface, ImageUpdateInterface {
   private Point[] controlPoints = new Point[3];
   private int padding = 5;
 
@@ -140,7 +140,7 @@ public class LevelAdjustmentDialog extends JFrame implements CurveInterface,Imag
 //    layeredPane.add(curvePanel);
 
 
-    JPanel splitViewPanel=new JPanel();
+    JPanel splitViewPanel = new JPanel();
     splitViewPanel.setLayout(new BoxLayout(splitViewPanel, BoxLayout.Y_AXIS));
     //the slider to control split view percentage
     JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
@@ -162,9 +162,9 @@ public class LevelAdjustmentDialog extends JFrame implements CurveInterface,Imag
     splitViewPanel.add(slider);
     splitViewPanel.add(scrollPane);
 
-    JPanel operationPanel=new JPanel(new BorderLayout());
-    operationPanel.add(valuesPanel,BorderLayout.WEST);
-    operationPanel.add(splitViewPanel,BorderLayout.CENTER);
+    JPanel operationPanel = new JPanel(new BorderLayout());
+    operationPanel.add(valuesPanel, BorderLayout.WEST);
+    operationPanel.add(splitViewPanel, BorderLayout.CENTER);
     //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
@@ -264,7 +264,8 @@ public class LevelAdjustmentDialog extends JFrame implements CurveInterface,Imag
    */
   @Override
   public float[] getControlPointValues() {
-    return new float[0];
+    return new float[]{(float) controlPoints[0].getX(), (float) controlPoints[1].getX(),
+        (float) controlPoints[2].getX()};
   }
 
   /**
@@ -294,7 +295,8 @@ public class LevelAdjustmentDialog extends JFrame implements CurveInterface,Imag
    */
   @Override
   public void updateDiagram(BufferedImage diagram) {
-
+    //do nothing
+    return;
   }
 }
 
