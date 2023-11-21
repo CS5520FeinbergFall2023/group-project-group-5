@@ -19,7 +19,9 @@ import javax.swing.event.ChangeListener;
  * This class represents the dialog windows that pops up when user trys to perform image
  * compression.
  */
-public class CompressDialog extends JFrame implements PercentageInterface,ImageUpdateInterface{
+public class CompressDialog extends JFrame implements PercentageInterface{
+  private final JSlider compressionSlider;
+
   /**
    * Constructs a new frame that is initially invisible. This constructor sets the component's
    * locale property to the value returned by
@@ -39,7 +41,7 @@ public class CompressDialog extends JFrame implements PercentageInterface,ImageU
     sliderLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
     // Set the slider
-    JSlider compressionSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
+    compressionSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
     compressionSlider.setMajorTickSpacing(10);
     compressionSlider.setMinorTickSpacing(1);
     compressionSlider.setPaintTrack(true);
@@ -78,27 +80,7 @@ public class CompressDialog extends JFrame implements PercentageInterface,ImageU
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setLocationRelativeTo(null); // Center the frame on the screen
   }
-
-  /**
-   * Update the image that is currently being processed.
-   *
-   * @param image the new image that is currently being processed
-   */
-  @Override
-  public void updateProcessingImage(BufferedImage image) {
-
-  }
-
-  /**
-   * Update the current image diagram.
-   *
-   * @param diagram the new image diagram
-   */
-  @Override
-  public void updateDiagram(BufferedImage diagram) {
-
-  }
-
+  
   /**
    * Get the percentage value in [0,1].
    *
@@ -106,6 +88,6 @@ public class CompressDialog extends JFrame implements PercentageInterface,ImageU
    */
   @Override
   public float getPercentage() {
-    return 0;
+    return compressionSlider.getValue() / 100f;
   }
 }
