@@ -20,6 +20,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import controller.ImageGUIController;
 import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
+import gui.dialog.ImageUpdateInterface;
 import gui.dialog.LevelAdjustmentDialog;
 
 import gui.dialog.SplitOperationDialog;
@@ -29,7 +30,8 @@ import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 /**
  * This class represents the frame for the image manipulation GUI.
  */
-public class ImageManipulationFrame extends JFrame implements ActionListener, MouseListener {
+public class ImageManipulationFrame extends JFrame implements ActionListener, MouseListener,
+    ImageUpdateInterface {
   private final JMenu fileMenu;
   private final JMenu helpMenu;
   private final JMenu saveMenu;
@@ -477,5 +479,25 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
 
       }
     }
+  }
+
+  /**
+   * Update the image that is currently being processed.
+   *
+   * @param image the new image that is currently being processed
+   */
+  @Override
+  public void updateProcessingImage(BufferedImage image) {
+
+  }
+
+  /**
+   * Update the current image diagram.
+   *
+   * @param diagram the new image diagram
+   */
+  @Override
+  public void updateDiagram(BufferedImage diagram) {
+
   }
 }

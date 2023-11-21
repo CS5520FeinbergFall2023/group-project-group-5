@@ -3,6 +3,7 @@ package gui.dialog;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.HeadlessException;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -18,7 +19,7 @@ import javax.swing.event.ChangeListener;
  * This class represents the dialog windows that pops up when user trys to perform image
  * compression.
  */
-public class CompressDialog extends JFrame {
+public class CompressDialog extends JFrame implements PercentageInterface,ImageUpdateInterface{
   /**
    * Constructs a new frame that is initially invisible. This constructor sets the component's
    * locale property to the value returned by
@@ -76,5 +77,35 @@ public class CompressDialog extends JFrame {
     add(mainPanel);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setLocationRelativeTo(null); // Center the frame on the screen
+  }
+
+  /**
+   * Update the image that is currently being processed.
+   *
+   * @param image the new image that is currently being processed
+   */
+  @Override
+  public void updateProcessingImage(BufferedImage image) {
+
+  }
+
+  /**
+   * Update the current image diagram.
+   *
+   * @param diagram the new image diagram
+   */
+  @Override
+  public void updateDiagram(BufferedImage diagram) {
+
+  }
+
+  /**
+   * Get the percentage value in [0,1].
+   *
+   * @return the percentage value
+   */
+  @Override
+  public float getPercentage() {
+    return 0;
   }
 }

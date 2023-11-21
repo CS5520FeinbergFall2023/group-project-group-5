@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -15,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 
-public class SplitOperationDialog extends JFrame {
+public class SplitOperationDialog extends JFrame implements PercentageInterface,ImageUpdateInterface{
   private ImageIcon splitViewImage;
   private JLabel imageViewProcessing;
 
@@ -77,5 +78,33 @@ public class SplitOperationDialog extends JFrame {
     setLocationRelativeTo(null); // Center the frame on the screen
   }
 
+  /**
+   * Update the image that is currently being processed.
+   *
+   * @param image the new image that is currently being processed
+   */
+  @Override
+  public void updateProcessingImage(BufferedImage image) {
 
+  }
+
+  /**
+   * Update the current image diagram.
+   *
+   * @param diagram the new image diagram
+   */
+  @Override
+  public void updateDiagram(BufferedImage diagram) {
+
+  }
+
+  /**
+   * Get the percentage value in [0,1].
+   *
+   * @return the percentage value
+   */
+  @Override
+  public float getPercentage() {
+    return 0;
+  }
 }

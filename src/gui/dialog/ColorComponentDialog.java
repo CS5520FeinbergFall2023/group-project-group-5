@@ -19,21 +19,25 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import model.Channel;
+
 /**
  * This class represents the dialog windows that pops up when user trys to get certain color
  * component of the image.
  */
-public class ColorComponentDialog extends JFrame implements ActionListener {
+public class ColorComponentDialog extends JFrame implements ActionListener, ChannelInterface {
   private static String redString = "Red";
   private static String greenString = "Green";
   private static String blueString = "Blue";
+
+  private ButtonGroup radioButtonGroup;
 
   private JLabel picture;
   private static Map<String, String> iconPath = new HashMap<>();
 
   /**
-   * Constructs a new frame that is initially invisible.
-   * This constructor sets the component's locale property to the value returned by
+   * Constructs a new frame that is initially invisible. This constructor sets the component's
+   * locale property to the value returned by
    *
    * @throws HeadlessException if GraphicsEnvironment.isHeadless() returns true.
    */
@@ -51,10 +55,10 @@ public class ColorComponentDialog extends JFrame implements ActionListener {
     greenButton.setActionCommand(greenString);
     JRadioButton blueButton = new JRadioButton(blueString);
     blueButton.setActionCommand(blueString);
-    ButtonGroup group = new ButtonGroup();
-    group.add(redButton);
-    group.add(greenButton);
-    group.add(blueButton);
+    radioButtonGroup = new ButtonGroup();
+    radioButtonGroup.add(redButton);
+    radioButtonGroup.add(greenButton);
+    radioButtonGroup.add(blueButton);
     //Register a listener for the radio buttons.
     redButton.addActionListener(this);
     greenButton.addActionListener(this);
@@ -92,6 +96,25 @@ public class ColorComponentDialog extends JFrame implements ActionListener {
 
     picture.setIcon(new ImageIcon(iconPath.get(e.getActionCommand())));
 
+  }
+
+  /**
+   * Get channel.
+   *
+   * @return the channel
+   */
+  @Override
+  public Channel getChannel() {
+    switch (radioButtonGroup.getSelection().getActionCommand()) {
+      case "Red":
+        return Channel.RED;
+      case "Green":
+        return Channel.GREEN;
+      case "Blue":
+        return Channel.BLUE;
+      default:
+        throw new IllegalArgumentException("Channel selected is illegal");
+    }
   }
 
 }
