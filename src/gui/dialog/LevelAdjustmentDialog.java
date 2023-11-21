@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.HeadlessException;
@@ -16,9 +17,13 @@ import java.awt.geom.GeneralPath;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
@@ -42,18 +47,21 @@ public class LevelAdjustmentDialog extends JFrame {
    */
   public LevelAdjustmentDialog() throws HeadlessException {
     JPanel mainPanel = new JPanel();
-    mainPanel.setLayout(new BorderLayout());
+    mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
     setTitle("Level Adjustment");
     setResizable(false);
     controlPoints[0] = new Point(0, 0);
-    controlPoints[1] = new Point(128, 128);
+//    controlPoints[1] = new Point(128, 128);
+    controlPoints[1] = new Point(230, 128);
     controlPoints[2] = new Point(255, 255);
 
 
     JLabel label = new JLabel("<html>Control the curve that manipulated the image's "
-                              + "histogram<br> by "
-                              + "setting (Black,0), (Middle,128) and (White,255).</html>",
+                              + "histogram<br> by setting (Black,0), (Middle,128) and (White,255)."
+                              + "<br>Use the slider to check the effect in split view.<br> "
+                              + "It will not be saved until you press confirm. </html>",
         JLabel.CENTER);
+    label.setAlignmentX(Component.CENTER_ALIGNMENT);
     label.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 
     JPanel valuesPanel = new JPanel();
@@ -121,9 +129,40 @@ public class LevelAdjustmentDialog extends JFrame {
 //    layeredPane.add(imagePanel);
 //    layeredPane.add(curvePanel);
 
-    mainPanel.add(label, BorderLayout.NORTH);
-    mainPanel.add(curvePanel, BorderLayout.CENTER);
-    mainPanel.add(valuesPanel, BorderLayout.WEST);
+    JPanel curveControlPanel = new JPanel();
+    curveControlPanel.setLayout(new BorderLayout());
+    curveControlPanel.add(valuesPanel, BorderLayout.WEST);
+    curveControlPanel.add(curvePanel, BorderLayout.CENTER);
+
+    //the slider to control split view percentage
+    JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
+    slider.setMajorTickSpacing(10);
+    slider.setMinorTickSpacing(1);
+    slider.setPaintTrack(true);
+    slider.setPaintTicks(true);
+    slider.setPaintLabels(true);
+    slider.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+    slider.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    //the image under process
+    JScrollPane scrollPane = new JScrollPane();
+    ImageIcon imageIconProcessing = new ImageIcon("res/city-level-adjustment-100-150-200.png");
+    JLabel imageViewProcessing = new JLabel(imageIconProcessing);
+    scrollPane.setViewportView(imageViewProcessing);
+
+    //confirm button
+    JButton button = new JButton("Confirm");
+    button.setActionCommand("Confirm");
+    button.addActionListener(e -> dispose());
+    JPanel bottomPanel = new JPanel();
+    bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+    bottomPanel.add(button);
+
+    mainPanel.add(label);
+    mainPanel.add(curveControlPanel);
+    mainPanel.add(slider);
+    mainPanel.add(scrollPane);
+    mainPanel.add(bottomPanel);
     add(mainPanel);
     pack();
     setLocationRelativeTo(null); // Center the frame on the screen
@@ -184,8 +223,8 @@ public class LevelAdjustmentDialog extends JFrame {
       double x = black;
       double y = 0;
       path.moveTo(x + padding, 255 - y + padding);
-      for (double t = 0.0; t <= 1.0; t += 0.01) {
-        x = black + t * (white - black);
+      for (int t = 0; t <= 100; t++) {
+        x = black + t * (white - black) / 100.0;
         y = a * x * x + b * x + c;
         if (y < 0) {
           y = 0;

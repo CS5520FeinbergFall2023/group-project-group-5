@@ -8,10 +8,11 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 import gui.ImageManipulationFrame;
-import model.image.Image;
 import model.image.MyImage;
 import model.pixel.RGBPixel;
 import service.ImageService;
+
+import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 
 
 public class ImageGUIController implements ActionListener {
@@ -25,8 +26,6 @@ public class ImageGUIController implements ActionListener {
     imageManipulationFrame.setController(this);
   }
 
-
-
   /**
    * Invoked when an action occurs.
    *
@@ -36,11 +35,22 @@ public class ImageGUIController implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == imageManipulationFrame.getOpenMenuItem()) {
       loadImage();
-    } else if (e.getSource() == imageManipulationFrame.getSaveMenuItem()) {
-      String path = imageManipulationFrame.getSaveFilePath();
-      saveFile(path);
+    } else if (e.getSource() == imageManipulationFrame.getSaveJPGItem()) {
+      String pathJPG = imageManipulationFrame.getSaveFilePath() + ".jpg";
+      saveFile(pathJPG);
+    } else if (e.getSource() == imageManipulationFrame.getSavePNGItem()) {
+      String pathPNG = imageManipulationFrame.getSaveFilePath() + ".png";
+      saveFile(pathPNG);;
+    } else if (e.getSource() == imageManipulationFrame.getSavePPMItem()) {
+      String pathPPM = imageManipulationFrame.getSaveFilePath() + ".ppm";
+      saveFile(pathPPM);
     } else if (e.getSource() == imageManipulationFrame.getQuitMenuItem()) {
-      System.exit(0);
+      int response = JOptionPane.showConfirmDialog(null, "Are you sure to "
+            + "quit without saving?", "You haven't saved the image", YES_NO_CANCEL_OPTION);
+      if (response == JOptionPane.YES_OPTION) {
+        System.exit(0);
+      }
+
     }
 
   }
@@ -48,7 +58,6 @@ public class ImageGUIController implements ActionListener {
   public void loadImage() {
     String filePath = imageManipulationFrame.getSelectedFilePath();
     if (filePath != null && !filePath.isEmpty()) {
-      //Image loadedImage = new MyImage(filePath);
       ImageIcon imageIcon = new ImageIcon(filePath);
       imageManipulationFrame.updateImageViewProcessing(imageIcon);
     }
@@ -69,7 +78,7 @@ public class ImageGUIController implements ActionListener {
       return null;
     }
 
-    // 将 java.awt.Image 转换为 BufferedImage
+    // transfer java.awt.Image into BufferedImage.
     BufferedImage bufferedImage = new BufferedImage(awtImage.getWidth(null),
           awtImage.getHeight(null),
           BufferedImage.TYPE_INT_ARGB);
@@ -77,14 +86,13 @@ public class ImageGUIController implements ActionListener {
     bGr.drawImage(awtImage, 0, 0, null);
     bGr.dispose();
 
-    // 从 BufferedImage 中提取像素数据并创建 MyImage 对象
+    // Acquire pixel and create MyImage object.
     int width = bufferedImage.getWidth();
     int height = bufferedImage.getHeight();
     MyImage myImage = new MyImage(height, width);
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         int argb = bufferedImage.getRGB(x, y);
-        // 假设您的 RGBPixel 构造函数接受 ARGB 值
         int red = (argb >> 16) & 0xff;
         int green = (argb >> 8) & 0xff;
         int blue = argb & 0xff;
