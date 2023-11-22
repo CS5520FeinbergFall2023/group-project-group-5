@@ -71,6 +71,9 @@ public class ImageGUIController implements ActionListener {
       MyImage myImage = new MyImage(filePath);
       BufferedImage loadedImage = convertToBufferedImage(myImage);
       imageManipulationFrame.updateProcessingImage(loadedImage);
+      MyImage myImageHistogram = (MyImage) imageService.getHistogram(myImage);
+      BufferedImage loadedImageHistogram = convertToBufferedImage(myImageHistogram);
+      imageManipulationFrame.updateDiagram(loadedImageHistogram);
     }
   }
 
@@ -173,6 +176,9 @@ public class ImageGUIController implements ActionListener {
               MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(currentMyImage, compressionValue);
               BufferedImage compressedBufferedImage = ImageGUIController.convertToBufferedImage(compressedImage);
               imageManipulationFrame.updateProcessingImage(compressedBufferedImage);
+              MyImage compressedImageHistogram = (MyImage) imageService.getHistogram(compressedImage);
+              BufferedImage compressedBufferedHistogram = ImageGUIController.convertToBufferedImage(compressedImageHistogram);
+              imageManipulationFrame.updateDiagram(compressedBufferedHistogram);
             }
           });
           compressDialog.setVisible(true);

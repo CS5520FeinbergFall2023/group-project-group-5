@@ -16,14 +16,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.ImageGUIController;
-import gui.dialog.ColorComponentDialog;
-import gui.dialog.CompressDialog;
 import gui.dialog.ImageUpdateInterface;
-import gui.dialog.LevelAdjustmentDialog;
-
-import gui.dialog.SplitOperationDialog;
 import model.image.MyImage;
-import model.pixel.RGBPixel;
 
 import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 
@@ -431,6 +425,10 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
    */
   @Override
   public void updateDiagram(BufferedImage diagram) {
+    ImageIcon diagramIcon = new ImageIcon(diagram);
+    imageViewHistogram.setIcon(diagramIcon);
+    imageViewHistogram.revalidate();
+    imageViewHistogram.repaint();
 
   }
 }
