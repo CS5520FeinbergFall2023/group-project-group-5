@@ -11,6 +11,7 @@ import gui.ImageManipulationFrame;
 import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
 import gui.dialog.LevelAdjustmentDialog;
+import gui.dialog.PercentageDialogListener;
 import gui.dialog.SplitOperationDialog;
 import model.Axis;
 import model.image.MyImage;
@@ -169,12 +170,25 @@ public class ImageGUIController implements ActionListener {
       switch (command) {
         case "Compress":
           CompressDialog compressDialog = new CompressDialog();
-          compressDialog.setCompressionDialogListener(new CompressDialog.CompressionDialogListener() {
+//          compressDialog.setCompressionDialogListener(new CompressDialog.CompressionDialogListener() {
+//            @Override
+//            public void onCompressionConfirmed(float compressionValue) {
+//              java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+//              MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
+//              MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(currentMyImage, compressionValue);
+//              BufferedImage compressedBufferedImage = ImageGUIController.convertToBufferedImage(compressedImage);
+//              imageManipulationFrame.updateProcessingImage(compressedBufferedImage);
+//              MyImage compressedImageHistogram = (MyImage) imageService.getHistogram(compressedImage);
+//              BufferedImage compressedBufferedHistogram = ImageGUIController.convertToBufferedImage(compressedImageHistogram);
+//              imageManipulationFrame.updateDiagram(compressedBufferedHistogram);
+//            }
+//          });
+          compressDialog.setPercentageDialogListener(new PercentageDialogListener() {
             @Override
-            public void onCompressionConfirmed(float compressionValue) {
+            public void onCompressionConfirmed(float percentage) {
               java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
               MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
-              MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(currentMyImage, compressionValue);
+              MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(currentMyImage, percentage);
               BufferedImage compressedBufferedImage = ImageGUIController.convertToBufferedImage(compressedImage);
               imageManipulationFrame.updateProcessingImage(compressedBufferedImage);
               MyImage compressedImageHistogram = (MyImage) imageService.getHistogram(compressedImage);

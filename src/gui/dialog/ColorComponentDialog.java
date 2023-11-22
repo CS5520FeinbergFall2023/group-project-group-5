@@ -18,7 +18,7 @@ import model.Channel;
  * This class represents the dialog windows that pops up when user try to get certain color
  * component of the image.
  */
-public class ColorComponentDialog extends JDialog implements ActionListener, ChannelInterface {
+public class ColorComponentDialog extends JDialog implements ActionListener, ChannelDialogListener {
   private static String redString = "Red";
   private static String greenString = "Green";
   private static String blueString = "Blue";
@@ -91,12 +91,6 @@ public class ColorComponentDialog extends JDialog implements ActionListener, Cha
 
   }
 
-  /**
-   * Get channel.
-   *
-   * @return the channel
-   */
-  @Override
   public Channel getChannel() {
     switch (radioButtonGroup.getSelection().getActionCommand()) {
       case "Red":
@@ -110,4 +104,8 @@ public class ColorComponentDialog extends JDialog implements ActionListener, Cha
     }
   }
 
+  @Override
+  public void onColorComponentConfirmed(Channel channel) {
+    // do nothing.
+  }
 }

@@ -10,7 +10,7 @@ import javax.swing.*;
 
 import model.image.MyImage;
 
-public class SplitOperationDialog extends JFrame implements PercentageInterface,ImageUpdateInterface{
+public class SplitOperationDialog extends JFrame implements ImageUpdateInterface{
   //private ImageIcon splitViewImage;
   private JLabel imageViewProcessing;
 
@@ -103,13 +103,4 @@ public class SplitOperationDialog extends JFrame implements PercentageInterface,
     return;
   }
 
-  /**
-   * Get the percentage value in [0,1].
-   *
-   * @return the percentage value
-   */
-  @Override
-  public float getPercentage() {
-    return 0;
-  }
 }

@@ -16,12 +16,12 @@ import javax.swing.event.ChangeListener;
  * compression.
  */
 
-public class CompressDialog extends JDialog implements PercentageInterface {
+public class CompressDialog extends JDialog implements PercentageDialogListener {
   private final JSlider compressionSlider;
-  private  CompressionDialogListener listener;
+  private PercentageDialogListener percentageListener;
 
-  public void setCompressionDialogListener(CompressionDialogListener listener) {
-    this.listener = listener;
+  public void setPercentageDialogListener(PercentageDialogListener percentageListener) {
+    this.percentageListener = percentageListener;
   }
 
   /**
@@ -73,9 +73,9 @@ public class CompressDialog extends JDialog implements PercentageInterface {
     button.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        float selectedValue = getPercentage();
-        if (listener != null) {
-          listener.onCompressionConfirmed(selectedValue);
+        float selectedValue = compressionSlider.getValue() / 100f;
+        if (percentageListener != null) {
+          percentageListener.onCompressionConfirmed(selectedValue);
         }
         dispose();
       }
@@ -94,17 +94,11 @@ public class CompressDialog extends JDialog implements PercentageInterface {
   }
 
   /**
-   * Get the percentage value in [0,1].
-   *
-   * @return the percentage value
+   * @param percentage the percentage value that user choose.
    */
   @Override
-  public float getPercentage() {
-    return compressionSlider.getValue() / 100f;
-  }
-
-  public interface CompressionDialogListener {
-    void onCompressionConfirmed(float compressionValue);
+  public void onCompressionConfirmed(float percentage) {
+    // do nothing
   }
 
 }

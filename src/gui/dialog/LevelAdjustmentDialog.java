@@ -26,7 +26,7 @@ import model.image.MyImage;
  * This class represents the dialog windows that pops up when user try to performs level
  * adjustment.
  */
-public class LevelAdjustmentDialog extends JDialog implements CurveInterface, ImageUpdateInterface {
+public class LevelAdjustmentDialog extends JDialog implements LevelAdjustmentDialogListener, ImageUpdateInterface {
   private Point[] controlPoints = new Point[3];
   private int padding = 5;
 
@@ -184,6 +184,11 @@ public class LevelAdjustmentDialog extends JDialog implements CurveInterface, Im
     return spinner;
   }
 
+  @Override
+  public void onLevelAdjustmentConfirmed(float[] ControlPointValues) {
+    // do nothing.
+  }
+
   private class CurvePanel extends JPanel {
     public Dimension getPreferredSize() {
       return new Dimension(256 + 2 * padding, 256 + 2 * padding);
@@ -246,12 +251,6 @@ public class LevelAdjustmentDialog extends JDialog implements CurveInterface, Im
     }
   }
 
-  /**
-   * Get the control point values of a curve.
-   *
-   * @return the control point values of a curve
-   */
-  @Override
   public float[] getControlPointValues() {
     return new float[]{(float) controlPoints[0].getX(), (float) controlPoints[1].getX(),
         (float) controlPoints[2].getX()};
