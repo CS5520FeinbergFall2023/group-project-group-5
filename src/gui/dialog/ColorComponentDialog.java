@@ -18,7 +18,7 @@ import model.Channel;
  * This class represents the dialog windows that pops up when user try to get certain color
  * component of the image.
  */
-public class ColorComponentDialog extends JFrame implements ActionListener, ChannelInterface {
+public class ColorComponentDialog extends JDialog implements ActionListener, ChannelInterface {
   private static String redString = "Red";
   private static String greenString = "Green";
   private static String blueString = "Blue";

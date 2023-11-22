@@ -12,6 +12,7 @@ import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
 import gui.dialog.LevelAdjustmentDialog;
 import gui.dialog.SplitOperationDialog;
+import model.Axis;
 import model.image.MyImage;
 import model.pixel.RGBPixel;
 import service.ImageService;
@@ -220,6 +221,26 @@ public class ImageGUIController implements ActionListener {
           SplitOperationDialog colorCorrectDialog =
                 new SplitOperationDialog("Correct", imageColorCorrect);
           colorCorrectDialog.setVisible(true);
+          break;
+        case "Vertical Flip":
+          java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+          MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
+          MyImage verticalImage = (MyImage) imageService.flip(currentMyImage, Axis.X);
+          BufferedImage verticalBufferedImage = ImageGUIController.convertToBufferedImage(verticalImage);
+          imageManipulationFrame.updateProcessingImage(verticalBufferedImage);
+          MyImage verticalImageHistogram = (MyImage) imageService.getHistogram(verticalImage);
+          BufferedImage verticalBufferedHistogram = ImageGUIController.convertToBufferedImage(verticalImageHistogram);
+          imageManipulationFrame.updateDiagram(verticalBufferedHistogram);
+          break;
+        case "Horizontal Flip":
+          java.awt.Image nowImage = imageManipulationFrame.getCurrentDisplayedImage();
+          MyImage nowMyImage = ImageGUIController.convertToMyImage(nowImage);
+          MyImage horizontalImage = (MyImage) imageService.flip(nowMyImage, Axis.Y);
+          BufferedImage horizontalBufferedImage = ImageGUIController.convertToBufferedImage(horizontalImage);
+          imageManipulationFrame.updateProcessingImage(horizontalBufferedImage);
+          MyImage horizontalImageHistogram = (MyImage) imageService.getHistogram(horizontalImage);
+          BufferedImage horizontalBufferedHistogram = ImageGUIController.convertToBufferedImage(horizontalImageHistogram);
+          imageManipulationFrame.updateDiagram(horizontalBufferedHistogram);
           break;
         default:
 

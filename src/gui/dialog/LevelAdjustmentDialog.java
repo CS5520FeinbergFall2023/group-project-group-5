@@ -26,7 +26,7 @@ import model.image.MyImage;
  * This class represents the dialog windows that pops up when user try to performs level
  * adjustment.
  */
-public class LevelAdjustmentDialog extends JFrame implements CurveInterface, ImageUpdateInterface {
+public class LevelAdjustmentDialog extends JDialog implements CurveInterface, ImageUpdateInterface {
   private Point[] controlPoints = new Point[3];
   private int padding = 5;
 
