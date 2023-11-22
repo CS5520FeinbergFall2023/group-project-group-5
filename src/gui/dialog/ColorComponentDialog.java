@@ -76,7 +76,6 @@ public class ColorComponentDialog extends JDialog implements ActionListener, Cha
       @Override
       public void actionPerformed(ActionEvent e) {
         Channel channel = getChannel();
-        System.out.println(channel);
         if (channelListener != null) {
           channelListener.onColorComponentConfirmed(channel);
         }

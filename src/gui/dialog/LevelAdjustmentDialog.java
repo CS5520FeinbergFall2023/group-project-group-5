@@ -13,6 +13,8 @@ import java.awt.Graphics2D;
 import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 
@@ -32,6 +34,11 @@ public class LevelAdjustmentDialog extends JDialog implements LevelAdjustmentDia
 
   private CurvePanel curvePanel;
   private JLabel imageViewProcessing;
+  private LevelAdjustmentDialogListener levelAdjustmentListener;
+
+  public void setLevelAdjustmentListener(LevelAdjustmentDialogListener levelAdjustmentListener) {
+    this.levelAdjustmentListener = levelAdjustmentListener;
+  }
 
   /**
    * Constructs a new frame that is initially invisible. This constructor sets the component's
@@ -157,7 +164,16 @@ public class LevelAdjustmentDialog extends JDialog implements LevelAdjustmentDia
     //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
-    button.addActionListener(e -> dispose());
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        float[] selectedValues = getControlPointValues();
+        if (levelAdjustmentListener != null) {
+          levelAdjustmentListener.onLevelAdjustmentConfirmed(selectedValues);
+        }
+        dispose();
+      }
+    });
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);

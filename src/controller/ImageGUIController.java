@@ -12,6 +12,7 @@ import gui.dialog.ChannelDialogListener;
 import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
 import gui.dialog.LevelAdjustmentDialog;
+import gui.dialog.LevelAdjustmentDialogListener;
 import gui.dialog.PercentageDialogListener;
 import gui.dialog.SplitOperationDialog;
 import model.Axis;
@@ -172,19 +173,6 @@ public class ImageGUIController implements ActionListener {
       switch (command) {
         case "Compress":
           CompressDialog compressDialog = new CompressDialog();
-//          compressDialog.setCompressionDialogListener(new CompressDialog.CompressionDialogListener() {
-//            @Override
-//            public void onCompressionConfirmed(float compressionValue) {
-//              java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
-//              MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
-//              MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(currentMyImage, compressionValue);
-//              BufferedImage compressedBufferedImage = ImageGUIController.convertToBufferedImage(compressedImage);
-//              imageManipulationFrame.updateProcessingImage(compressedBufferedImage);
-//              MyImage compressedImageHistogram = (MyImage) imageService.getHistogram(compressedImage);
-//              BufferedImage compressedBufferedHistogram = ImageGUIController.convertToBufferedImage(compressedImageHistogram);
-//              imageManipulationFrame.updateDiagram(compressedBufferedHistogram);
-//            }
-//          });
           compressDialog.setPercentageDialogListener(new PercentageDialogListener() {
             @Override
             public void onCompressionConfirmed(float percentage) {
@@ -219,6 +207,20 @@ public class ImageGUIController implements ActionListener {
           break;
         case "Level Adjustment":
           LevelAdjustmentDialog levelAdjustmentDialog = new LevelAdjustmentDialog();
+          levelAdjustmentDialog.setLevelAdjustmentListener(new LevelAdjustmentDialogListener() {
+            @Override
+            public void onLevelAdjustmentConfirmed(float[] ControlPointValues) {
+              java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+              MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
+              //todo: directly set percentage = 1 and splitAxis = X?
+              MyImage levelAdjustImage = (MyImage) imageService.levelAdjustment(currentMyImage, ControlPointValues[0], ControlPointValues[1], ControlPointValues[2], 1, Axis.X);
+              BufferedImage levelAdjustBufferedImage = ImageGUIController.convertToBufferedImage(levelAdjustImage);
+              imageManipulationFrame.updateProcessingImage(levelAdjustBufferedImage);
+              MyImage levelAdjustImageHistogram = (MyImage) imageService.getHistogram(currentMyImage);
+              BufferedImage levelAdjustBufferedHistogram = ImageGUIController.convertToBufferedImage(levelAdjustImageHistogram);
+              imageManipulationFrame.updateDiagram(levelAdjustBufferedHistogram);
+            }
+          });
           levelAdjustmentDialog.setVisible(true);
           break;
         case "Sepia":
