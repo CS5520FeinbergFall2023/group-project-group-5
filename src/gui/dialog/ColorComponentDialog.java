@@ -28,6 +28,12 @@ public class ColorComponentDialog extends JDialog implements ActionListener, Cha
   private JLabel picture;
   private static Map<String, String> iconPath = new HashMap<>();
 
+  private ChannelDialogListener channelListener;
+
+  public void setChannelListener(ChannelDialogListener channelListener) {
+    this.channelListener = channelListener;
+  }
+
   /**
    * Constructs a new frame that is initially invisible. This constructor sets the component's
    * locale property to the value returned by
@@ -66,7 +72,17 @@ public class ColorComponentDialog extends JDialog implements ActionListener, Cha
     //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
-    button.addActionListener(e -> dispose());
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        Channel channel = getChannel();
+        System.out.println(channel);
+        if (channelListener != null) {
+          channelListener.onColorComponentConfirmed(channel);
+        }
+        dispose();
+      }
+    });
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);

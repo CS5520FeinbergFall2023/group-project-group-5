@@ -8,12 +8,14 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 import gui.ImageManipulationFrame;
+import gui.dialog.ChannelDialogListener;
 import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
 import gui.dialog.LevelAdjustmentDialog;
 import gui.dialog.PercentageDialogListener;
 import gui.dialog.SplitOperationDialog;
 import model.Axis;
+import model.Channel;
 import model.image.MyImage;
 import model.pixel.RGBPixel;
 import service.ImageService;
@@ -200,6 +202,19 @@ public class ImageGUIController implements ActionListener {
           break;
         case "Color Component":
           ColorComponentDialog colorComponentDialog = new ColorComponentDialog();
+          colorComponentDialog.setChannelListener(new ChannelDialogListener() {
+            @Override
+            public void onColorComponentConfirmed(Channel channel) {
+              java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+              MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
+              MyImage componentImage = (MyImage) imageService.splitComponent(currentMyImage, channel);
+              BufferedImage componentBufferedImage = ImageGUIController.convertToBufferedImage(componentImage);
+              imageManipulationFrame.updateProcessingImage(componentBufferedImage);
+              MyImage componentImageHistogram = (MyImage) imageService.getHistogram(componentImage);
+              BufferedImage componentBufferedHistogram = ImageGUIController.convertToBufferedImage(componentImageHistogram);
+              imageManipulationFrame.updateDiagram(componentBufferedHistogram);
+            }
+          });
           colorComponentDialog.setVisible(true);
           break;
         case "Level Adjustment":
