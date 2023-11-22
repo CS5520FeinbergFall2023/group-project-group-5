@@ -5,15 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -23,10 +16,13 @@ import javax.swing.event.ChangeListener;
  * compression.
  */
 
-public class CompressDialog extends JFrame implements PercentageInterface {
+public class CompressDialog extends JDialog implements PercentageInterface {
   private final JSlider compressionSlider;
+  private  CompressionDialogListener listener;
 
-
+  public void setCompressionDialogListener(CompressionDialogListener listener) {
+    this.listener = listener;
+  }
 
   /**
    * Constructs a new frame that is initially invisible. This constructor sets the component's
@@ -74,7 +70,16 @@ public class CompressDialog extends JFrame implements PercentageInterface {
     //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
-    button.addActionListener(e -> dispose());
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        float selectedValue = getPercentage();
+        if (listener != null) {
+          listener.onCompressionConfirmed(selectedValue);
+        }
+        dispose();
+      }
+    });
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);
@@ -83,7 +88,6 @@ public class CompressDialog extends JFrame implements PercentageInterface {
     mainPanel.add(compressionSlider);
     mainPanel.add(valueLabel);
     mainPanel.add(bottomPanel);
-
     add(mainPanel);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setLocationRelativeTo(null); // Center the frame on the screen
@@ -97,6 +101,10 @@ public class CompressDialog extends JFrame implements PercentageInterface {
   @Override
   public float getPercentage() {
     return compressionSlider.getValue() / 100f;
+  }
+
+  public interface CompressionDialogListener {
+    void onCompressionConfirmed(float compressionValue);
   }
 
 }

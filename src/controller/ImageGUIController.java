@@ -165,12 +165,16 @@ public class ImageGUIController implements ActionListener {
       switch (command) {
         case "Compress":
           CompressDialog compressDialog = new CompressDialog();
-          float compressionValue = compressDialog.getPercentage();
-          java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
-          MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
-          MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(currentMyImage, compressionValue);
-          BufferedImage compressedBufferedImage = ImageGUIController.convertToBufferedImage(compressedImage);
-          imageManipulationFrame.updateProcessingImage(compressedBufferedImage);
+          compressDialog.setCompressionDialogListener(new CompressDialog.CompressionDialogListener() {
+            @Override
+            public void onCompressionConfirmed(float compressionValue) {
+              java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+              MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
+              MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(currentMyImage, compressionValue);
+              BufferedImage compressedBufferedImage = ImageGUIController.convertToBufferedImage(compressedImage);
+              imageManipulationFrame.updateProcessingImage(compressedBufferedImage);
+            }
+          });
           compressDialog.setVisible(true);
           break;
         case "Color Component":
@@ -216,5 +220,5 @@ public class ImageGUIController implements ActionListener {
       }
     }
   }
-  
+
 }

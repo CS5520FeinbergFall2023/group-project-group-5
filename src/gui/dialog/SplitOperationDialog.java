@@ -6,20 +6,12 @@ import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
+import javax.swing.*;
 
 import model.image.MyImage;
 
 public class SplitOperationDialog extends JFrame implements PercentageInterface,ImageUpdateInterface{
-//  private ImageIcon splitViewImage;
+  //private ImageIcon splitViewImage;
   private JLabel imageViewProcessing;
 
   /**
@@ -34,7 +26,7 @@ public class SplitOperationDialog extends JFrame implements PercentageInterface,
   public SplitOperationDialog(String title, ImageIcon splitViewImage)
       throws HeadlessException {
     super(title);
-//    this.splitViewImage = splitViewImage;
+    //this.splitViewImage = splitViewImage;
 
     JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
