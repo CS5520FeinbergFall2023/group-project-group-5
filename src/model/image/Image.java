@@ -1,5 +1,6 @@
 package model.image;
 
+import java.awt.image.BufferedImage;
 import java.util.function.Function;
 
 import model.Axis;
@@ -168,6 +169,5 @@ public interface Image {
    * @return the adjusted image
    */
   Image levelAdjustment(float black, float mid, float highlight);
-
 
 }

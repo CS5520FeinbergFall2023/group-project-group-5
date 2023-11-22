@@ -17,32 +17,15 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import controller.ImageGUIController;
-import model.image.MyImage;
 
 /**
  * This class represents the dialog windows that pops up when user try to perform image
  * compression.
  */
 
-
-//public class CompressDialog extends JFrame {
-//
-//  private CompressionListener compressionListener;
-//  private ImageGUIController imageGUIController;
-//
-//  public ImageGUIController getImageGUIController() {
-//    return imageGUIController;
-//  }
-//
-//  public void setCompressionListener(CompressionListener listener) {
-//    this.compressionListener = listener;
-//  }
-
 public class CompressDialog extends JFrame implements PercentageInterface {
   private final JSlider compressionSlider;
-//  private final ImageGUIController controller;
-  //private ActionListener actionListener;
+
 
 
   /**
@@ -76,6 +59,7 @@ public class CompressDialog extends JFrame implements PercentageInterface {
     // Show the rate user picked
     JLabel valueLabel =
           new JLabel("Compression ratio: " + compressionSlider.getValue() + "%", JLabel.CENTER);
+
     compressionSlider.addChangeListener(new ChangeListener() {
       @Override
       public void stateChanged(ChangeEvent e) {
@@ -83,6 +67,7 @@ public class CompressDialog extends JFrame implements PercentageInterface {
         valueLabel.setText("Compression ratio: " + value + "%");
       }
     });
+
     valueLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     valueLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
@@ -90,27 +75,6 @@ public class CompressDialog extends JFrame implements PercentageInterface {
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
     button.addActionListener(e -> dispose());
-
-//    button.addActionListener(e-> {
-//      int compressionValue = compressionSlider.getValue();
-//      if (compressionListener != null) {
-//        compressionListener.onCompressionConfirmed(compressionValue);
-//      }
-//      ImageGUIController controller = getImageGUIController();
-//
-//      controller.compressOperation(compressionValue);
-//      this.dispose();
-//    });
-//    button.addActionListener(new ActionListener() {
-//      public void actionPerformed(ActionEvent e) {
-//        float selectedCompression = getPercentage();
-//        ActionEvent compressEvent = new ActionEvent(this, ActionEvent.ACTION_PERFORMED,
-//              "Compress", (int)selectedCompression);
-//        if (actionListener != null) {
-//          actionListener.actionPerformed(compressEvent);
-//        }
-//      }
-//    });
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);
@@ -124,11 +88,6 @@ public class CompressDialog extends JFrame implements PercentageInterface {
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setLocationRelativeTo(null); // Center the frame on the screen
   }
-
-
-//  public void setActionListener(ActionListener listener) {
-//    this.actionListener = listener;
-//  }
 
   /**
    * Get the percentage value in [0,1].

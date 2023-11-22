@@ -1,5 +1,6 @@
 package model.image;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;

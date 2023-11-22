@@ -35,11 +35,8 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
   private final JMenu fileMenu;
   private final JMenu helpMenu;
   private final JMenu saveMenu;
-
   private final JMenuItem saveJPGItem;
-
   private final JMenuItem savePNGItem;
-
   private final JMenuItem savePPMItem;
   private final JMenuItem openMenuItem;
   private final JMenuItem quitMenuItem;
@@ -406,43 +403,25 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
   }
 
   public void updateImageViewProcessing(MyImage myImage) {
-    BufferedImage bufferedImage = convertToBufferedImage(myImage);
-    ImageIcon imageIcon = new ImageIcon(bufferedImage);
-    imageViewProcessing.setIcon(imageIcon);
-    imageViewProcessing.revalidate();
-    imageViewProcessing.repaint();
+//    BufferedImage bufferedImage = convertToBufferedImage(myImage);
+//    ImageIcon imageIcon = new ImageIcon(bufferedImage);
+//    imageViewProcessing.setIcon(imageIcon);
+//    imageViewProcessing.revalidate();
+//    imageViewProcessing.repaint();
 
-  }
-
-  private BufferedImage convertToBufferedImage(MyImage myImage) {
-    if (myImage == null) {
-      return null;
-    }
-    int width = myImage.getWidth();
-    int height = myImage.getHeight();
-    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-    for (int y = 0; y < height; y++) {
-      for (int x = 0; x < width; x++) {
-        RGBPixel pixel = myImage.getPixel(y,x);
-        int red = pixel.getRed();
-        int green = pixel.getGreen();
-        int blue = pixel.getBlue();
-        int alpha = 255;
-        int argb = (alpha << 24 ) | (red << 16) | (green << 8) | blue;
-        bufferedImage.setRGB(x, y, argb);
-      }
-    }
-    return bufferedImage;
   }
 
   /**
    * Update the image that is currently being processed.
    *
-   * @param image the new image that is currently being processed
+   * @param image the new image that is currently being processed.
    */
   @Override
   public void updateProcessingImage(BufferedImage image) {
-
+    ImageIcon imageIcon = new ImageIcon(image);
+    imageViewProcessing.setIcon(imageIcon);
+    imageViewProcessing.revalidate();
+    imageViewProcessing.repaint();
   }
 
   /**

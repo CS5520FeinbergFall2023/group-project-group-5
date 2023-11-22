@@ -25,19 +25,13 @@ public class ImageGUIController implements ActionListener {
   private ImageManipulationFrame imageManipulationFrame;
   public ButtonListener buttonListener;
 
-//  public ImageGUIController (ImageService imageService, ImageManipulationFrame imageManipulationFrame) {
-//    this.imageService = imageService;
-//    this.imageManipulationFrame = imageManipulationFrame;
-//    this.buttonListener = new ButtonListener();
-//    imageManipulationFrame.setController(this);
-//  }
-
   public ImageGUIController(ImageService imageService) {
     this.imageService = imageService;
   }
-  public void setImageManipulationFrame(ImageManipulationFrame frame) {
-    this.imageManipulationFrame = frame;
-    this.buttonListener = new ButtonListener();
+
+  public void setImageManipulationFrame(ImageManipulationFrame imageManipulationFrame) {
+    this.imageManipulationFrame = imageManipulationFrame;
+    this.buttonListener = new ButtonListener(imageManipulationFrame, this.imageService);
   }
 
   /**
@@ -75,7 +69,8 @@ public class ImageGUIController implements ActionListener {
     String filePath = imageManipulationFrame.getSelectedFilePath();
     if (filePath != null && !filePath.isEmpty()) {
       MyImage myImage = new MyImage(filePath);
-      imageManipulationFrame.updateImageViewProcessing(myImage);
+      BufferedImage loadedImage = convertToBufferedImage(myImage);
+      imageManipulationFrame.updateProcessingImage(loadedImage);
     }
   }
 
@@ -89,7 +84,14 @@ public class ImageGUIController implements ActionListener {
     }
   }
 
-  public MyImage convertToMyImage(java.awt.Image awtImage) {
+
+  /**
+   * Transfer the awtImage type picture into MyImage type picture.
+   *
+   * @param awtImage Image
+   * @return
+   */
+  public static MyImage convertToMyImage(java.awt.Image awtImage) {
     if (awtImage == null) {
       return null;
     }
@@ -119,7 +121,43 @@ public class ImageGUIController implements ActionListener {
     return myImage;
   }
 
+  /**
+   * Transfer the MyImage type into BufferedImage type.
+   *
+   * @param myImage MyImage object picture.
+   * @return the bufferedImage type.
+   */
+  public static BufferedImage convertToBufferedImage(MyImage myImage) {
+    if (myImage == null) {
+      return null;
+    }
+    int width = myImage.getWidth();
+    int height = myImage.getHeight();
+    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        RGBPixel pixel = myImage.getPixel(y,x);
+        int red = pixel.getRed();
+        int green = pixel.getGreen();
+        int blue = pixel.getBlue();
+        int alpha = 255;
+        int argb = (alpha << 24 ) | (red << 16) | (green << 8) | blue;
+        bufferedImage.setRGB(x, y, argb);
+      }
+    }
+    return bufferedImage;
+  }
+
   private static class ButtonListener implements ActionListener {
+
+    private ImageManipulationFrame imageManipulationFrame;
+    private ImageService imageService;
+
+
+    public ButtonListener(ImageManipulationFrame imageManipulationFrame, ImageService imageService) {
+      this.imageManipulationFrame = imageManipulationFrame;
+      this.imageService = imageService;
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -127,6 +165,12 @@ public class ImageGUIController implements ActionListener {
       switch (command) {
         case "Compress":
           CompressDialog compressDialog = new CompressDialog();
+          float compressionValue = compressDialog.getPercentage();
+          java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+          MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
+          MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(currentMyImage, compressionValue);
+          BufferedImage compressedBufferedImage = ImageGUIController.convertToBufferedImage(compressedImage);
+          imageManipulationFrame.updateProcessingImage(compressedBufferedImage);
           compressDialog.setVisible(true);
           break;
         case "Color Component":
@@ -172,14 +216,5 @@ public class ImageGUIController implements ActionListener {
       }
     }
   }
-
-//  public void compressOperation(float compressionValue) {
-//    java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
-//    MyImage myImage = convertToMyImage(currentImage);
-//    MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(myImage, compressionValue);
-//    imageManipulationFrame.updateImageViewProcessing(compressedImage);
-//  }
-
-
-
+  
 }
