@@ -4,15 +4,24 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import model.image.MyImage;
 
-public class SplitOperationDialog extends JFrame implements ImageUpdateInterface{
+public class SplitOperationDialog extends JFrame implements ChangeListener, ImageUpdateInterface{
   //private ImageIcon splitViewImage;
   private JLabel imageViewProcessing;
+  private SplitViewDialogListener splitViewDialogListener;
+
+  public void setSplitViewDialogListener(SplitViewDialogListener splitViewDialogListener) {
+    this.splitViewDialogListener = splitViewDialogListener;
+  }
 
   /**
    * Creates a new, initially invisible <code>Frame</code> with the specified title.
@@ -46,6 +55,7 @@ public class SplitOperationDialog extends JFrame implements ImageUpdateInterface
     slider.setPaintLabels(true);
     slider.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
     slider.setAlignmentX(Component.CENTER_ALIGNMENT);
+    slider.addChangeListener(this);
     // the split view image
     //the image under process
     JScrollPane scrollPane = new JScrollPane();
@@ -55,7 +65,16 @@ public class SplitOperationDialog extends JFrame implements ImageUpdateInterface
     //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
-    button.addActionListener(e -> dispose());
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (splitViewDialogListener != null) {
+          splitViewDialogListener.onConfirm();
+        }
+        dispose();
+      }
+    });
+    
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);
@@ -79,17 +98,6 @@ public class SplitOperationDialog extends JFrame implements ImageUpdateInterface
   @Override
   public void updateProcessingImage(BufferedImage image) {
     imageViewProcessing.setIcon(new ImageIcon(image));
-
-  }
-
-  /**
-   * Update the image that is currently being processed.
-   *
-   * @param myImage the new image that is currently being processed
-   */
-  @Override
-  public void updateImageViewProcessing(MyImage myImage) {
-
   }
 
   /**
@@ -99,8 +107,21 @@ public class SplitOperationDialog extends JFrame implements ImageUpdateInterface
    */
   @Override
   public void updateDiagram(BufferedImage diagram) {
-    // do nothing
+    //do nothing
     return;
+  }
+
+  /**
+   * Invoked when the target of the listener has changed its state.
+   *
+   * @param e a ChangeEvent object
+   */
+  @Override
+  public void stateChanged(ChangeEvent e) {
+    int value = ((JSlider) e.getSource()).getValue();
+    if (splitViewDialogListener != null) {
+      splitViewDialogListener.onUpdatePercentage(value / 100f, this);
+    }
   }
 
 }

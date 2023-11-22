@@ -6,7 +6,14 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -16,12 +23,12 @@ import javax.swing.event.ChangeListener;
  * compression.
  */
 
-public class CompressDialog extends JDialog implements PercentageDialogListener {
+public class CompressDialog extends JDialog{
   private final JSlider compressionSlider;
-  private PercentageDialogListener percentageListener;
+  private CompressionDialogListener compressionDialogListener;
 
-  public void setPercentageDialogListener(PercentageDialogListener percentageListener) {
-    this.percentageListener = percentageListener;
+  public void setPercentageDialogListener(CompressionDialogListener compressionDialogListener) {
+    this.compressionDialogListener = compressionDialogListener;
   }
 
   /**
@@ -38,7 +45,7 @@ public class CompressDialog extends JDialog implements PercentageDialogListener 
 
     // Create the label.
     JLabel sliderLabel =
-          new JLabel("The ratio indicates the size by which the image is reduced.", JLabel.CENTER);
+        new JLabel("The ratio indicates the size by which the image is reduced.", JLabel.CENTER);
     sliderLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     sliderLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
@@ -54,7 +61,7 @@ public class CompressDialog extends JDialog implements PercentageDialogListener 
 
     // Show the rate user picked
     JLabel valueLabel =
-          new JLabel("Compression ratio: " + compressionSlider.getValue() + "%", JLabel.CENTER);
+        new JLabel("Compression ratio: " + compressionSlider.getValue() + "%", JLabel.CENTER);
 
     compressionSlider.addChangeListener(new ChangeListener() {
       @Override
@@ -74,12 +81,13 @@ public class CompressDialog extends JDialog implements PercentageDialogListener 
       @Override
       public void actionPerformed(ActionEvent e) {
         float selectedValue = compressionSlider.getValue() / 100f;
-        if (percentageListener != null) {
-          percentageListener.onCompressionConfirmed(selectedValue);
+        if (compressionDialogListener != null) {
+          compressionDialogListener.onCompressionConfirmed(selectedValue);
         }
         dispose();
       }
     });
+
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);
@@ -91,14 +99,6 @@ public class CompressDialog extends JDialog implements PercentageDialogListener 
     add(mainPanel);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     setLocationRelativeTo(null); // Center the frame on the screen
-  }
-
-  /**
-   * @param percentage the percentage value that user choose.
-   */
-  @Override
-  public void onCompressionConfirmed(float percentage) {
-    // do nothing
   }
 
 }

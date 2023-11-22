@@ -13,25 +13,48 @@ import java.awt.Graphics2D;
 import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import model.image.MyImage;
 
 /**
  * This class represents the dialog windows that pops up when user try to performs level
  * adjustment.
  */
-public class LevelAdjustmentDialog extends JDialog implements LevelAdjustmentDialogListener, ImageUpdateInterface {
+public class LevelAdjustmentDialog extends JDialog implements ChangeListener, ImageUpdateInterface {
   private Point[] controlPoints = new Point[3];
   private int padding = 5;
 
   private CurvePanel curvePanel;
   private JLabel imageViewProcessing;
+
+  private LevelAdjustmentDialogListener levelAdjustmentDialogListener;
+  private SplitViewDialogListener splitViewDialogListener;
+
+  public void setLevelAdjustmentDialogListener(
+      LevelAdjustmentDialogListener levelAdjustmentDialogListener) {
+    this.levelAdjustmentDialogListener = levelAdjustmentDialogListener;
+  }
+
+  public void setSplitViewDialogListener(SplitViewDialogListener splitViewDialogListener) {
+    this.splitViewDialogListener = splitViewDialogListener;
+  }
 
   /**
    * Constructs a new frame that is initially invisible. This constructor sets the component's
@@ -140,6 +163,7 @@ public class LevelAdjustmentDialog extends JDialog implements LevelAdjustmentDia
     slider.setPaintLabels(true);
     slider.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
     slider.setAlignmentX(Component.CENTER_ALIGNMENT);
+    slider.addChangeListener(this);
 
     //the image under process
     JScrollPane scrollPane = new JScrollPane();
@@ -157,15 +181,21 @@ public class LevelAdjustmentDialog extends JDialog implements LevelAdjustmentDia
     //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
-    button.addActionListener(e -> dispose());
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (levelAdjustmentDialogListener != null) {
+          levelAdjustmentDialogListener.onLevelAdjustmentConfirmed(getControlPointValues());
+        }
+        dispose();
+      }
+    });
+
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);
 
     mainPanel.add(label);
-//    mainPanel.add(valuesPanel);
-//    mainPanel.add(slider);
-//    mainPanel.add(scrollPane);
     mainPanel.add(operationPanel);
     mainPanel.add(bottomPanel);
     add(mainPanel);
@@ -182,11 +212,6 @@ public class LevelAdjustmentDialog extends JDialog implements LevelAdjustmentDia
     spinnerPanel.add(spinner);
     c.add(spinnerPanel);
     return spinner;
-  }
-
-  @Override
-  public void onLevelAdjustmentConfirmed(float[] ControlPointValues) {
-    // do nothing.
   }
 
   private class CurvePanel extends JPanel {
@@ -251,7 +276,8 @@ public class LevelAdjustmentDialog extends JDialog implements LevelAdjustmentDia
     }
   }
 
-  public float[] getControlPointValues() {
+
+  private float[] getControlPointValues() {
     return new float[]{(float) controlPoints[0].getX(), (float) controlPoints[1].getX(),
         (float) controlPoints[2].getX()};
   }
@@ -267,16 +293,6 @@ public class LevelAdjustmentDialog extends JDialog implements LevelAdjustmentDia
   }
 
   /**
-   * Update the image that is currently being processed.
-   *
-   * @param myImage the new image that is currently being processed
-   */
-  @Override
-  public void updateImageViewProcessing(MyImage myImage) {
-
-  }
-
-  /**
    * Update the current image diagram.
    *
    * @param diagram the new image diagram
@@ -285,6 +301,19 @@ public class LevelAdjustmentDialog extends JDialog implements LevelAdjustmentDia
   public void updateDiagram(BufferedImage diagram) {
     //do nothing
     return;
+  }
+
+  /**
+   * Invoked when the target of the listener has changed its state.
+   *
+   * @param e a ChangeEvent object
+   */
+  @Override
+  public void stateChanged(ChangeEvent e) {
+    int value = ((JSlider) e.getSource()).getValue();
+    if (splitViewDialogListener != null) {
+      splitViewDialogListener.onUpdatePercentage(value / 100f, this);
+    }
   }
 }
 

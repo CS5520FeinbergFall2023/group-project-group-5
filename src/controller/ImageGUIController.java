@@ -1,18 +1,21 @@
 package controller;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 import gui.ImageManipulationFrame;
 import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
+import gui.dialog.CompressionDialogListener;
+import gui.dialog.ImageUpdateInterface;
 import gui.dialog.LevelAdjustmentDialog;
-import gui.dialog.PercentageDialogListener;
 import gui.dialog.SplitOperationDialog;
+import gui.dialog.SplitViewDialogListener;
 import model.Axis;
 import model.image.MyImage;
 import model.pixel.RGBPixel;
@@ -56,7 +59,8 @@ public class ImageGUIController implements ActionListener {
       saveFile(pathPPM);
     } else if (e.getSource() == imageManipulationFrame.getQuitMenuItem()) {
       int response = JOptionPane.showConfirmDialog(null, "Are you sure to "
-            + "quit without saving?", "You haven't saved the image", YES_NO_CANCEL_OPTION);
+                                                         + "quit without saving?",
+          "You haven't saved the image", YES_NO_CANCEL_OPTION);
       if (response == JOptionPane.YES_OPTION) {
         System.exit(0);
       }
@@ -103,8 +107,8 @@ public class ImageGUIController implements ActionListener {
 
     // transfer java.awt.Image into BufferedImage.
     BufferedImage bufferedImage = new BufferedImage(awtImage.getWidth(null),
-          awtImage.getHeight(null),
-          BufferedImage.TYPE_INT_ARGB);
+        awtImage.getHeight(null),
+        BufferedImage.TYPE_INT_ARGB);
     Graphics2D bGr = bufferedImage.createGraphics();
     bGr.drawImage(awtImage, 0, 0, null);
     bGr.dispose();
@@ -141,12 +145,12 @@ public class ImageGUIController implements ActionListener {
     BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        RGBPixel pixel = myImage.getPixel(y,x);
+        RGBPixel pixel = myImage.getPixel(y, x);
         int red = pixel.getRed();
         int green = pixel.getGreen();
         int blue = pixel.getBlue();
         int alpha = 255;
-        int argb = (alpha << 24 ) | (red << 16) | (green << 8) | blue;
+        int argb = (alpha << 24) | (red << 16) | (green << 8) | blue;
         bufferedImage.setRGB(x, y, argb);
       }
     }
@@ -159,7 +163,8 @@ public class ImageGUIController implements ActionListener {
     private ImageService imageService;
 
 
-    public ButtonListener(ImageManipulationFrame imageManipulationFrame, ImageService imageService) {
+    public ButtonListener(ImageManipulationFrame imageManipulationFrame,
+                          ImageService imageService) {
       this.imageManipulationFrame = imageManipulationFrame;
       this.imageService = imageService;
     }
@@ -183,16 +188,20 @@ public class ImageGUIController implements ActionListener {
 //              imageManipulationFrame.updateDiagram(compressedBufferedHistogram);
 //            }
 //          });
-          compressDialog.setPercentageDialogListener(new PercentageDialogListener() {
+          compressDialog.setPercentageDialogListener(new CompressionDialogListener() {
             @Override
             public void onCompressionConfirmed(float percentage) {
               java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
               MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
-              MyImage compressedImage = (MyImage) imageService.haarWaveletCompress(currentMyImage, percentage);
-              BufferedImage compressedBufferedImage = ImageGUIController.convertToBufferedImage(compressedImage);
+              MyImage compressedImage =
+                  (MyImage) imageService.haarWaveletCompress(currentMyImage, percentage);
+              BufferedImage compressedBufferedImage =
+                  ImageGUIController.convertToBufferedImage(compressedImage);
               imageManipulationFrame.updateProcessingImage(compressedBufferedImage);
-              MyImage compressedImageHistogram = (MyImage) imageService.getHistogram(compressedImage);
-              BufferedImage compressedBufferedHistogram = ImageGUIController.convertToBufferedImage(compressedImageHistogram);
+              MyImage compressedImageHistogram =
+                  (MyImage) imageService.getHistogram(compressedImage);
+              BufferedImage compressedBufferedHistogram =
+                  ImageGUIController.convertToBufferedImage(compressedImageHistogram);
               imageManipulationFrame.updateDiagram(compressedBufferedHistogram);
             }
           });
@@ -209,51 +218,87 @@ public class ImageGUIController implements ActionListener {
         case "Sepia":
           ImageIcon imageSepia = new ImageIcon("res/cupcake-sepia-50%.png");
           SplitOperationDialog sepiaDialog =
-                new SplitOperationDialog("Sepia", imageSepia);
+              new SplitOperationDialog("Sepia", imageSepia);
           sepiaDialog.setVisible(true);
           break;
         case "Blur":
           ImageIcon imageBlur = new ImageIcon("res/cupcake-blur-50%.png");
           SplitOperationDialog blurDialog =
-                new SplitOperationDialog("Blur", imageBlur);
+              new SplitOperationDialog("Blur", imageBlur);
           blurDialog.setVisible(true);
           break;
         case "Greyscale":
-          ImageIcon imageGreyscale = new ImageIcon("res/cupcake-greyscale-50%.png");
+          ImageIcon imageGreyscale = new ImageIcon(imageManipulationFrame.getCurrentDisplayedImage());
           SplitOperationDialog greyscaleDialog =
-                new SplitOperationDialog("Greyscale", imageGreyscale);
+              new SplitOperationDialog("Greyscale", imageGreyscale);
+          SplitViewDialogListener splitViewDialogListener = new SplitViewDialogListener() {
+            @Override
+            public void onUpdatePercentage(float percentage,
+                                           ImageUpdateInterface imageUpdateInterface) {
+              java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+              MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
+              MyImage greyscaledImage =
+                  (MyImage) imageService.greyscale(currentMyImage, percentage, Axis.X);
+              BufferedImage compressedBufferedImage =
+                  ImageGUIController.convertToBufferedImage(greyscaledImage);
+              imageUpdateInterface.updateProcessingImage(compressedBufferedImage);
+            }
+
+            @Override
+            public void onConfirm() {
+              java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+              MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
+              MyImage greyscaledImage =
+                  (MyImage) imageService.greyscale(currentMyImage, 1, Axis.X);
+              BufferedImage compressedBufferedImage =
+                  ImageGUIController.convertToBufferedImage(greyscaledImage);
+              imageManipulationFrame.updateProcessingImage(compressedBufferedImage);
+              MyImage compressedImageHistogram =
+                  (MyImage) imageService.getHistogram(greyscaledImage);
+              BufferedImage compressedBufferedHistogram =
+                  ImageGUIController.convertToBufferedImage(compressedImageHistogram);
+              imageManipulationFrame.updateDiagram(compressedBufferedHistogram);
+            }
+          };
+
+          greyscaleDialog.setSplitViewDialogListener(splitViewDialogListener);
+
           greyscaleDialog.setVisible(true);
           break;
         case "Sharpen":
           ImageIcon imageSharpen = new ImageIcon("res/cupcake-sharpen-50%.png");
           SplitOperationDialog sharpenDialog =
-                new SplitOperationDialog("Sharpen", imageSharpen);
+              new SplitOperationDialog("Sharpen", imageSharpen);
           sharpenDialog.setVisible(true);
           break;
         case "Color Correct":
           ImageIcon imageColorCorrect = new ImageIcon("res/cupcake-sharpen-50%.png");
           SplitOperationDialog colorCorrectDialog =
-                new SplitOperationDialog("Correct", imageColorCorrect);
+              new SplitOperationDialog("Correct", imageColorCorrect);
           colorCorrectDialog.setVisible(true);
           break;
         case "Vertical Flip":
           java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
           MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
           MyImage verticalImage = (MyImage) imageService.flip(currentMyImage, Axis.X);
-          BufferedImage verticalBufferedImage = ImageGUIController.convertToBufferedImage(verticalImage);
+          BufferedImage verticalBufferedImage =
+              ImageGUIController.convertToBufferedImage(verticalImage);
           imageManipulationFrame.updateProcessingImage(verticalBufferedImage);
           MyImage verticalImageHistogram = (MyImage) imageService.getHistogram(verticalImage);
-          BufferedImage verticalBufferedHistogram = ImageGUIController.convertToBufferedImage(verticalImageHistogram);
+          BufferedImage verticalBufferedHistogram =
+              ImageGUIController.convertToBufferedImage(verticalImageHistogram);
           imageManipulationFrame.updateDiagram(verticalBufferedHistogram);
           break;
         case "Horizontal Flip":
           java.awt.Image nowImage = imageManipulationFrame.getCurrentDisplayedImage();
           MyImage nowMyImage = ImageGUIController.convertToMyImage(nowImage);
           MyImage horizontalImage = (MyImage) imageService.flip(nowMyImage, Axis.Y);
-          BufferedImage horizontalBufferedImage = ImageGUIController.convertToBufferedImage(horizontalImage);
+          BufferedImage horizontalBufferedImage =
+              ImageGUIController.convertToBufferedImage(horizontalImage);
           imageManipulationFrame.updateProcessingImage(horizontalBufferedImage);
           MyImage horizontalImageHistogram = (MyImage) imageService.getHistogram(horizontalImage);
-          BufferedImage horizontalBufferedHistogram = ImageGUIController.convertToBufferedImage(horizontalImageHistogram);
+          BufferedImage horizontalBufferedHistogram =
+              ImageGUIController.convertToBufferedImage(horizontalImageHistogram);
           imageManipulationFrame.updateDiagram(horizontalBufferedHistogram);
           break;
         default:

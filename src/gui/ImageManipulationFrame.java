@@ -168,8 +168,7 @@ public class ImageManipulationFrame extends JFrame implements ActionListener, Mo
 
     //the image that user is currently working on
     JScrollPane scrollPane = new JScrollPane();
-    ImageIcon imageIconProcessing = new ImageIcon("resources/icons/sofa-purple-living-room-with"
-                                                  + "-copy-space.jpg");
+    ImageIcon imageIconProcessing = new ImageIcon("res/city.png");
     imageViewProcessing = new JLabel(imageIconProcessing);
     imageViewProcessing.addMouseListener(this);
     scrollPane.setViewportView(imageViewProcessing);

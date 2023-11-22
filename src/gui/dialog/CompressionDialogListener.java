@@ -3,7 +3,7 @@ package gui.dialog;
 /**
  * This interface sets listener to the dialog that need delivery the percentage value.
  */
-public interface PercentageDialogListener {
+public interface CompressionDialogListener {
 
   /**
    *

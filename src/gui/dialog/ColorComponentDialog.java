@@ -10,7 +10,15 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 
 import model.Channel;
 
@@ -18,15 +26,22 @@ import model.Channel;
  * This class represents the dialog windows that pops up when user try to get certain color
  * component of the image.
  */
-public class ColorComponentDialog extends JDialog implements ActionListener, ChannelDialogListener {
+public class ColorComponentDialog extends JDialog implements ActionListener {
   private static String redString = "Red";
   private static String greenString = "Green";
   private static String blueString = "Blue";
+
+  private ChannelDialogListener channelDialogListener;
 
   private ButtonGroup radioButtonGroup;
 
   private JLabel picture;
   private static Map<String, String> iconPath = new HashMap<>();
+
+
+  public void setChannelDialogListener(ChannelDialogListener channelDialogListener) {
+    this.channelDialogListener = channelDialogListener;
+  }
 
   /**
    * Constructs a new frame that is initially invisible. This constructor sets the component's
@@ -66,7 +81,16 @@ public class ColorComponentDialog extends JDialog implements ActionListener, Cha
     //confirm button
     JButton button = new JButton("Confirm");
     button.setActionCommand("Confirm");
-    button.addActionListener(e -> dispose());
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (channelDialogListener != null) {
+          channelDialogListener.onColorComponentConfirmed(getChannel());
+        }
+        dispose();
+      }
+    });
+
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);
@@ -91,7 +115,7 @@ public class ColorComponentDialog extends JDialog implements ActionListener, Cha
 
   }
 
-  public Channel getChannel() {
+  private Channel getChannel() {
     switch (radioButtonGroup.getSelection().getActionCommand()) {
       case "Red":
         return Channel.RED;
@@ -104,8 +128,4 @@ public class ColorComponentDialog extends JDialog implements ActionListener, Cha
     }
   }
 
-  @Override
-  public void onColorComponentConfirmed(Channel channel) {
-    // do nothing.
-  }
 }

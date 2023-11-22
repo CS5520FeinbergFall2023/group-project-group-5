@@ -15,14 +15,6 @@ public interface ImageUpdateInterface {
    * @param image the new image that is currently being processed.
    */
   void updateProcessingImage(BufferedImage image);
-
-  /**
-   * Update the image that is currently being processed.
-   *
-   * @param myImage the new image that is currently being processed.
-   */
-  void updateImageViewProcessing(MyImage myImage);
-
   /**
    * Update the current image diagram.
    *
