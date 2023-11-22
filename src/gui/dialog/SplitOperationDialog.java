@@ -74,7 +74,7 @@ public class SplitOperationDialog extends JFrame implements ChangeListener, Imag
         dispose();
       }
     });
-    
+
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);

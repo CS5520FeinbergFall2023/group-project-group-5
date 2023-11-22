@@ -38,7 +38,6 @@ public class ColorComponentDialog extends JDialog implements ActionListener {
   private JLabel picture;
   private static Map<String, String> iconPath = new HashMap<>();
 
-
   public void setChannelDialogListener(ChannelDialogListener channelDialogListener) {
     this.channelDialogListener = channelDialogListener;
   }
@@ -86,11 +85,9 @@ public class ColorComponentDialog extends JDialog implements ActionListener {
       public void actionPerformed(ActionEvent e) {
         if (channelDialogListener != null) {
           channelDialogListener.onColorComponentConfirmed(getChannel());
-        }
         dispose();
       }
-    });
-
+    }});
     JPanel bottomPanel = new JPanel();
     bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
     bottomPanel.add(button);

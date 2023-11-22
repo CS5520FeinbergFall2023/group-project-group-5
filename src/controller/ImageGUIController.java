@@ -9,14 +9,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import gui.ImageManipulationFrame;
+import gui.dialog.ChannelDialogListener;
 import gui.dialog.ColorComponentDialog;
 import gui.dialog.CompressDialog;
 import gui.dialog.CompressionDialogListener;
 import gui.dialog.ImageUpdateInterface;
 import gui.dialog.LevelAdjustmentDialog;
+import gui.dialog.LevelAdjustmentDialogListener;
 import gui.dialog.SplitOperationDialog;
 import gui.dialog.SplitViewDialogListener;
 import model.Axis;
+import model.Channel;
 import model.image.MyImage;
 import model.pixel.RGBPixel;
 import service.ImageService;
@@ -209,10 +212,37 @@ public class ImageGUIController implements ActionListener {
           break;
         case "Color Component":
           ColorComponentDialog colorComponentDialog = new ColorComponentDialog();
+          colorComponentDialog.setChannelDialogListener(new ChannelDialogListener() {
+            @Override
+            public void onColorComponentConfirmed(Channel channel) {
+              java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+              MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
+              MyImage componentImage = (MyImage) imageService.splitComponent(currentMyImage, channel);
+              BufferedImage componentBufferedImage = ImageGUIController.convertToBufferedImage(componentImage);
+              imageManipulationFrame.updateProcessingImage(componentBufferedImage);
+              MyImage componentImageHistogram = (MyImage) imageService.getHistogram(componentImage);
+              BufferedImage componentBufferedHistogram = ImageGUIController.convertToBufferedImage(componentImageHistogram);
+              imageManipulationFrame.updateDiagram(componentBufferedHistogram);
+            }
+          });
           colorComponentDialog.setVisible(true);
           break;
         case "Level Adjustment":
           LevelAdjustmentDialog levelAdjustmentDialog = new LevelAdjustmentDialog();
+          levelAdjustmentDialog.setLevelAdjustmentListener(new LevelAdjustmentDialogListener() {
+            @Override
+            public void onLevelAdjustmentConfirmed(float[] ControlPointValues) {
+              java.awt.Image currentImage = imageManipulationFrame.getCurrentDisplayedImage();
+              MyImage currentMyImage = ImageGUIController.convertToMyImage(currentImage);
+              //todo: directly set percentage = 1 and splitAxis = X?
+              MyImage levelAdjustImage = (MyImage) imageService.levelAdjustment(currentMyImage, ControlPointValues[0], ControlPointValues[1], ControlPointValues[2], 1, Axis.X);
+              BufferedImage levelAdjustBufferedImage = ImageGUIController.convertToBufferedImage(levelAdjustImage);
+              imageManipulationFrame.updateProcessingImage(levelAdjustBufferedImage);
+              MyImage levelAdjustImageHistogram = (MyImage) imageService.getHistogram(currentMyImage);
+              BufferedImage levelAdjustBufferedHistogram = ImageGUIController.convertToBufferedImage(levelAdjustImageHistogram);
+              imageManipulationFrame.updateDiagram(levelAdjustBufferedHistogram);
+            }
+          });
           levelAdjustmentDialog.setVisible(true);
           break;
         case "Sepia":

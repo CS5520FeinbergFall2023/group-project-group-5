@@ -43,6 +43,11 @@ public class LevelAdjustmentDialog extends JDialog implements ChangeListener, Im
 
   private CurvePanel curvePanel;
   private JLabel imageViewProcessing;
+  private LevelAdjustmentDialogListener levelAdjustmentListener;
+
+  public void setLevelAdjustmentListener(LevelAdjustmentDialogListener levelAdjustmentListener) {
+    this.levelAdjustmentListener = levelAdjustmentListener;
+  }
 
   private LevelAdjustmentDialogListener levelAdjustmentDialogListener;
   private SplitViewDialogListener splitViewDialogListener;
