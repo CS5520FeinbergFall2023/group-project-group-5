@@ -1,3 +1,0 @@
-load test\img\car.jpg car
-blur car car-blurred
-brighten 2 car car-brighten

@@ -1,3 +1,0 @@
-load res\cupcake.png cupcake
-blur cupcake cupcake_blurOnce
-sharpen cupcake cupcake_sharpenOnce

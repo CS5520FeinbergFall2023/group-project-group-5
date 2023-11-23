@@ -1,3 +1,0 @@
-load res/car.png car
-# blur the car
-blor car car-blurred

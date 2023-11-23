@@ -1,1 +1,0 @@
-load test\img\car.jpg car

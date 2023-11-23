@@ -1,8 +1,0 @@
-load res/city_small.png city_small
-# get the city_small intensity
-intensity-component city_small city_small_intensity
-# get the city_small value
-value-component city_small city_small_value
-# get the city_small luma
-luma-component city_small city_small_luma
-exit

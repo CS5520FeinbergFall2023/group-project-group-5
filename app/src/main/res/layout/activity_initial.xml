@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".InitialActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/picture_frame_by_velvet_armchair_blurred" />
+
+    <TextView
+        android:id="@+id/textViewAppName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="DecorSense"
+        android:textSize="48sp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonScan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonScan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scan"
+        android:textSize="24sp"
+        app:icon="@drawable/outline_photo_camera_24"
+        app:layout_constraintBottom_toTopOf="@+id/buttonBrowse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@+id/textViewAppName" />
+
+    <Button
+        android:id="@+id/buttonBrowse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Browse"
+        android:textSize="24sp"
+        app:icon="@drawable/baseline_search_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonScan"
+        app:layout_constraintBottom_toTopOf="@+id/buttonUser"
+
+        />
+
+    <Button
+        android:id="@+id/buttonUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User"
+        android:textSize="24sp"
+        app:icon="@drawable/baseline_person_outline_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonBrowse"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewAboutUs"
+        />
+
+    <TextView
+        android:id="@+id/textViewAboutUs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About Us"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonUser"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

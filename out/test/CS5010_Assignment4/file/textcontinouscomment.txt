@@ -1,4 +1,0 @@
-# I want to load a image
-# this image is called car
-# the car's file path is shown as below:
-load res/car.png car
