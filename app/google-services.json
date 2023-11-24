@@ -10,7 +10,26 @@
       "client_info": {
         "mobilesdk_app_id": "1:422375954003:android:fb76052e3d28c8e06258a6",
         "android_client_info": {
-          "package_name": "edu.northeastern.numad23fa23_group5"
+          "package_name": "com.northeastern.edu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArmtMxJNLBl56jykrYnwjZAmPFgGtmQko"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422375954003:android:f39d83e94da95aa96258a6",
+        "android_client_info": {
+          "package_name": "edu.northeastern.afinal"
         }
       },
       "oauth_client": [],

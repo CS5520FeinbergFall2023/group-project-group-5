@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "NUMAD23Fa23_Group5"
+rootProject.name = "Final"
 include(":app")
  
