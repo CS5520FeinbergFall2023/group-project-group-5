@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -27,6 +28,8 @@ public class BrowseFragment extends Fragment {
 
         binding = FragmentBrowseBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        // hide the label bar on the top
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
 //        final TextView textView = binding.textHome;
 //        browseViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
