@@ -6,17 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".ui.browse.BrowseFragment">
 
-    <TextView
-        android:id="@+id/text_home"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            >
+
+<!--            <ImageView-->
+<!--                android:id="@+id/buttonHamburger"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@drawable/logo_decorsense_24"-->
+<!--                android:padding="4dp"-->
+<!--                android:layout_gravity="start"-->
+<!--                android:contentDescription="Hamburger Icon" />-->
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:iconifiedByDefault="false"
+                android:queryHint="Search" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

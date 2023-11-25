@@ -16,6 +16,10 @@ public class BrowseFragment extends Fragment {
 
     private FragmentBrowseBinding binding;
 
+    public BrowseFragment() {
+    }
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         BrowseViewModel browseViewModel =
@@ -24,8 +28,8 @@ public class BrowseFragment extends Fragment {
         binding = FragmentBrowseBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textHome;
-        browseViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+//        final TextView textView = binding.textHome;
+//        browseViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
@@ -33,5 +37,9 @@ public class BrowseFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public static BrowseFragment newInstance() {
+        return new BrowseFragment();
     }
 }

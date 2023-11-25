@@ -1,5 +1,6 @@
 package edu.northeastern.afinal;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -38,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        // Check if there is an intent with a specific flag or extra indicating BrowseFragment should be shown
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("SHOW_BROWSE_FRAGMENT")) {
+            navController.navigate(R.id.navigation_browse);
+        }
     }
 
 }
