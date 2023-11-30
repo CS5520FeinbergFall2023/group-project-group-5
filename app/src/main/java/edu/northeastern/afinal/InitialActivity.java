@@ -1,5 +1,7 @@
 package edu.northeastern.afinal;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.Navigation;
 
@@ -15,6 +17,14 @@ import edu.northeastern.afinal.ui.login.LoginActivity;
 
 public class InitialActivity extends AppCompatActivity {
 
+    private final ActivityResultLauncher<Intent> startMainActivityForResult = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    // Handle the result if needed
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +43,12 @@ public class InitialActivity extends AppCompatActivity {
 //            startActivity(intent);
 //        });
 
+
+
         browseButton.setOnClickListener(v -> {
             Intent intent = new Intent(InitialActivity.this, MainActivity.class);
             intent.putExtra("SHOW_BROWSE_FRAGMENT", true);
-            startActivity(intent);
+            startMainActivityForResult.launch(intent);
         });
     }
 }

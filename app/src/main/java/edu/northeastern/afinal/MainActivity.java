@@ -25,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String userEmail = getIntent().getStringExtra("email");
-        // show login success toast
-        Toast.makeText(MainActivity.this, "Welcome " + userEmail,
-                Toast.LENGTH_SHORT).show();
+//        String userEmail = getIntent().getStringExtra("email");
+//        // show login success toast
+//        Toast.makeText(MainActivity.this, "Welcome " + userEmail,
+//                Toast.LENGTH_SHORT).show();
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
@@ -43,7 +43,14 @@ public class MainActivity extends AppCompatActivity {
         // Check if there is an intent with a specific flag or extra indicating BrowseFragment should be shown
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra("SHOW_BROWSE_FRAGMENT")) {
-            navController.navigate(R.id.navigation_browse);
+//            navController.navigate(R.id.navigation_browse);
+            // Clear the intent to avoid navigating again on configuration changes (e.g., rotation)
+            setIntent(new Intent());
+
+            // Navigate to BrowseFragment only if it's not already on the top of the stack
+            if (navController.getCurrentDestination().getId() != R.id.navigation_browse) {
+                navController.navigate(R.id.navigation_browse);
+            }
         }
     }
 
