@@ -124,12 +124,6 @@ public class BrowseFragment extends Fragment {
             @Override
             public void onItemClicked(String productID) {
                 //opens up the corresponding product detail page
-                ProductDetailFragment productDetailFragment = ProductDetailFragment.newInstance(productID);
-//                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-//                transaction.replace(R.id.nav_host_fragment_activity_main, productDetailFragment);
-//                transaction.addToBackStack(null);
-//                transaction.commit();
-
                 NavController navController = Navigation.findNavController(requireView());
                 navController.navigate(R.id.action_browseFragment_to_productDetailFragment);
             }
