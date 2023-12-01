@@ -62,44 +62,45 @@ public class BrowseFragment extends Fragment {
         root = binding.getRoot();
         // hide the label bar on the top
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-//        init(savedInstanceState);
-//        final TextView textView = binding.textHome;
-//        browseViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
-        //when first enter the page, show recommendation products
-        String[] recommendationProductIDs=new String[]{"0","1","2","3","4","5"};
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference furnitureRef = database.getReference().child("decor-sense").child("furniture");
-        for (String id : recommendationProductIDs) {
-            final String finalId = id; // Declare a final variable
-            DatabaseReference productRef = furnitureRef.child(finalId);
-            productRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        // Retrieve details
-                        Double price = dataSnapshot.child("price").getValue(Double.class);
-                        String name = dataSnapshot.child("name").getValue(String.class);
-                        String brand = dataSnapshot.child("brand").getValue(String.class);
-                        String thumbnailURL = dataSnapshot.child("thumbnail").getValue(String.class);
-                        // Print or use the details as needed
-                        System.out.println("ID: " + finalId + ", Price: " + price + ", Name: " + name + ", Brand: " + brand+", Thumbnail URL: "+thumbnailURL);
-
-                        itemList.add(new ProductItemCard(finalId,name,price,brand,thumbnailURL));
-                        rviewAdapter.notifyItemInserted(itemList.size()-1);
-                    } else {
-                        System.out.println("Product with ID " + finalId + " does not exist.");
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    System.out.println("Error reading product details: " + databaseError.getMessage());
-                }
-            });
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
+            init(savedInstanceState);
         }
-        createRecyclerView();
-        //if user initialize a search, show search result
+        else {
+            //when first enter the page, show recommendation products
+            String[] recommendationProductIDs = new String[]{"0", "1", "2", "3", "4", "5"};
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference furnitureRef = database.getReference().child("decor-sense").child("furniture");
+            for (String id : recommendationProductIDs) {
+                final String finalId = id; // Declare a final variable
+                DatabaseReference productRef = furnitureRef.child(finalId);
+                productRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // Retrieve details
+                            Double price = dataSnapshot.child("price").getValue(Double.class);
+                            String name = dataSnapshot.child("name").getValue(String.class);
+                            String brand = dataSnapshot.child("brand").getValue(String.class);
+                            String thumbnailURL = dataSnapshot.child("thumbnail").getValue(String.class);
+                            // Print or use the details as needed
+                            System.out.println("ID: " + finalId + ", Price: " + price + ", Name: " + name + ", Brand: " + brand + ", Thumbnail URL: " + thumbnailURL);
+
+                            itemList.add(new ProductItemCard(finalId, name, price, brand, thumbnailURL));
+                            rviewAdapter.notifyItemInserted(itemList.size() - 1);
+                        } else {
+                            System.out.println("Product with ID " + finalId + " does not exist.");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        System.out.println("Error reading product details: " + databaseError.getMessage());
+                    }
+                });
+            }
+            createRecyclerView();
+            //if user initialize a search, show search result
+        }
         return root;
     }
 
@@ -109,12 +110,12 @@ public class BrowseFragment extends Fragment {
         outState.putParcelableArrayList(KEY_ITEM_LIST, itemList);
     }
 
-//    private void init(Bundle savedInstanceState) {
-//        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
-//            itemList = savedInstanceState.getParcelableArrayList(KEY_ITEM_LIST);
-//        }
-//        createRecyclerView();
-//    }
+    private void init(Bundle savedInstanceState) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
+            itemList = savedInstanceState.getParcelableArrayList(KEY_ITEM_LIST);
+        }
+        createRecyclerView();
+    }
 
     private void createRecyclerView() {
         int orientation = getResources().getConfiguration().orientation;
