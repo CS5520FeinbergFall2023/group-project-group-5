@@ -22,4 +22,14 @@
         android:name="edu.northeastern.afinal.ui.user.UserFragment"
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" />
+
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="edu.northeastern.afinal.ui.product.ProductDetailFragment"
+        android:label="ProductDetailFragment"
+        tools:layout="@layout/fragment_product_detail">
+        <argument
+            android:name="productId"
+            app:argType="string" />
+    </fragment>
 </navigation>
