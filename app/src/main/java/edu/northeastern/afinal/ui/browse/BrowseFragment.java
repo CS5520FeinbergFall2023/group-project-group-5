@@ -62,7 +62,7 @@ public class BrowseFragment extends Fragment {
         root = binding.getRoot();
         // hide the label bar on the top
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        init(savedInstanceState);
+//        init(savedInstanceState);
 //        final TextView textView = binding.textHome;
 //        browseViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
@@ -98,6 +98,7 @@ public class BrowseFragment extends Fragment {
                 }
             });
         }
+        createRecyclerView();
         //if user initialize a search, show search result
         return root;
     }
@@ -108,12 +109,12 @@ public class BrowseFragment extends Fragment {
         outState.putParcelableArrayList(KEY_ITEM_LIST, itemList);
     }
 
-    private void init(Bundle savedInstanceState) {
-        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
-            itemList = savedInstanceState.getParcelableArrayList(KEY_ITEM_LIST);
-        }
-        createRecyclerView();
-    }
+//    private void init(Bundle savedInstanceState) {
+//        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
+//            itemList = savedInstanceState.getParcelableArrayList(KEY_ITEM_LIST);
+//        }
+//        createRecyclerView();
+//    }
 
     private void createRecyclerView() {
         int orientation = getResources().getConfiguration().orientation;
