@@ -23,6 +23,10 @@
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" />
 
+    <action
+        android:id="@+id/action_browseFragment_to_productDetailFragment"
+        app:destination="@id/productDetailFragment" />
+
     <fragment
         android:id="@+id/productDetailFragment"
         android:name="edu.northeastern.afinal.ui.product.ProductDetailFragment"
