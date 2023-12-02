@@ -36,4 +36,19 @@
             android:name="productId"
             app:argType="string" />
     </fragment>
+
+    <action
+        android:id="@+id/action_browseFragment_to_searchResultFragment"
+        app:destination="@id/searchResultFragment" />
+
+    <fragment
+        android:id="@+id/searchResultFragment"
+        android:name="edu.northeastern.afinal.ui.browse.SearchResultFragment"
+        android:label="SearchResultFragment"
+        tools:layout="@layout/fragment_search_result">
+        <argument
+            android:name="keyword"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

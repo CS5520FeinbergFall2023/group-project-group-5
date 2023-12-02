@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.appcompat.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -101,6 +102,25 @@ public class BrowseFragment extends Fragment {
             createRecyclerView();
             //if user initialize a search, show search result
         }
+
+        //search bar
+        SearchView searchView = root.findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Handle search query submission (e.g., launch search results fragment)
+                NavController navController = Navigation.findNavController(requireView());
+                SearchResultFragment searchResultFragment=SearchResultFragment.newInstance(query);
+                navController.navigate(R.id.action_browseFragment_to_searchResultFragment,searchResultFragment.getArguments());
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Handle search query changes
+                return true;
+            }
+        });
         return root;
     }
 
@@ -127,7 +147,8 @@ public class BrowseFragment extends Fragment {
             public void onItemClicked(String productID) {
                 //opens up the corresponding product detail page
                 NavController navController = Navigation.findNavController(requireView());
-                navController.navigate(R.id.action_browseFragment_to_productDetailFragment);
+                ProductDetailFragment productDetailFragment = ProductDetailFragment.newInstance(productID);
+                navController.navigate(R.id.action_browseFragment_to_searchResultFragment,productDetailFragment.getArguments());
             }
         };
         rviewAdapter = new ProductAdapter(requireContext(),itemList,productItemClickListener);

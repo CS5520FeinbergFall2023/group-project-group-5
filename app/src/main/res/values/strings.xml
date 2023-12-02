@@ -15,4 +15,12 @@
     <string name="login_failed">"Login failed"</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="sortings_array">
+        <item>Top Sellers</item>
+        <item>Price Low to High</item>
+        <item>Price High to Low</item>
+        <item>Top Rated</item>
+    </string-array>
+
 </resources>
