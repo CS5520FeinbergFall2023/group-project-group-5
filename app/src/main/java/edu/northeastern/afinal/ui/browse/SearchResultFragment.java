@@ -39,6 +39,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import edu.northeastern.afinal.R;
@@ -53,7 +54,7 @@ import edu.northeastern.afinal.ui.product.ProductItemClickListener;
  * Use the {@link SearchResultFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchResultFragment extends Fragment {
+public class SearchResultFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -171,17 +172,7 @@ public class SearchResultFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner.
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sortType = parent.getItemAtPosition(position).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        spinner.setOnItemSelectedListener(this);
 
         //fetch search result
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
@@ -212,6 +203,8 @@ public class SearchResultFragment extends Fragment {
                     // Handle errors
                 }
             });
+            //by default sort with top sellers
+            itemList.sort(Comparator.comparing(ProductItemCard::getReviews).reversed());
             createRecyclerView();
         }
 
@@ -237,6 +230,36 @@ public class SearchResultFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        sortType = parent.getItemAtPosition(position).toString();
+        switch (sortType){
+            case "Top Sellers":
+                itemList.sort(Comparator.comparing(ProductItemCard::getReviews).reversed());
+                createRecyclerView();
+                break;
+            case "Price Low to High":
+                itemList.sort(Comparator.comparing(ProductItemCard::getPrice));
+                createRecyclerView();
+                break;
+            case "Price High to Low":
+                itemList.sort(Comparator.comparing(ProductItemCard::getPrice).reversed());
+                createRecyclerView();
+                break;
+            case "Top Rated":
+                itemList.sort(Comparator.comparing(ProductItemCard::getRatings).reversed());
+                createRecyclerView();
+                break;
+            default:
+                //todo:error
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 
     private void showColorOptionsPopupWindow() {
         //
