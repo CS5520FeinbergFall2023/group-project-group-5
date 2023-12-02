@@ -45,14 +45,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductReviewHolder> {
         holder.productName.setText(currentItem.getProductName());
         holder.price.setText("$" + currentItem.getPrice());
         //load image from firebase
-        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(currentItem.getImgURL());
+        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(currentItem.getThumbnail());
         // Use Glide to load the image
         Glide.with(context).load(storageRef).into(holder.image);
 
         holder.itemView.setOnClickListener(v -> {
             // open ProductDetail fragment with corresponding product ID
             if (productItemClickListener != null) {
-                productItemClickListener.onItemClicked(currentItem.getId());
+                productItemClickListener.onItemClicked(currentItem.getFirebaseKey());
             }
         });
     }

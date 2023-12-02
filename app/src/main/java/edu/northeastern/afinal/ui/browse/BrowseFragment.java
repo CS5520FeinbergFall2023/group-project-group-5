@@ -79,14 +79,13 @@ public class BrowseFragment extends Fragment {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             // Retrieve details
-                            Double price = dataSnapshot.child("price").getValue(Double.class);
-                            String name = dataSnapshot.child("name").getValue(String.class);
-                            String brand = dataSnapshot.child("brand").getValue(String.class);
-                            String thumbnailURL = dataSnapshot.child("thumbnail").getValue(String.class);
-                            // Print or use the details as needed
-                            System.out.println("ID: " + finalId + ", Price: " + price + ", Name: " + name + ", Brand: " + brand + ", Thumbnail URL: " + thumbnailURL);
-
-                            itemList.add(new ProductItemCard(finalId, name, price, brand, thumbnailURL));
+//                            Double price = dataSnapshot.child("price").getValue(Double.class);
+//                            String name = dataSnapshot.child("name").getValue(String.class);
+//                            String brand = dataSnapshot.child("brand").getValue(String.class);
+//                            String thumbnailURL = dataSnapshot.child("thumbnail").getValue(String.class);
+//                            // Print or use the details as needed
+//                            System.out.println("ID: " + finalId + ", Price: " + price + ", Name: " + name + ", Brand: " + brand + ", Thumbnail URL: " + thumbnailURL);
+                            itemList.add(dataSnapshot.getValue(ProductItemCard.class));
                             rviewAdapter.notifyItemInserted(itemList.size() - 1);
                         } else {
                             System.out.println("Product with ID " + finalId + " does not exist.");
