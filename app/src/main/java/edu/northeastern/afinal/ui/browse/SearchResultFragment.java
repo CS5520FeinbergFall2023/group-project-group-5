@@ -1,11 +1,16 @@
 package edu.northeastern.afinal.ui.browse;
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,13 +26,27 @@ import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.northeastern.afinal.R;
 import edu.northeastern.afinal.databinding.FragmentBrowseBinding;
+import edu.northeastern.afinal.ui.product.ProductAdapter;
+import edu.northeastern.afinal.ui.product.ProductDetailFragment;
+import edu.northeastern.afinal.ui.product.ProductItemCard;
+import edu.northeastern.afinal.ui.product.ProductItemClickListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +58,12 @@ public class SearchResultFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_KEYWORD = "keyword";
+    private static final String KEY_ITEM_LIST = "KEY_ITEM_LIST";
+    private ArrayList<ProductItemCard> itemList=new ArrayList<>(0);
+    private RecyclerView recyclerView;
+    private ProductAdapter rviewAdapter;
+
+    private RecyclerView.LayoutManager rLayoutManger;
     private FragmentBrowseBinding binding;
     private View root;
 
@@ -86,15 +111,15 @@ public class SearchResultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_search_result, container, false);
+        root = inflater.inflate(R.layout.fragment_search_result, container, false);
         if (getArguments() != null) {
             keyword = getArguments().getString(ARG_KEYWORD);
         }
-        colorFilterButton=view.findViewById(R.id.colorFilterButton);
-        widthFilterButton=view.findViewById(R.id.widthFilterButton);
-        heightFilterButton=view.findViewById(R.id.heightFilterButton);
-        depthFilterButton=view.findViewById(R.id.depthFilterButton);
-        spinner=view.findViewById(R.id.spinnerSorting);
+        colorFilterButton=root.findViewById(R.id.colorFilterButton);
+        widthFilterButton=root.findViewById(R.id.widthFilterButton);
+        heightFilterButton=root.findViewById(R.id.heightFilterButton);
+        depthFilterButton=root.findViewById(R.id.depthFilterButton);
+        spinner=root.findViewById(R.id.spinnerSorting);
 
         // Set click listener for the color button
         colorFilterButton.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +183,58 @@ public class SearchResultFragment extends Fragment {
             }
         });
 
-        return view;
+        //fetch search result
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
+            init(savedInstanceState);
+        }
+        else {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference furnitureRef = database.getReference().child("decor-sense").child("furniture");
+            itemList.clear();
+            furnitureRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot entrySnapshot : dataSnapshot.getChildren()) {
+                        String productName = entrySnapshot.child("name").getValue(String.class);
+                        String productDescription = entrySnapshot.child("description").getValue(String.class);
+                        if (productName.toLowerCase().contains(keyword.toLowerCase()) ||
+                                productDescription.toLowerCase().contains(keyword.toLowerCase())) {
+                            ProductItemCard productItemCard=entrySnapshot.getValue(ProductItemCard.class);
+                            productItemCard.setFirebaseKey(entrySnapshot.getKey());
+                            itemList.add(productItemCard);
+                            rviewAdapter.notifyItemInserted(itemList.size() - 1);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Handle errors
+                }
+            });
+            createRecyclerView();
+        }
+
+        //search bar
+        SearchView searchView = root.findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Handle search query submission (e.g., launch search results fragment)
+                NavController navController = Navigation.findNavController(requireView());
+                SearchResultFragment searchResultFragment=SearchResultFragment.newInstance(query);
+                navController.navigate(R.id.action_searchResultFragment_self,searchResultFragment.getArguments());
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Handle search query changes
+                return true;
+            }
+        });
+
+        return root;
     }
 
 
@@ -192,6 +268,38 @@ public class SearchResultFragment extends Fragment {
         popupWindow.showAsDropDown(anchorView);
     }
 
+    //for the recycler view
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(KEY_ITEM_LIST, itemList);
+    }
+
+    private void init(Bundle savedInstanceState) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
+            itemList = savedInstanceState.getParcelableArrayList(KEY_ITEM_LIST);
+        }
+        createRecyclerView();
+    }
+
+    private void createRecyclerView() {
+        int orientation = getResources().getConfiguration().orientation;
+        rLayoutManger = (orientation == Configuration.ORIENTATION_PORTRAIT)?new GridLayoutManager(requireContext(), 2):new GridLayoutManager(requireContext(), 4);
+        recyclerView = root.findViewById(R.id.rvSearchResult);
+        recyclerView.setHasFixedSize(true);
+        ProductItemClickListener productItemClickListener = new ProductItemClickListener() {
+            @Override
+            public void onItemClicked(String productID) {
+                //opens up the corresponding product detail page
+                NavController navController = Navigation.findNavController(requireView());
+                ProductDetailFragment productDetailFragment = ProductDetailFragment.newInstance(productID);
+                navController.navigate(R.id.action_browseFragment_to_productDetailFragment,productDetailFragment.getArguments());
+            }
+        };
+        rviewAdapter = new ProductAdapter(requireContext(),itemList,productItemClickListener);
+        recyclerView.setAdapter(rviewAdapter);
+        recyclerView.setLayoutManager(rLayoutManger);
+    }
 
 
 }

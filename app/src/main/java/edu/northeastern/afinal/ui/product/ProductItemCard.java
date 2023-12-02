@@ -7,12 +7,14 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.database.PropertyName;
 
+import java.util.Comparator;
+
 public class ProductItemCard implements Parcelable {
 
     // Use the @PropertyName annotation to map the "id" field to the Firebase key
     @PropertyName("id")
     private String firebaseKey;
-    private String productName;
+    private String name;
     private double price;
     private String brand;
 
@@ -34,9 +36,9 @@ public class ProductItemCard implements Parcelable {
     public ProductItemCard() {
     }
 
-    public ProductItemCard(String firebaseKey, String productName, double price, String brand, String color, String category, double depth, String description, double height, String link, double ratings, String thumbnail, String vendor, double width, double reviews) {
+    public ProductItemCard(String firebaseKey, String name, double price, String brand, String color, String category, double depth, String description, double height, String link, double ratings, String thumbnail, String vendor, double width, double reviews) {
         this.firebaseKey = firebaseKey;
-        this.productName = productName;
+        this.name = name;
         this.price = price;
         this.brand = brand;
         this.color = color;
@@ -54,7 +56,7 @@ public class ProductItemCard implements Parcelable {
 
     protected ProductItemCard(Parcel in) {
         firebaseKey = in.readString();
-        productName = in.readString();
+        name = in.readString();
         price = in.readDouble();
         brand = in.readString();
         color = in.readString();
@@ -86,8 +88,8 @@ public class ProductItemCard implements Parcelable {
         return firebaseKey;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getName() {
+        return name;
     }
 
     public double getPrice() {
@@ -102,12 +104,20 @@ public class ProductItemCard implements Parcelable {
         return thumbnail;
     }
 
+    public double getRatings() {
+        return ratings;
+    }
+
+    public double getReviews() {
+        return reviews;
+    }
+
     public void setFirebaseKey(String firebaseKey) {
         this.firebaseKey = firebaseKey;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setPrice(double price) {
@@ -162,6 +172,7 @@ public class ProductItemCard implements Parcelable {
         this.reviews = reviews;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -170,7 +181,7 @@ public class ProductItemCard implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(firebaseKey);
-        dest.writeString(productName);
+        dest.writeString(name);
         dest.writeDouble(price);
         dest.writeString(brand);
         dest.writeString(color);
@@ -186,3 +197,5 @@ public class ProductItemCard implements Parcelable {
         dest.writeDouble(reviews);
     }
 }
+
+

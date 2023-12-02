@@ -42,7 +42,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductReviewHolder> {
     public void onBindViewHolder(@NonNull ProductReviewHolder holder, int position) {
         ProductItemCard currentItem = itemList.get(position);
         holder.brandName.setText(currentItem.getBrand());
-        holder.productName.setText(currentItem.getProductName());
+        holder.productName.setText(currentItem.getName());
         holder.price.setText("$" + currentItem.getPrice());
         //load image from firebase
         StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(currentItem.getThumbnail());
@@ -56,6 +56,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductReviewHolder> {
             }
         });
     }
+
+
 
     @Override
     public int getItemCount() {
