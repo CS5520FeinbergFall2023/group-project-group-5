@@ -18,6 +18,7 @@ import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderF
 
 import edu.northeastern.afinal.ui.browse.BrowseFragment;
 import edu.northeastern.afinal.ui.login.LoginActivity;
+import edu.northeastern.afinal.ui.scan.ScanActivity;
 
 public class InitialActivity extends AppCompatActivity {
 
@@ -51,6 +52,12 @@ public class InitialActivity extends AppCompatActivity {
             Intent intent = new Intent(InitialActivity.this, MainActivity.class);
             intent.putExtra("SHOW_BROWSE_FRAGMENT", true);
             startMainActivityForResult.launch(intent);
+        });
+
+        Button scanButton = (Button) findViewById(R.id.buttonScan);
+        scanButton.setOnClickListener(v -> {
+            Intent intent = new Intent(InitialActivity.this, ScanActivity.class);
+            startActivity(intent);
         });
     }
 }

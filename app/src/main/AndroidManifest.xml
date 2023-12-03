@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -25,6 +29,10 @@
             android:name=".MainActivity"
             android:exported="false"
             android:label="@string/app_name" />
+        <activity
+            android:name=".ui.scan.ScanActivity"
+            android:exported="false"
+            />
         <activity android:name=".ui.browse.BrowseFragment"
             android:theme="@style/Theme.FinalNoActionBar"
             />
