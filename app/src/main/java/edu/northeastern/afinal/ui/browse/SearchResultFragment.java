@@ -59,7 +59,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_KEYWORD = "keyword";
+    public static final String ARG_KEYWORD = "keyword";
     private static final String KEY_ITEM_LIST = "KEY_ITEM_LIST";
     private static final String KEY_MIN_WIDTH = "KEY_MIN_WIDTH";
     private static final String KEY_MAX_WIDTH = "KEY_MAX_WIDTH";
@@ -93,15 +93,11 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     private FragmentBrowseBinding binding;
     private View root;
 
-    // TODO: Rename and change types of parameters
     private String keyword;
     private Button widthFilterButton;
     private Button heightFilterButton;
     private Button depthFilterButton;
     private Button colorFilterButton;
-    private ChipGroup colorChipGroup;
-    private ListPopupWindow colorPopupWindow;
-
     private Spinner spinner;
     private String sortType;
 
@@ -125,6 +121,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         SearchResultFragment fragment = new SearchResultFragment();
         Bundle args = new Bundle();
         args.putString(ARG_KEYWORD, keyword);
+        Log.d("SearchResultFragment",keyword);
         fragment.setArguments(args);
 
         return fragment;
@@ -145,6 +142,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         root = inflater.inflate(R.layout.fragment_search_result, container, false);
         if (getArguments() != null) {
             keyword = getArguments().getString(ARG_KEYWORD);
+            Log.d("onCreateView",keyword);
         }
         colorFilterButton = root.findViewById(R.id.colorFilterButton);
         widthFilterButton = root.findViewById(R.id.widthFilterButton);
@@ -223,7 +221,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                                     }
                                 }
                             }
-//                            rviewAdapter.notifyItemInserted(itemList.size() - 1);
+                            rviewAdapter.notifyItemInserted(itemList.size() - 1);
                         }
                     }
                 }
@@ -550,7 +548,6 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         int orientation = getResources().getConfiguration().orientation;
         rLayoutManger = (orientation == Configuration.ORIENTATION_PORTRAIT) ? new GridLayoutManager(requireContext(), 2) : new GridLayoutManager(requireContext(), 4);
         recyclerView = root.findViewById(R.id.rvSearchResult);
-        recyclerView.setHasFixedSize(true);
         ProductItemClickListener productItemClickListener = new ProductItemClickListener() {
             @Override
             public void onItemClicked(String productID) {
