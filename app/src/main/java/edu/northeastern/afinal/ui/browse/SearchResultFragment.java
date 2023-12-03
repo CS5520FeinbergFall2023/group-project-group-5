@@ -219,33 +219,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                                     if(!tagList.contains(tag.toLowerCase()))
                                     {
                                         tagList.add(tag.toLowerCase());
-                                        Chip chip = new Chip(getContext());
-                                        chip.setText(tag);
-                                        chip.setCheckable(true);
-                                        chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                                            @Override
-                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                                String chipText = chip.getText().toString();
-                                                if(isChecked)
-                                                {
-                                                    if(!checkedTagList.contains(chipText))
-                                                    {
-                                                        checkedTagList.add(chipText);
-                                                    }
-                                                }
-                                                else {
-                                                    if(checkedTagList.contains(chipText))
-                                                    {
-                                                        checkedTagList.remove(chipText);
-                                                    }
-                                                }
-                                                createRecyclerView(applyFilter(itemList));
-                                            }
-                                        });
-                                        //Begin with all tags unchecked and all products with the keyword shown,
-                                        // if user check a tag, only products with the tag will be shown
-//                                        chip.setChecked(false);
-                                        chipGroup.addView(chip);
+                                        addTagChip(tag.toLowerCase());
                                     }
                                 }
                             }
@@ -263,38 +237,6 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
             itemList.sort(Comparator.comparing(ProductItemCard::getReviews).reversed());
             createRecyclerView(applyFilter(itemList));
         }
-
-//        chipGroup.setOnCheckedStateChangeListener(
-//                new ChipGroup.OnCheckedStateChangeListener() {
-//
-//                    @Override
-//                    public void onCheckedChanged(@NonNull ChipGroup group, @NonNull List<Integer> checkedIds) {
-//                        for (int checkedId : checkedIds) {
-//                            Chip checkedChip = group.findViewById(checkedId);
-//                            if (checkedChip != null) {
-//                                String chipText = checkedChip.getText().toString();
-//                                Log.d("checkedTagList",checkedTagList.toString());
-//                                Log.d("checkedTagList", chipText);
-//                                Log.d("checkedTagList", String.valueOf(checkedChip.isChecked()));
-//                                if(checkedChip.isChecked())
-//                                {
-//                                    if(!checkedTagList.contains(chipText))
-//                                    {
-//                                        checkedTagList.add(chipText);
-//                                    }
-//                                }
-//                                else {
-//                                    if(checkedTagList.contains(chipText))
-//                                    {
-//                                        checkedTagList.remove(chipText);
-//                                    }
-//                                }
-//                                Log.d("checkedTagList",checkedTagList.toString());
-//                            }
-//                        }
-//                        createRecyclerView(applyFilter(itemList));
-//                    }
-//                });
 
         //search bar
         SearchView searchView = root.findViewById(R.id.searchView);
@@ -340,6 +282,36 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
 
         return root;
     }
+
+    private void addTagChip(String tag)
+    {
+        Chip chip = new Chip(getContext());
+        chip.setText(tag);
+        chip.setCheckable(true);
+        chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String chipText = chip.getText().toString();
+                if(isChecked)
+                {
+                    if(!checkedTagList.contains(chipText))
+                    {
+                        checkedTagList.add(chipText);
+                    }
+                }
+                else {
+                    if(checkedTagList.contains(chipText))
+                    {
+                        checkedTagList.remove(chipText);
+                    }
+                }
+                createRecyclerView(applyFilter(itemList));
+            }
+        });
+        //Begin with all tags unchecked and all products with the keyword shown,
+        // if user check a tag, only products with the tag will be shown
+        chipGroup.addView(chip);}
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -497,10 +469,23 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                         (savedInstanceState.getBooleanArray(KEY_COLOR_SELECTED_ITEMS));
             }
             if (savedInstanceState.containsKey(KEY_TAGS_LIST)) {
-                colorOptions = savedInstanceState.getStringArrayList(KEY_TAGS_LIST);
+                tagList = savedInstanceState.getStringArrayList(KEY_TAGS_LIST);
+                //add tag chips
+                for(String tag:tagList)
+                {
+                    addTagChip(tag);
+                }
             }
             if (savedInstanceState.containsKey(KEY_CHECKED_TAGS_LIST)) {
-                colorOptions = savedInstanceState.getStringArrayList(KEY_CHECKED_TAGS_LIST);
+                checkedTagList = savedInstanceState.getStringArrayList(KEY_CHECKED_TAGS_LIST);
+                //restore tag selections
+                for (int i = 0; i < chipGroup.getChildCount(); i++) {
+                    View child = chipGroup.getChildAt(i);
+                    if (child instanceof Chip) {
+                        Chip chip=((Chip) child);
+                        chip.setChecked(checkedTagList.contains(chip.getText()));
+                    }
+                }
             }
         }
     }
