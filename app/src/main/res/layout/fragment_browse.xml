@@ -47,20 +47,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/imageViewBanner"
+            <FrameLayout
+                android:id="@+id/banner"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_margin="10dp"
-                android:paddingStart="12dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="8dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/sofa_purple_living_room_with_copy_space_blur"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                >
+
+                <!-- ImageView作为底层图像 -->
+                <ImageView
+                    android:id="@+id/imageViewBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sofa_purple_living_room_with_copy_space_blur"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:text="FREE shipping on all orders"
+                    android:textColor="@color/alabaster"
+                    android:textSize="36sp"/>
+
+            </FrameLayout>
+
 
             <TextView
                 android:id="@+id/textViewRecommendation"
@@ -70,9 +85,10 @@
                 android:paddingTop="8dp"
                 android:paddingEnd="16dp"
                 android:text="We recommend"
-                android:textSize="24sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display4"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageViewBanner" />
+                app:layout_constraintTop_toBottomOf="@+id/banner" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRecommendation"

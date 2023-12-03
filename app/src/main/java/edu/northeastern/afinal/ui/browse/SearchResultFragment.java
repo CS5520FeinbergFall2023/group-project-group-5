@@ -186,15 +186,15 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         spinner.setOnItemSelectedListener(this);
 
         //init filter values
-        initFilter(savedInstanceState);
         //fetch search result
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
             init(savedInstanceState);
+            initFilter(savedInstanceState);
         } else {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference furnitureRef = database.getReference().child("decor-sense").child("furniture");
             itemList.clear();
-            furnitureRef.addValueEventListener(new ValueEventListener() {
+            furnitureRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot entrySnapshot : dataSnapshot.getChildren()) {
@@ -224,6 +224,9 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                             rviewAdapter.notifyItemInserted(itemList.size() - 1);
                         }
                     }
+                    Log.d("furnitureRef",itemList.toString());
+                    itemList.sort(Comparator.comparing(ProductItemCard::getReviews).reversed());
+                    createRecyclerView(applyFilter(itemList));
                 }
 
                 @Override
@@ -231,9 +234,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                     // Handle errors
                 }
             });
-            //by default sort with top sellers
-            itemList.sort(Comparator.comparing(ProductItemCard::getReviews).reversed());
-            createRecyclerView(applyFilter(itemList));
+
         }
 
         //search bar
@@ -308,7 +309,8 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         });
         //Begin with all tags unchecked and all products with the keyword shown,
         // if user check a tag, only products with the tag will be shown
-        chipGroup.addView(chip);}
+        chipGroup.addView(chip);
+    }
 
 
     @Override
