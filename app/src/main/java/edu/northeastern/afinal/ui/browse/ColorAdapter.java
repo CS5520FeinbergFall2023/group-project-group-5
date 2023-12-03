@@ -20,14 +20,15 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorViewHol
     private final List<String> colorOptions;
     private SparseBooleanArray selectedItems;
 
-    public ColorAdapter(Context context, List<String> colorOptions) {
+    public ColorAdapter(Context context, List<String> colorOptions,SparseBooleanArray selectedItems) {
         this.context = context;
         this.colorOptions = colorOptions;
-        this.selectedItems = new SparseBooleanArray();
+        this.selectedItems=selectedItems;
+//        this.selectedItems = new SparseBooleanArray();
         // initialize all items as checked
-        for (int i = 0; i < colorOptions.size(); i++) {
-            selectedItems.put(i, true);
-        }
+//        for (int i = 0; i < colorOptions.size(); i++) {
+//            selectedItems.put(i, true);
+//        }
     }
 
     @NonNull

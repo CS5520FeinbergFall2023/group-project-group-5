@@ -1,20 +1,10 @@
 package edu.northeastern.afinal.ui.browse;
 
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.InputFilter;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,21 +16,24 @@ import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 import edu.northeastern.afinal.R;
 import edu.northeastern.afinal.databinding.FragmentBrowseBinding;
@@ -68,6 +61,8 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
 
     private static final String KEY_MIN_DEPTH = "KEY_MIN_DEPTH";
     private static final String KEY_MAX_DEPTH = "KEY_MAX_DEPTH";
+    private static final String KEY_COLOR_OPTIONS = "KEY_COLOR_OPTIONS";
+    private static final String KEY_COLOR_SELECTED_ITEMS = "KEY_COLOR_SELECTED_ITEMS";
 
     private String minWidth = "";
     private String maxWidth = "";
@@ -78,6 +73,9 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     private String minHeight = "";
     private String maxHeight = "";
     private ArrayList<ProductItemCard> itemList = new ArrayList<>(0);
+    private ArrayList<String> colorOptions = new ArrayList<>();
+
+    private SparseBooleanArray selectedColorItems=new SparseBooleanArray();
     private RecyclerView recyclerView;
     private ProductAdapter rviewAdapter;
 
@@ -139,24 +137,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         depthFilterButton = root.findViewById(R.id.depthFilterButton);
         spinner = root.findViewById(R.id.spinnerSorting);
 
-        // Set click listener for the color button
-        colorFilterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View popupView = getLayoutInflater().inflate(R.layout.color_filter_dropdown_layout, null);
-                RecyclerView recyclerView = popupView.findViewById(R.id.recyclerViewColorFilter);
-                List<String> colorOptions = new ArrayList<>();
-                colorOptions.add("white");
-                colorOptions.add("black");
-                ColorAdapter colorAdapter = new ColorAdapter(requireContext(), colorOptions);
-                recyclerView.setAdapter(colorAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-                PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                int popupBackgroundColor = ContextCompat.getColor(requireContext(), R.color.alabaster);
-                popupWindow.setBackgroundDrawable(new ColorDrawable(popupBackgroundColor));
-                popupWindow.showAsDropDown(colorFilterButton);
-            }
-        });
+
         widthFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,6 +192,10 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                             ProductItemCard productItemCard = entrySnapshot.getValue(ProductItemCard.class);
                             productItemCard.setFirebaseKey(entrySnapshot.getKey());
                             itemList.add(productItemCard);
+                            if (!colorOptions.contains(productItemCard.getColor().toLowerCase())) {
+                                colorOptions.add(productItemCard.getColor().toLowerCase());
+                                selectedColorItems.put(selectedColorItems.size(), true);
+                            }
 //                            rviewAdapter.notifyItemInserted(itemList.size() - 1);
                         }
                     }
@@ -242,6 +227,22 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
             public boolean onQueryTextChange(String newText) {
                 // Handle search query changes
                 return true;
+            }
+        });
+
+        // Set click listener for the color button
+        colorFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View popupView = getLayoutInflater().inflate(R.layout.color_filter_dropdown_layout, null);
+                RecyclerView recyclerView = popupView.findViewById(R.id.recyclerViewColorFilter);
+                ColorAdapter colorAdapter = new ColorAdapter(requireContext(), colorOptions, selectedColorItems);
+                recyclerView.setAdapter(colorAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+                PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                int popupBackgroundColor = ContextCompat.getColor(requireContext(), R.color.alabaster);
+                popupWindow.setBackgroundDrawable(new ColorDrawable(popupBackgroundColor));
+                popupWindow.showAsDropDown(colorFilterButton);
             }
         });
 
@@ -351,6 +352,27 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         outState.putString(KEY_MAX_HEIGHT, maxHeight);
         outState.putString(KEY_MIN_DEPTH, minDepth);
         outState.putString(KEY_MAX_DEPTH, maxDepth);
+        outState.putStringArrayList(KEY_COLOR_OPTIONS, colorOptions);
+        outState.putBooleanArray(KEY_COLOR_SELECTED_ITEMS, sparseBooleanArrayToBooleanArray(selectedColorItems));
+    }
+
+    private boolean[] sparseBooleanArrayToBooleanArray(SparseBooleanArray sparseBooleanArray) {
+        int size = sparseBooleanArray.size();
+        boolean[] booleanArray = new boolean[size];
+
+        for (int i = 0; i < size; i++) {
+            booleanArray[i] = sparseBooleanArray.valueAt(i);
+        }
+
+        return booleanArray;
+    }
+
+    private SparseBooleanArray booleanArrayToSparseBooleanArray(boolean[] booleanArray) {
+        SparseBooleanArray sparseBooleanArray = new SparseBooleanArray();
+        for (int i = 0; i < booleanArray.length; i++) {
+            sparseBooleanArray.put(i, booleanArray[i]);
+        }
+        return sparseBooleanArray;
     }
 
     private void initFilter(Bundle savedInstanceState) {
@@ -373,11 +395,17 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
             if (savedInstanceState.containsKey(KEY_MAX_WIDTH)) {
                 maxWidth = savedInstanceState.getString(KEY_MAX_WIDTH);
             }
+            if (savedInstanceState.containsKey(KEY_COLOR_OPTIONS)) {
+                colorOptions = savedInstanceState.getStringArrayList(KEY_COLOR_OPTIONS);
+            }
+            if (savedInstanceState.containsKey(KEY_COLOR_SELECTED_ITEMS)) {
+                selectedColorItems = booleanArrayToSparseBooleanArray
+                        (savedInstanceState.getBooleanArray(KEY_COLOR_SELECTED_ITEMS));
+            }
         }
     }
 
-    private ArrayList<ProductItemCard> applyFilter(ArrayList<ProductItemCard> itemList)
-    {
+    private ArrayList<ProductItemCard> applyFilter(ArrayList<ProductItemCard> itemList) {
         double minWidthDouble = minWidth.isEmpty() ? 0 : Double.parseDouble(minWidth);
         double maxWidthDouble = maxWidth.isEmpty() ? Double.MAX_VALUE : Double.parseDouble(maxWidth);
         double minHeightDouble = minHeight.isEmpty() ? 0 : Double.parseDouble(minHeight);
@@ -385,17 +413,12 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         double minDepthDouble = minDepth.isEmpty() ? 0 : Double.parseDouble(minDepth);
         double maxDepthDouble = maxDepth.isEmpty() ? Double.MAX_VALUE : Double.parseDouble(maxDepth);
 
-        System.out.println(minWidth);
-        System.out.println(maxWidth);
-        System.out.println(minHeight);
-        System.out.println(maxHeight);
-        System.out.println(minDepth);
-        System.out.println(maxDepth);
-
         ArrayList<ProductItemCard> filtered = new ArrayList<>(itemList);
         filtered.removeIf(item -> (item.getWidth() < minWidthDouble || item.getWidth() > maxWidthDouble));
         filtered.removeIf(item -> (item.getHeight() < minHeightDouble || item.getHeight() > maxHeightDouble));
         filtered.removeIf(item -> (item.getDepth() < minDepthDouble || item.getDepth() > maxDepthDouble));
+
+        //checked colors
 
         return filtered;
     }
@@ -409,7 +432,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
 
     private void createRecyclerView(ArrayList<ProductItemCard> itemList) {
         int orientation = getResources().getConfiguration().orientation;
-        rLayoutManger = (orientation == Configuration.ORIENTATION_PORTRAIT)?new GridLayoutManager(requireContext(), 2):new GridLayoutManager(requireContext(), 4);
+        rLayoutManger = (orientation == Configuration.ORIENTATION_PORTRAIT) ? new GridLayoutManager(requireContext(), 2) : new GridLayoutManager(requireContext(), 4);
         recyclerView = root.findViewById(R.id.rvSearchResult);
         recyclerView.setHasFixedSize(true);
         ProductItemClickListener productItemClickListener = new ProductItemClickListener() {
@@ -418,10 +441,10 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                 //opens up the corresponding product detail page
                 NavController navController = Navigation.findNavController(requireView());
                 ProductDetailFragment productDetailFragment = ProductDetailFragment.newInstance(productID);
-                navController.navigate(R.id.action_browseFragment_to_productDetailFragment,productDetailFragment.getArguments());
+                navController.navigate(R.id.action_browseFragment_to_productDetailFragment, productDetailFragment.getArguments());
             }
         };
-        rviewAdapter = new ProductAdapter(requireContext(),itemList,productItemClickListener);
+        rviewAdapter = new ProductAdapter(requireContext(), itemList, productItemClickListener);
         recyclerView.setAdapter(rviewAdapter);
         recyclerView.setLayoutManager(rLayoutManger);
     }
