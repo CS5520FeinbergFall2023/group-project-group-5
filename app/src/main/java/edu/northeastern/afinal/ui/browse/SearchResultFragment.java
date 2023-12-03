@@ -237,6 +237,13 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                 View popupView = getLayoutInflater().inflate(R.layout.color_filter_dropdown_layout, null);
                 RecyclerView recyclerView = popupView.findViewById(R.id.recyclerViewColorFilter);
                 ColorAdapter colorAdapter = new ColorAdapter(requireContext(), colorOptions, selectedColorItems);
+                ColorClickListener colorClickListener=new ColorClickListener() {
+                    @Override
+                    public void onItemClicked() {
+                        createRecyclerView(applyFilter(itemList));
+                    }
+                };
+                colorAdapter.setColorClickListener(colorClickListener);
                 recyclerView.setAdapter(colorAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
                 PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
@@ -419,6 +426,15 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         filtered.removeIf(item -> (item.getDepth() < minDepthDouble || item.getDepth() > maxDepthDouble));
 
         //checked colors
+        ArrayList<String> colorsToBeRemoved=new ArrayList<>();
+        for(int i=0;i<colorOptions.size();i++)
+        {
+            if(!selectedColorItems.get(i))
+            {
+                colorsToBeRemoved.add(colorOptions.get(i));
+            }
+        }
+        filtered.removeIf(item -> colorsToBeRemoved.contains(item.getColor().toLowerCase()));
 
         return filtered;
     }

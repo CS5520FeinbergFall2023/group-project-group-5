@@ -20,15 +20,16 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorViewHol
     private final List<String> colorOptions;
     private SparseBooleanArray selectedItems;
 
+    private ColorClickListener colorClickListener;
+
     public ColorAdapter(Context context, List<String> colorOptions,SparseBooleanArray selectedItems) {
         this.context = context;
         this.colorOptions = colorOptions;
         this.selectedItems=selectedItems;
-//        this.selectedItems = new SparseBooleanArray();
-        // initialize all items as checked
-//        for (int i = 0; i < colorOptions.size(); i++) {
-//            selectedItems.put(i, true);
-//        }
+    }
+
+    public void setColorClickListener(ColorClickListener colorClickListener) {
+        this.colorClickListener = colorClickListener;
     }
 
     @NonNull
@@ -64,6 +65,10 @@ public class ColorAdapter extends RecyclerView.Adapter<ColorAdapter.ColorViewHol
                         selectedItems.put(adapterPosition, !selectedItems.get(adapterPosition));
                         // Update the UI to reflect the new state
                         checkedTextView.setChecked(selectedItems.get(adapterPosition));
+                        if(colorClickListener!=null)
+                        {
+                            colorClickListener.onItemClicked();
+                        }
                     }
                 }
             });
