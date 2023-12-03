@@ -112,6 +112,22 @@ public class ProductItemCard implements Parcelable {
         return reviews;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public double getDepth() {
+        return depth;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
     public void setFirebaseKey(String firebaseKey) {
         this.firebaseKey = firebaseKey;
     }

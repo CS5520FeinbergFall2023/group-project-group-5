@@ -60,7 +60,24 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_KEYWORD = "keyword";
     private static final String KEY_ITEM_LIST = "KEY_ITEM_LIST";
-    private ArrayList<ProductItemCard> itemList=new ArrayList<>(0);
+    private static final String KEY_MIN_WIDTH = "KEY_MIN_WIDTH";
+    private static final String KEY_MAX_WIDTH = "KEY_MAX_WIDTH";
+
+    private static final String KEY_MIN_HEIGHT = "KEY_MIN_HEIGHT ";
+    private static final String KEY_MAX_HEIGHT = "KEY_MAX_HEIGHT ";
+
+    private static final String KEY_MIN_DEPTH = "KEY_MIN_DEPTH";
+    private static final String KEY_MAX_DEPTH = "KEY_MAX_DEPTH";
+
+    private String minWidth = "";
+    private String maxWidth = "";
+
+    private String minDepth = "";
+    private String maxDepth = "";
+
+    private String minHeight = "";
+    private String maxHeight = "";
+    private ArrayList<ProductItemCard> itemList = new ArrayList<>(0);
     private RecyclerView recyclerView;
     private ProductAdapter rviewAdapter;
 
@@ -116,11 +133,11 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         if (getArguments() != null) {
             keyword = getArguments().getString(ARG_KEYWORD);
         }
-        colorFilterButton=root.findViewById(R.id.colorFilterButton);
-        widthFilterButton=root.findViewById(R.id.widthFilterButton);
-        heightFilterButton=root.findViewById(R.id.heightFilterButton);
-        depthFilterButton=root.findViewById(R.id.depthFilterButton);
-        spinner=root.findViewById(R.id.spinnerSorting);
+        colorFilterButton = root.findViewById(R.id.colorFilterButton);
+        widthFilterButton = root.findViewById(R.id.widthFilterButton);
+        heightFilterButton = root.findViewById(R.id.heightFilterButton);
+        depthFilterButton = root.findViewById(R.id.depthFilterButton);
+        spinner = root.findViewById(R.id.spinnerSorting);
 
         // Set click listener for the color button
         colorFilterButton.setOnClickListener(new View.OnClickListener() {
@@ -174,11 +191,12 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
+        //init filter values
+        initFilter(savedInstanceState);
         //fetch search result
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
             init(savedInstanceState);
-        }
-        else {
+        } else {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference furnitureRef = database.getReference().child("decor-sense").child("furniture");
             itemList.clear();
@@ -190,10 +208,10 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                         String productDescription = entrySnapshot.child("description").getValue(String.class);
                         if (productName.toLowerCase().contains(keyword.toLowerCase()) ||
                                 productDescription.toLowerCase().contains(keyword.toLowerCase())) {
-                            ProductItemCard productItemCard=entrySnapshot.getValue(ProductItemCard.class);
+                            ProductItemCard productItemCard = entrySnapshot.getValue(ProductItemCard.class);
                             productItemCard.setFirebaseKey(entrySnapshot.getKey());
                             itemList.add(productItemCard);
-                            rviewAdapter.notifyItemInserted(itemList.size() - 1);
+//                            rviewAdapter.notifyItemInserted(itemList.size() - 1);
                         }
                     }
                 }
@@ -205,7 +223,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
             });
             //by default sort with top sellers
             itemList.sort(Comparator.comparing(ProductItemCard::getReviews).reversed());
-            createRecyclerView();
+            createRecyclerView(applyFilter(itemList));
         }
 
         //search bar
@@ -215,8 +233,8 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
             public boolean onQueryTextSubmit(String query) {
                 // Handle search query submission (e.g., launch search results fragment)
                 NavController navController = Navigation.findNavController(requireView());
-                SearchResultFragment searchResultFragment=SearchResultFragment.newInstance(query);
-                navController.navigate(R.id.action_searchResultFragment_self,searchResultFragment.getArguments());
+                SearchResultFragment searchResultFragment = SearchResultFragment.newInstance(query);
+                navController.navigate(R.id.action_searchResultFragment_self, searchResultFragment.getArguments());
                 return true;
             }
 
@@ -233,22 +251,22 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         sortType = parent.getItemAtPosition(position).toString();
-        switch (sortType){
+        switch (sortType) {
             case "Top Sellers":
                 itemList.sort(Comparator.comparing(ProductItemCard::getReviews).reversed());
-                createRecyclerView();
+                createRecyclerView(applyFilter(itemList));
                 break;
             case "Price Low to High":
                 itemList.sort(Comparator.comparing(ProductItemCard::getPrice));
-                createRecyclerView();
+                createRecyclerView(applyFilter(itemList));
                 break;
             case "Price High to Low":
                 itemList.sort(Comparator.comparing(ProductItemCard::getPrice).reversed());
-                createRecyclerView();
+                createRecyclerView(applyFilter(itemList));
                 break;
             case "Top Rated":
                 itemList.sort(Comparator.comparing(ProductItemCard::getRatings).reversed());
-                createRecyclerView();
+                createRecyclerView(applyFilter(itemList));
                 break;
             default:
                 //todo:error
@@ -277,13 +295,44 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         filters[0] = new DecimalDigitsInputFilter();
         editTextStart.setFilters(filters);
         editTextEnd.setFilters(filters);
-
+        if (anchorView == widthFilterButton) {
+            editTextStart.setText(minWidth);
+            editTextEnd.setText(maxWidth);
+        } else if (anchorView == heightFilterButton) {
+            editTextStart.setText(minHeight);
+            editTextEnd.setText(maxHeight);
+        } else if (anchorView == depthFilterButton) {
+            editTextStart.setText(minDepth);
+            editTextEnd.setText(maxDepth);
+        } else {
+        }
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String min = editTextStart.getText().toString();
-                String max = editTextEnd.getText().toString();
+                double min = editTextStart.getText().toString().isEmpty() ? 0 : Double.parseDouble(editTextStart.getText().toString());
+                double max = editTextEnd.getText().toString().isEmpty() ? Double.MAX_VALUE : Double.parseDouble(editTextEnd.getText().toString());
+                // filter search result
+//                ArrayList<ProductItemCard> filtered = new ArrayList<>(itemList);
+                if (anchorView == widthFilterButton) {
+//                    filtered.removeIf(item -> (item.getWidth() < min || item.getWidth() > max));
+//                    createRecyclerView(filtered);
+                    minWidth = editTextStart.getText().toString();
+                    maxWidth = editTextEnd.getText().toString();
+                } else if (anchorView == heightFilterButton) {
+//                    filtered.removeIf(item -> (item.getHeight() < min || item.getHeight() > max));
+//                    createRecyclerView(filtered);
+                    minHeight = editTextStart.getText().toString();
+                    maxHeight = editTextEnd.getText().toString();
+                } else if (anchorView == depthFilterButton) {
+//                    filtered.removeIf(item -> (item.getDepth() < min || item.getDepth() > max));
+//                    createRecyclerView(filtered);
+                    minDepth = editTextStart.getText().toString();
+                    maxDepth = editTextEnd.getText().toString();
+                } else {
+                }
+                //clear list and repaint
                 popupWindow.dismiss();
+                createRecyclerView(applyFilter(itemList));
             }
         });
 
@@ -296,16 +345,69 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(KEY_ITEM_LIST, itemList);
+        outState.putString(KEY_MIN_WIDTH, minWidth);
+        outState.putString(KEY_MAX_WIDTH, maxWidth);
+        outState.putString(KEY_MIN_HEIGHT, minHeight);
+        outState.putString(KEY_MAX_HEIGHT, maxHeight);
+        outState.putString(KEY_MIN_DEPTH, minDepth);
+        outState.putString(KEY_MAX_DEPTH, maxDepth);
+    }
+
+    private void initFilter(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(KEY_MIN_WIDTH)) {
+                minWidth = savedInstanceState.getString(KEY_MIN_WIDTH);
+            }
+            if (savedInstanceState.containsKey(KEY_MAX_WIDTH)) {
+                maxWidth = savedInstanceState.getString(KEY_MAX_WIDTH);
+            }
+            if (savedInstanceState.containsKey(KEY_MIN_WIDTH)) {
+                minWidth = savedInstanceState.getString(KEY_MIN_WIDTH);
+            }
+            if (savedInstanceState.containsKey(KEY_MAX_WIDTH)) {
+                maxWidth = savedInstanceState.getString(KEY_MAX_WIDTH);
+            }
+            if (savedInstanceState.containsKey(KEY_MIN_WIDTH)) {
+                minWidth = savedInstanceState.getString(KEY_MIN_WIDTH);
+            }
+            if (savedInstanceState.containsKey(KEY_MAX_WIDTH)) {
+                maxWidth = savedInstanceState.getString(KEY_MAX_WIDTH);
+            }
+        }
+    }
+
+    private ArrayList<ProductItemCard> applyFilter(ArrayList<ProductItemCard> itemList)
+    {
+        double minWidthDouble = minWidth.isEmpty() ? 0 : Double.parseDouble(minWidth);
+        double maxWidthDouble = maxWidth.isEmpty() ? Double.MAX_VALUE : Double.parseDouble(maxWidth);
+        double minHeightDouble = minHeight.isEmpty() ? 0 : Double.parseDouble(minHeight);
+        double maxHeightDouble = maxHeight.isEmpty() ? Double.MAX_VALUE : Double.parseDouble(maxHeight);
+        double minDepthDouble = minDepth.isEmpty() ? 0 : Double.parseDouble(minDepth);
+        double maxDepthDouble = maxDepth.isEmpty() ? Double.MAX_VALUE : Double.parseDouble(maxDepth);
+
+        System.out.println(minWidth);
+        System.out.println(maxWidth);
+        System.out.println(minHeight);
+        System.out.println(maxHeight);
+        System.out.println(minDepth);
+        System.out.println(maxDepth);
+
+        ArrayList<ProductItemCard> filtered = new ArrayList<>(itemList);
+        filtered.removeIf(item -> (item.getWidth() < minWidthDouble || item.getWidth() > maxWidthDouble));
+        filtered.removeIf(item -> (item.getHeight() < minHeightDouble || item.getHeight() > maxHeightDouble));
+        filtered.removeIf(item -> (item.getDepth() < minDepthDouble || item.getDepth() > maxDepthDouble));
+
+        return filtered;
     }
 
     private void init(Bundle savedInstanceState) {
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
             itemList = savedInstanceState.getParcelableArrayList(KEY_ITEM_LIST);
         }
-        createRecyclerView();
+        createRecyclerView(applyFilter(itemList));
     }
 
-    private void createRecyclerView() {
+    private void createRecyclerView(ArrayList<ProductItemCard> itemList) {
         int orientation = getResources().getConfiguration().orientation;
         rLayoutManger = (orientation == Configuration.ORIENTATION_PORTRAIT)?new GridLayoutManager(requireContext(), 2):new GridLayoutManager(requireContext(), 4);
         recyclerView = root.findViewById(R.id.rvSearchResult);
