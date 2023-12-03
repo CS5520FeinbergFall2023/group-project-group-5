@@ -33,10 +33,12 @@ public class ProductItemCard implements Parcelable {
     private double width;
     private double reviews;
 
+    private String tags;
+
     public ProductItemCard() {
     }
 
-    public ProductItemCard(String firebaseKey, String name, double price, String brand, String color, String category, double depth, String description, double height, String link, double ratings, String thumbnail, String vendor, double width, double reviews) {
+    public ProductItemCard(String firebaseKey, String name, double price, String brand, String color, String category, double depth, String description, double height, String link, double ratings, String thumbnail, String vendor, double width, double reviews, String tags) {
         this.firebaseKey = firebaseKey;
         this.name = name;
         this.price = price;
@@ -52,6 +54,7 @@ public class ProductItemCard implements Parcelable {
         this.vendor = vendor;
         this.width = width;
         this.reviews = reviews;
+        this.tags = tags;
     }
 
     protected ProductItemCard(Parcel in) {
@@ -70,6 +73,8 @@ public class ProductItemCard implements Parcelable {
         vendor = in.readString();
         width = in.readDouble();
         reviews = in.readDouble();
+        tags = in.readString();
+
     }
 
     public static final Creator<ProductItemCard> CREATOR = new Creator<ProductItemCard>() {
@@ -102,6 +107,10 @@ public class ProductItemCard implements Parcelable {
 
     public String getThumbnail() {
         return thumbnail;
+    }
+
+    public String getTags() {
+        return tags;
     }
 
     public double getRatings() {
@@ -209,6 +218,7 @@ public class ProductItemCard implements Parcelable {
         dest.writeDouble(ratings);
         dest.writeString(thumbnail);
         dest.writeString(vendor);
+        dest.writeString(tags);
         dest.writeDouble(width);
         dest.writeDouble(reviews);
     }

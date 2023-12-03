@@ -120,26 +120,26 @@
         app:layout_constraintTop_toBottomOf="@+id/tvTag"
         >
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_1"
-            style="@style/Widget.MaterialComponents.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="chip1"/>
+<!--        <com.google.android.material.chip.Chip-->
+<!--            android:id="@+id/chip_1"-->
+<!--            style="@style/Widget.MaterialComponents.Chip.Filter"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="chip1"/>-->
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_2"
-            style="@style/Widget.MaterialComponents.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="chip2"/>
+<!--        <com.google.android.material.chip.Chip-->
+<!--            android:id="@+id/chip_2"-->
+<!--            style="@style/Widget.MaterialComponents.Chip.Filter"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="chip2"/>-->
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chip_3"
-            style="@style/Widget.MaterialComponents.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="chip3"/>
+<!--        <com.google.android.material.chip.Chip-->
+<!--            android:id="@+id/chip_3"-->
+<!--            style="@style/Widget.MaterialComponents.Chip.Filter"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="chip3"/>-->
 
     </com.google.android.material.chip.ChipGroup>
 

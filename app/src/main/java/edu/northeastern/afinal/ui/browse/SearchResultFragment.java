@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -25,6 +28,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,7 +37,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import edu.northeastern.afinal.R;
 import edu.northeastern.afinal.databinding.FragmentBrowseBinding;
@@ -63,6 +71,8 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     private static final String KEY_MAX_DEPTH = "KEY_MAX_DEPTH";
     private static final String KEY_COLOR_OPTIONS = "KEY_COLOR_OPTIONS";
     private static final String KEY_COLOR_SELECTED_ITEMS = "KEY_COLOR_SELECTED_ITEMS";
+    private static final String KEY_TAGS_LIST = "KEY_TAGS_LIST";
+    private static final String KEY_CHECKED_TAGS_LIST = "KEY_CHECKED_TAGS_LIST";
 
     private String minWidth = "";
     private String maxWidth = "";
@@ -94,6 +104,11 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
 
     private Spinner spinner;
     private String sortType;
+
+    private ChipGroup chipGroup;
+    private ArrayList<String> tagList=new ArrayList<>();
+    private ArrayList<String> checkedTagList=new ArrayList<>();
+
 
     public SearchResultFragment() {
         // Required empty public constructor
@@ -136,7 +151,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         heightFilterButton = root.findViewById(R.id.heightFilterButton);
         depthFilterButton = root.findViewById(R.id.depthFilterButton);
         spinner = root.findViewById(R.id.spinnerSorting);
-
+        chipGroup=root.findViewById(R.id.tagChipGroup);
 
         widthFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +211,44 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                                 colorOptions.add(productItemCard.getColor().toLowerCase());
                                 selectedColorItems.put(selectedColorItems.size(), true);
                             }
+                            String tags=productItemCard.getTags();
+                            if(!tags.isEmpty())
+                            {
+                                for (String tag:tags.split(","))
+                                {
+                                    if(!tagList.contains(tag.toLowerCase()))
+                                    {
+                                        tagList.add(tag.toLowerCase());
+                                        Chip chip = new Chip(getContext());
+                                        chip.setText(tag);
+                                        chip.setCheckable(true);
+                                        chip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                            @Override
+                                            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                                String chipText = chip.getText().toString();
+                                                if(isChecked)
+                                                {
+                                                    if(!checkedTagList.contains(chipText))
+                                                    {
+                                                        checkedTagList.add(chipText);
+                                                    }
+                                                }
+                                                else {
+                                                    if(checkedTagList.contains(chipText))
+                                                    {
+                                                        checkedTagList.remove(chipText);
+                                                    }
+                                                }
+                                                createRecyclerView(applyFilter(itemList));
+                                            }
+                                        });
+                                        //Begin with all tags unchecked and all products with the keyword shown,
+                                        // if user check a tag, only products with the tag will be shown
+//                                        chip.setChecked(false);
+                                        chipGroup.addView(chip);
+                                    }
+                                }
+                            }
 //                            rviewAdapter.notifyItemInserted(itemList.size() - 1);
                         }
                     }
@@ -210,6 +263,38 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
             itemList.sort(Comparator.comparing(ProductItemCard::getReviews).reversed());
             createRecyclerView(applyFilter(itemList));
         }
+
+//        chipGroup.setOnCheckedStateChangeListener(
+//                new ChipGroup.OnCheckedStateChangeListener() {
+//
+//                    @Override
+//                    public void onCheckedChanged(@NonNull ChipGroup group, @NonNull List<Integer> checkedIds) {
+//                        for (int checkedId : checkedIds) {
+//                            Chip checkedChip = group.findViewById(checkedId);
+//                            if (checkedChip != null) {
+//                                String chipText = checkedChip.getText().toString();
+//                                Log.d("checkedTagList",checkedTagList.toString());
+//                                Log.d("checkedTagList", chipText);
+//                                Log.d("checkedTagList", String.valueOf(checkedChip.isChecked()));
+//                                if(checkedChip.isChecked())
+//                                {
+//                                    if(!checkedTagList.contains(chipText))
+//                                    {
+//                                        checkedTagList.add(chipText);
+//                                    }
+//                                }
+//                                else {
+//                                    if(checkedTagList.contains(chipText))
+//                                    {
+//                                        checkedTagList.remove(chipText);
+//                                    }
+//                                }
+//                                Log.d("checkedTagList",checkedTagList.toString());
+//                            }
+//                        }
+//                        createRecyclerView(applyFilter(itemList));
+//                    }
+//                });
 
         //search bar
         SearchView searchView = root.findViewById(R.id.searchView);
@@ -360,6 +445,8 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         outState.putString(KEY_MIN_DEPTH, minDepth);
         outState.putString(KEY_MAX_DEPTH, maxDepth);
         outState.putStringArrayList(KEY_COLOR_OPTIONS, colorOptions);
+        outState.putStringArrayList(KEY_CHECKED_TAGS_LIST, checkedTagList);
+        outState.putStringArrayList(KEY_TAGS_LIST, tagList);
         outState.putBooleanArray(KEY_COLOR_SELECTED_ITEMS, sparseBooleanArrayToBooleanArray(selectedColorItems));
     }
 
@@ -409,6 +496,12 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                 selectedColorItems = booleanArrayToSparseBooleanArray
                         (savedInstanceState.getBooleanArray(KEY_COLOR_SELECTED_ITEMS));
             }
+            if (savedInstanceState.containsKey(KEY_TAGS_LIST)) {
+                colorOptions = savedInstanceState.getStringArrayList(KEY_TAGS_LIST);
+            }
+            if (savedInstanceState.containsKey(KEY_CHECKED_TAGS_LIST)) {
+                colorOptions = savedInstanceState.getStringArrayList(KEY_CHECKED_TAGS_LIST);
+            }
         }
     }
 
@@ -435,8 +528,30 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
             }
         }
         filtered.removeIf(item -> colorsToBeRemoved.contains(item.getColor().toLowerCase()));
+        //checked tags
+        filtered.removeIf(item -> !ifHasTag(item.getTags(),checkedTagList));
 
         return filtered;
+    }
+
+    private boolean ifHasTag(String tags, ArrayList<String> desiredTags)
+    {
+        if(tags.isEmpty())
+        {
+            return false;
+        }
+        if(desiredTags.isEmpty())
+        {
+            return true;
+        }
+        for(String desiredTag:desiredTags)
+        {
+            if(Arrays.asList(tags.split(",")).contains(desiredTag))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void init(Bundle savedInstanceState) {
