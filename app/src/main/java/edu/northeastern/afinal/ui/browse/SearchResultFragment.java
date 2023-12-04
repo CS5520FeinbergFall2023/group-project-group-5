@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListPopupWindow;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
@@ -105,6 +106,8 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     private ArrayList<String> tagList=new ArrayList<>();
     private ArrayList<String> checkedTagList=new ArrayList<>();
 
+    private ImageView icon;
+
 
 
     public SearchResultFragment() {
@@ -122,7 +125,6 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         SearchResultFragment fragment = new SearchResultFragment();
         Bundle args = new Bundle();
         args.putString(ARG_KEYWORD, keyword);
-        Log.d("SearchResultFragment",keyword);
         fragment.setArguments(args);
 
         return fragment;
@@ -131,7 +133,6 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("SearchResultFragment","onCreate called!");
         if (getArguments() != null) {
             keyword = getArguments().getString(ARG_KEYWORD);
         }
@@ -141,7 +142,6 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.d("SearchResultFragment","onCreateView called!");
         root = inflater.inflate(R.layout.fragment_search_result, container, false);
         if (getArguments() != null) {
             keyword = getArguments().getString(ARG_KEYWORD);
@@ -152,6 +152,15 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         depthFilterButton = root.findViewById(R.id.depthFilterButton);
         spinner = root.findViewById(R.id.spinnerSorting);
         chipGroup=root.findViewById(R.id.tagChipGroup);
+        icon=root.findViewById(R.id.iconImageView);
+        icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Navigate to BrowseFragment
+                NavController navController = Navigation.findNavController(requireView());
+                navController.navigate(R.id.action_searchResultFragment_to_browseFragment);
+            }
+        });
 
         widthFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,7 +235,6 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                             rviewAdapter.notifyItemInserted(itemList.size() - 1);
                         }
                     }
-                    Log.d("furnitureRef",itemList.toString());
                     itemList.sort(Comparator.comparing(ProductItemCard::getReviews).reversed());
                     createRecyclerView(applyFilter(itemList));
                 }

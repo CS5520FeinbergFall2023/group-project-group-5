@@ -53,6 +53,13 @@
         <argument
             android:name="keyword"
             app:argType="string" />
+
+        <action
+            android:id="@+id/action_searchResultFragment_to_browseFragment"
+            app:destination="@id/navigation_browse"
+            app:popUpTo="@id/navigation_browse"
+            app:popUpToInclusive="true" />
+
     </fragment>
 
 </navigation>
