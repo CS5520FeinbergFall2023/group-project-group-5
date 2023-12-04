@@ -106,6 +106,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     private ArrayList<String> checkedTagList=new ArrayList<>();
 
 
+
     public SearchResultFragment() {
         // Required empty public constructor
     }
@@ -130,37 +131,20 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("SearchResultFragment","onCreate called!");
         if (getArguments() != null) {
             keyword = getArguments().getString(ARG_KEYWORD);
         }
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        for(String tag:tagList)
-        {
-            addTagChip(tag);
-        }
-        //restore tag selections
-        for (int i = 0; i < chipGroup.getChildCount(); i++) {
-            View child = chipGroup.getChildAt(i);
-            if (child instanceof Chip) {
-                Chip chip=((Chip) child);
-                chip.setChecked(checkedTagList.contains(chip.getText()));
-            }
-        }
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Log.d("SearchResultFragment","onCreateView called!");
         root = inflater.inflate(R.layout.fragment_search_result, container, false);
         if (getArguments() != null) {
             keyword = getArguments().getString(ARG_KEYWORD);
-            Log.d("onCreateView",keyword);
         }
         colorFilterButton = root.findViewById(R.id.colorFilterButton);
         widthFilterButton = root.findViewById(R.id.widthFilterButton);
@@ -494,20 +478,22 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
             }
             if (savedInstanceState.containsKey(KEY_TAGS_LIST)) {
                 tagList = savedInstanceState.getStringArrayList(KEY_TAGS_LIST);
-                //add tag chips
-                for(String tag:tagList)
-                {
-                    addTagChip(tag);
-                }
             }
             if (savedInstanceState.containsKey(KEY_CHECKED_TAGS_LIST)) {
                 checkedTagList = savedInstanceState.getStringArrayList(KEY_CHECKED_TAGS_LIST);
+            }
+            if(!tagList.isEmpty()) {
+                for (String tag : tagList) {
+                    addTagChip(tag);
+                }
                 //restore tag selections
-                for (int i = 0; i < chipGroup.getChildCount(); i++) {
-                    View child = chipGroup.getChildAt(i);
-                    if (child instanceof Chip) {
-                        Chip chip=((Chip) child);
-                        chip.setChecked(checkedTagList.contains(chip.getText()));
+                if(!checkedTagList.isEmpty()) {
+                    for (int i = 0; i < chipGroup.getChildCount(); i++) {
+                        View child = chipGroup.getChildAt(i);
+                        if (child instanceof Chip) {
+                            Chip chip = ((Chip) child);
+                            chip.setChecked(checkedTagList.contains(chip.getText()));
+                        }
                     }
                 }
             }
