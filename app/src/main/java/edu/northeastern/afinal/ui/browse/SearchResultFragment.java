@@ -136,6 +136,24 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        for(String tag:tagList)
+        {
+            addTagChip(tag);
+        }
+        //restore tag selections
+        for (int i = 0; i < chipGroup.getChildCount(); i++) {
+            View child = chipGroup.getChildAt(i);
+            if (child instanceof Chip) {
+                Chip chip=((Chip) child);
+                chip.setChecked(checkedTagList.contains(chip.getText()));
+            }
+        }
+    }
+
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
