@@ -241,7 +241,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    // Handle errors
+                    // todo: Handle errors
                 }
             });
 

@@ -148,10 +148,10 @@ public class BrowseFragment extends Fragment {
             public void onItemClicked(String productID) {
                 //opens up the corresponding product detail page
                 NavController navController = Navigation.findNavController(requireView());
-//                ProductDetailFragment productDetailFragment = ProductDetailFragment.newInstance(productID);
-                Bundle bundle = new Bundle();
-                bundle.putString(SearchResultFragment.ARG_KEYWORD, productID);
-                navController.navigate(R.id.action_browseFragment_to_productDetailFragment,bundle);
+                ProductDetailFragment productDetailFragment = ProductDetailFragment.newInstance(productID);
+//                Bundle bundle = new Bundle();
+//                bundle.putString(SearchResultFragment.ARG_KEYWORD, productID);
+                navController.navigate(R.id.action_browseFragment_to_productDetailFragment,productDetailFragment.getArguments());
             }
         };
         rviewAdapter = new ProductAdapter(requireContext(),itemList,productItemClickListener);
