@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import edu.northeastern.afinal.ui.browse.BrowseFragment;
 import edu.northeastern.afinal.ui.login.LoginActivity;
@@ -35,22 +37,35 @@ public class InitialActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_initial);
-        FirebaseApp.initializeApp(/*context=*/ this);
+        FirebaseApp.initializeApp(this);
         FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
         firebaseAppCheck.installAppCheckProviderFactory(
                 PlayIntegrityAppCheckProviderFactory.getInstance());
 
         Button userButton = (Button) findViewById(R.id.buttonUser);
         userButton.setOnClickListener(v->{
-            Intent intent = new Intent(InitialActivity.this, LoginActivity.class);
-            startActivity(intent);
+            //check if already logged in
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            FirebaseUser user = auth.getCurrentUser();
+            if(user==null) {
+                Intent intent = new Intent(InitialActivity.this, LoginActivity.class);
+//                startActivity(intent);
+                startMainActivityForResult.launch(intent);
+
+            }
+            else {
+                Intent intent = new Intent(InitialActivity.this, MainActivity.class);
+                intent.putExtra("SHOW_USER_FRAGMENT", true);
+//                startActivity(intent);
+                startMainActivityForResult.launch(intent);
+
+            }
         });
 
         // go to the browse fragment
         Button browseButton = (Button) findViewById(R.id.buttonBrowse);
         browseButton.setOnClickListener(v -> {
             Intent intent = new Intent(InitialActivity.this, MainActivity.class);
-            intent.putExtra("SHOW_BROWSE_FRAGMENT", true);
             startMainActivityForResult.launch(intent);
         });
 

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -56,16 +57,20 @@ public class BrowseFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        System.out.println("BrowseFragment Create View");
         BrowseViewModel browseViewModel =
                 new ViewModelProvider(this).get(BrowseViewModel.class);
 
         binding = FragmentBrowseBinding.inflate(inflater, container, false);
         root = binding.getRoot();
+
         // hide the label bar on the top
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
             init(savedInstanceState);
         }
+
+
         else {
             //when first enter the page, show recommendation products
             String[] recommendationProductIDs = new String[]{"0", "1", "2", "3", "4", "5"};
@@ -165,6 +170,9 @@ public class BrowseFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
+
 
     public static BrowseFragment newInstance() {
         return new BrowseFragment();

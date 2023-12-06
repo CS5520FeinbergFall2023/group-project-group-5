@@ -2,11 +2,13 @@ package edu.northeastern.afinal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -17,7 +19,7 @@ import edu.northeastern.afinal.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-
+    private NavController navController;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,22 +38,37 @@ public class MainActivity extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_browse, R.id.navigation_scan, R.id.navigation_user)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         // Check if there is an intent with a specific flag or extra indicating BrowseFragment should be shown
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("SHOW_BROWSE_FRAGMENT")) {
-//            navController.navigate(R.id.navigation_browse);
+        if (intent != null) {
+
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                for (String key : extras.keySet()) {
+                    Object value = extras.get(key);
+                    System.out.println("Intent Key: " + key + ", Value: " + value);
+                }
+            }
+
+            // Check if the extra "SHOW_BROWSE_FRAGMENT" is present
+            if (intent.hasExtra("SHOW_BROWSE_FRAGMENT")) {
+                // Clear the back stack up to and including UserFragment and navigate to BrowseFragment
+                navController.popBackStack(R.id.navigation_user, true);
+                navController.navigate(R.id.navigation_browse);
+            } else if (intent.hasExtra("SHOW_USER_FRAGMENT")) {
+                // Clear the back stack up to and including BrowseFragment and navigate to UserFragment
+                navController.popBackStack(R.id.navigation_browse, true);
+                navController.navigate(R.id.navigation_user);
+            }
             // Clear the intent to avoid navigating again on configuration changes (e.g., rotation)
             setIntent(new Intent());
-
-            // Navigate to BrowseFragment only if it's not already on the top of the stack
-            if (navController.getCurrentDestination().getId() != R.id.navigation_browse) {
-                navController.navigate(R.id.navigation_browse);
-            }
         }
+
+
     }
 
 }

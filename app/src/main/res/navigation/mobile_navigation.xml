@@ -31,8 +31,6 @@
         android:label="@string/title_user"
         tools:layout="@layout/fragment_user" />
 
-
-
     <fragment
         android:id="@+id/productDetailFragment"
         android:name="edu.northeastern.afinal.ui.product.ProductDetailFragment"
