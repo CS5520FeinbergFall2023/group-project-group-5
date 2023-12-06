@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.northeastern.afinal.R;
+import me.relex.circleindicator.CircleIndicator3;
 
 public class ProductDetailFragment extends Fragment {
     private View root;
@@ -44,6 +45,7 @@ public class ProductDetailFragment extends Fragment {
 
         ViewPager2 productImageViewPager = root.findViewById(R.id.productImageViewPager);
 
+
         //get all images under /furniture/{productID}/images/
         FirebaseStorage storage = FirebaseStorage.getInstance();
         String path = String.format("furniture/%s/images",productId);  // replace with your path
@@ -66,6 +68,8 @@ public class ProductDetailFragment extends Fragment {
                                 // All URLs retrieved, initialize and set the adapter
                                 sliderAdapter = new SliderAdapter(requireContext(), itemList);
                                 productImageViewPager.setAdapter(sliderAdapter);
+                                CircleIndicator3 indicator = root.findViewById(R.id.indicator);
+                                indicator.setViewPager(productImageViewPager);
                                 sliderAdapter.notifyDataSetChanged();
                             }
 
