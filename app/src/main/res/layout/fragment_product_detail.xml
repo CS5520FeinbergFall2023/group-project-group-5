@@ -62,7 +62,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         android:text="ABCD Product" />
 
@@ -71,7 +70,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toBottomOf="@+id/textViewProductName"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         android:text="BRAND" />
 
@@ -79,11 +77,11 @@
                         android:id="@+id/ratingBar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
+                        android:isIndicator="true"
+                        android:numStars="5"
                         android:scaleX="0.5"
                         android:scaleY="0.5"
                         app:layout_constraintTop_toBottomOf="@+id/textViewProductBrand"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         />
 
@@ -93,7 +91,6 @@
                         android:layout_height="wrap_content"
                         android:text="(662)"
                         app:layout_constraintTop_toBottomOf="@+id/ratingBar"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         />
 
@@ -103,7 +100,6 @@
                         android:layout_height="wrap_content"
                         android:text="$1000"
                         app:layout_constraintTop_toBottomOf="@+id/textViewRatingCount"
-                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -252,6 +248,29 @@
                     >
 
                 </TextView>
+
+                <TextView
+                    android:id="@+id/colorTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detailsTextView"
+                    android:text="Color: clear"
+                    >
+                </TextView>
+
+                <TextView
+                    android:id="@+id/sizeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/colorTextView"
+                    android:text="Size: 32.25 (H) × 21.625 (W) × 22 (D)"
+                    >
+                </TextView>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

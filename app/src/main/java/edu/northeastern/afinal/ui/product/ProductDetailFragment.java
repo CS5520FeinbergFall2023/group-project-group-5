@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,7 +19,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.northeastern.afinal.R;
@@ -27,6 +32,16 @@ public class ProductDetailFragment extends Fragment {
     private View root;
     private ArrayList<SliderItemCard> itemList = new ArrayList<>();
     private SliderAdapter sliderAdapter;
+
+    private TextView textViewProductName;
+    private TextView textViewProductBrand;
+    private RatingBar ratingBar;
+    private TextView textViewRatingCount;
+    private TextView textViewProductPrice;
+    private TextView detailsTextView;
+    private TextView colorTextView;
+    private TextView sizeTextView;
+
 
 
     public static ProductDetailFragment newInstance(String productId) {
@@ -44,7 +59,14 @@ public class ProductDetailFragment extends Fragment {
         String productId = getArguments().getString("PRODUCT_ID", "");
 
         ViewPager2 productImageViewPager = root.findViewById(R.id.productImageViewPager);
-
+        textViewProductName=root.findViewById(R.id.textViewProductName);
+        textViewProductBrand=root.findViewById(R.id.textViewProductBrand);
+        ratingBar=root.findViewById(R.id.ratingBar);
+        textViewRatingCount=root.findViewById(R.id.textViewRatingCount);
+        textViewProductPrice=root.findViewById(R.id.textViewProductPrice);
+        detailsTextView=root.findViewById(R.id.detailsTextView);
+        colorTextView=root.findViewById(R.id.colorTextView);
+        sizeTextView=root.findViewById(R.id.sizeTextView);
 
         //get all images under /furniture/{productID}/images/
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -61,8 +83,6 @@ public class ProductDetailFragment extends Fragment {
                             String downloadUrl = uri.toString();
                             SliderItemCard sliderItemCard=new SliderItemCard(downloadUrl);
                             itemList.add(sliderItemCard);
-                            System.out.println("Download URL: " + downloadUrl);
-
                             // Check if all download URLs have been obtained
                             if (counter.incrementAndGet() == totalItems) {
                                 // All URLs retrieved, initialize and set the adapter
@@ -82,6 +102,29 @@ public class ProductDetailFragment extends Fragment {
                 .addOnFailureListener(e -> {
                     System.err.println("Error listing files: " + e.getMessage());
                 });
+
+        // get product info from firebase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference furnitureRef = database.getReference().child("decor-sense").child("furniture").child(productId);
+        furnitureRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot entrySnapshot) {
+                    ProductItemCard productItemCard = entrySnapshot.getValue(ProductItemCard.class);
+                    textViewProductName.setText(productItemCard.getName());
+                    textViewProductBrand.setText(productItemCard.getBrand());
+                    ratingBar.setRating((float) productItemCard.getRatings());
+                    textViewRatingCount.setText(String.format("(%s)",(int)productItemCard.getReviews()));
+                    textViewProductPrice.setText(String.format("$%s",productItemCard.getPrice()));
+                    detailsTextView.setText(productItemCard.getDescription());
+                    colorTextView.setText(String.format("Color: %s",productItemCard.getColor()));
+                    sizeTextView.setText(String.format("Size: %s (H) × %s (W) × %s (D)",productItemCard.getHeight(),productItemCard.getWidth(),productItemCard.getDepth()));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // todo: Handle errors
+            }
+        });
 
         return root;
     }

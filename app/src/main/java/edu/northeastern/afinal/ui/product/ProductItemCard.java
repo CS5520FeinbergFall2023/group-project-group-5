@@ -137,6 +137,10 @@ public class ProductItemCard implements Parcelable {
         return width;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setFirebaseKey(String firebaseKey) {
         this.firebaseKey = firebaseKey;
     }
