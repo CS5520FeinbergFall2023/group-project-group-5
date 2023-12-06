@@ -206,7 +206,7 @@ public class ProductDetailFragment extends Fragment {
                     ProductItemCard productItemCard = entrySnapshot.getValue(ProductItemCard.class);
                     textViewProductName.setText(productItemCard.getName());
                     textViewProductBrand.setText(productItemCard.getBrand());
-                    ratingBar.setRating((float) productItemCard.getRatings());
+                    ratingBar.setRating(Math.round(productItemCard.getRatings()));
                     textViewRatingCount.setText(String.format("(%s)",(int)productItemCard.getReviews()));
                     textViewProductPrice.setText(String.format("$%s",productItemCard.getPrice()));
                     detailsTextView.setText(productItemCard.getDescription());

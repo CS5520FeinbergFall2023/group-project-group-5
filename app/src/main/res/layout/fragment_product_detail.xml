@@ -75,9 +75,11 @@
 
                     <RatingBar
                         android:id="@+id/ratingBar"
-                        android:layout_width="match_parent"
+                        style="@android:style/Widget.Material.RatingBar.Indicator"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:isIndicator="true"
+                        android:rating="5"
                         android:numStars="5"
                         android:scaleX="0.5"
                         android:scaleY="0.5"
