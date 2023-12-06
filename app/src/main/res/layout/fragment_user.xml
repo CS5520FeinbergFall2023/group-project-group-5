@@ -68,21 +68,20 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonAddBookmark"
+        app:layout_constraintBottom_toTopOf="@id/buttonLogout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textViewBookmarksTitle"
         app:layout_constraintVertical_weight="1" />
 
-    <!-- Add Button for Bookmarks -->
     <Button
-        android:id="@+id/buttonAddBookmark"
+        android:id="@+id/buttonLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:layout_marginEnd="84dp"
         android:layout_marginBottom="252dp"
-        android:text="+ Add Bookmark"
+        android:text="Log out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

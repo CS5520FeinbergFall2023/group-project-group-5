@@ -1,16 +1,21 @@
 package edu.northeastern.afinal.ui.product;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +47,15 @@ public class ProductDetailFragment extends Fragment {
     private TextView colorTextView;
     private TextView sizeTextView;
 
+    private TextView noLoginTextView;
+
+    private ConstraintLayout addToPlanLayout;
+    private ConstraintLayout usedInPlanLayout;
+    private ConstraintLayout bookmarkLayout;
+    private ImageButton addToPlanButton;
+    private ImageButton usedInPlanButton;
+    private ImageButton bookmarkButton;
+
 
 
     public static ProductDetailFragment newInstance(String productId) {
@@ -67,6 +81,86 @@ public class ProductDetailFragment extends Fragment {
         detailsTextView=root.findViewById(R.id.detailsTextView);
         colorTextView=root.findViewById(R.id.colorTextView);
         sizeTextView=root.findViewById(R.id.sizeTextView);
+        noLoginTextView=root.findViewById(R.id.noLoginTextView);
+        addToPlanLayout=root.findViewById(R.id.addToPlanLayout);
+        usedInPlanLayout=root.findViewById(R.id.usedInPlanLayout);
+        bookmarkLayout=root.findViewById(R.id.bookmarkLayout);
+        addToPlanButton=root.findViewById(R.id.addToPlanButton);
+        usedInPlanButton=root.findViewById(R.id.usedInPlanButton);
+        bookmarkButton=root.findViewById(R.id.bookmarkButton);
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            String uid = user.getUid();
+            noLoginTextView.setVisibility(View.INVISIBLE);
+            addToPlanLayout.setVisibility(View.VISIBLE);
+            usedInPlanLayout.setVisibility(View.VISIBLE);
+            bookmarkLayout.setVisibility(View.VISIBLE);
+
+            // Button functions
+            // todo: add to plan button
+            // todo: used in plan button
+            // bookmark button
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference bookmarkRef = database.getReference().child("decor-sense")
+                    .child("users").child(uid).child("bookmarks").child(productId);
+            bookmarkRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    boolean isBookmarked = snapshot.exists();
+                    // Update the image of the button based on the existence of the record
+                    if (isBookmarked) {
+                        bookmarkButton.setImageResource(R.drawable.baseline_bookmark_24);
+                    } else {
+                        bookmarkButton.setImageResource(R.drawable.baseline_bookmark_border_24);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle errors, if any
+                }
+            });
+
+            bookmarkButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    bookmarkRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                // The product is bookmarked by the current user
+                                // unbookmark now
+//                                bookmarkButton.setImageResource(R.drawable.baseline_bookmark_24);
+                                bookmarkRef.removeValue();
+
+                            } else {
+                                // The product is not bookmarked by the current user
+                                // bookmark now
+//                                bookmarkButton.setImageResource(R.drawable.baseline_bookmark_border_24);
+                                bookmarkRef.setValue(true);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+                }
+            });
+
+        } else {
+            // No user signed in
+            noLoginTextView.setVisibility(View.VISIBLE);
+            addToPlanLayout.setVisibility(View.INVISIBLE);
+            usedInPlanLayout.setVisibility(View.INVISIBLE);
+            bookmarkLayout.setVisibility(View.INVISIBLE);
+        }
 
         //get all images under /furniture/{productID}/images/
         FirebaseStorage storage = FirebaseStorage.getInstance();

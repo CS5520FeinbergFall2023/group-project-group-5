@@ -2,21 +2,17 @@ package edu.northeastern.afinal.ui.login;
 
 import static android.content.ContentValues.TAG;
 
-import android.app.Activity;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
+
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.text.Editable;
-import android.text.TextWatcher;
+
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -33,8 +29,13 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import edu.northeastern.afinal.InitialActivity;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.northeastern.afinal.MainActivity;
 import edu.northeastern.afinal.R;
 import edu.northeastern.afinal.databinding.ActivityLoginBinding;
@@ -127,6 +128,8 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUIWUser(user);
+
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -148,6 +151,16 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.d(TAG, "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     updateUIWUser(user);
+                                    // Insert to the firebase
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                    DatabaseReference usersRef = database.getReference().child("decor-sense").child("users");
+                                    String userId = user.getUid();
+                                    String profilePath="gs://numadfa23-group5.appspot.com/userProfileImages/0.jpg";
+                                    Map<String, Object> newUser = new HashMap<>();
+                                    newUser.put("username", user.getEmail());
+                                    newUser.put("profile-image", profilePath);
+                                    newUser.put("bookmarks", new ArrayList<String>());
+                                    usersRef.child(userId).setValue(newUser);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
