@@ -64,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
                 navController.popBackStack(R.id.navigation_browse, true);
                 navController.navigate(R.id.navigation_user);
             } else if (intent.hasExtra("SHOW_SCAN_FRAGMENT")) {
-                navController.navigate(R.id.navigation_scan);
+                Bundle bundle = new Bundle();
+                bundle.putString("object_id", null); // Pass null for objectId
+                navController.navigate(R.id.navigation_scan, bundle);
                 
             }
             // Clear the intent to avoid navigating again on configuration changes (e.g., rotation)

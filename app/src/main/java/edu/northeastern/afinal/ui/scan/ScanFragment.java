@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -39,6 +40,25 @@ public class ScanFragment extends Fragment {
     private Size imageDimension;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
+    private static final String ARG_OBJECT_ID = "object_id";
+    private String objectId = null; // Default to null
+
+
+    public static ScanFragment newInstance(@Nullable String objectId) {
+        ScanFragment fragment = new ScanFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_OBJECT_ID, objectId); // Put the object ID in the arguments
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            objectId = getArguments().getString(ARG_OBJECT_ID); // Retrieve the object ID
+        }
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
