@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import edu.northeastern.afinal.ui.browse.BrowseFragment;
 import edu.northeastern.afinal.ui.login.LoginActivity;
-import edu.northeastern.afinal.ui.scan.ScanActivity;
+//import edu.northeastern.afinal.ui.scan.ScanActivity;
 import edu.northeastern.afinal.ui.scan.ScanFragment;
 
 public class InitialActivity extends AppCompatActivity {
