@@ -63,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
                 // Clear the back stack up to and including BrowseFragment and navigate to UserFragment
                 navController.popBackStack(R.id.navigation_browse, true);
                 navController.navigate(R.id.navigation_user);
+            } else if (intent.hasExtra("SHOW_SCAN_FRAGMENT")) {
+                navController.navigate(R.id.navigation_scan);
+                
             }
             // Clear the intent to avoid navigating again on configuration changes (e.g., rotation)
             setIntent(new Intent());

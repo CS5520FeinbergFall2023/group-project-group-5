@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import edu.northeastern.afinal.ui.browse.BrowseFragment;
 import edu.northeastern.afinal.ui.login.LoginActivity;
 import edu.northeastern.afinal.ui.scan.ScanActivity;
+import edu.northeastern.afinal.ui.scan.ScanFragment;
 
 public class InitialActivity extends AppCompatActivity {
 
@@ -71,8 +72,10 @@ public class InitialActivity extends AppCompatActivity {
 
         Button scanButton = (Button) findViewById(R.id.buttonScan);
         scanButton.setOnClickListener(v -> {
-            Intent intent = new Intent(InitialActivity.this, ScanActivity.class);
-            startActivity(intent);
+            Intent intent = new Intent(InitialActivity.this, MainActivity.class);
+            intent.putExtra("SHOW_SCAN_FRAGMENT", true);
+            startMainActivityForResult.launch(intent);
         });
+
     }
 }
