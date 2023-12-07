@@ -124,6 +124,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         android:text="Log in for use in plans or save for later."
+                        android:visibility="invisible"
                         >
 
                     </TextView>
@@ -142,10 +143,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
-                            android:src="@android:drawable/btn_star"
+                            android:src="@drawable/baseline_open_in_new_24"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-
                             app:layout_constraintEnd_toStartOf="@+id/addToPlanTextView"
                             />
 
@@ -197,10 +197,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
-
-
-
-
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/DetailsLayout"

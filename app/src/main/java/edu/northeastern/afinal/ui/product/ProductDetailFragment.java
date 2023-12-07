@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -29,6 +31,8 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.northeastern.afinal.R;
+import edu.northeastern.afinal.ui.browse.BrowseFragment;
+import edu.northeastern.afinal.ui.scan.ScanFragment;
 import me.relex.circleindicator.CircleIndicator3;
 
 public class ProductDetailFragment extends Fragment {
@@ -70,6 +74,7 @@ public class ProductDetailFragment extends Fragment {
             Snackbar.make(root.findViewById(R.id.product_detail_view), "Error reading product.",
                     Snackbar.LENGTH_LONG).show();
             Log.e("ProductDetailFragment", "PRODUCT_ID is empty.");
+            return root;
         }
         ViewPager2 productImageViewPager = root.findViewById(R.id.productImageViewPager);
         textViewProductName = root.findViewById(R.id.textViewProductName);
@@ -96,13 +101,17 @@ public class ProductDetailFragment extends Fragment {
             bookmarkLayout.setVisibility(View.VISIBLE);
 
             // Button functions
-            // todo: add to plan button
+            // add to plan button
             addToPlanButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    //opens up the scan page and pass the object ID
+                    NavController navController = Navigation.findNavController(requireView());
+                    ScanFragment scanFragment = ScanFragment.newInstance(productId);
+                    navController.navigate(R.id.action_productDetailFragment_to_scanFragment,scanFragment.getArguments());
                 }
             });
+
             // bookmark button
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference bookmarkRef = database.getReference().child("decor-sense")

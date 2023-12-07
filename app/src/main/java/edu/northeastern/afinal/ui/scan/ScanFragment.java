@@ -14,6 +14,7 @@ import android.hardware.camera2.CaptureRequest;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -57,6 +58,7 @@ public class ScanFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             objectId = getArguments().getString(ARG_OBJECT_ID); // Retrieve the object ID
+            Log.d("ScanFragment",objectId);
         }
     }
 

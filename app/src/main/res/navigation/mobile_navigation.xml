@@ -18,7 +18,6 @@
         app:destination="@id/searchResultFragment" />
     </fragment>
 
-
     <fragment
         android:id="@+id/navigation_scan"
         android:name="edu.northeastern.afinal.ui.scan.ScanFragment"
@@ -39,9 +38,11 @@
         <argument
             android:name="productId"
             app:argType="string" />
+
+        <action
+            android:id="@+id/action_productDetailFragment_to_scanFragment"
+            app:destination="@id/navigation_scan" />
     </fragment>
-
-
 
     <fragment
         android:id="@+id/searchResultFragment"
