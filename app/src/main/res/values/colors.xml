@@ -13,5 +13,6 @@
     <color name="oat">#C7BEB4</color>
     <color name="dark_oat">#958C82</color>
     <color name="alabaster">#f3f2ee</color>
+    <color name="transparent">#00FFFFFF</color>
 
 </resources>

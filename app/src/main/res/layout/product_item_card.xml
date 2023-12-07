@@ -1,8 +1,9 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/productCardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="?attr/colorOnPrimary"
+    app:cardBackgroundColor="@color/transparent"
     app:cardCornerRadius="0dp"
     app:cardElevation="0dp">
 
@@ -41,7 +42,6 @@
             android:layout_height="wrap_content"
             android:paddingTop="8dp"
             android:text="Product Name"
-            android:textColor="#000000"
             android:textSize="14sp" />
 
         <TextView
@@ -58,7 +58,6 @@
             android:layout_height="wrap_content"
             android:text="Price: $99"
             android:textAlignment="viewStart"
-            android:textColor="#000000"
             android:textSize="14sp" />
 
     </LinearLayout>
