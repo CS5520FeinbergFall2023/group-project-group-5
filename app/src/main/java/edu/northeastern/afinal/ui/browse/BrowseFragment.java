@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -90,13 +91,15 @@ public class BrowseFragment extends Fragment {
                             itemList.add(productItemCard);
                             rviewAdapter.notifyItemInserted(itemList.size() - 1);
                         } else {
-                            System.out.println("Product with ID " + finalId + " does not exist.");
+                            Log.d("BrowseFragment","Product with ID " + finalId + " does not exist.");
                         }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        System.out.println("Error reading product details: " + databaseError.getMessage());
+                        Log.d("BrowseFragment","Error reading product details: " + databaseError.getMessage());
+                        Snackbar.make(root.findViewById(R.id.browse_view), "Error reading product details from database.",
+                                Snackbar.LENGTH_LONG).show();
                     }
                 });
             }
@@ -154,8 +157,6 @@ public class BrowseFragment extends Fragment {
                 //opens up the corresponding product detail page
                 NavController navController = Navigation.findNavController(requireView());
                 ProductDetailFragment productDetailFragment = ProductDetailFragment.newInstance(productID);
-//                Bundle bundle = new Bundle();
-//                bundle.putString(SearchResultFragment.ARG_KEYWORD, productID);
                 navController.navigate(R.id.action_browseFragment_to_productDetailFragment,productDetailFragment.getArguments());
             }
         };
@@ -170,9 +171,6 @@ public class BrowseFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-
-
 
     public static BrowseFragment newInstance() {
         return new BrowseFragment();

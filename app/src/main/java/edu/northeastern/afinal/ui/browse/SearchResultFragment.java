@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,9 +58,6 @@ import edu.northeastern.afinal.ui.product.ProductItemClickListener;
  * create an instance of this fragment.
  */
 public class SearchResultFragment extends Fragment implements AdapterView.OnItemSelectedListener {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String ARG_KEYWORD = "keyword";
     private static final String KEY_ITEM_LIST = "KEY_ITEM_LIST";
     private static final String KEY_MIN_WIDTH = "KEY_MIN_WIDTH";
@@ -145,6 +143,16 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         root = inflater.inflate(R.layout.fragment_search_result, container, false);
         if (getArguments() != null) {
             keyword = getArguments().getString(ARG_KEYWORD);
+            if(keyword==null || keyword.isEmpty()) {
+                Snackbar.make(root.findViewById(R.id.search_result_view), "Empty search keyword!",
+                        Snackbar.LENGTH_LONG).show();
+                Log.e("SearchResultFragment", "keyword is null or empty.");
+            }
+        }
+        else {
+            Snackbar.make(root.findViewById(R.id.search_result_view), "Empty search keyword!",
+                    Snackbar.LENGTH_LONG).show();
+            Log.e("SearchResultFragment", "getArguments returns null.");
         }
         colorFilterButton = root.findViewById(R.id.colorFilterButton);
         widthFilterButton = root.findViewById(R.id.widthFilterButton);
@@ -241,7 +249,9 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    // todo: Handle errors
+                    Snackbar.make(root.findViewById(R.id.search_result_view), "Error getting product search result.",
+                            Snackbar.LENGTH_LONG).show();
+                    Log.e("SearchResultFragment", "Error getting product search result: " + databaseError.getMessage());
                 }
             });
 
@@ -360,10 +370,6 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
 
     }
 
-    private void showColorOptionsPopupWindow() {
-        //
-    }
-
     private void showSizeFilterPopupWindow(View anchorView) {
         View popupView = getLayoutInflater().inflate(R.layout.size_filter_dropdown_layout, null);
 
@@ -390,23 +396,14 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double min = editTextStart.getText().toString().isEmpty() ? 0 : Double.parseDouble(editTextStart.getText().toString());
-                double max = editTextEnd.getText().toString().isEmpty() ? Double.MAX_VALUE : Double.parseDouble(editTextEnd.getText().toString());
                 // filter search result
-//                ArrayList<ProductItemCard> filtered = new ArrayList<>(itemList);
                 if (anchorView == widthFilterButton) {
-//                    filtered.removeIf(item -> (item.getWidth() < min || item.getWidth() > max));
-//                    createRecyclerView(filtered);
                     minWidth = editTextStart.getText().toString();
                     maxWidth = editTextEnd.getText().toString();
                 } else if (anchorView == heightFilterButton) {
-//                    filtered.removeIf(item -> (item.getHeight() < min || item.getHeight() > max));
-//                    createRecyclerView(filtered);
                     minHeight = editTextStart.getText().toString();
                     maxHeight = editTextEnd.getText().toString();
                 } else if (anchorView == depthFilterButton) {
-//                    filtered.removeIf(item -> (item.getDepth() < min || item.getDepth() > max));
-//                    createRecyclerView(filtered);
                     minDepth = editTextStart.getText().toString();
                     maxDepth = editTextEnd.getText().toString();
                 } else {

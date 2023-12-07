@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,10 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import edu.northeastern.afinal.R;
@@ -55,7 +53,6 @@ public class ProductDetailFragment extends Fragment {
     private ImageButton bookmarkButton;
 
 
-
     public static ProductDetailFragment newInstance(String productId) {
         ProductDetailFragment fragment = new ProductDetailFragment();
         Bundle args = new Bundle();
@@ -69,21 +66,25 @@ public class ProductDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_product_detail, container, false);
         String productId = getArguments().getString("PRODUCT_ID", "");
-
+        if (productId.isEmpty()) {
+            Snackbar.make(root.findViewById(R.id.product_detail_view), "Error reading product.",
+                    Snackbar.LENGTH_LONG).show();
+            Log.e("ProductDetailFragment", "PRODUCT_ID is empty.");
+        }
         ViewPager2 productImageViewPager = root.findViewById(R.id.productImageViewPager);
-        textViewProductName=root.findViewById(R.id.textViewProductName);
-        textViewProductBrand=root.findViewById(R.id.textViewProductBrand);
-        ratingBar=root.findViewById(R.id.ratingBar);
-        textViewRatingCount=root.findViewById(R.id.textViewRatingCount);
-        textViewProductPrice=root.findViewById(R.id.textViewProductPrice);
-        detailsTextView=root.findViewById(R.id.detailsTextView);
-        colorTextView=root.findViewById(R.id.colorTextView);
-        sizeTextView=root.findViewById(R.id.sizeTextView);
-        noLoginTextView=root.findViewById(R.id.noLoginTextView);
-        addToPlanLayout=root.findViewById(R.id.addToPlanLayout);
-        bookmarkLayout=root.findViewById(R.id.bookmarkLayout);
-        addToPlanButton=root.findViewById(R.id.addToPlanButton);
-        bookmarkButton=root.findViewById(R.id.bookmarkButton);
+        textViewProductName = root.findViewById(R.id.textViewProductName);
+        textViewProductBrand = root.findViewById(R.id.textViewProductBrand);
+        ratingBar = root.findViewById(R.id.ratingBar);
+        textViewRatingCount = root.findViewById(R.id.textViewRatingCount);
+        textViewProductPrice = root.findViewById(R.id.textViewProductPrice);
+        detailsTextView = root.findViewById(R.id.detailsTextView);
+        colorTextView = root.findViewById(R.id.colorTextView);
+        sizeTextView = root.findViewById(R.id.sizeTextView);
+        noLoginTextView = root.findViewById(R.id.noLoginTextView);
+        addToPlanLayout = root.findViewById(R.id.addToPlanLayout);
+        bookmarkLayout = root.findViewById(R.id.bookmarkLayout);
+        addToPlanButton = root.findViewById(R.id.addToPlanButton);
+        bookmarkButton = root.findViewById(R.id.bookmarkButton);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
@@ -96,7 +97,12 @@ public class ProductDetailFragment extends Fragment {
 
             // Button functions
             // todo: add to plan button
-            // todo: used in plan button
+            addToPlanButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
             // bookmark button
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference bookmarkRef = database.getReference().child("decor-sense")
@@ -158,7 +164,7 @@ public class ProductDetailFragment extends Fragment {
 
         //get all images under /furniture/{productID}/images/
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        String path = String.format("furniture/%s/images",productId);  // replace with your path
+        String path = String.format("furniture/%s/images", productId);  // replace with your path
         StorageReference storageRef = storage.getReference(path);
         storageRef.listAll()
                 .addOnSuccessListener(listResult -> {
@@ -169,7 +175,7 @@ public class ProductDetailFragment extends Fragment {
                         item.getDownloadUrl().addOnSuccessListener(uri -> {
                             // uri is the correct download URL for each item
                             String downloadUrl = uri.toString();
-                            SliderItemCard sliderItemCard=new SliderItemCard(downloadUrl);
+                            SliderItemCard sliderItemCard = new SliderItemCard(downloadUrl);
                             itemList.add(sliderItemCard);
                             // Check if all download URLs have been obtained
                             if (counter.incrementAndGet() == totalItems) {
@@ -183,12 +189,14 @@ public class ProductDetailFragment extends Fragment {
 
                         }).addOnFailureListener(e -> {
                             // Handle failure to get download URL
-                            System.err.println("Error getting download URL: " + e.getMessage());
+                            Log.e("ProductDetailFragment", "Error getting download URL: " + e.getMessage());
                         });
                     }
                 })
                 .addOnFailureListener(e -> {
-                    System.err.println("Error listing files: " + e.getMessage());
+                    Snackbar.make(root.findViewById(R.id.product_detail_view), "Error reading product images.",
+                            Snackbar.LENGTH_LONG).show();
+                    Log.e("ProductDetailFragment", "Error listing files: " + e.getMessage());
                 });
 
         // get product info from firebase
@@ -197,20 +205,23 @@ public class ProductDetailFragment extends Fragment {
         furnitureRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot entrySnapshot) {
-                    ProductItemCard productItemCard = entrySnapshot.getValue(ProductItemCard.class);
-                    textViewProductName.setText(productItemCard.getName());
-                    textViewProductBrand.setText(productItemCard.getBrand());
-                    ratingBar.setRating(Math.round(productItemCard.getRatings()));
-                    textViewRatingCount.setText(String.format("(%s)",(int)productItemCard.getReviews()));
-                    textViewProductPrice.setText(String.format("$%s",productItemCard.getPrice()));
-                    detailsTextView.setText(productItemCard.getDescription());
-                    colorTextView.setText(String.format("Color: %s",productItemCard.getColor()));
-                    sizeTextView.setText(String.format("Size: %s (H) × %s (W) × %s (D)",productItemCard.getHeight(),productItemCard.getWidth(),productItemCard.getDepth()));
+                ProductItemCard productItemCard = entrySnapshot.getValue(ProductItemCard.class);
+                textViewProductName.setText(productItemCard.getName());
+                textViewProductBrand.setText(productItemCard.getBrand());
+                ratingBar.setRating(Math.round(productItemCard.getRatings()));
+                textViewRatingCount.setText(String.format("(%s)", (int) productItemCard.getReviews()));
+                textViewProductPrice.setText(String.format("$%s", productItemCard.getPrice()));
+                detailsTextView.setText(productItemCard.getDescription());
+                colorTextView.setText(String.format("Color: %s", productItemCard.getColor()));
+                sizeTextView.setText(String.format("Size: %s (H) × %s (W) × %s (D)",
+                        productItemCard.getHeight(), productItemCard.getWidth(), productItemCard.getDepth()));
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // todo: Handle errors
+                Snackbar.make(root.findViewById(R.id.product_detail_view), "Error getting product details.",
+                        Snackbar.LENGTH_LONG).show();
+                Log.e("ProductDetailFragment", "Error reading product details: " + databaseError.getMessage());
             }
         });
 
