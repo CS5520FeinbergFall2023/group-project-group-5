@@ -109,9 +109,9 @@ public class InitialActivity extends AppCompatActivity {
     private void showCameraPermissionExplanation() {
         new AlertDialog.Builder(this)
                 .setTitle("Camera Permission Needed")
-                .setMessage("Camera permission is necessary to use the scan feature. Please grant camera permission to continue.")
+                .setMessage("Camera permission is necessary to use the scan feature. Please grant camera permission in the settings menu to continue.")
                 .setPositiveButton("OK", (dialog, which) -> {
-                    // Optionally, try to request the permission again or guide the user to settings
+                    dialog.dismiss();
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> {
                     dialog.dismiss();
