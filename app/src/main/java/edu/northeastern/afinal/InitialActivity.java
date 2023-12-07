@@ -2,10 +2,15 @@ package edu.northeastern.afinal;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
+import android.Manifest;
+
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.RenderEffect;
 import android.os.Bundle;
 import android.view.View;
@@ -33,6 +38,18 @@ public class InitialActivity extends AppCompatActivity {
                 }
             }
     );
+
+    private final ActivityResultLauncher<String> requestCameraPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    // Permission is granted, proceed to open MainActivity with scan fragment
+                    openScanFragment();
+                } else {
+                    // Permission is denied, we can show a message to the user explaining why the permission is needed
+                    showCameraPermissionExplanation();
+
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +89,34 @@ public class InitialActivity extends AppCompatActivity {
 
         Button scanButton = (Button) findViewById(R.id.buttonScan);
         scanButton.setOnClickListener(v -> {
-            Intent intent = new Intent(InitialActivity.this, MainActivity.class);
-            intent.putExtra("SHOW_SCAN_FRAGMENT", true);
-            startMainActivityForResult.launch(intent);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                // If permission is already granted, open the scan fragment
+                openScanFragment();
+            } else {
+                // Request camera permission
+                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
+            }
         });
 
+    }
+
+    private void openScanFragment() {
+        Intent intent = new Intent(InitialActivity.this, MainActivity.class);
+        intent.putExtra("SHOW_SCAN_FRAGMENT", true);
+        startMainActivityForResult.launch(intent);
+    }
+
+    private void showCameraPermissionExplanation() {
+        new AlertDialog.Builder(this)
+                .setTitle("Camera Permission Needed")
+                .setMessage("Camera permission is necessary to use the scan feature. Please grant camera permission to continue.")
+                .setPositiveButton("OK", (dialog, which) -> {
+                    // Optionally, try to request the permission again or guide the user to settings
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .create()
+                .show();
     }
 }
