@@ -51,7 +51,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/signin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/signin"
-        app:layout_constraintVertical_bias="0.0" />
+        android:backgroundTint="?attr/colorPrimaryVariant"
+         />
 
     <Button
         android:id="@+id/signin"
@@ -63,6 +64,8 @@
         android:enabled="true"
         android:text="@string/action_sign_in"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="?attr/colorPrimaryVariant"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
