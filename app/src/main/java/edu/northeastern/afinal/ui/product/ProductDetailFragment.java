@@ -50,10 +50,8 @@ public class ProductDetailFragment extends Fragment {
     private TextView noLoginTextView;
 
     private ConstraintLayout addToPlanLayout;
-    private ConstraintLayout usedInPlanLayout;
     private ConstraintLayout bookmarkLayout;
     private ImageButton addToPlanButton;
-    private ImageButton usedInPlanButton;
     private ImageButton bookmarkButton;
 
 
@@ -83,10 +81,8 @@ public class ProductDetailFragment extends Fragment {
         sizeTextView=root.findViewById(R.id.sizeTextView);
         noLoginTextView=root.findViewById(R.id.noLoginTextView);
         addToPlanLayout=root.findViewById(R.id.addToPlanLayout);
-        usedInPlanLayout=root.findViewById(R.id.usedInPlanLayout);
         bookmarkLayout=root.findViewById(R.id.bookmarkLayout);
         addToPlanButton=root.findViewById(R.id.addToPlanButton);
-        usedInPlanButton=root.findViewById(R.id.usedInPlanButton);
         bookmarkButton=root.findViewById(R.id.bookmarkButton);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -96,7 +92,6 @@ public class ProductDetailFragment extends Fragment {
             String uid = user.getUid();
             noLoginTextView.setVisibility(View.INVISIBLE);
             addToPlanLayout.setVisibility(View.VISIBLE);
-            usedInPlanLayout.setVisibility(View.VISIBLE);
             bookmarkLayout.setVisibility(View.VISIBLE);
 
             // Button functions
@@ -158,7 +153,6 @@ public class ProductDetailFragment extends Fragment {
             // No user signed in
             noLoginTextView.setVisibility(View.VISIBLE);
             addToPlanLayout.setVisibility(View.INVISIBLE);
-            usedInPlanLayout.setVisibility(View.INVISIBLE);
             bookmarkLayout.setVisibility(View.INVISIBLE);
         }
 

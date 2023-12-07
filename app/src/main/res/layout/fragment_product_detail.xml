@@ -132,7 +132,6 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
                         >
 
 
@@ -152,7 +151,7 @@
                             android:id="@+id/addToPlanTextView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Add to plan"
+                            android:text="Use it"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
@@ -160,45 +159,12 @@
                         </TextView>
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/usedInPlanLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@+id/addToPlanLayout"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        >
-
-                        <ImageButton
-                            android:id="@+id/usedInPlanButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-
-                            android:src="@android:drawable/btn_star"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/usedInPlanTextView"
-                            app:layout_constraintStart_toStartOf="parent"
-                            />
-
-                        <TextView
-                            android:id="@+id/usedInPlanTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Used in ..."
-                            app:layout_constraintBottom_toBottomOf="parent"
-
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            >
-
-                        </TextView>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/bookmarkLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@+id/usedInPlanLayout"
+                        app:layout_constraintTop_toBottomOf="@+id/addToPlanLayout"
                         app:layout_constraintEnd_toEndOf="parent"
                         >
 
