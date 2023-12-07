@@ -58,7 +58,7 @@ public class ScanFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             objectId = getArguments().getString(ARG_OBJECT_ID); // Retrieve the object ID
-            Log.d("ScanFragment",objectId);
+//            Log.d("ScanFragment",objectId);
         }
     }
 
