@@ -22,7 +22,7 @@
             app:layout_constraintBottom_toTopOf="@+id/textViewBookmarkProductName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:src="@drawable/ic_placeholder_image" /> <!-- Replace with your image placeholder -->
+            android:src="@android:drawable/ic_menu_camera" />
 
         <TextView
             android:id="@+id/textViewBookmarkProductName"
