@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -56,9 +58,12 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int position) {
         Bookmark bookmark = bookmarksList.get(position);
         viewHolder.getTextView().setText(bookmark.getProductName());
-        Glide.with(viewHolder.getImageView().getContext())
-                .load(bookmark.getImageUrl())
-                .into(viewHolder.getImageView());
+//        Glide.with(viewHolder.getImageView().getContext())
+//                .load(bookmark.getImageUrl())
+//                .into(viewHolder.getImageView());
+        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(bookmark.getImageUrl());
+        // Use Glide to load the image
+        Glide.with(viewHolder.getImageView().getContext()).load(storageRef).into(viewHolder.imageView);
     }
 
     @Override

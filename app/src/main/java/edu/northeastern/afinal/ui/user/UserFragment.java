@@ -55,10 +55,11 @@ public class UserFragment extends Fragment {
         recyclerViewBookmarks = root.findViewById(R.id.recyclerViewBookmarks);
         recyclerViewBookmarks.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        bookmarksAdapter = new BookmarksAdapter(getContext(), bookmarksList);
-        recyclerViewBookmarks.setAdapter(bookmarksAdapter);
+
 
         loadBookmarks();
+        bookmarksAdapter = new BookmarksAdapter(getContext(), bookmarksList);
+        recyclerViewBookmarks.setAdapter(bookmarksAdapter);
 
         buttonLogout=root.findViewById(R.id.buttonLogout);
         buttonLogout.setOnClickListener(new View.OnClickListener() {
@@ -77,8 +78,8 @@ public class UserFragment extends Fragment {
             }
         });
 
-        final TextView textView = binding.textNotifications;
-        userViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+//        final TextView textView = binding.textNotifications;
+//        userViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
@@ -89,9 +90,9 @@ public class UserFragment extends Fragment {
         if (user != null) {
             String uid = user.getUid();
             Log.d("UserFragment", "User ID: " + uid);
-            DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference()
+            DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference().child("decor-sense")
                     .child("users").child(uid).child("bookmarks");
-            DatabaseReference furnitureRef = FirebaseDatabase.getInstance().getReference().child("furniture");
+            DatabaseReference furnitureRef = FirebaseDatabase.getInstance().getReference().child("decor-sense").child("furniture");
 
             bookmarksRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -128,6 +129,7 @@ public class UserFragment extends Fragment {
                 }
             });
         }
+
     }
 
 
