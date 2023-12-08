@@ -20,6 +20,10 @@
         <item name="itemIconTint">@color/oat</item>
         <item name="itemTextColor">?attr/colorPrimaryVariant</item>
 
+        <item name="mycustomcolor">?attr/colorPrimaryVariant</item>
+
+
+
 
     </style>
 
