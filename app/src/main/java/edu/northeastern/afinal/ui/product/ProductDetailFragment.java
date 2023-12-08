@@ -1,5 +1,6 @@
 package edu.northeastern.afinal.ui.product;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,6 +70,9 @@ public class ProductDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_product_detail, container, false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getView().setBackgroundResource(R.style.Theme_FinalNoActionBar);
+        }
         String productId = getArguments().getString("PRODUCT_ID", "");
         if (productId.isEmpty()) {
             Snackbar.make(root.findViewById(R.id.product_detail_view), "Error reading product.",
