@@ -22,6 +22,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.474" />
 
+
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo465"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <ImageView
         android:id="@+id/imageViewProfilePicture"
         android:layout_width="80dp"
@@ -29,6 +39,7 @@
         android:background="@drawable/rounded_image"
         android:scaleType="centerCrop"
         android:src="@android:drawable/ic_menu_camera"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.102"
@@ -49,6 +60,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.141" />
 
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="2023/01/01"
+        app:layout_constraintTop_toBottomOf="@+id/textViewUsername"
+        app:layout_constraintStart_toStartOf="@+id/textViewUsername"
+        app:layout_constraintEnd_toEndOf="@+id/textViewUsername"/>
+
     <Button
         android:id="@+id/buttonLogout"
         android:layout_width="wrap_content"
@@ -58,7 +78,10 @@
         android:layout_marginBottom="252dp"
         android:text="Log out"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonChangePassword"
+        />
 
 
     <TextView
@@ -77,15 +100,25 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewBookmarks"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonLogout"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/textViewBookmarksTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    <!-- layout for changing password -->
+
+    <Button
+        android:id="@+id/buttonChangePassword"
+        android:layout_width="223dp"
+        android:layout_height="62dp"
+        android:text="change_password"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewBookmarksTitle"
-        app:layout_constraintVertical_weight="1" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewBookmarks" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

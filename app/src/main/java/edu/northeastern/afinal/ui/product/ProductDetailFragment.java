@@ -1,6 +1,7 @@
 package edu.northeastern.afinal.ui.product;
 
 import android.os.Build;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ import edu.northeastern.afinal.R;
 import edu.northeastern.afinal.ui.browse.BrowseFragment;
 import edu.northeastern.afinal.ui.scan.ScanFragment;
 import me.relex.circleindicator.CircleIndicator3;
+
 
 public class ProductDetailFragment extends Fragment {
     private View root;
