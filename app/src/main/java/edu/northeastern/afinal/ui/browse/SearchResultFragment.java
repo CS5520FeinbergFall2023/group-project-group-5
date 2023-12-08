@@ -145,11 +145,11 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         if (getArguments() != null) {
             keyword = getArguments().getString(ARG_KEYWORD);
             minWidth=getArguments().getString(ARG_MIN_WIDTH,"");
-            maxWidth=getArguments().getString(ARG_MIN_WIDTH,"");
-            minHeight=getArguments().getString(ARG_MIN_WIDTH,"");
-            maxHeight=getArguments().getString(ARG_MIN_WIDTH,"");
-            minDepth=getArguments().getString(ARG_MIN_WIDTH,"");
-            maxDepth=getArguments().getString(ARG_MIN_WIDTH,"");
+            maxWidth=getArguments().getString(ARG_MAX_WIDTH,"");
+            minHeight=getArguments().getString(ARG_MIN_HEIGHT,"");
+            maxHeight=getArguments().getString(ARG_MAX_HEIGHT,"");
+            minDepth=getArguments().getString(ARG_MIN_DEPTH,"");
+            maxDepth=getArguments().getString(ARG_MAX_WIDTH,"");
         }
     }
 
