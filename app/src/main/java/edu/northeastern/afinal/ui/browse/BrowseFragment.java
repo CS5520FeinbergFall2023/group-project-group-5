@@ -66,7 +66,6 @@ public class BrowseFragment extends Fragment {
         root = binding.getRoot();
 
         // hide the label bar on the top
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
             init(savedInstanceState);
         }

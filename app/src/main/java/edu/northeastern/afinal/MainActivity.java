@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_browse, R.id.navigation_scan, R.id.navigation_user)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         // Check if there is an intent with a specific flag or extra indicating BrowseFragment should be shown
