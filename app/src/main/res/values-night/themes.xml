@@ -19,7 +19,7 @@
         <item name="android:itemBackground">@color/oat</item>
         <item name="itemIconTint">@color/oat</item>
         <item name="itemTextColor">?attr/colorPrimaryVariant</item>
-        
+
     </style>
 
 </resources>

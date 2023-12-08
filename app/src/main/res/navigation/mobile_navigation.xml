@@ -15,8 +15,39 @@
         app:destination="@id/productDetailFragment" />
     <action
         android:id="@+id/action_browseFragment_to_searchResultFragment"
-        app:destination="@id/searchResultFragment" />
+        app:destination="@id/searchResultFragment">
+        <argument
+            android:name="keyword"
+            app:argType="string" />
+    </action>
+    <!-- Action with keyword and dimensions -->
+    <action
+        android:id="@+id/action_browseFragment_to_searchResultFragmentDimensions"
+        app:destination="@id/searchResultFragment">
+        <argument
+            android:name="keyword"
+            app:argType="string" />
+        <argument
+            android:name="min_width"
+            app:argType="float" />
+        <argument
+            android:name="max_width"
+            app:argType="float" />
+        <argument
+            android:name="min_"
+            app:argType="float" />
+        <argument
+            android:name="max_width"
+            app:argType="float" />
+        <argument
+            android:name="min_width"
+            app:argType="float" />
+        <argument
+            android:name="max_width"
+            app:argType="float" />
+    </action>
     </fragment>
+
 
     <fragment
         android:id="@+id/navigation_scan"
@@ -38,7 +69,6 @@
         <argument
             android:name="productId"
             app:argType="string" />
-
         <action
             android:id="@+id/action_productDetailFragment_to_scanFragment"
             app:destination="@id/navigation_scan" />

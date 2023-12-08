@@ -59,6 +59,14 @@ import edu.northeastern.afinal.ui.product.ProductItemClickListener;
  */
 public class SearchResultFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     public static final String ARG_KEYWORD = "keyword";
+
+    public static final String ARG_MIN_WIDTH = "min_width";
+    public static final String ARG_MAX_WIDTH = "max_width";
+    public static final String ARG_MIN_HEIGHT = "min_height";
+    public static final String ARG_MAX_HEIGHT = "max_height";
+    public static final String ARG_MIN_DEPTH = "min_depth";
+    public static final String ARG_MAX_DEPTH = "max_depth";
+
     private static final String KEY_ITEM_LIST = "KEY_ITEM_LIST";
     private static final String KEY_MIN_WIDTH = "KEY_MIN_WIDTH";
     private static final String KEY_MAX_WIDTH = "KEY_MAX_WIDTH";
@@ -462,17 +470,17 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
             if (savedInstanceState.containsKey(KEY_MAX_WIDTH)) {
                 maxWidth = savedInstanceState.getString(KEY_MAX_WIDTH);
             }
-            if (savedInstanceState.containsKey(KEY_MIN_WIDTH)) {
-                minWidth = savedInstanceState.getString(KEY_MIN_WIDTH);
+            if (savedInstanceState.containsKey(KEY_MIN_HEIGHT)) {
+                minHeight = savedInstanceState.getString(KEY_MIN_HEIGHT);
             }
-            if (savedInstanceState.containsKey(KEY_MAX_WIDTH)) {
-                maxWidth = savedInstanceState.getString(KEY_MAX_WIDTH);
+            if (savedInstanceState.containsKey(KEY_MAX_HEIGHT)) {
+                maxHeight = savedInstanceState.getString(KEY_MAX_HEIGHT);
             }
-            if (savedInstanceState.containsKey(KEY_MIN_WIDTH)) {
-                minWidth = savedInstanceState.getString(KEY_MIN_WIDTH);
+            if (savedInstanceState.containsKey(KEY_MIN_DEPTH)) {
+                minDepth = savedInstanceState.getString(KEY_MIN_DEPTH);
             }
-            if (savedInstanceState.containsKey(KEY_MAX_WIDTH)) {
-                maxWidth = savedInstanceState.getString(KEY_MAX_WIDTH);
+            if (savedInstanceState.containsKey(KEY_MAX_DEPTH)) {
+                maxDepth = savedInstanceState.getString(KEY_MAX_DEPTH);
             }
             if (savedInstanceState.containsKey(KEY_COLOR_OPTIONS)) {
                 colorOptions = savedInstanceState.getStringArrayList(KEY_COLOR_OPTIONS);
