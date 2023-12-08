@@ -42,7 +42,6 @@ public class ProductDetailFragment extends Fragment {
     private View root;
     private ArrayList<SliderItemCard> itemList = new ArrayList<>();
     private SliderAdapter sliderAdapter;
-
     private TextView textViewProductName;
     private TextView textViewProductBrand;
     private RatingBar ratingBar;
@@ -51,9 +50,7 @@ public class ProductDetailFragment extends Fragment {
     private TextView detailsTextView;
     private TextView colorTextView;
     private TextView sizeTextView;
-
     private TextView noLoginTextView;
-
     private ConstraintLayout addToPlanLayout;
     private ConstraintLayout bookmarkLayout;
     private ImageButton addToPlanButton;
