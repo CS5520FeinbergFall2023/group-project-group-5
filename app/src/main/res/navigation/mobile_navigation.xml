@@ -29,22 +29,22 @@
             app:argType="string" />
         <argument
             android:name="min_width"
-            app:argType="float" />
+            app:argType="string" />
         <argument
             android:name="max_width"
-            app:argType="float" />
+            app:argType="string" />
         <argument
-            android:name="min_"
-            app:argType="float" />
+            android:name="min_height"
+            app:argType="string" />
         <argument
-            android:name="max_width"
-            app:argType="float" />
+            android:name="max_height"
+            app:argType="string" />
         <argument
-            android:name="min_width"
-            app:argType="float" />
+            android:name="min_depth"
+            app:argType="string" />
         <argument
-            android:name="max_width"
-            app:argType="float" />
+            android:name="max_depth"
+            app:argType="string" />
     </action>
     </fragment>
 

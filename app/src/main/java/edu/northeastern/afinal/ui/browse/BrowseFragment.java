@@ -120,6 +120,18 @@ public class BrowseFragment extends Fragment {
                 NavController navController = Navigation.findNavController(requireView());
                 SearchResultFragment searchResultFragment=SearchResultFragment.newInstance(query);
                 navController.navigate(R.id.action_browseFragment_to_searchResultFragment,searchResultFragment.getArguments());
+                //todo:from scan page to search result page with keyword and dimensions
+//                 Bundle args = new Bundle();
+//                 args.putString(SearchResultFragment.ARG_KEYWORD, "desk");
+//                 args.putDouble(SearchResultFragment.ARG_MIN_WIDTH, 0);
+//                 args.putDouble(SearchResultFragment.ARG_MAX_WIDTH, 50);
+//                 args.putDouble(SearchResultFragment.ARG_MIN_HEIGHT, 5);
+//                 args.putDouble(SearchResultFragment.ARG_MAX_HEIGHT, 20);
+//                 args.putDouble(SearchResultFragment.ARG_MIN_DEPTH, 5);
+//                 args.putDouble(SearchResultFragment.ARG_MAX_DEPTH, 10.5);
+//                navController.navigate(R.id.action_browseFragment_to_searchResultFragmentDimensions, args);
+//                NavController navController = Navigation.findNavController(requireView());
+//                navController.navigate(R.id.action_browseFragment_to_searchResultFragmentDimensions);
                 return true;
             }
 
