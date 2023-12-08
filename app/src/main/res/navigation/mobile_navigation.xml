@@ -20,32 +20,7 @@
             android:name="keyword"
             app:argType="string" />
     </action>
-    <!-- Action with keyword and dimensions -->
-    <action
-        android:id="@+id/action_browseFragment_to_searchResultFragmentDimensions"
-        app:destination="@id/searchResultFragment">
-        <argument
-            android:name="keyword"
-            app:argType="string" />
-        <argument
-            android:name="min_width"
-            app:argType="string" />
-        <argument
-            android:name="max_width"
-            app:argType="string" />
-        <argument
-            android:name="min_height"
-            app:argType="string" />
-        <argument
-            android:name="max_height"
-            app:argType="string" />
-        <argument
-            android:name="min_depth"
-            app:argType="string" />
-        <argument
-            android:name="max_depth"
-            app:argType="string" />
-    </action>
+
     </fragment>
 
 
@@ -53,7 +28,34 @@
         android:id="@+id/navigation_scan"
         android:name="edu.northeastern.afinal.ui.scan.ScanFragment"
         android:label="@string/title_scan"
-        tools:layout="@layout/fragment_scan" />
+        tools:layout="@layout/fragment_scan" >
+        <!-- Action with keyword and dimensions -->
+        <action
+            android:id="@+id/action_scanFragment_to_searchResultFragmentDimensions"
+            app:destination="@id/searchResultFragment">
+            <argument
+                android:name="keyword"
+                app:argType="string" />
+            <argument
+                android:name="min_width"
+                app:argType="string" />
+            <argument
+                android:name="max_width"
+                app:argType="string" />
+            <argument
+                android:name="min_height"
+                app:argType="string" />
+            <argument
+                android:name="max_height"
+                app:argType="string" />
+            <argument
+                android:name="min_depth"
+                app:argType="string" />
+            <argument
+                android:name="max_depth"
+                app:argType="string" />
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_user"

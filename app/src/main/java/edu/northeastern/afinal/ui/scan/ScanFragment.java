@@ -21,13 +21,18 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import edu.northeastern.afinal.R;
 import edu.northeastern.afinal.databinding.FragmentScanBinding;
+import edu.northeastern.afinal.ui.browse.SearchResultFragment;
 
 import java.util.Collections;
 
@@ -68,8 +73,27 @@ public class ScanFragment extends Fragment {
         binding = FragmentScanBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        Button jumpButton=root.findViewById(R.id.button_jump);
+        jumpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //todo:from scan page to search result page with keyword and dimensions
+                NavController navController = Navigation.findNavController(requireView());
+                Bundle args = new Bundle();
+                 args.putString(SearchResultFragment.ARG_KEYWORD, "desk");
+                 args.putString(SearchResultFragment.ARG_MIN_WIDTH, "0");
+                 args.putString(SearchResultFragment.ARG_MAX_WIDTH, "50");
+                 args.putString(SearchResultFragment.ARG_MIN_HEIGHT, "5");
+                 args.putString(SearchResultFragment.ARG_MAX_HEIGHT, "20");
+                 args.putString(SearchResultFragment.ARG_MIN_DEPTH, "5");
+                 args.putString(SearchResultFragment.ARG_MAX_DEPTH, "10.5");
+                navController.navigate(R.id.action_scanFragment_to_searchResultFragmentDimensions, args);
+            }
+        });
+
         textureView = binding.cameraPreview; // Update this ID based on your layout
         textureView.setSurfaceTextureListener(textureListener);
+
 
         return root;
     }

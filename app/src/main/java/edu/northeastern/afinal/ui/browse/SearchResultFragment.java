@@ -68,6 +68,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     public static final String ARG_MAX_DEPTH = "max_depth";
 
     private static final String KEY_ITEM_LIST = "KEY_ITEM_LIST";
+    private static final String KEY_QUERY = "KEY_QUERY";
     private static final String KEY_MIN_WIDTH = "KEY_MIN_WIDTH";
     private static final String KEY_MAX_WIDTH = "KEY_MAX_WIDTH";
 
@@ -105,6 +106,8 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
     private Button heightFilterButton;
     private Button depthFilterButton;
     private Button colorFilterButton;
+
+    private SearchView searchView;
     private Spinner spinner;
     private String sortType;
 
@@ -161,12 +164,14 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                 Snackbar.make(root.findViewById(R.id.search_result_view), "Empty search keyword!",
                         Snackbar.LENGTH_LONG).show();
                 Log.e("SearchResultFragment", "keyword is null or empty.");
+                return root;
             }
         }
         else {
             Snackbar.make(root.findViewById(R.id.search_result_view), "Empty search keyword!",
                     Snackbar.LENGTH_LONG).show();
             Log.e("SearchResultFragment", "getArguments returns null.");
+            return root;
         }
         colorFilterButton = root.findViewById(R.id.colorFilterButton);
         widthFilterButton = root.findViewById(R.id.widthFilterButton);
@@ -175,6 +180,10 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         spinner = root.findViewById(R.id.spinnerSorting);
         chipGroup=root.findViewById(R.id.tagChipGroup);
         icon=root.findViewById(R.id.iconImageView);
+        searchView=root.findViewById(R.id.searchView);
+        searchView.setQuery(keyword,false);
+        searchView.setIconifiedByDefault(false);
+
         icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -254,7 +263,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                                     }
                                 }
                             }
-                            rviewAdapter.notifyItemInserted(itemList.size() - 1);
+//                            rviewAdapter.notifyItemInserted(itemList.size() - 1);
                         }
                     }
                     itemList.sort(Comparator.comparing(ProductItemCard::getReviews).reversed());
