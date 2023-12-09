@@ -58,7 +58,9 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation("me.relex:circleindicator:2.1.6")
     implementation ("com.google.ar:core:1.26.0")
+    implementation ("com.gorisse.thomas.sceneform:sceneform:1.23.0")
 }
+
 
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))

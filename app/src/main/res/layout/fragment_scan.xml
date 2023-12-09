@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".ui.scan.ScanFragment">
 
+    <!-- AR Fragment for ARCore functionality -->
+    <fragment
+        android:id="@+id/ar_fragment"
+        android:name="com.google.ar.sceneform.ux.ArFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/button_capture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Existing TextureView -->
     <TextureView
         android:id="@+id/camera_preview"
         android:layout_width="0dp"
@@ -15,9 +27,10 @@
         app:layout_constraintBottom_toTopOf="@id/button_capture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" /> <!-- Hide TextureView when using ARFragment -->
 
-
+    <!-- Existing Buttons -->
     <Button
         android:id="@+id/button_capture"
         android:layout_width="wrap_content"
@@ -26,10 +39,9 @@
         app:layout_constraintBottom_toBottomOf="@+id/button_jump"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/camera_preview"
+        app:layout_constraintTop_toBottomOf="@id/ar_fragment"
         android:layout_marginBottom="20dp"/>
 
-<!--test call product search fragment-->
     <Button
         android:id="@+id/button_jump"
         android:layout_width="wrap_content"
