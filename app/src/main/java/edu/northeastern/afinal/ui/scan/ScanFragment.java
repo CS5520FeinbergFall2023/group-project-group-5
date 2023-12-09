@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -16,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
@@ -145,13 +147,10 @@ public class ScanFragment extends Fragment {
                 secondPointAnchorNode = placeMarker(hitResult);
                 float distance = calculateDistanceBetweenPoints(firstPointAnchorNode, secondPointAnchorNode);
                 distanceTextView.setText(String.format("Distance: %.2f meters", distance));
-                Log.d("ScanFragment", "Distance between points: " + distance + " meters");
-                // Optionally, reset points for new measurement
-                // firstPointAnchorNode = null;
-                // secondPointAnchorNode = null;
             }
         });
     }
+
 
     private AnchorNode placeMarker(HitResult hitResult) {
         Anchor anchor = hitResult.createAnchor();
@@ -166,6 +165,7 @@ public class ScanFragment extends Fragment {
         }
         return anchorNode;
     }
+
 
     // New methods for AR functionality
     private AnchorNode placeAnchor(HitResult hitResult) {
@@ -182,20 +182,35 @@ public class ScanFragment extends Fragment {
     }
 
     private void takeArScreenshot() {
-        ArSceneView view = arFragment.getArSceneView();
-        final Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-        final HandlerThread handlerThread = new HandlerThread("PixelCopier");
-        handlerThread.start();
-        PixelCopy.request(view, bitmap, (copyResult) -> {
+        ArSceneView arSceneView = arFragment.getArSceneView();
+
+        // Create a bitmap the size of the scene view.
+        final Bitmap bitmap = Bitmap.createBitmap(arSceneView.getWidth(), arSceneView.getHeight(), Bitmap.Config.ARGB_8888);
+
+        // Use PixelCopy to copy the surface texture to the bitmap.
+        PixelCopy.request(arSceneView, bitmap, (copyResult) -> {
             if (copyResult == PixelCopy.SUCCESS) {
-                // Save bitmap to a file or display it
-                // Example: saveBitmapToFile(bitmap);
+                getActivity().runOnUiThread(() -> {
+                    // Freeze the screen with the captured bitmap
+                    freezeScreenWithBitmap(bitmap);
+                });
             } else {
                 Toast.makeText(getContext(), "Failed to capture screenshot", Toast.LENGTH_SHORT).show();
             }
-            handlerThread.quitSafely();
-        }, new Handler(handlerThread.getLooper()));
+        }, new Handler(Looper.getMainLooper()));
     }
+
+    private void freezeScreenWithBitmap(Bitmap bitmap) {
+        if (textureView.isAvailable()) {
+            final Canvas canvas = textureView.lockCanvas();
+            if (canvas != null) {
+                canvas.drawBitmap(bitmap, 0, 0, null);
+                textureView.unlockCanvasAndPost(canvas);
+            }
+        }
+    }
+
+
 
     private void suggestProducts(float distance) {
         // Implement your logic to suggest products based on the distance
