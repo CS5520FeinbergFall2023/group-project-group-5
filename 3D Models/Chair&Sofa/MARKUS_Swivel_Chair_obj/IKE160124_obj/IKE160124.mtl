@@ -36,10 +36,10 @@ newmtl 01___Default
 	Kd 0.16 0.16 0.16
 	Ks 0.29 0.29 0.29
 	Ke 0.00 0.00 0.00
-	map_Ka E:\work\2017\7\IKE16总\IKE160124\TEX\IKE160124_b.jpg
-	map_Kd E:\work\2017\7\IKE16总\IKE160124\TEX\IKE160124_b.jpg
-	map_bump E:\work\2017\7\IKE16总\IKE160124\TEX\IKE160124_b.jpg
-	bump E:\work\2017\7\IKE16总\IKE160124\TEX\IKE160124_b.jpg
+	map_Ka maps/IKE160124_d.jpg
+	map_Kd maps/IKE160124_d.jpg
+	map_bump maps/IKE160124_d.jpg
+	bump maps/IKE160124_d.jpg
 
 newmtl 2
 	Ns 10.00
@@ -52,4 +52,4 @@ newmtl 2
 	Kd 0.31 0.31 0.31
 	Ks 0.29 0.29 0.29
 	Ke 0.00 0.00 0.00
-	map_d E:\work\2017\7\IKE16总\IKE160124\TEX\IKE160124_d.jpg
+	map_d maps/IKE160124_d.jpg

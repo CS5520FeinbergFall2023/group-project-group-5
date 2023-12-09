@@ -12,8 +12,8 @@ newmtl Material__26
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0900 0.0900 0.0900
 	Ke 0.0588 0.0588 0.0588
-	map_Ka maps\tekstur.jpg
-	map_Kd maps\tekstur.jpg
+	map_Ka maps\IKE040001.jpg
+	map_Kd maps\IKE040001.jpg
 
 newmtl wire_177028149
 	Ns 32.0000
