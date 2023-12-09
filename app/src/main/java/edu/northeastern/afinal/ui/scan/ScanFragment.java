@@ -22,6 +22,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import com.google.ar.core.ArCoreApk;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -101,6 +102,19 @@ public class ScanFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        // Check if ARCore is installed and up to date
+        switch (ArCoreApk.getInstance().checkAvailability(getContext())) {
+            case SUPPORTED_INSTALLED:
+                // ARCore is installed and supported on this device
+                break;
+            case SUPPORTED_NOT_INSTALLED:
+                // ARCore is not installed, prompt the user to install it
+                break;
+            case UNSUPPORTED_DEVICE_NOT_CAPABLE:
+                // ARCore is not supported on this device
+                break;
+            // Handle other cases
+        }
         startBackgroundThread();
         if (textureView.isAvailable()) {
             openCamera();
