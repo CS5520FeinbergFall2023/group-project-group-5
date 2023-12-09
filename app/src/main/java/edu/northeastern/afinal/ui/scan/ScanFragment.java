@@ -3,6 +3,7 @@ package edu.northeastern.afinal.ui.scan;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
@@ -17,11 +18,15 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
+import android.view.PixelCopy;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.ar.core.ArCoreApk;
 
 import androidx.annotation.NonNull;
@@ -38,6 +43,7 @@ import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Pose;
 import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.ArSceneView;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.math.Vector3;
 
@@ -57,6 +63,8 @@ public class ScanFragment extends Fragment {
     private String objectId = null; // Default to null
     private ArFragment arFragment;
     private AnchorNode firstPointAnchorNode, secondPointAnchorNode;
+    private TextView distanceTextView;
+    private Button captureButton;
 
 
     public static ScanFragment newInstance(@Nullable String objectId) {
@@ -85,7 +93,13 @@ public class ScanFragment extends Fragment {
         // Initialize AR Fragment
         setupArFragment();
 
-        Button jumpButton=root.findViewById(R.id.button_jump);
+        // Update the IDs to match those in the layout
+        distanceTextView = root.findViewById(R.id.distance_text_view);
+        captureButton = root.findViewById(R.id.button_capture);
+        captureButton.setOnClickListener(v -> takeArScreenshot());
+
+        // Set up jump button (if needed)
+        Button jumpButton = root.findViewById(R.id.button_jump);
         jumpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +117,7 @@ public class ScanFragment extends Fragment {
             }
         });
 
-        textureView = binding.cameraPreview; // Update this ID based on your layout
+        textureView = binding.cameraPreview;
         textureView.setSurfaceTextureListener(textureListener);
 
         return root;
@@ -117,10 +131,8 @@ public class ScanFragment extends Fragment {
             } else if (secondPointAnchorNode == null) {
                 secondPointAnchorNode = placeAnchor(hitResult);
                 float distance = calculateDistanceBetweenPoints(firstPointAnchorNode, secondPointAnchorNode);
-                // Handle the distance measurement (e.g., show a toast, suggest products)
+                distanceTextView.setText("Distance: " + distance + " meters"); // Display the distance
                 Log.d("ScanFragment", "Distance between points: " + distance + " meters");
-
-                // Reset for next measurement
                 firstPointAnchorNode = null;
                 secondPointAnchorNode = null;
             }
@@ -139,6 +151,22 @@ public class ScanFragment extends Fragment {
         Vector3 point1 = firstPoint.getWorldPosition();
         Vector3 point2 = secondPoint.getWorldPosition();
         return Vector3.subtract(point1, point2).length();
+    }
+
+    private void takeArScreenshot() {
+        ArSceneView view = arFragment.getArSceneView();
+        final Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        final HandlerThread handlerThread = new HandlerThread("PixelCopier");
+        handlerThread.start();
+        PixelCopy.request(view, bitmap, (copyResult) -> {
+            if (copyResult == PixelCopy.SUCCESS) {
+                // Save bitmap to a file or display it
+                // Example: saveBitmapToFile(bitmap);
+            } else {
+                Toast.makeText(getContext(), "Failed to capture screenshot", Toast.LENGTH_SHORT).show();
+            }
+            handlerThread.quitSafely();
+        }, new Handler(handlerThread.getLooper()));
     }
 
     private void suggestProducts(float distance) {
