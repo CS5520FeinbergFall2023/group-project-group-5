@@ -12,6 +12,7 @@ import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -44,6 +45,8 @@ import com.google.ar.core.HitResult;
 import com.google.ar.core.Pose;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.ArSceneView;
+import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.math.Vector3;
 
@@ -63,6 +66,7 @@ public class ScanFragment extends Fragment {
     private String objectId = null; // Default to null
     private ArFragment arFragment;
     private AnchorNode firstPointAnchorNode, secondPointAnchorNode;
+    private ModelRenderable markerRenderable;
     private TextView distanceTextView;
     private Button captureButton;
 
@@ -78,6 +82,15 @@ public class ScanFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ModelRenderable.builder()
+                .setSource(getContext(), Uri.parse("file:///android_asset/sphere.glb")) // Replace 'your_model.glb' with your model's filename
+                .build()
+                .thenAccept(renderable -> markerRenderable = renderable)
+                .exceptionally(throwable -> {
+                    Log.e("ScanFragment", "Error loading GLB model", throwable);
+                    return null;
+                });
+
         if (getArguments() != null) {
             objectId = getArguments().getString(ARG_OBJECT_ID); // Retrieve the object ID
 //            Log.d("ScanFragment",objectId);
@@ -127,16 +140,31 @@ public class ScanFragment extends Fragment {
         arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.ar_fragment);
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
             if (firstPointAnchorNode == null) {
-                firstPointAnchorNode = placeAnchor(hitResult);
+                firstPointAnchorNode = placeMarker(hitResult);
             } else if (secondPointAnchorNode == null) {
-                secondPointAnchorNode = placeAnchor(hitResult);
+                secondPointAnchorNode = placeMarker(hitResult);
                 float distance = calculateDistanceBetweenPoints(firstPointAnchorNode, secondPointAnchorNode);
-                distanceTextView.setText("Distance: " + distance + " meters"); // Display the distance
+                distanceTextView.setText(String.format("Distance: %.2f meters", distance));
                 Log.d("ScanFragment", "Distance between points: " + distance + " meters");
-                firstPointAnchorNode = null;
-                secondPointAnchorNode = null;
+                // Optionally, reset points for new measurement
+                // firstPointAnchorNode = null;
+                // secondPointAnchorNode = null;
             }
         });
+    }
+
+    private AnchorNode placeMarker(HitResult hitResult) {
+        Anchor anchor = hitResult.createAnchor();
+        AnchorNode anchorNode = new AnchorNode(anchor);
+        anchorNode.setParent(arFragment.getArSceneView().getScene());
+
+        // Attach a node with the marker model to the anchor
+        if (markerRenderable != null) {
+            Node markerNode = new Node();
+            markerNode.setParent(anchorNode);
+            markerNode.setRenderable(markerRenderable);
+        }
+        return anchorNode;
     }
 
     // New methods for AR functionality
