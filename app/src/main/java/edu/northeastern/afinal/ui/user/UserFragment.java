@@ -57,7 +57,7 @@ public class UserFragment extends Fragment {
         recyclerViewBookmarks.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
 
-
+        loadUserData();
         loadBookmarks();
 
         bookmarksAdapter = new BookmarksAdapter(getContext(), bookmarksList, new BookmarksAdapter.BookmarkClickListener() {
@@ -71,8 +71,6 @@ public class UserFragment extends Fragment {
         });
         recyclerViewBookmarks.setAdapter(bookmarksAdapter);
 
-        //bookmarksAdapter = new BookmarksAdapter(getContext(), bookmarksList);
-        //recyclerViewBookmarks.setAdapter(bookmarksAdapter);
 
         buttonLogout=root.findViewById(R.id.buttonLogout);
         buttonLogout.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +93,36 @@ public class UserFragment extends Fragment {
 //        userViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
+
+    private void loadUserData() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("decor-sense").child("users").child(uid);
+
+
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    String username = dataSnapshot.child("username").getValue(String.class);
+                    Log.d("UserFragment", "Username: " + username);
+                    Log.d("UserFragment", "User UID: " + user.getUid());
+
+
+                    TextView usernameTextView = binding.textViewUsername;
+                    usernameTextView.setText(username != null ? username : "Username");
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("UserFragment", "Error fetching user data.", databaseError.toException());
+                }
+            });
+        }
+    }
+
 
 
     private void loadBookmarks() {
