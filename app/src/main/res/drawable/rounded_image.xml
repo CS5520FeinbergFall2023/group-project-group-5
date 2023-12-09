@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/grey"/> <!-- or any color you want for the border -->
-    <corners android:radius="250dp"/> <!-- Assuming the ImageView is 100dp x 100dp -->
+    <solid android:color="@color/oat"/> <!-- or any color you want for the border -->
+    <corners android:radius="150dp"/> <!-- Assuming the ImageView is 100dp x 100dp -->
     <padding android:left="2dp"
         android:top="2dp"
         android:right="2dp"

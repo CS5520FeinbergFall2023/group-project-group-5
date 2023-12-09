@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -106,12 +108,21 @@ public class UserFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String username = dataSnapshot.child("username").getValue(String.class);
+                    //String profilePicUrl = dataSnapshot.child("profile-image").getValue(String.class);
                     Log.d("UserFragment", "Username: " + username);
                     Log.d("UserFragment", "User UID: " + user.getUid());
 
 
                     TextView usernameTextView = binding.textViewUsername;
                     usernameTextView.setText(username != null ? username : "Username");
+
+                    // Set profile picture using Glide or another image loading library
+                    /*if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
+                        ImageView profileImageView = binding.imageViewProfilePicture;
+                        Glide.with(UserFragment.this)
+                                .load(profilePicUrl)
+                                .into(profileImageView);
+                    }*/
 
                 }
 
