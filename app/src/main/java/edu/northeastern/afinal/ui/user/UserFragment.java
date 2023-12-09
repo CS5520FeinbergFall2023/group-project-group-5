@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,8 +59,20 @@ public class UserFragment extends Fragment {
 
 
         loadBookmarks();
-        bookmarksAdapter = new BookmarksAdapter(getContext(), bookmarksList);
+
+        bookmarksAdapter = new BookmarksAdapter(getContext(), bookmarksList, new BookmarksAdapter.BookmarkClickListener() {
+            @Override
+            public void onBookmarkClick(String productId) {
+                // Navigation to ProductDetailFragment
+                Bundle args = new Bundle();
+                args.putString("PRODUCT_ID", productId);
+                Navigation.findNavController(root).navigate(R.id.action_userFragment_to_productDetailFragment, args);
+            }
+        });
         recyclerViewBookmarks.setAdapter(bookmarksAdapter);
+
+        //bookmarksAdapter = new BookmarksAdapter(getContext(), bookmarksList);
+        //recyclerViewBookmarks.setAdapter(bookmarksAdapter);
 
         buttonLogout=root.findViewById(R.id.buttonLogout);
         buttonLogout.setOnClickListener(new View.OnClickListener() {

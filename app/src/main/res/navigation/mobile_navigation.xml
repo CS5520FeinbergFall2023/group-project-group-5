@@ -61,7 +61,14 @@
         android:id="@+id/navigation_user"
         android:name="edu.northeastern.afinal.ui.user.UserFragment"
         android:label="@string/title_user"
-        tools:layout="@layout/fragment_user" />
+        tools:layout="@layout/fragment_user">
+
+        <action
+            android:id="@+id/action_userFragment_to_productDetailFragment"
+            app:destination="@id/productDetailFragment" />
+
+    </fragment>
+
 
     <fragment
         android:id="@+id/productDetailFragment"

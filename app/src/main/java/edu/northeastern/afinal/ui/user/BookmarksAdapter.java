@@ -18,10 +18,20 @@ import java.util.List;
 
 import edu.northeastern.afinal.R;
 
+
+
+
 public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.ViewHolder> {
 
+
+    public interface BookmarkClickListener {
+        void onBookmarkClick(String productId);
+    }
     private List<Bookmark> bookmarksList;
     private LayoutInflater layoutInflater;
+
+    private BookmarkClickListener listener;
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageView;
@@ -42,9 +52,10 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.View
         }
     }
 
-    public BookmarksAdapter(Context context, List<Bookmark> bookmarksList) {
+    public BookmarksAdapter(Context context, List<Bookmark> bookmarksList, BookmarkClickListener listener) {
         this.bookmarksList = bookmarksList;
         this.layoutInflater = LayoutInflater.from(context);
+        this.listener = listener;
     }
 
     @NonNull
@@ -64,6 +75,11 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.View
         StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(bookmark.getImageUrl());
         // Use Glide to load the image
         Glide.with(viewHolder.getImageView().getContext()).load(storageRef).into(viewHolder.imageView);
+
+        viewHolder.itemView.setOnClickListener(v -> {
+            listener.onBookmarkClick(bookmark.getProductId());
+        });
+
     }
 
     @Override
