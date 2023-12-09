@@ -34,6 +34,12 @@ import androidx.navigation.Navigation;
 import edu.northeastern.afinal.R;
 import edu.northeastern.afinal.databinding.FragmentScanBinding;
 import edu.northeastern.afinal.ui.browse.SearchResultFragment;
+import com.google.ar.core.Anchor;
+import com.google.ar.core.HitResult;
+import com.google.ar.core.Pose;
+import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.ux.ArFragment;
+import com.google.ar.sceneform.math.Vector3;
 
 import java.util.Collections;
 
@@ -49,6 +55,8 @@ public class ScanFragment extends Fragment {
     private HandlerThread mBackgroundThread;
     private static final String ARG_OBJECT_ID = "object_id";
     private String objectId = null; // Default to null
+    private ArFragment arFragment;
+    private AnchorNode firstPointAnchorNode, secondPointAnchorNode;
 
 
     public static ScanFragment newInstance(@Nullable String objectId) {
@@ -74,6 +82,9 @@ public class ScanFragment extends Fragment {
         binding = FragmentScanBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        // Initialize AR Fragment
+        setupArFragment();
+
         Button jumpButton=root.findViewById(R.id.button_jump);
         jumpButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,8 +106,43 @@ public class ScanFragment extends Fragment {
         textureView = binding.cameraPreview; // Update this ID based on your layout
         textureView.setSurfaceTextureListener(textureListener);
 
-
         return root;
+    }
+
+    private void setupArFragment() {
+        arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.ar_fragment);
+        arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
+            if (firstPointAnchorNode == null) {
+                firstPointAnchorNode = placeAnchor(hitResult);
+            } else if (secondPointAnchorNode == null) {
+                secondPointAnchorNode = placeAnchor(hitResult);
+                float distance = calculateDistanceBetweenPoints(firstPointAnchorNode, secondPointAnchorNode);
+                // Handle the distance measurement (e.g., show a toast, suggest products)
+                Log.d("ScanFragment", "Distance between points: " + distance + " meters");
+
+                // Reset for next measurement
+                firstPointAnchorNode = null;
+                secondPointAnchorNode = null;
+            }
+        });
+    }
+
+    // New methods for AR functionality
+    private AnchorNode placeAnchor(HitResult hitResult) {
+        Anchor anchor = hitResult.createAnchor();
+        AnchorNode anchorNode = new AnchorNode(anchor);
+        arFragment.getArSceneView().getScene().addChild(anchorNode);
+        return anchorNode;
+    }
+
+    private float calculateDistanceBetweenPoints(AnchorNode firstPoint, AnchorNode secondPoint) {
+        Vector3 point1 = firstPoint.getWorldPosition();
+        Vector3 point2 = secondPoint.getWorldPosition();
+        return Vector3.subtract(point1, point2).length();
+    }
+
+    private void suggestProducts(float distance) {
+        // Implement your logic to suggest products based on the distance
     }
 
     @Override
@@ -261,5 +307,7 @@ public class ScanFragment extends Fragment {
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
             // Update your view if required
         }
+
+
     };
 }
