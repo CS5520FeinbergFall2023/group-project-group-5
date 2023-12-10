@@ -82,12 +82,22 @@ public class ScanFragment extends Fragment {
     private static final String ARG_OBJECT_ID = "object_id";
     private String objectId = null;
     private ArFragment arFragment;
-    private ModelRenderable cubeRenderable;
+//    private ModelRenderable cubeRenderable;
     private TextView dimensionsTextView;
-    private Button captureButton, lockButton;
+    private Button captureButton;
     private TransformableNode cubeNode; // Reference to the cube node
     private boolean dimensionsLocked = false;
     private float lockedWidth, lockedHeight, lockedDepth;
+
+    private float modelWidth = 0.0f;
+    private float modelHeight = 0.0f;
+    private float modelDepth = 0.0f;
+
+
+    private float cubeWidth = 0.0f;
+    private float cubeHeight = 0.0f;
+    private float cubeDepth = 0.0f;
+
     private boolean returningFromSearch = false;
 
     private FragmentManager fragmentManager;
@@ -119,25 +129,6 @@ public class ScanFragment extends Fragment {
         captureButton = root.findViewById(R.id.button_capture);
         captureButton.setOnClickListener(v -> takeArScreenshot());
 
-        Button jumpButton = root.findViewById(R.id.button_jump);
-        jumpButton.setOnClickListener(v -> {
-            // Values in inches
-            float minWidthInInches = 0.0f; // Example minimum width
-            float maxWidthInInches = 100.0f; // Example maximum width
-            float minHeightInInches = 0.0f; // Example minimum height
-            float maxHeightInInches = 100.0f; // Example maximum height
-            float minDepthInInches = 0.0f;  // Example minimum depth
-            float maxDepthInInches = 100.0f;  // Example maximum depth
-
-            // Now, you can navigate to the search fragment with min and max values in inches
-            navigateToSearchFragment(
-                    minWidthInInches, maxWidthInInches,
-                    minHeightInInches, maxHeightInInches,
-                    minDepthInInches, maxDepthInInches
-            );
-        });
-
-
         textureView = binding.cameraPreview;
         textureView.setSurfaceTextureListener(textureListener);
 
@@ -161,12 +152,38 @@ public class ScanFragment extends Fragment {
                     Node modelNode = new Node();
                     modelNode.setRenderable(renderableInstance.getRenderable());
 
-                    // Scale the model. For example, to half size
-                    float scaleFactor = 0.00000001f;
-                    modelNode.setLocalScale(new Vector3(scaleFactor, scaleFactor, scaleFactor));
-
-                    // Add the scaled node to the scene
+                    // Add the node to the scene
                     arFragment.getArSceneView().getScene().addChild(modelNode);
+
+                    // Get the transform of the model node
+                    TransformableNode transformableNode = new TransformableNode(arFragment.getTransformationSystem());
+                    transformableNode.setRenderable(renderableInstance.getRenderable());
+                    transformableNode.setParent(modelNode);
+
+                    // Calculate and store model dimensions from the transform
+                    Vector3 localScale = transformableNode.getLocalScale();
+                    modelWidth = localScale.x;
+                    modelHeight = localScale.y;
+                    modelDepth = localScale.z;
+
+                    // You can now use modelWidth, modelHeight, and modelDepth as needed.
+                    Button jumpButton = root.findViewById(R.id.button_jump);
+                    jumpButton.setOnClickListener(v -> {
+                        // Values in inches
+                        float minWidthInInches = 0.0f; // Example minimum width
+                        float maxWidthInInches = modelWidth; // Example maximum width
+                        float minHeightInInches = 0.0f; // Example minimum height
+                        float maxHeightInInches = modelHeight; // Example maximum height
+                        float minDepthInInches = 0.0f;  // Example minimum depth
+                        float maxDepthInInches = modelDepth;  // Example maximum depth
+
+                        // Now, you can navigate to the search fragment with min and max values in inches
+                        navigateToSearchFragment(
+                                minWidthInInches, maxWidthInInches,
+                                minHeightInInches, maxHeightInInches,
+                                minDepthInInches, maxDepthInInches
+                        );
+                    });
                 }
 
                 @Override
@@ -203,8 +220,6 @@ public class ScanFragment extends Fragment {
 
         }
 
-
-
 //        ModelRenderable.builder()
 //                .setSource(getContext(), Uri.parse("cube.glb"))
 //                .build()
@@ -220,21 +235,21 @@ public class ScanFragment extends Fragment {
     private void setupArFragment() {
         arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.ar_fragment);
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> updateDimensionTextView());
-        arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
-            // Log statement to check if the listener is triggered
-            Log.d("ScanFragment", "Tap detected on AR plane");
-
-            if (cubeRenderable == null || dimensionsLocked) return;
-
-            Anchor anchor = hitResult.createAnchor();
-            AnchorNode anchorNode = new AnchorNode(anchor);
-            anchorNode.setParent(arFragment.getArSceneView().getScene());
-
-            cubeNode = new TransformableNode(arFragment.getTransformationSystem());
-            cubeNode.setParent(anchorNode);
-            cubeNode.setRenderable(cubeRenderable);
-            cubeNode.select();
-        });
+//        arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
+//            // Log statement to check if the listener is triggered
+//            Log.d("ScanFragment", "Tap detected on AR plane");
+//
+//            if (cubeRenderable == null || dimensionsLocked) return;
+//
+//            Anchor anchor = hitResult.createAnchor();
+//            AnchorNode anchorNode = new AnchorNode(anchor);
+//            anchorNode.setParent(arFragment.getArSceneView().getScene());
+//
+//            cubeNode = new TransformableNode(arFragment.getTransformationSystem());
+//            cubeNode.setParent(anchorNode);
+//            cubeNode.setRenderable(cubeRenderable);
+//            cubeNode.select();
+//        });
 
     }
 
@@ -284,7 +299,7 @@ public class ScanFragment extends Fragment {
         PixelCopy.request(arSceneView, bitmap, (copyResult) -> {
             if (copyResult == PixelCopy.SUCCESS) {
                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                String filename = userId + "_screenshot_" + (screenshotCount++) + ".jpg";
+                String filename = "screenshot_" + Math.random() + ".jpg";
                 saveBitmapToFileAndUpload(bitmap, filename);
                 Toast.makeText(getContext(), "Screenshot successfully captured", Toast.LENGTH_SHORT).show();
             } else {
@@ -306,13 +321,13 @@ public class ScanFragment extends Fragment {
 
     private void uploadToFirebase(Uri fileUri, String filename) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child("plans/" + filename);
+        StorageReference storageRef = storage.getReference().child("plans/thumbnails/" + filename);
 
         storageRef.putFile(fileUri)
                 .addOnSuccessListener(taskSnapshot -> {
                     // Get the download URL
                     taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
-                        String image_url = String.valueOf(storage.getReference().child("plans/" + filename));
+                        String image_url = String.valueOf(storage.getReference().child("plans/thumbnails/" + filename));
 
                         // Create a new plan object
                         Map<String, Object> newPlan = new HashMap<>();
@@ -404,6 +419,9 @@ public class ScanFragment extends Fragment {
             Toast.makeText(getContext(), "ARCore encountered an error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
+        if(objectId!=null){
+            returningFromSearch=true;
+        }
         if (returningFromSearch) {
             captureButton.setEnabled(true);
             dimensionsLocked = false;

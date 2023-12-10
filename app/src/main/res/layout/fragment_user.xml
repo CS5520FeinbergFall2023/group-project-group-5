@@ -24,35 +24,33 @@
                 android:id="@+id/imageViewProfilePicture"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginRight="100dp"
                 android:layout_marginBottom="30dp"
                 android:background="@drawable/rounded_image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/baseline_person_24"
                 app:layout_constraintBottom_toTopOf="@id/textViewBookmarksTitle"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.099"
+                app:layout_constraintEnd_toStartOf="@id/textViewUsername"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.107" />
+                 />
 
             <TextView
                 android:id="@+id/textViewUsername"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginBottom="55dp"
+                android:layout_marginTop="20dp"
                 android:text="Username"
                 android:textStyle="bold"
                 android:textSize="20dp"
                 android:textColor="@color/brown"
                 app:layout_constraintBottom_toTopOf="@id/textViewBookmarksTitle"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@id/imageViewProfilePicture"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.141" />
+                 />
 
 
     <Button
