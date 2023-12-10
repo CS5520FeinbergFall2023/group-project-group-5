@@ -84,6 +84,8 @@ public class ScanFragment extends Fragment {
     private float lockedWidth, lockedHeight, lockedDepth;
     private boolean returningFromSearch = false;
 
+    private FragmentManager fragmentManager;
+
     public static ScanFragment newInstance(@Nullable String objectId) {
         ScanFragment fragment = new ScanFragment();
         Bundle args = new Bundle();
@@ -129,9 +131,13 @@ public class ScanFragment extends Fragment {
         textureView = binding.cameraPreview;
         textureView.setSurfaceTextureListener(textureListener);
 
-        FragmentManager fragmentManager = getChildFragmentManager();
-        ArFragment arFragment = (ArFragment) fragmentManager.findFragmentById(R.id.ar_fragment);
-        arFragment.setOnTapPlaneGlbModel("cube.glb",null);
+        fragmentManager = getChildFragmentManager();
+        arFragment = (ArFragment) fragmentManager.findFragmentById(R.id.ar_fragment);
+
+        //todo: if !objectId==null && !objectId.isEmpty()
+        //replace ID with objectID
+        loadFurnitureModel("0");
+//        arFragment.setOnTapPlaneGlbModel("cube.glb",null);
 
 //        ModelRenderable.builder()
 //                .setSource(getContext(), Uri.parse("cube.glb"))
@@ -466,4 +472,26 @@ public class ScanFragment extends Fragment {
 
 
     };
+
+
+    private void loadFurnitureModel(String furnitureID)
+    {
+        String furnitureModelPath=String.format("gs://numadfa23-group5.appspot.com/furniture/%s/model/model.glb",furnitureID);
+        //download model from firebase storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl(furnitureModelPath);
+        File localFile = new File(requireContext().getFilesDir(), furnitureID + ".glb");
+
+        storageRef.getFile(localFile)
+                .addOnSuccessListener(taskSnapshot -> {
+                    // Model downloaded successfully
+                    // Use the local path with Sceneform
+                    String localPath = localFile.getAbsolutePath();
+                    arFragment.setOnTapPlaneGlbModel(localPath, null);
+                })
+                .addOnFailureListener(exception -> {
+                    // Handle failed download
+                    exception.printStackTrace();
+                });
+    }
 }
