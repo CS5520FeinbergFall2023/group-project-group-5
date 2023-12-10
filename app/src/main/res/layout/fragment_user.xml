@@ -157,8 +157,6 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonChangePassword"
     />
 
-
-
     <!-- layout for changing password -->
 
     <Button
