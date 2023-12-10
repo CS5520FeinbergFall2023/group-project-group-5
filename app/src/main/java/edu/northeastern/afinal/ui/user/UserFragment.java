@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -137,43 +141,56 @@ public class UserFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Change Password");
 
-        final EditText input = new EditText(getContext());
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        builder.setView(input);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View layout = inflater.inflate(R.layout.dialog_change_password, null);
+        final EditText inputOldPassword = layout.findViewById(R.id.editTextOldPassword);
+        final EditText inputNewPassword = layout.findViewById(R.id.editTextNewPassword);
+        builder.setView(layout);
 
-        builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String newPassword = input.getText().toString();
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                if (user != null && newPassword.length() >= 6) {
-                    user.updatePassword(newPassword)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(getContext(), "Password successfully changed", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getContext(), "Failed to change password", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                } else {
-                    Toast.makeText(getContext(), "Password too short", Toast.LENGTH_SHORT).show();
-                }
+                changeUserPassword(inputOldPassword.getText().toString(), inputNewPassword.getText().toString());
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton("Cancel", null);
 
-        builder.show();
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
+
+    private void changeUserPassword(String oldPassword, String newPassword) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (newPassword.length() < 6) {
+            Snackbar.make(getView(), "Minimum 6 characters needed for new password", Snackbar.LENGTH_LONG)
+                    .setAction("Retry", v -> showChangePasswordDialog()).show();
+            return;
+        }
+
+
+        if (user != null && oldPassword.length() >= 6) {
+            AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), oldPassword);
+            user.reauthenticate(credential).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    user.updatePassword(newPassword).addOnCompleteListener(task1 -> {
+                        if (task1.isSuccessful()) {
+                            Snackbar.make(getView(), "Password successfully changed", Snackbar.LENGTH_LONG).show();
+                        } else {
+                            Snackbar.make(getView(), "Failed to change password", Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    Snackbar.make(getView(), "Old password incorrect", Snackbar.LENGTH_LONG).setAction("Retry", v -> showChangePasswordDialog()).show();
+                }
+            });
+        } else {
+            Snackbar.make(getView(), "Invalid old or new password", Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+
 
     private void showEnlargedImage(String imageUrl) {
 
