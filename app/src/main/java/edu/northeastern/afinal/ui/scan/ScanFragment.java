@@ -113,20 +113,20 @@ public class ScanFragment extends Fragment {
         captureButton = root.findViewById(R.id.button_capture);
         captureButton.setOnClickListener(v -> takeArScreenshot());
 
-        lockButton = root.findViewById(R.id.button_lock);
-        lockButton.setOnClickListener(v -> {
-            if (dimensionsLocked) {
-                // Unlock the dimensions
-                dimensionsLocked = false;
-                Toast.makeText(getContext(), "Dimensions unlocked", Toast.LENGTH_SHORT).show();
+        Button jumpButton = root.findViewById(R.id.button_jump);
+        jumpButton.setOnClickListener(v -> {
+            if (cubeNode != null) {
+                // Pass the cube dimensions to the search fragment
+                float width = cubeNode.getWorldScale().x;
+                float height = cubeNode.getWorldScale().y;
+                float depth = cubeNode.getWorldScale().z;
+
+                // Now, you can navigate to the search fragment and pass the dimensions directly
+                navigateToSearchFragment(width, height, depth);
             } else {
-                // Lock the dimensions
-                lockDimensions();
+                Toast.makeText(getContext(), "Place the cube first", Toast.LENGTH_SHORT).show();
             }
         });
-
-        Button jumpButton = root.findViewById(R.id.button_jump);
-        jumpButton.setOnClickListener(v -> navigateToSearchFragment());
 
         textureView = binding.cameraPreview;
         textureView.setSurfaceTextureListener(textureListener);
@@ -134,10 +134,17 @@ public class ScanFragment extends Fragment {
         fragmentManager = getChildFragmentManager();
         arFragment = (ArFragment) fragmentManager.findFragmentById(R.id.ar_fragment);
 
+        //todo: load furniture
         //todo: if !objectId==null && !objectId.isEmpty()
         //replace ID with objectID
-        loadFurnitureModel("0");
-//        arFragment.setOnTapPlaneGlbModel("cube.glb",null);
+//        loadFurnitureModel("0");
+
+        //load a cube
+        FragmentManager fragmentManager = getChildFragmentManager();
+        arFragment = (ArFragment) fragmentManager.findFragmentById(R.id.ar_fragment);
+        arFragment.setOnTapPlaneGlbModel("cube.glb",null);
+
+
 
 //        ModelRenderable.builder()
 //                .setSource(getContext(), Uri.parse("cube.glb"))
@@ -172,27 +179,6 @@ public class ScanFragment extends Fragment {
 
     }
 
-    private void lockDimensions() {
-        if (cubeNode != null && cubeNode.getParent() != null) {
-            Vector3 scale = cubeNode.getWorldScale();
-            lockedWidth = scale.x;
-            lockedHeight = scale.y;
-            lockedDepth = scale.z;
-            dimensionsLocked = true;
-
-            String lockedDimensionsText = String.format(
-                    "Locked Dimensions - Width: %.2f m, Height: %.2f m, Depth: %.2f m",
-                    lockedWidth, lockedHeight, lockedDepth
-            );
-            dimensionsTextView.setText(lockedDimensionsText);
-            Toast.makeText(getContext(), "Dimensions locked", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getContext(), "Place the cube first", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-
     private void updateDimensionTextView() {
         if (cubeNode != null && !dimensionsLocked) {
             Vector3 scale = cubeNode.getWorldScale();
@@ -211,20 +197,16 @@ public class ScanFragment extends Fragment {
     }
 
 
-    private void navigateToSearchFragment() {
-        if (!dimensionsLocked) {
-            Toast.makeText(getContext(), "Lock dimensions first", Toast.LENGTH_SHORT).show();
-            return;
-        }
+    private void navigateToSearchFragment(float width, float height, float depth) {
         NavController navController = Navigation.findNavController(requireView());
         Bundle args = new Bundle();
         args.putString(SearchResultFragment.ARG_KEYWORD, "desk");
-        args.putString(SearchResultFragment.ARG_MIN_WIDTH, String.valueOf(lockedWidth));
-        args.putString(SearchResultFragment.ARG_MAX_WIDTH, String.valueOf(lockedWidth));
-        args.putString(SearchResultFragment.ARG_MIN_HEIGHT, String.valueOf(lockedHeight));
-        args.putString(SearchResultFragment.ARG_MAX_HEIGHT, String.valueOf(lockedHeight));
-        args.putString(SearchResultFragment.ARG_MIN_DEPTH, String.valueOf(lockedDepth));
-        args.putString(SearchResultFragment.ARG_MAX_DEPTH, String.valueOf(lockedDepth));
+        args.putString(SearchResultFragment.ARG_MIN_WIDTH, String.valueOf(width));
+        args.putString(SearchResultFragment.ARG_MAX_WIDTH, String.valueOf(width));
+        args.putString(SearchResultFragment.ARG_MIN_HEIGHT, String.valueOf(height));
+        args.putString(SearchResultFragment.ARG_MAX_HEIGHT, String.valueOf(height));
+        args.putString(SearchResultFragment.ARG_MIN_DEPTH, String.valueOf(depth));
+        args.putString(SearchResultFragment.ARG_MAX_DEPTH, String.valueOf(depth));
         navController.navigate(R.id.action_scanFragment_to_searchResultFragmentDimensions, args);
 
         // Set the flag to true as we are navigating to the search screen
