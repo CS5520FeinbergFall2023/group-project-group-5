@@ -71,6 +71,7 @@ public class ScanFragment extends Fragment {
     private TransformableNode cubeNode; // Reference to the cube node
     private boolean dimensionsLocked = false;
     private float lockedWidth, lockedHeight, lockedDepth;
+    private boolean returningFromSearch = false;
 
     public static ScanFragment newInstance(@Nullable String objectId) {
         ScanFragment fragment = new ScanFragment();
@@ -174,6 +175,9 @@ public class ScanFragment extends Fragment {
         args.putString(SearchResultFragment.ARG_MIN_DEPTH, String.valueOf(lockedDepth));
         args.putString(SearchResultFragment.ARG_MAX_DEPTH, String.valueOf(lockedDepth));
         navController.navigate(R.id.action_scanFragment_to_searchResultFragmentDimensions, args);
+
+        // Set the flag to true as we are navigating to the search screen
+        returningFromSearch = true;
     }
 
     private void takeArScreenshot() {
@@ -205,8 +209,6 @@ public class ScanFragment extends Fragment {
         }
     }
 
-
-
     private void suggestProducts(float distance) {
         // Implement your logic to suggest products based on the distance
     }
@@ -233,6 +235,13 @@ public class ScanFragment extends Fragment {
         } else {
             textureView.setSurfaceTextureListener(textureListener);
         }
+        if (returningFromSearch) {
+            captureButton.setEnabled(true);
+            returningFromSearch = false; // Reset the flag
+        } else {
+            // If not returning from search, deactivate the capture button
+            captureButton.setEnabled(false);
+        }
     }
 
     @Override
@@ -240,6 +249,7 @@ public class ScanFragment extends Fragment {
         stopBackgroundThread();
         closeCamera();
         super.onPause();
+        captureButton.setEnabled(false);
     }
 
     @Override
