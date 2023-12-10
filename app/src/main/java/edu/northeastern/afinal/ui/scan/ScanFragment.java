@@ -36,6 +36,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -90,14 +91,16 @@ public class ScanFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ModelRenderable.builder()
-                .setSource(getContext(), Uri.parse("file:///android_asset/cube.glb"))
-                .build()
-                .thenAccept(renderable -> cubeRenderable = renderable)
-                .exceptionally(throwable -> {
-                    Log.e("ScanFragment", "Error loading cube model", throwable);
-                    return null;
-                });
+        System.out.println("path here");
+        System.out.println();
+//        ModelRenderable.builder()
+//                .setSource(getContext(), Uri.parse("cube.glb"))
+//                .build()
+//                .thenAccept(renderable -> cubeRenderable = renderable)
+//                .exceptionally(throwable -> {
+//                    Log.e("ScanFragment", "Error loading cube model", throwable);
+//                    return null;
+//                });
 
         if (getArguments() != null) {
             objectId = getArguments().getString(ARG_OBJECT_ID);
@@ -123,6 +126,19 @@ public class ScanFragment extends Fragment {
 
         textureView = binding.cameraPreview;
         textureView.setSurfaceTextureListener(textureListener);
+
+        FragmentManager fragmentManager = getChildFragmentManager();
+        ArFragment arFragment = (ArFragment) fragmentManager.findFragmentById(R.id.ar_fragment);
+        arFragment.setOnTapPlaneGlbModel("cube.glb",null);
+
+//        ModelRenderable.builder()
+//                .setSource(getContext(), Uri.parse("cube.glb"))
+//                .build()
+//                .thenAccept(renderable -> cubeRenderable = renderable)
+//                .exceptionally(throwable -> {
+//                    Log.e("ScanFragment", "Error loading cube model", throwable);
+//                    return null;
+//                });
 
         return root;
     }
