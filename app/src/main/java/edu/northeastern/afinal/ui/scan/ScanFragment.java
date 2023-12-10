@@ -112,7 +112,17 @@ public class ScanFragment extends Fragment {
         captureButton.setOnClickListener(v -> takeArScreenshot());
 
         lockButton = root.findViewById(R.id.button_lock);
-        lockButton.setOnClickListener(v -> lockDimensions());
+        lockButton.setOnClickListener(v -> {
+            if (dimensionsLocked) {
+                // Unlock the dimensions
+                dimensionsLocked = false;
+                Toast.makeText(getContext(), "Dimensions unlocked", Toast.LENGTH_SHORT).show();
+            } else {
+                // Lock the dimensions
+                lockDimensions();
+            }
+        });
+        ;
 
         Button jumpButton = root.findViewById(R.id.button_jump);
         jumpButton.setOnClickListener(v -> navigateToSearchFragment());
@@ -172,6 +182,7 @@ public class ScanFragment extends Fragment {
             Toast.makeText(getContext(), "Place the cube first", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void updateDimensionTextView() {
         if (cubeNode != null && !dimensionsLocked) {
