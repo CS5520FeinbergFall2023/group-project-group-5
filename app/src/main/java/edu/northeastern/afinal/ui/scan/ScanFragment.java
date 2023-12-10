@@ -64,6 +64,9 @@ public class ScanFragment extends Fragment {
     private Size imageDimension;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
+
+    private Handler distanceUpdateHandler;
+    private Runnable distanceUpdateTask;
     private static final String ARG_OBJECT_ID = "object_id";
     private String objectId = null; // Default to null
     private ArFragment arFragment;
@@ -145,8 +148,7 @@ public class ScanFragment extends Fragment {
                 firstPointAnchorNode = placeMarker(hitResult);
             } else if (secondPointAnchorNode == null) {
                 secondPointAnchorNode = placeMarker(hitResult);
-                float distance = calculateDistanceBetweenPoints(firstPointAnchorNode, secondPointAnchorNode);
-                distanceTextView.setText(String.format("Distance: %.2f meters", distance));
+                startDistanceUpdateLoop();
             }
         });
     }
@@ -166,14 +168,34 @@ public class ScanFragment extends Fragment {
         return anchorNode;
     }
 
+    private void startDistanceUpdateLoop() {
+        final Handler handler = new Handler(Looper.getMainLooper());
+        final Runnable updateDistanceTask = new Runnable() {
+            @Override
+            public void run() {
+                if (firstPointAnchorNode != null && secondPointAnchorNode != null) {
+                    float distance = calculateDistanceBetweenPoints(firstPointAnchorNode, secondPointAnchorNode);
+                    distanceTextView.setText(String.format("Distance: %.2f meters", distance));
+                }
+                handler.postDelayed(this, 500); // Update distance every 500 milliseconds
+            }
+        };
+        handler.post(updateDistanceTask);
+    }
+
+    private void stopDistanceUpdateLoop() {
+        if (distanceUpdateHandler != null) {
+            distanceUpdateHandler.removeCallbacks(distanceUpdateTask);
+        }
+    }
 
     // New methods for AR functionality
-    private AnchorNode placeAnchor(HitResult hitResult) {
-        Anchor anchor = hitResult.createAnchor();
-        AnchorNode anchorNode = new AnchorNode(anchor);
-        arFragment.getArSceneView().getScene().addChild(anchorNode);
-        return anchorNode;
-    }
+//    private AnchorNode placeAnchor(HitResult hitResult) {
+//        Anchor anchor = hitResult.createAnchor();
+//        AnchorNode anchorNode = new AnchorNode(anchor);
+//        arFragment.getArSceneView().getScene().addChild(anchorNode);
+//        return anchorNode;
+//    }
 
     private float calculateDistanceBetweenPoints(AnchorNode firstPoint, AnchorNode secondPoint) {
         Vector3 point1 = firstPoint.getWorldPosition();
@@ -245,11 +267,13 @@ public class ScanFragment extends Fragment {
         stopBackgroundThread();
         closeCamera();
         super.onPause();
+        stopDistanceUpdateLoop();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        stopDistanceUpdateLoop();
         binding = null;
     }
 
