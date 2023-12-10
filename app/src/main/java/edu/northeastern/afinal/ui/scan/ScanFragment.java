@@ -139,7 +139,7 @@ public class ScanFragment extends Fragment {
     }
 
     private void lockDimensions() {
-        if (cubeNode != null) {
+        if (cubeNode != null && cubeNode.getParent() != null) {
             Vector3 scale = cubeNode.getWorldScale();
             lockedWidth = scale.x;
             lockedHeight = scale.y;
@@ -149,6 +149,8 @@ public class ScanFragment extends Fragment {
             String lockedDimensionsText = String.format("Locked Dimensions - Width: %.2f m, Height: %.2f m, Depth: %.2f m", lockedWidth, lockedHeight, lockedDepth);
             dimensionsTextView.setText(lockedDimensionsText);
             Toast.makeText(getContext(), "Dimensions locked", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "Place the cube first", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -237,6 +239,7 @@ public class ScanFragment extends Fragment {
         }
         if (returningFromSearch) {
             captureButton.setEnabled(true);
+            dimensionsLocked = false;
             returningFromSearch = false; // Reset the flag
         } else {
             // If not returning from search, deactivate the capture button
