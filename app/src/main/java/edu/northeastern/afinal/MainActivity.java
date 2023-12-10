@@ -58,15 +58,17 @@ public class MainActivity extends AppCompatActivity {
             if (intent.hasExtra("SHOW_BROWSE_FRAGMENT")) {
                 // Clear the back stack up to and including UserFragment and navigate to BrowseFragment
                 navController.popBackStack(R.id.navigation_user, true);
+                navController.popBackStack(R.id.navigation_scan, true);
                 navController.navigate(R.id.navigation_browse);
             } else if (intent.hasExtra("SHOW_USER_FRAGMENT")) {
                 // Clear the back stack up to and including BrowseFragment and navigate to UserFragment
                 navController.popBackStack(R.id.navigation_browse, true);
+                navController.popBackStack(R.id.navigation_scan, true);
                 navController.navigate(R.id.navigation_user);
             } else if (intent.hasExtra("SHOW_SCAN_FRAGMENT")) {
-                Bundle bundle = new Bundle();
-                bundle.putString("object_id", null); // Pass null for objectId
-                navController.navigate(R.id.navigation_scan, bundle);
+                navController.popBackStack(R.id.navigation_browse, true);
+                navController.popBackStack(R.id.navigation_user, true);
+                navController.navigate(R.id.navigation_scan);
                 
             }
             // Clear the intent to avoid navigating again on configuration changes (e.g., rotation)
