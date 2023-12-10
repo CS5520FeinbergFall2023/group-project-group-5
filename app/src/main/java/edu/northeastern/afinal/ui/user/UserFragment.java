@@ -119,6 +119,9 @@ public class UserFragment extends Fragment {
     }
 
     private void showEnlargedImage(String imageUrl) {
+
+        Log.d("UserFragment", "Image URL: " + imageUrl);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_custom_image, null);
@@ -130,8 +133,6 @@ public class UserFragment extends Fragment {
         Glide.with(this)
                 .load(storageRef)
                 .into(imageView);
-
-
         builder.setView(view);
         AlertDialog dialog = builder.create();
         dialog.show();
