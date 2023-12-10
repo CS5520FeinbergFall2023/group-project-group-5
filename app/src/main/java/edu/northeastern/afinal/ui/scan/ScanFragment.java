@@ -53,7 +53,13 @@ import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.ux.TransformableNode;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Collections;
 
 public class ScanFragment extends Fragment {
@@ -190,24 +196,50 @@ public class ScanFragment extends Fragment {
         returningFromSearch = true;
     }
 
+    private int screenshotCount = 0; // A counter for the screenshots
+
     private void takeArScreenshot() {
         ArSceneView arSceneView = arFragment.getArSceneView();
-
-        // Create a bitmap the size of the scene view.
         final Bitmap bitmap = Bitmap.createBitmap(arSceneView.getWidth(), arSceneView.getHeight(), Bitmap.Config.ARGB_8888);
 
-        // Use PixelCopy to copy the surface texture to the bitmap.
         PixelCopy.request(arSceneView, bitmap, (copyResult) -> {
             if (copyResult == PixelCopy.SUCCESS) {
-                getActivity().runOnUiThread(() -> {
-                    // Freeze the screen with the captured bitmap
-                    freezeScreenWithBitmap(bitmap);
-                });
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                String filename = userId + "_screenshot_" + (screenshotCount++) + ".jpg";
+                saveBitmapToFileAndUpload(bitmap, filename);
+                Toast.makeText(getContext(), "Screenshot successfully captured", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Failed to capture screenshot", Toast.LENGTH_SHORT).show();
             }
         }, new Handler(Looper.getMainLooper()));
     }
+
+    private void saveBitmapToFileAndUpload(Bitmap bitmap, String filename) {
+        File file = new File(getContext().getExternalFilesDir(null), filename);
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            uploadToFirebase(Uri.fromFile(file), filename);
+        } catch (IOException e) {
+            Log.e("ScanFragment", "Error saving bitmap", e);
+        }
+    }
+
+    private void uploadToFirebase(Uri fileUri, String filename) {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference().child("plans/" + filename);
+
+        storageRef.putFile(fileUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    Log.d("ScanFragment", "Screenshot uploaded successfully");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ScanFragment", "Upload failed", e);
+                });
+    }
+
+
+// The uploadToFirebase method remains the same as provided previously
+
 
     private void freezeScreenWithBitmap(Bitmap bitmap) {
         if (textureView.isAvailable()) {
