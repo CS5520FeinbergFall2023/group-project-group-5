@@ -352,7 +352,7 @@ public class ScanFragment extends Fragment {
             returningFromSearch = false; // Reset the flag
         } else {
             // If not returning from search, deactivate the capture button
-            captureButton.setEnabled(true);
+            captureButton.setEnabled(false);
         }
     }
 
