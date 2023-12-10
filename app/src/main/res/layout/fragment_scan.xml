@@ -12,46 +12,57 @@
         android:name="com.google.ar.sceneform.ux.ArFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/button_capture"
+        app:layout_constraintBottom_toTopOf="@id/button_lock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Existing TextureView -->
+    <!-- TextureView (Hidden when using ARFragment) -->
     <TextureView
         android:id="@+id/camera_preview"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toTopOf="@id/button_capture"
+        app:layout_constraintBottom_toTopOf="@id/button_lock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone" /> <!-- Hide TextureView when using ARFragment -->
+        android:visibility="gone" />
 
-    <!-- TextView for displaying distance -->
+    <!-- TextView for displaying dimensions -->
     <TextView
-        android:id="@+id/distance_text_view"
+        android:id="@+id/dimensions_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/button_capture"
+        app:layout_constraintBottom_toTopOf="@id/button_lock"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Existing Buttons -->
+    <!-- Lock Dimensions Button -->
+    <Button
+        android:id="@+id/button_lock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lock Dimensions"
+        app:layout_constraintBottom_toTopOf="@id/button_capture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Capture Button -->
     <Button
         android:id="@+id/button_capture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Capture"
-        app:layout_constraintBottom_toTopOf="@+id/button_jump"
+        app:layout_constraintBottom_toTopOf="@id/button_jump"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ar_fragment"
         android:layout_marginBottom="20dp"/>
 
+    <!-- Jump to Search Button -->
     <Button
         android:id="@+id/button_jump"
         android:layout_width="wrap_content"
@@ -60,7 +71,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_capture"
         android:layout_marginBottom="20dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

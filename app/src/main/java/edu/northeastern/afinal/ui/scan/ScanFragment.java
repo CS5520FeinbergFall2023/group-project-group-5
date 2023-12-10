@@ -43,14 +43,12 @@ import edu.northeastern.afinal.R;
 import edu.northeastern.afinal.databinding.FragmentScanBinding;
 import edu.northeastern.afinal.ui.browse.SearchResultFragment;
 import com.google.ar.core.Anchor;
-import com.google.ar.core.HitResult;
-import com.google.ar.core.Pose;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.ArSceneView;
-import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.ux.TransformableNode;
 
 import java.util.Collections;
 
@@ -64,22 +62,20 @@ public class ScanFragment extends Fragment {
     private Size imageDimension;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
-
-    private Handler distanceUpdateHandler;
-    private Runnable distanceUpdateTask;
     private static final String ARG_OBJECT_ID = "object_id";
-    private String objectId = null; // Default to null
+    private String objectId = null;
     private ArFragment arFragment;
-    private AnchorNode firstPointAnchorNode, secondPointAnchorNode;
-    private ModelRenderable markerRenderable;
-    private TextView distanceTextView;
-    private Button captureButton;
-
+    private ModelRenderable cubeRenderable;
+    private TextView dimensionsTextView;
+    private Button captureButton, lockButton;
+    private TransformableNode cubeNode; // Reference to the cube node
+    private boolean dimensionsLocked = false;
+    private float lockedWidth, lockedHeight, lockedDepth;
 
     public static ScanFragment newInstance(@Nullable String objectId) {
         ScanFragment fragment = new ScanFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_OBJECT_ID, objectId); // Put the object ID in the arguments
+        args.putString(ARG_OBJECT_ID, objectId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,52 +84,35 @@ public class ScanFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ModelRenderable.builder()
-                .setSource(getContext(), Uri.parse("file:///android_asset/sphere.glb")) // Replace 'your_model.glb' with your model's filename
+                .setSource(getContext(), Uri.parse("file:///android_asset/cube.glb"))
                 .build()
-                .thenAccept(renderable -> markerRenderable = renderable)
+                .thenAccept(renderable -> cubeRenderable = renderable)
                 .exceptionally(throwable -> {
-                    Log.e("ScanFragment", "Error loading GLB model", throwable);
+                    Log.e("ScanFragment", "Error loading cube model", throwable);
                     return null;
                 });
 
         if (getArguments() != null) {
-            objectId = getArguments().getString(ARG_OBJECT_ID); // Retrieve the object ID
-//            Log.d("ScanFragment",objectId);
+            objectId = getArguments().getString(ARG_OBJECT_ID);
         }
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentScanBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        // Initialize AR Fragment
         setupArFragment();
 
-        // Update the IDs to match those in the layout
-        distanceTextView = root.findViewById(R.id.distance_text_view);
+        dimensionsTextView = root.findViewById(R.id.dimensions_text_view);
         captureButton = root.findViewById(R.id.button_capture);
         captureButton.setOnClickListener(v -> takeArScreenshot());
 
-        // Set up jump button (if needed)
+        lockButton = root.findViewById(R.id.button_lock);
+        lockButton.setOnClickListener(v -> lockDimensions());
+
         Button jumpButton = root.findViewById(R.id.button_jump);
-        jumpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //todo:from scan page to search result page with keyword and dimensions
-                NavController navController = Navigation.findNavController(requireView());
-                Bundle args = new Bundle();
-                 args.putString(SearchResultFragment.ARG_KEYWORD, "desk");
-                 args.putString(SearchResultFragment.ARG_MIN_WIDTH, "0");
-                 args.putString(SearchResultFragment.ARG_MAX_WIDTH, "50");
-                 args.putString(SearchResultFragment.ARG_MIN_HEIGHT, "5");
-                 args.putString(SearchResultFragment.ARG_MAX_HEIGHT, "20");
-                 args.putString(SearchResultFragment.ARG_MIN_DEPTH, "5");
-                 args.putString(SearchResultFragment.ARG_MAX_DEPTH, "10.5");
-                navController.navigate(R.id.action_scanFragment_to_searchResultFragmentDimensions, args);
-            }
-        });
+        jumpButton.setOnClickListener(v -> navigateToSearchFragment());
 
         textureView = binding.cameraPreview;
         textureView.setSurfaceTextureListener(textureListener);
@@ -143,64 +122,58 @@ public class ScanFragment extends Fragment {
 
     private void setupArFragment() {
         arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.ar_fragment);
+        arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> updateDimensionTextView());
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
-            if (firstPointAnchorNode == null) {
-                firstPointAnchorNode = placeMarker(hitResult);
-            } else if (secondPointAnchorNode == null) {
-                secondPointAnchorNode = placeMarker(hitResult);
-                startDistanceUpdateLoop();
-            }
+            if (cubeRenderable == null || dimensionsLocked) return;
+
+            Anchor anchor = hitResult.createAnchor();
+            AnchorNode anchorNode = new AnchorNode(anchor);
+            anchorNode.setParent(arFragment.getArSceneView().getScene());
+
+            cubeNode = new TransformableNode(arFragment.getTransformationSystem());
+            cubeNode.setParent(anchorNode);
+            cubeNode.setRenderable(cubeRenderable);
+            cubeNode.select();
         });
     }
 
+    private void lockDimensions() {
+        if (cubeNode != null) {
+            Vector3 scale = cubeNode.getWorldScale();
+            lockedWidth = scale.x;
+            lockedHeight = scale.y;
+            lockedDepth = scale.z;
+            dimensionsLocked = true;
 
-    private AnchorNode placeMarker(HitResult hitResult) {
-        Anchor anchor = hitResult.createAnchor();
-        AnchorNode anchorNode = new AnchorNode(anchor);
-        anchorNode.setParent(arFragment.getArSceneView().getScene());
-
-        // Attach a node with the marker model to the anchor
-        if (markerRenderable != null) {
-            Node markerNode = new Node();
-            markerNode.setParent(anchorNode);
-            markerNode.setRenderable(markerRenderable);
-        }
-        return anchorNode;
-    }
-
-    private void startDistanceUpdateLoop() {
-        final Handler handler = new Handler(Looper.getMainLooper());
-        final Runnable updateDistanceTask = new Runnable() {
-            @Override
-            public void run() {
-                if (firstPointAnchorNode != null && secondPointAnchorNode != null) {
-                    float distance = calculateDistanceBetweenPoints(firstPointAnchorNode, secondPointAnchorNode);
-                    distanceTextView.setText(String.format("Distance: %.2f meters", distance));
-                }
-                handler.postDelayed(this, 500); // Update distance every 500 milliseconds
-            }
-        };
-        handler.post(updateDistanceTask);
-    }
-
-    private void stopDistanceUpdateLoop() {
-        if (distanceUpdateHandler != null) {
-            distanceUpdateHandler.removeCallbacks(distanceUpdateTask);
+            String lockedDimensionsText = String.format("Locked Dimensions - Width: %.2f m, Height: %.2f m, Depth: %.2f m", lockedWidth, lockedHeight, lockedDepth);
+            dimensionsTextView.setText(lockedDimensionsText);
+            Toast.makeText(getContext(), "Dimensions locked", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // New methods for AR functionality
-//    private AnchorNode placeAnchor(HitResult hitResult) {
-//        Anchor anchor = hitResult.createAnchor();
-//        AnchorNode anchorNode = new AnchorNode(anchor);
-//        arFragment.getArSceneView().getScene().addChild(anchorNode);
-//        return anchorNode;
-//    }
+    private void updateDimensionTextView() {
+        if (cubeNode != null && !dimensionsLocked) {
+            Vector3 scale = cubeNode.getWorldScale();
+            String dimensionsText = String.format("Width: %.2f m, Height: %.2f m, Depth: %.2f m", scale.x, scale.y, scale.z);
+            dimensionsTextView.setText(dimensionsText);
+        }
+    }
 
-    private float calculateDistanceBetweenPoints(AnchorNode firstPoint, AnchorNode secondPoint) {
-        Vector3 point1 = firstPoint.getWorldPosition();
-        Vector3 point2 = secondPoint.getWorldPosition();
-        return Vector3.subtract(point1, point2).length();
+    private void navigateToSearchFragment() {
+        if (!dimensionsLocked) {
+            Toast.makeText(getContext(), "Lock dimensions first", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        NavController navController = Navigation.findNavController(requireView());
+        Bundle args = new Bundle();
+        args.putString(SearchResultFragment.ARG_KEYWORD, "desk");
+        args.putString(SearchResultFragment.ARG_MIN_WIDTH, String.valueOf(lockedWidth));
+        args.putString(SearchResultFragment.ARG_MAX_WIDTH, String.valueOf(lockedWidth));
+        args.putString(SearchResultFragment.ARG_MIN_HEIGHT, String.valueOf(lockedHeight));
+        args.putString(SearchResultFragment.ARG_MAX_HEIGHT, String.valueOf(lockedHeight));
+        args.putString(SearchResultFragment.ARG_MIN_DEPTH, String.valueOf(lockedDepth));
+        args.putString(SearchResultFragment.ARG_MAX_DEPTH, String.valueOf(lockedDepth));
+        navController.navigate(R.id.action_scanFragment_to_searchResultFragmentDimensions, args);
     }
 
     private void takeArScreenshot() {
@@ -267,13 +240,11 @@ public class ScanFragment extends Fragment {
         stopBackgroundThread();
         closeCamera();
         super.onPause();
-        stopDistanceUpdateLoop();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        stopDistanceUpdateLoop();
         binding = null;
     }
 
