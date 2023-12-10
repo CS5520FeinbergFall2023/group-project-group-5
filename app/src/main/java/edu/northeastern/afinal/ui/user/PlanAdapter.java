@@ -47,7 +47,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PlanViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PlanViewHolder holder, final int position) {
         Plan plan = planList.get(position);
 
         Log.d("PlanAdapter", "Binding plan: " + plan.getTitle() + " with image URL: " + plan.getImageUrl());
