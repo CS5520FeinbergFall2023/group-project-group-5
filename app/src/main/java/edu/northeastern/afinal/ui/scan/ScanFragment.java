@@ -299,7 +299,7 @@ public class ScanFragment extends Fragment {
         PixelCopy.request(arSceneView, bitmap, (copyResult) -> {
             if (copyResult == PixelCopy.SUCCESS) {
                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                String filename = userId + "_screenshot_" + (screenshotCount++) + ".jpg";
+                String filename = "screenshot_" + Math.random() + ".jpg";
                 saveBitmapToFileAndUpload(bitmap, filename);
                 Toast.makeText(getContext(), "Screenshot successfully captured", Toast.LENGTH_SHORT).show();
             } else {
@@ -321,13 +321,13 @@ public class ScanFragment extends Fragment {
 
     private void uploadToFirebase(Uri fileUri, String filename) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child("plans/" + filename);
+        StorageReference storageRef = storage.getReference().child("plans/thumbnails/" + filename);
 
         storageRef.putFile(fileUri)
                 .addOnSuccessListener(taskSnapshot -> {
                     // Get the download URL
                     taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
-                        String image_url = String.valueOf(storage.getReference().child("plans/" + filename));
+                        String image_url = String.valueOf(storage.getReference().child("plans/thumbnails/" + filename));
 
                         // Create a new plan object
                         Map<String, Object> newPlan = new HashMap<>();
@@ -419,6 +419,9 @@ public class ScanFragment extends Fragment {
             Toast.makeText(getContext(), "ARCore encountered an error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
+        if(objectId!=null){
+            returningFromSearch=true;
+        }
         if (returningFromSearch) {
             captureButton.setEnabled(true);
             dimensionsLocked = false;
