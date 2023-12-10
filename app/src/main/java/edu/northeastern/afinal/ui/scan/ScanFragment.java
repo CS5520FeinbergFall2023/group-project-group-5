@@ -122,7 +122,6 @@ public class ScanFragment extends Fragment {
                 lockDimensions();
             }
         });
-        ;
 
         Button jumpButton = root.findViewById(R.id.button_jump);
         jumpButton.setOnClickListener(v -> navigateToSearchFragment());
@@ -175,7 +174,10 @@ public class ScanFragment extends Fragment {
             lockedDepth = scale.z;
             dimensionsLocked = true;
 
-            String lockedDimensionsText = String.format("Locked Dimensions - Width: %.2f m, Height: %.2f m, Depth: %.2f m", lockedWidth, lockedHeight, lockedDepth);
+            String lockedDimensionsText = String.format(
+                    "Locked Dimensions - Width: %.2f m, Height: %.2f m, Depth: %.2f m",
+                    lockedWidth, lockedHeight, lockedDepth
+            );
             dimensionsTextView.setText(lockedDimensionsText);
             Toast.makeText(getContext(), "Dimensions locked", Toast.LENGTH_SHORT).show();
         } else {
@@ -184,13 +186,24 @@ public class ScanFragment extends Fragment {
     }
 
 
+
     private void updateDimensionTextView() {
         if (cubeNode != null && !dimensionsLocked) {
             Vector3 scale = cubeNode.getWorldScale();
-            String dimensionsText = String.format("Width: %.2f m, Height: %.2f m, Depth: %.2f m", scale.x, scale.y, scale.z);
+            String dimensionsText = String.format(
+                    "Width: %.2f m, Height: %.2f m, Depth: %.2f m",
+                    scale.x, scale.y, scale.z
+            );
             dimensionsTextView.setText(dimensionsText);
+        } else if (dimensionsLocked) {
+            String lockedDimensionsText = String.format(
+                    "Locked Dimensions - Width: %.2f m, Height: %.2f m, Depth: %.2f m",
+                    lockedWidth, lockedHeight, lockedDepth
+            );
+            dimensionsTextView.setText(lockedDimensionsText);
         }
     }
+
 
     private void navigateToSearchFragment() {
         if (!dimensionsLocked) {
