@@ -596,7 +596,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                 //opens up the corresponding product detail page
                 NavController navController = Navigation.findNavController(requireView());
                 ProductDetailFragment productDetailFragment = ProductDetailFragment.newInstance(productID);
-                navController.navigate(R.id.action_browseFragment_to_productDetailFragment, productDetailFragment.getArguments());
+                navController.navigate(R.id.action_searchResultFragment_to_productDetailFragment, productDetailFragment.getArguments());
             }
         };
         rviewAdapter = new ProductAdapter(requireContext(), itemList, productItemClickListener);

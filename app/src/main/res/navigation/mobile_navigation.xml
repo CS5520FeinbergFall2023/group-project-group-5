@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_browse" >
     <action
         android:id="@+id/action_browseFragment_to_productDetailFragment"
-        app:destination="@id/productDetailFragment" />
+        app:destination="@id/productDetailFragment" >
+        <argument
+            android:name="productId"
+            app:argType="string" />
+    </action>
     <action
         android:id="@+id/action_browseFragment_to_searchResultFragment"
         app:destination="@id/searchResultFragment">
