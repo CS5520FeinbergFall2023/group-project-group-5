@@ -50,7 +50,9 @@ import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.ArSceneView;
+import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.rendering.RenderableInstance;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.ux.TransformableNode;
@@ -148,9 +150,58 @@ public class ScanFragment extends Fragment {
 //        loadFurnitureModel("0");
 
         //load a cube
-        FragmentManager fragmentManager = getChildFragmentManager();
-        arFragment = (ArFragment) fragmentManager.findFragmentById(R.id.ar_fragment);
-        arFragment.setOnTapPlaneGlbModel("cube.glb",null);
+        String model_name = objectId + ".glb";
+        if (model_name.equals("null.glb")) {
+            FragmentManager fragmentManager = getChildFragmentManager();
+            arFragment = (ArFragment) fragmentManager.findFragmentById(R.id.ar_fragment);
+            arFragment.setOnTapPlaneGlbModel("cube.glb", new ArFragment.OnTapModelListener() {
+                @Override
+                public void onModelAdded(RenderableInstance renderableInstance) {
+                    // Create a new Node with the renderable instance
+                    Node modelNode = new Node();
+                    modelNode.setRenderable(renderableInstance.getRenderable());
+
+                    // Scale the model. For example, to half size
+                    float scaleFactor = 0.00000001f;
+                    modelNode.setLocalScale(new Vector3(scaleFactor, scaleFactor, scaleFactor));
+
+                    // Add the scaled node to the scene
+                    arFragment.getArSceneView().getScene().addChild(modelNode);
+                }
+
+                @Override
+                public void onModelError(Throwable exception) {
+                    // Handle model loading error
+                }
+            });
+
+        }
+        else {
+            Log.d("SAMSUNGGG", model_name);
+            FragmentManager fragmentManager = getChildFragmentManager();
+            arFragment = (ArFragment) fragmentManager.findFragmentById(R.id.ar_fragment);
+            arFragment.setOnTapPlaneGlbModel(model_name, new ArFragment.OnTapModelListener() {
+                @Override
+                public void onModelAdded(RenderableInstance renderableInstance) {
+                    // Create a new Node with the renderable instance
+                    Node modelNode = new Node();
+                    modelNode.setRenderable(renderableInstance.getRenderable());
+
+                    // Scale the model. For example, to half size
+                    float scaleFactor = 0.00000001f;
+                    modelNode.setLocalScale(new Vector3(scaleFactor, scaleFactor, scaleFactor));
+
+                    // Add the scaled node to the scene
+                    arFragment.getArSceneView().getScene().addChild(modelNode);
+                }
+
+                @Override
+                public void onModelError(Throwable exception) {
+                    // Handle model loading error
+                }
+            });
+
+        }
 
 
 
