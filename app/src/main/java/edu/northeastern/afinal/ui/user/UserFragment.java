@@ -1,5 +1,6 @@
 package edu.northeastern.afinal.ui.user;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +26,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +47,10 @@ public class UserFragment extends Fragment {
     private RecyclerView recyclerViewBookmarks;
     private BookmarksAdapter bookmarksAdapter;
     private List<Bookmark> bookmarksList = new ArrayList<>();
+
+    private RecyclerView recyclerViewPlans;
+    private PlanAdapter planAdapter;
+    private List<Plan> plansList = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -91,10 +99,90 @@ public class UserFragment extends Fragment {
             }
         });
 
+
+        // Inside onCreateView or onViewCreated
+        recyclerViewPlans = root.findViewById(R.id.recyclerViewPlans);
+        recyclerViewPlans.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        planAdapter = new PlanAdapter(getContext(), plansList, new PlanAdapter.PlanClickListener() {
+            @Override
+            public void onPlanClick(Plan plan) {
+                showEnlargedImage(plan.getImageUrl());
+            }
+        });
+        recyclerViewPlans.setAdapter(planAdapter);
+        loadPlans();
+
 //        final TextView textView = binding.textNotifications;
 //        userViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
+
+    private void showEnlargedImage(String imageUrl) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_custom_image, null);
+        ImageView imageView = view.findViewById(R.id.dialog_imageview);
+
+        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
+
+        // Use Glide to load the image into the ImageView
+        Glide.with(this)
+                .load(storageRef)
+                .into(imageView);
+
+
+        builder.setView(view);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
+    private void loadPlans() {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            String uid = user.getUid();
+            DatabaseReference plansRef = FirebaseDatabase.getInstance().getReference()
+                    .child("decor-sense").child("plans");
+
+            plansRef.orderByChild("user-id").equalTo(uid).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    plansList.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String imageUrl = snapshot.child("image").getValue(String.class);
+                        String name = snapshot.child("name").getValue(String.class);
+                        //String furnitureId = snapshot.child("furniture-id").getValue(String.class);
+
+                        Long furnitureIdLong = snapshot.child("furniture-id").getValue(Long.class);
+                        String furnitureId = furnitureIdLong != null ? String.valueOf(furnitureIdLong) : null;
+
+                        Log.d("UserFragment", "Plan ID: " + snapshot.getKey());
+                        Log.d("UserFragment", "Image URL: " + imageUrl);
+                        Log.d("UserFragment", "Name: " + name);
+                        Log.d("UserFragment", "Furniture ID: " + furnitureId);
+
+
+                        if (imageUrl != null && name != null && furnitureId != null) {
+                            plansList.add(new Plan(snapshot.getKey(), imageUrl, name, furnitureId));
+                        }
+                    }
+                    if (plansList.isEmpty()) {
+                        Log.d("UserFragment", "No plans found for user: " + uid);
+                    } else {
+                        planAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("UserFragment", "Error loading plans.", databaseError.toException());
+                }
+            });
+        }
+    }
+
 
     private void loadUserData() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -108,21 +196,13 @@ public class UserFragment extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     String username = dataSnapshot.child("username").getValue(String.class);
-                    //String profilePicUrl = dataSnapshot.child("profile-image").getValue(String.class);
+
                     Log.d("UserFragment", "Username: " + username);
                     Log.d("UserFragment", "User UID: " + user.getUid());
 
 
                     TextView usernameTextView = binding.textViewUsername;
                     usernameTextView.setText(username != null ? username : "Username");
-
-                    // Set profile picture using Glide or another image loading library
-                    /*if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
-                        ImageView profileImageView = binding.imageViewProfilePicture;
-                        Glide.with(UserFragment.this)
-                                .load(profilePicUrl)
-                                .into(profileImageView);
-                    }*/
 
                 }
 
@@ -157,8 +237,11 @@ public class UserFragment extends Fragment {
                         if(snapshot.getValue(Boolean.class)){
                             // Using the key to get the furniture item details
                             furnitureRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+
+
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot furnitureSnapshot) {
+                                    Log.d("UserFragment", "Snapshot: " + dataSnapshot.toString());
                                     String productName = furnitureSnapshot.child("name").getValue(String.class);
                                     String imageUrl = furnitureSnapshot.child("thumbnail").getValue(String.class);
                                     Log.d("UserFragment", "Furniture item - Name: " + productName + ", Image: " + imageUrl);
@@ -183,9 +266,6 @@ public class UserFragment extends Fragment {
         }
 
     }
-
-
-
 
     @Override
     public void onDestroyView() {

@@ -76,8 +76,8 @@
         android:text="Log out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonChangePassword"
+        app:layout_constraintStart_toEndOf="@+id/buttonChangePassword"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewPlans"
         />
 
 
@@ -85,7 +85,6 @@
         android:id="@+id/textViewBookmarksTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
         android:text="Items you Bookmarked"
         android:textStyle="bold"
         android:textSize="20dp"
@@ -108,22 +107,51 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewBookmarksTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/buttonChangePassword"
+        app:layout_constraintBottom_toTopOf="@+id/textViewPlansTitle"
 
         />
+
+    <TextView
+        android:id="@+id/textViewPlansTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="My Plans"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textColor="@color/brown"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewBookmarks"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerViewPlans"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPlans"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPlansTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonChangePassword"
+    />
+
 
 
     <!-- layout for changing password -->
 
     <Button
         android:id="@+id/buttonChangePassword"
-        android:layout_width="223dp"
-        android:layout_height="62dp"
+        android:layout_width="203dp"
+        android:layout_height="50dp"
         android:text="change_password"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/buttonLogout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewBookmarks" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewPlans" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
