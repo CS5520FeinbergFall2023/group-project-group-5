@@ -212,6 +212,7 @@ public class UserFragment extends Fragment {
     }
 
 
+
     private void loadPlans() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
