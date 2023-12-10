@@ -55,6 +55,8 @@ import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.ux.TransformableNode;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -62,6 +64,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScanFragment extends Fragment {
 
@@ -241,18 +245,59 @@ public class ScanFragment extends Fragment {
         }
     }
 
+
     private void uploadToFirebase(Uri fileUri, String filename) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child("plans/" + filename);
 
         storageRef.putFile(fileUri)
                 .addOnSuccessListener(taskSnapshot -> {
+                    // Get the download URL
+                    taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
+                        String image_url = String.valueOf(storage.getReference().child("plans/" + filename));
+
+                        // Create a new plan object
+                        Map<String, Object> newPlan = new HashMap<>();
+                        newPlan.put("furniture-id", 0);
+                        newPlan.put("image", image_url);
+                        newPlan.put("name", "myplan" + Math.random());
+                        newPlan.put("user-id", FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+                        // Write the new plan to the Realtime Database
+                        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("decor-sense/plans");
+                        databaseRef.push().setValue(newPlan)
+                                .addOnSuccessListener(aVoid -> Log.d("ScanFragment", "Plan added successfully"))
+                                .addOnFailureListener(e -> Log.e("ScanFragment", "Failed to add plan", e));
+
+                    }).addOnFailureListener(e -> {
+                        Log.e("ScanFragment", "Failed to get download URL", e);
+                    });
+
                     Log.d("ScanFragment", "Screenshot uploaded successfully");
                 })
                 .addOnFailureListener(e -> {
                     Log.e("ScanFragment", "Upload failed", e);
                 });
     }
+
+
+//    private void uploadToFirebase(Uri fileUri, String filename) {
+//        FirebaseStorage storage = FirebaseStorage.getInstance();
+//        StorageReference storageRef = storage.getReference().child("plans/" + filename);
+////        Log.d("Storage Link", String.valueOf(storageRef));
+//        storageRef.putFile(fileUri)
+//                .addOnSuccessListener(taskSnapshot -> {
+//                    Log.d("ScanFragment", "Screenshot uploaded successfully");
+//                })
+//                .addOnFailureListener(e -> {
+//                    Log.e("ScanFragment", "Upload failed", e);
+//                });
+//        int furniture_id = 0;
+//        String image_url = String.valueOf(storageRef);
+//        String name = "myplan"+Math.random();
+//        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//
+//    }
 
 
 // The uploadToFirebase method remains the same as provided previously
@@ -307,7 +352,7 @@ public class ScanFragment extends Fragment {
             returningFromSearch = false; // Reset the flag
         } else {
             // If not returning from search, deactivate the capture button
-            captureButton.setEnabled(false);
+            captureButton.setEnabled(true);
         }
     }
 
