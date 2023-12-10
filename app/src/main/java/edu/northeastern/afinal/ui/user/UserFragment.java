@@ -1,15 +1,19 @@
 package edu.northeastern.afinal.ui.user;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -20,6 +24,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -113,9 +119,60 @@ public class UserFragment extends Fragment {
         recyclerViewPlans.setAdapter(planAdapter);
         loadPlans();
 
+
+        Button buttonChangePassword = root.findViewById(R.id.buttonChangePassword);
+        buttonChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChangePasswordDialog();
+            }
+        });
+
 //        final TextView textView = binding.textNotifications;
 //        userViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
+    }
+
+    private void showChangePasswordDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Change Password");
+
+        final EditText input = new EditText(getContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+
+        builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newPassword = input.getText().toString();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                if (user != null && newPassword.length() >= 6) {
+                    user.updatePassword(newPassword)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getContext(), "Password successfully changed", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getContext(), "Failed to change password", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                } else {
+                    Toast.makeText(getContext(), "Password too short", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     private void showEnlargedImage(String imageUrl) {
@@ -129,7 +186,6 @@ public class UserFragment extends Fragment {
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
 
-        // Use Glide to load the image into the ImageView
         Glide.with(this)
                 .load(storageRef)
                 .into(imageView);
