@@ -119,18 +119,22 @@ public class ScanFragment extends Fragment {
 
         Button jumpButton = root.findViewById(R.id.button_jump);
         jumpButton.setOnClickListener(v -> {
-            if (cubeNode != null) {
-                // Pass the cube dimensions to the search fragment
-                float width = cubeNode.getWorldScale().x;
-                float height = cubeNode.getWorldScale().y;
-                float depth = cubeNode.getWorldScale().z;
+            // Values in inches
+            float minWidthInInches = 0.0f; // Example minimum width
+            float maxWidthInInches = 100.0f; // Example maximum width
+            float minHeightInInches = 0.0f; // Example minimum height
+            float maxHeightInInches = 100.0f; // Example maximum height
+            float minDepthInInches = 0.0f;  // Example minimum depth
+            float maxDepthInInches = 100.0f;  // Example maximum depth
 
-                // Now, you can navigate to the search fragment and pass the dimensions directly
-                navigateToSearchFragment(width, height, depth);
-            } else {
-                Toast.makeText(getContext(), "Place the cube first", Toast.LENGTH_SHORT).show();
-            }
+            // Now, you can navigate to the search fragment with min and max values in inches
+            navigateToSearchFragment(
+                    minWidthInInches, maxWidthInInches,
+                    minHeightInInches, maxHeightInInches,
+                    minDepthInInches, maxDepthInInches
+            );
         });
+
 
         textureView = binding.cameraPreview;
         textureView.setSurfaceTextureListener(textureListener);
@@ -200,17 +204,20 @@ public class ScanFragment extends Fragment {
         }
     }
 
-
-    private void navigateToSearchFragment(float width, float height, float depth) {
+    private void navigateToSearchFragment(
+            float minWidthInInches, float maxWidthInInches,
+            float minHeightInInches, float maxHeightInInches,
+            float minDepthInInches, float maxDepthInInches
+    ) {
         NavController navController = Navigation.findNavController(requireView());
         Bundle args = new Bundle();
         args.putString(SearchResultFragment.ARG_KEYWORD, "desk");
-        args.putString(SearchResultFragment.ARG_MIN_WIDTH, String.valueOf(width));
-        args.putString(SearchResultFragment.ARG_MAX_WIDTH, String.valueOf(width));
-        args.putString(SearchResultFragment.ARG_MIN_HEIGHT, String.valueOf(height));
-        args.putString(SearchResultFragment.ARG_MAX_HEIGHT, String.valueOf(height));
-        args.putString(SearchResultFragment.ARG_MIN_DEPTH, String.valueOf(depth));
-        args.putString(SearchResultFragment.ARG_MAX_DEPTH, String.valueOf(depth));
+        args.putString(SearchResultFragment.ARG_MIN_WIDTH, String.valueOf(minWidthInInches));
+        args.putString(SearchResultFragment.ARG_MAX_WIDTH, String.valueOf(maxWidthInInches));
+        args.putString(SearchResultFragment.ARG_MIN_HEIGHT, String.valueOf(minHeightInInches));
+        args.putString(SearchResultFragment.ARG_MAX_HEIGHT, String.valueOf(maxHeightInInches));
+        args.putString(SearchResultFragment.ARG_MIN_DEPTH, String.valueOf(minDepthInInches));
+        args.putString(SearchResultFragment.ARG_MAX_DEPTH, String.valueOf(maxDepthInInches));
         navController.navigate(R.id.action_scanFragment_to_searchResultFragmentDimensions, args);
 
         // Set the flag to true as we are navigating to the search screen
