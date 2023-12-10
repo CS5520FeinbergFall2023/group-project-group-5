@@ -43,6 +43,10 @@ import edu.northeastern.afinal.R;
 import edu.northeastern.afinal.databinding.FragmentScanBinding;
 import edu.northeastern.afinal.ui.browse.SearchResultFragment;
 import com.google.ar.core.Anchor;
+import com.google.ar.core.exceptions.UnavailableApkTooOldException;
+import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
+import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
+import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.ArSceneView;
 import com.google.ar.sceneform.rendering.ModelRenderable;
@@ -85,7 +89,7 @@ public class ScanFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ModelRenderable.builder()
-                .setSource(getContext(), Uri.parse("file:///android_asset/cube.glb"))
+                .setSource(getContext(), R.raw.cube)
                 .build()
                 .thenAccept(renderable -> cubeRenderable = renderable)
                 .exceptionally(throwable -> {
@@ -125,6 +129,9 @@ public class ScanFragment extends Fragment {
         arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.ar_fragment);
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> updateDimensionTextView());
         arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
+            // Log statement to check if the listener is triggered
+            Log.d("ScanFragment", "Tap detected on AR plane");
+
             if (cubeRenderable == null || dimensionsLocked) return;
 
             Anchor anchor = hitResult.createAnchor();
@@ -136,6 +143,7 @@ public class ScanFragment extends Fragment {
             cubeNode.setRenderable(cubeRenderable);
             cubeNode.select();
         });
+
     }
 
     private void lockDimensions() {
@@ -218,25 +226,32 @@ public class ScanFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Check if ARCore is installed and up to date
-        switch (ArCoreApk.getInstance().checkAvailability(getContext())) {
-            case SUPPORTED_INSTALLED:
-                // ARCore is installed and supported on this device
-                break;
-            case SUPPORTED_NOT_INSTALLED:
-                // ARCore is not installed, prompt the user to install it
-                break;
-            case UNSUPPORTED_DEVICE_NOT_CAPABLE:
-                // ARCore is not supported on this device
-                break;
-            // Handle other cases
+        try {
+            switch (ArCoreApk.getInstance().requestInstall(getActivity(), true)) {
+                case INSTALLED:
+                    // ARCore is installed and supported on this device
+                    startBackgroundThread();
+                    if (textureView.isAvailable()) {
+                        openCamera();
+                    } else {
+                        textureView.setSurfaceTextureListener(textureListener);
+                    }
+                    break;
+                case INSTALL_REQUESTED:
+                    // ARCore installation requested. Return to onResume after installation.
+                    return;
+            }
+        } catch (UnavailableUserDeclinedInstallationException e) {
+            // User declined ARCore installation.
+            Toast.makeText(getContext(), "ARCore is required for this feature", Toast.LENGTH_LONG).show();
+        } catch (UnavailableDeviceNotCompatibleException e) {
+            // Current device is not compatible with ARCore.
+            Toast.makeText(getContext(), "ARCore is not supported on this device", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            // Generic exception handling for other types of exceptions.
+            Toast.makeText(getContext(), "ARCore encountered an error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        startBackgroundThread();
-        if (textureView.isAvailable()) {
-            openCamera();
-        } else {
-            textureView.setSurfaceTextureListener(textureListener);
-        }
+
         if (returningFromSearch) {
             captureButton.setEnabled(true);
             dimensionsLocked = false;
@@ -246,6 +261,7 @@ public class ScanFragment extends Fragment {
             captureButton.setEnabled(false);
         }
     }
+
 
     @Override
     public void onPause() {
