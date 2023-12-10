@@ -43,7 +43,7 @@ public class InitialActivity extends AppCompatActivity {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
                     // Permission is granted, proceed to open MainActivity with scan fragment
-                    openScanFragment();
+//                    openScanFragment();
                 } else {
                     // Permission is denied, we can show a message to the user explaining why the permission is needed
                     showCameraPermissionExplanation();
@@ -87,17 +87,6 @@ public class InitialActivity extends AppCompatActivity {
             startMainActivityForResult.launch(intent);
         });
 
-        Button scanButton = (Button) findViewById(R.id.buttonScan);
-        scanButton.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                // If permission is already granted, open the scan fragment
-                openScanFragment();
-            } else {
-                // Request camera permission
-                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
-            }
-        });
-
     }
 
     private void openScanFragment() {
@@ -109,7 +98,7 @@ public class InitialActivity extends AppCompatActivity {
     private void showCameraPermissionExplanation() {
         new AlertDialog.Builder(this)
                 .setTitle("Camera Permission Needed")
-                .setMessage("Camera permission is necessary to use the scan feature. Please grant camera permission in the settings menu to continue.")
+                .setMessage("Camera permission is necessary to use the scan suggestion feature. Please grant camera permission in the settings menu to continue.")
                 .setPositiveButton("OK", (dialog, which) -> {
                     dialog.dismiss();
                 })

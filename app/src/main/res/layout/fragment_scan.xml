@@ -10,7 +10,7 @@
     <fragment
         android:id="@+id/ar_fragment"
         android:name="com.google.ar.sceneform.ux.ArFragment"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/button_capture"
         app:layout_constraintEnd_toEndOf="parent"

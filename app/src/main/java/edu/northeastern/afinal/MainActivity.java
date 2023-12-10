@@ -2,7 +2,9 @@ package edu.northeastern.afinal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,14 +48,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
 
-            Bundle extras = intent.getExtras();
-            if (extras != null) {
-                for (String key : extras.keySet()) {
-                    Object value = extras.get(key);
-                    System.out.println("Intent Key: " + key + ", Value: " + value);
-                }
-            }
-
             // Check if the extra "SHOW_BROWSE_FRAGMENT" is present
             if (intent.hasExtra("SHOW_BROWSE_FRAGMENT")) {
                 // Clear the back stack up to and including UserFragment and navigate to BrowseFragment
@@ -69,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 navController.popBackStack(R.id.navigation_browse, true);
                 navController.popBackStack(R.id.navigation_user, true);
                 navController.navigate(R.id.navigation_scan);
-                
             }
             // Clear the intent to avoid navigating again on configuration changes (e.g., rotation)
             setIntent(new Intent());
@@ -79,3 +72,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
+

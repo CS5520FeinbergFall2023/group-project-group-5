@@ -25,23 +25,10 @@
         android:text="DecorSense"
         android:textSize="48sp"
         android:textColor="?attr/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/buttonScan"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonScan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scan"
-        android:textSize="24sp"
-        app:icon="@drawable/outline_photo_camera_24"
         app:layout_constraintBottom_toTopOf="@+id/buttonBrowse"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toBottomOf="@+id/textViewAppName" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/buttonBrowse"
@@ -52,7 +39,7 @@
         app:icon="@drawable/baseline_search_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonScan"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAppName"
         app:layout_constraintBottom_toTopOf="@+id/buttonUser"
 
         />
