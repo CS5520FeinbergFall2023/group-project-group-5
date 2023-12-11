@@ -3,9 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
-    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
-    <uses-feature android:glEsVersion="0x00030000" android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.ar"
+        android:required="true" />
+    <uses-feature
+        android:glEsVersion="0x00030000"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -15,51 +22,48 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Final"
+        android:theme="@style/Theme.FinalNoActionBar"
         tools:targetApi="31">
 
-        <meta-data android:name="com.google.ar.core" android:value="required" />
+        <activity
+            android:name=".AboutUsActivity"
+            android:theme="@style/Theme.FinalNoActionBar"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.ar.core"
+            android:value="required" />
 
         <activity
             android:name=".InitialActivity"
-            android:theme="@style/Theme.FinalNoActionBar"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.FinalNoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.FinalNoActionBar"
             android:label="@string/app_name"
-            />
-
+            android:theme="@style/Theme.FinalNoActionBar" />
         <activity
             android:name=".ui.scan.ScanFragment"
             android:exported="false"
-            android:theme="@style/Theme.FinalNoActionBar"
-            />
-
-        <activity android:name=".ui.browse.BrowseFragment"
-            android:theme="@style/Theme.FinalNoActionBar"
-            />
-
-        <activity android:name=".ui.product.ProductDetailFragment"
-            android:theme="@style/Theme.FinalNoActionBar"
-            />
-
+            android:theme="@style/Theme.FinalNoActionBar" />
+        <activity
+            android:name=".ui.browse.BrowseFragment"
+            android:theme="@style/Theme.FinalNoActionBar" />
+        <activity
+            android:name=".ui.product.ProductDetailFragment"
+            android:theme="@style/Theme.FinalNoActionBar" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.FinalNoActionBar">
-
-        </activity>
-
+            android:theme="@style/Theme.FinalNoActionBar"></activity>
     </application>
 
 </manifest>

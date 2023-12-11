@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
@@ -47,7 +48,6 @@ public class InitialActivity extends AppCompatActivity {
                 } else {
                     // Permission is denied, we can show a message to the user explaining why the permission is needed
                     showCameraPermissionExplanation();
-
                 }
             });
 
@@ -85,6 +85,20 @@ public class InitialActivity extends AppCompatActivity {
         browseButton.setOnClickListener(v -> {
             Intent intent = new Intent(InitialActivity.this, MainActivity.class);
             startMainActivityForResult.launch(intent);
+        });
+
+        TextView aboutUsTextView=(TextView) findViewById(R.id.textViewAboutUs);
+        aboutUsTextView.setOnClickListener(v->{
+            Intent intent = new Intent(InitialActivity.this, AboutUsActivity.class);
+            intent.putExtra("name1", "Ajay Inavolu");
+            intent.putExtra("email1", "inavolu.a@northeastern.edu");
+            intent.putExtra("name2", "Jiaming Xu");
+            intent.putExtra("email2", "xu.jiami@northeastern.edu");
+            intent.putExtra("name3", "Kiran Shatiya T R");
+            intent.putExtra("email3", "thirugnanasambanth.k@northeastern.edu");
+            intent.putExtra("name4", "Vishrutha Abbaiah Reddy");
+            intent.putExtra("email4", "abbaiahreddy.v@northeastern.edu");
+            startActivity(intent);
         });
 
     }
