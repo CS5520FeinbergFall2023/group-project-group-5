@@ -27,6 +27,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +77,7 @@ public class ScanFragment extends Fragment {
     private CameraDevice cameraDevice;
     private CameraCaptureSession cameraCaptureSession;
     private CaptureRequest.Builder captureRequestBuilder;
+    private EditText selectDecorEditText;
     private Size imageDimension;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
@@ -124,7 +126,7 @@ public class ScanFragment extends Fragment {
 
         setupArFragment();
 
-        dimensionsTextView = root.findViewById(R.id.dimensions_text_view);
+        selectDecorEditText = root.findViewById(R.id.select_decor);
         captureButton = root.findViewById(R.id.button_capture);
         captureButton.setOnClickListener(v -> takeArScreenshot());
 
@@ -160,6 +162,7 @@ public class ScanFragment extends Fragment {
                     modelHeight = localScale.y;
                     modelDepth = localScale.z;
 
+                    String furnitureKeyword = selectDecorEditText.getText().toString().trim();
                     // You can now use modelWidth, modelHeight, and modelDepth as needed.
                     Button jumpButton = root.findViewById(R.id.button_jump);
                     jumpButton.setOnClickListener(v -> {
@@ -171,6 +174,7 @@ public class ScanFragment extends Fragment {
                         float maxDepthInInches = modelDepth;
 
                         navigateToSearchFragment(
+                                furnitureKeyword,
                                 minWidthInInches, maxWidthInInches,
                                 minHeightInInches, maxHeightInInches,
                                 minDepthInInches, maxDepthInInches
@@ -263,13 +267,14 @@ public class ScanFragment extends Fragment {
     }
 
     private void navigateToSearchFragment(
+            String furnitureKeyword,
             float minWidthInInches, float maxWidthInInches,
             float minHeightInInches, float maxHeightInInches,
             float minDepthInInches, float maxDepthInInches
     ) {
         NavController navController = Navigation.findNavController(requireView());
         Bundle args = new Bundle();
-        args.putString(SearchResultFragment.ARG_KEYWORD, "desk");
+        args.putString(SearchResultFragment.ARG_KEYWORD, furnitureKeyword);
         args.putString(SearchResultFragment.ARG_MIN_WIDTH, String.valueOf(minWidthInInches));
         args.putString(SearchResultFragment.ARG_MAX_WIDTH, String.valueOf(maxWidthInInches));
         args.putString(SearchResultFragment.ARG_MIN_HEIGHT, String.valueOf(minHeightInInches));
