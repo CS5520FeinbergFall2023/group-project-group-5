@@ -504,18 +504,28 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
             if (savedInstanceState.containsKey(KEY_CHECKED_TAGS_LIST)) {
                 checkedTagList = savedInstanceState.getStringArrayList(KEY_CHECKED_TAGS_LIST);
             }
-            if(!tagList.isEmpty()) {
-                for (String tag : tagList) {
-                    addTagChip(tag);
-                }
-                //restore tag selections
-                if(!checkedTagList.isEmpty()) {
-                    for (int i = 0; i < chipGroup.getChildCount(); i++) {
-                        View child = chipGroup.getChildAt(i);
-                        if (child instanceof Chip) {
-                            Chip chip = ((Chip) child);
-                            chip.setChecked(checkedTagList.contains(chip.getText()));
-                        }
+            restoreTags();
+        }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        restoreTags();
+    }
+
+    private void restoreTags()
+    {
+        if(!tagList.isEmpty()) {
+            for (String tag : tagList) {
+                addTagChip(tag);
+            }
+            //restore tag selections
+            if(!checkedTagList.isEmpty()) {
+                for (int i = 0; i < chipGroup.getChildCount(); i++) {
+                    View child = chipGroup.getChildAt(i);
+                    if (child instanceof Chip) {
+                        Chip chip = ((Chip) child);
+                        chip.setChecked(checkedTagList.contains(chip.getText()));
                     }
                 }
             }

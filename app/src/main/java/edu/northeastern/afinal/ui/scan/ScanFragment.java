@@ -145,13 +145,13 @@ public class ScanFragment extends Fragment {
                 @Override
                 public void onModelAdded(RenderableInstance renderableInstance) {
                     Node modelNode = new Node();
-                    modelNode.setRenderable(renderableInstance.getRenderable());
-
-                    arFragment.getArSceneView().getScene().addChild(modelNode);
+//                    modelNode.setRenderable(renderableInstance.getRenderable());
+//
+//                    arFragment.getArSceneView().getScene().addChild(modelNode);
 
                     TransformableNode transformableNode = new TransformableNode(arFragment.getTransformationSystem());
                     transformableNode.setRenderable(renderableInstance.getRenderable());
-                    transformableNode.setParent(modelNode);
+//                    transformableNode.setParent(modelNode);
 
                     Vector3 localScale = transformableNode.getLocalScale();
                     modelWidth = localScale.x;

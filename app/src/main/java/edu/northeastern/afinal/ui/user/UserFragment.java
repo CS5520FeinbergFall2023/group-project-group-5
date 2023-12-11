@@ -65,6 +65,7 @@ public class UserFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+
         // Check if user is logged in
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
@@ -82,8 +83,8 @@ public class UserFragment extends Fragment {
 
         System.out.println("UserFragment Create View");
 
-        UserViewModel userViewModel =
-                new ViewModelProvider(this).get(UserViewModel.class);
+ //       UserViewModel userViewModel =
+ //               new ViewModelProvider(this).get(UserViewModel.class);
 
         binding = FragmentUserBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
