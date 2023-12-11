@@ -130,7 +130,6 @@ public class ProductDetailFragment extends Fragment {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    // Handle errors, if any
                 }
             });
 
@@ -142,15 +141,11 @@ public class ProductDetailFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()) {
-                                // The product is bookmarked by the current user
-                                // unbookmark now
-//                                bookmarkButton.setImageResource(R.drawable.baseline_bookmark_24);
+
                                 bookmarkRef.removeValue();
 
                             } else {
-                                // The product is not bookmarked by the current user
-                                // bookmark now
-//                                bookmarkButton.setImageResource(R.drawable.baseline_bookmark_border_24);
+
                                 bookmarkRef.setValue(true);
                             }
                         }
@@ -173,7 +168,7 @@ public class ProductDetailFragment extends Fragment {
 
         //get all images under /furniture/{productID}/images/
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        String path = String.format("furniture/%s/images", productId);  // replace with your path
+        String path = String.format("furniture/%s/images", productId);
         StorageReference storageRef = storage.getReference(path);
         storageRef.listAll()
                 .addOnSuccessListener(listResult -> {

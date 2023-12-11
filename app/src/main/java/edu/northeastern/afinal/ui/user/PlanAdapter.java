@@ -56,7 +56,6 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder
 
         StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(plan.getImageUrl());
 
-        // Use Glide with the storage reference
         Glide.with(holder.itemView.getContext())
                 .load(storageRef)
                 .error(R.drawable.outline_photo_camera_24) // Provide a default image in case of an error
@@ -77,7 +76,6 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder
             super(itemView);
             imageViewPlan = itemView.findViewById(R.id.imageViewPlan);
             textViewTitle = itemView.findViewById(R.id.textViewPlanTitle);
-            //itemView.setOnClickListener(this);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -109,7 +107,6 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.PlanViewHolder
 
     }
 
-    // Item click listener interface
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }

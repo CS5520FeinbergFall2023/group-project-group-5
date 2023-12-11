@@ -144,26 +144,21 @@ public class ScanFragment extends Fragment {
             arFragment.setOnTapPlaneGlbModel("cube.glb", new ArFragment.OnTapModelListener() {
                 @Override
                 public void onModelAdded(RenderableInstance renderableInstance) {
-                    // Create a new Node with the renderable instance
                     Node modelNode = new Node();
                     modelNode.setRenderable(renderableInstance.getRenderable());
 
-                    // Add the node to the scene
                     arFragment.getArSceneView().getScene().addChild(modelNode);
 
-                    // Get the transform of the model node
                     TransformableNode transformableNode = new TransformableNode(arFragment.getTransformationSystem());
                     transformableNode.setRenderable(renderableInstance.getRenderable());
                     transformableNode.setParent(modelNode);
 
-                    // Calculate and store model dimensions from the transform
                     Vector3 localScale = transformableNode.getLocalScale();
                     modelWidth = localScale.x;
                     modelHeight = localScale.y;
                     modelDepth = localScale.z;
 
                     String furnitureKeyword = selectDecorEditText.getText().toString().trim();
-                    // You can now use modelWidth, modelHeight, and modelDepth as needed.
                     Button jumpButton = root.findViewById(R.id.button_jump);
                     jumpButton.setOnClickListener(v -> {
                         float minWidthInInches = 0.0f;
@@ -190,40 +185,27 @@ public class ScanFragment extends Fragment {
 
         }
         else {
-//            Log.d("SAMSUNGGG", model_name);
             FragmentManager fragmentManager = getChildFragmentManager();
             arFragment = (ArFragment) fragmentManager.findFragmentById(R.id.ar_fragment);
             arFragment.setOnTapPlaneGlbModel(model_name, new ArFragment.OnTapModelListener() {
                 @Override
                 public void onModelAdded(RenderableInstance renderableInstance) {
-                    // Create a new Node with the renderable instance
                     Node modelNode = new Node();
                     modelNode.setRenderable(renderableInstance.getRenderable());
 
-                    // Scale the model. For example, to half size
                     float scaleFactor = 0.00000001f;
                     modelNode.setLocalScale(new Vector3(scaleFactor, scaleFactor, scaleFactor));
 
-                    // Add the scaled node to the scene
                     arFragment.getArSceneView().getScene().addChild(modelNode);
                 }
 
                 @Override
                 public void onModelError(Throwable exception) {
-                    // Handle model loading error
                 }
             });
 
         }
 
-//        ModelRenderable.builder()
-//                .setSource(getContext(), Uri.parse("cube.glb"))
-//                .build()
-//                .thenAccept(renderable -> cubeRenderable = renderable)
-//                .exceptionally(throwable -> {
-//                    Log.e("ScanFragment", "Error loading cube model", throwable);
-//                    return null;
-//                });
 
         return root;
     }
@@ -231,21 +213,7 @@ public class ScanFragment extends Fragment {
     private void setupArFragment() {
         arFragment = (ArFragment) getChildFragmentManager().findFragmentById(R.id.ar_fragment);
         arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> updateDimensionTextView());
-//        arFragment.setOnTapArPlaneListener((hitResult, plane, motionEvent) -> {
-//            // Log statement to check if the listener is triggered
-//            Log.d("ScanFragment", "Tap detected on AR plane");
-//
-//            if (cubeRenderable == null || dimensionsLocked) return;
-//
-//            Anchor anchor = hitResult.createAnchor();
-//            AnchorNode anchorNode = new AnchorNode(anchor);
-//            anchorNode.setParent(arFragment.getArSceneView().getScene());
-//
-//            cubeNode = new TransformableNode(arFragment.getTransformationSystem());
-//            cubeNode.setParent(anchorNode);
-//            cubeNode.setRenderable(cubeRenderable);
-//            cubeNode.select();
-//        });
+
 
     }
 
@@ -283,11 +251,9 @@ public class ScanFragment extends Fragment {
         args.putString(SearchResultFragment.ARG_MAX_DEPTH, String.valueOf(maxDepthInInches));
         navController.navigate(R.id.action_scanFragment_to_searchResultFragmentDimensions, args);
 
-        // Set the flag to true as we are navigating to the search screen
         returningFromSearch = true;
     }
 
-    private int screenshotCount = 0; // A counter for the screenshots
 
     private void takeArScreenshot() {
         ArSceneView arSceneView = arFragment.getArSceneView();
@@ -322,18 +288,15 @@ public class ScanFragment extends Fragment {
 
         storageRef.putFile(fileUri)
                 .addOnSuccessListener(taskSnapshot -> {
-                    // Get the download URL
                     taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
                         String image_url = String.valueOf(storage.getReference().child("plans/thumbnails/" + filename));
 
-                        // Create a new plan object
                         Map<String, Object> newPlan = new HashMap<>();
                         newPlan.put("furniture-id", 0);
                         newPlan.put("image", image_url);
                         newPlan.put("name", "myplan" + Math.random());
                         newPlan.put("user-id", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                        // Write the new plan to the Realtime Database
                         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("decor-sense/plans");
                         databaseRef.push().setValue(newPlan)
                                 .addOnSuccessListener(aVoid -> Log.d("ScanFragment", "Plan added successfully"))
@@ -351,27 +314,6 @@ public class ScanFragment extends Fragment {
     }
 
 
-//    private void uploadToFirebase(Uri fileUri, String filename) {
-//        FirebaseStorage storage = FirebaseStorage.getInstance();
-//        StorageReference storageRef = storage.getReference().child("plans/" + filename);
-////        Log.d("Storage Link", String.valueOf(storageRef));
-//        storageRef.putFile(fileUri)
-//                .addOnSuccessListener(taskSnapshot -> {
-//                    Log.d("ScanFragment", "Screenshot uploaded successfully");
-//                })
-//                .addOnFailureListener(e -> {
-//                    Log.e("ScanFragment", "Upload failed", e);
-//                });
-//        int furniture_id = 0;
-//        String image_url = String.valueOf(storageRef);
-//        String name = "myplan"+Math.random();
-//        String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//
-//    }
-
-
-// The uploadToFirebase method remains the same as provided previously
-
 
     private void freezeScreenWithBitmap(Bitmap bitmap) {
         if (textureView.isAvailable()) {
@@ -384,7 +326,6 @@ public class ScanFragment extends Fragment {
     }
 
     private void suggestProducts(float distance) {
-        // Implement your logic to suggest products based on the distance
     }
 
     @Override
@@ -393,7 +334,6 @@ public class ScanFragment extends Fragment {
         try {
             switch (ArCoreApk.getInstance().requestInstall(getActivity(), true)) {
                 case INSTALLED:
-                    // ARCore is installed and supported on this device
                     startBackgroundThread();
                     if (textureView.isAvailable()) {
                         openCamera();
@@ -402,7 +342,6 @@ public class ScanFragment extends Fragment {
                     }
                     break;
                 case INSTALL_REQUESTED:
-                    // ARCore installation requested. Return to onResume after installation.
                     return;
             }
         } catch (UnavailableUserDeclinedInstallationException e) {
@@ -412,7 +351,6 @@ public class ScanFragment extends Fragment {
             // Current device is not compatible with ARCore.
             Toast.makeText(getContext(), "ARCore is not supported on this device", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            // Generic exception handling for other types of exceptions.
             Toast.makeText(getContext(), "ARCore encountered an error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
@@ -422,7 +360,7 @@ public class ScanFragment extends Fragment {
         if (returningFromSearch) {
             captureButton.setEnabled(true);
             dimensionsLocked = false;
-            returningFromSearch = false; // Reset the flag
+            returningFromSearch = false;
         } else {
             // If not returning from search, deactivate the capture button
             captureButton.setEnabled(false);
@@ -468,7 +406,6 @@ public class ScanFragment extends Fragment {
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
             imageDimension = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(SurfaceTexture.class)[0];
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                // Consider requesting the permission here
                 return;
             }
             manager.openCamera(cameraId, stateCallback, null);
@@ -529,7 +466,6 @@ public class ScanFragment extends Fragment {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    // Handle configuration failure
                 }
             }, null);
         } catch (CameraAccessException e) {
@@ -557,7 +493,6 @@ public class ScanFragment extends Fragment {
 
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-            // Handle size changes if necessary
         }
 
         @Override
@@ -567,7 +502,6 @@ public class ScanFragment extends Fragment {
 
         @Override
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-            // Update your view if required
         }
 
 
@@ -577,20 +511,16 @@ public class ScanFragment extends Fragment {
     private void loadFurnitureModel(String furnitureID)
     {
         String furnitureModelPath=String.format("gs://numadfa23-group5.appspot.com/furniture/%s/model/model.glb",furnitureID);
-        //download model from firebase storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReferenceFromUrl(furnitureModelPath);
         File localFile = new File(requireContext().getFilesDir(), furnitureID + ".glb");
 
         storageRef.getFile(localFile)
                 .addOnSuccessListener(taskSnapshot -> {
-                    // Model downloaded successfully
-                    // Use the local path with Sceneform
                     String localPath = localFile.getAbsolutePath();
                     arFragment.setOnTapPlaneGlbModel(localPath, null);
                 })
                 .addOnFailureListener(exception -> {
-                    // Handle failed download
                     exception.printStackTrace();
                 });
     }

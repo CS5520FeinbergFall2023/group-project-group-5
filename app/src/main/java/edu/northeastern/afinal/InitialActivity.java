@@ -35,7 +35,6 @@ public class InitialActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    // Handle the result if needed
                 }
             }
     );
@@ -43,10 +42,7 @@ public class InitialActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String> requestCameraPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    // Permission is granted, proceed to open MainActivity with scan fragment
-//                    openScanFragment();
                 } else {
-                    // Permission is denied, we can show a message to the user explaining why the permission is needed
                     showCameraPermissionExplanation();
                 }
             });
@@ -67,20 +63,17 @@ public class InitialActivity extends AppCompatActivity {
             FirebaseUser user = auth.getCurrentUser();
             if(user==null) {
                 Intent intent = new Intent(InitialActivity.this, LoginActivity.class);
-//                startActivity(intent);
                 startMainActivityForResult.launch(intent);
 
             }
             else {
                 Intent intent = new Intent(InitialActivity.this, MainActivity.class);
                 intent.putExtra("SHOW_USER_FRAGMENT", true);
-//                startActivity(intent);
                 startMainActivityForResult.launch(intent);
 
             }
         });
 
-        // go to the browse fragment
         Button browseButton = (Button) findViewById(R.id.buttonBrowse);
         browseButton.setOnClickListener(v -> {
             Intent intent = new Intent(InitialActivity.this, MainActivity.class);

@@ -55,18 +55,6 @@ public class LoginActivity extends AppCompatActivity {
             // jump to main activity
         }
 
-        //can get user UID by
-//        FirebaseAuth auth = FirebaseAuth.getInstance();
-//        FirebaseUser user = auth.getCurrentUser();
-//
-//        if (user != null) {
-//            // User is signed in
-//            String uid = user.getUid();
-//            Log.d("TAG", "User UID: " + uid);
-//        } else {
-//            // No user signed in
-//            Log.d("TAG", "No user signed in.");
-//        }
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
