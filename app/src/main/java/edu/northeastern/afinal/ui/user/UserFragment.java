@@ -47,6 +47,7 @@ import java.util.List;
 import edu.northeastern.afinal.InitialActivity;
 import edu.northeastern.afinal.R;
 import edu.northeastern.afinal.databinding.FragmentUserBinding;
+import edu.northeastern.afinal.ui.login.LoginActivity;
 
 public class UserFragment extends Fragment {
 
@@ -63,6 +64,21 @@ public class UserFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        // Check if user is logged in
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(getContext(), "Please login to continue", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+
+            if (getActivity() != null) {
+                getActivity().finish();
+            }
+            // Return an empty view or null if you don't want to show the fragment UI
+            return new View(getContext());
+        }
 
         System.out.println("UserFragment Create View");
 
