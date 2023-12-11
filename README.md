@@ -16,14 +16,6 @@ Decor Sense is an Android application built using ARCore, Sceneform, and Firebas
 
 - **Authentication:** Firebase authentication is used to manage user sessions and login details.
 
-## Screenshots
-
-![Screenshot 1](screenshots/screenshot1.png)
-*Caption for Screenshot 1*
-
-![Screenshot 2](screenshots/screenshot2.png)
-*Caption for Screenshot 2*
-
 ## Getting Started
 
 These instructions will help you get a copy of the project up and running on your local machine for development and testing purposes.
