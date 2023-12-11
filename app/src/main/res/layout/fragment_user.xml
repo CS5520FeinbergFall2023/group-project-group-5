@@ -134,7 +134,7 @@
         android:id="@+id/buttonChangePassword"
         android:layout_width="203dp"
         android:layout_height="50dp"
-        android:text="change_password"
+        android:text="change password"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/buttonLogout"
         app:layout_constraintStart_toStartOf="parent"

@@ -24,7 +24,7 @@
         android:fontFamily="sans-serif-smallcaps"
         android:text="DecorSense"
         android:textSize="48sp"
-        android:textColor="?attr/colorPrimary"
+        android:textColor="@color/burnt_umber"
         app:layout_constraintBottom_toTopOf="@+id/buttonScan"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
