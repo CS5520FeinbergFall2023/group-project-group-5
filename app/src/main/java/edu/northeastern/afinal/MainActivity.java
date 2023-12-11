@@ -1,15 +1,21 @@
 package edu.northeastern.afinal;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+import android.Manifest;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -22,6 +28,17 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private NavController navController;
+
+
+    private final ActivityResultLauncher<String> requestCameraPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    navigateToScanFragment();
+                } else {
+                    showCameraPermissionExplanation();
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,16 +77,33 @@ public class MainActivity extends AppCompatActivity {
                 navController.popBackStack(R.id.navigation_scan, true);
                 navController.navigate(R.id.navigation_user);
             } else if (intent.hasExtra("SHOW_SCAN_FRAGMENT")) {
-                navController.popBackStack(R.id.navigation_browse, true);
-                navController.popBackStack(R.id.navigation_user, true);
-                navController.navigate(R.id.navigation_scan);
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    navigateToScanFragment();
+                } else {
+                    requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
+                }
             }
-            // Clear the intent to avoid navigating again on configuration changes (e.g., rotation)
+            // Clear the intent
             setIntent(new Intent());
         }
-
-
+    }
+    private void navigateToScanFragment() {
+        navController.popBackStack(R.id.navigation_browse, true);
+        navController.popBackStack(R.id.navigation_user, true);
+        navController.navigate(R.id.navigation_scan);
     }
 
+    private void showCameraPermissionExplanation() {
+        new AlertDialog.Builder(this)
+                .setTitle("Camera Permission Needed")
+                .setMessage("Camera permission is necessary to use the scan suggestion feature. Please grant camera permission to continue.")
+                .setPositiveButton("OK", (dialog, which) -> requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA))
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .create()
+                .show();
+    }
 }
+
+
 

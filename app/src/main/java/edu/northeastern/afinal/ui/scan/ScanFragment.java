@@ -135,11 +135,6 @@ public class ScanFragment extends Fragment {
         fragmentManager = getChildFragmentManager();
         arFragment = (ArFragment) fragmentManager.findFragmentById(R.id.ar_fragment);
 
-        //todo: load furniture
-        //todo: if !objectId==null && !objectId.isEmpty()
-        //replace ID with objectID
-//        loadFurnitureModel("0");
-
         //load a cube
         String model_name = objectId + ".glb";
         if (model_name.equals("null.glb")) {
@@ -194,7 +189,7 @@ public class ScanFragment extends Fragment {
 
         }
         else {
-            Log.d("SAMSUNGGG", model_name);
+//            Log.d("SAMSUNGGG", model_name);
             FragmentManager fragmentManager = getChildFragmentManager();
             arFragment = (ArFragment) fragmentManager.findFragmentById(R.id.ar_fragment);
             arFragment.setOnTapPlaneGlbModel(model_name, new ArFragment.OnTapModelListener() {
