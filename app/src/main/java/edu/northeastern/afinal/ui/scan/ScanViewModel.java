@@ -16,4 +16,6 @@ public class ScanViewModel extends ViewModel {
     public LiveData<String> getText() {
         return mText;
     }
+
+
 }

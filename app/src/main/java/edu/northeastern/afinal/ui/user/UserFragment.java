@@ -45,7 +45,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.northeastern.afinal.InitialActivity;
-import edu.northeastern.afinal.MainActivity;
 import edu.northeastern.afinal.R;
 import edu.northeastern.afinal.databinding.FragmentUserBinding;
 
@@ -83,7 +82,6 @@ public class UserFragment extends Fragment {
         bookmarksAdapter = new BookmarksAdapter(getContext(), bookmarksList, new BookmarksAdapter.BookmarkClickListener() {
             @Override
             public void onBookmarkClick(String productId) {
-                // Navigation to ProductDetailFragment
                 Bundle args = new Bundle();
                 args.putString("PRODUCT_ID", productId);
                 Navigation.findNavController(root).navigate(R.id.action_userFragment_to_productDetailFragment, args);
@@ -96,13 +94,10 @@ public class UserFragment extends Fragment {
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //log out
                 FirebaseAuth auth = FirebaseAuth.getInstance();
                 auth.signOut();
-                // get back to InitialActivity
                 Intent intent = new Intent(getActivity(), InitialActivity.class);
                 startActivity(intent);
-                // Finish the current MainActivity
                 if (getActivity() != null) {
                     getActivity().finish();
                 }
@@ -110,7 +105,6 @@ public class UserFragment extends Fragment {
         });
 
 
-        // Inside onCreateView or onViewCreated
         recyclerViewPlans = root.findViewById(R.id.recyclerViewPlans);
         recyclerViewPlans.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -132,8 +126,7 @@ public class UserFragment extends Fragment {
             }
         });
 
-//        final TextView textView = binding.textNotifications;
-//        userViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
 
@@ -228,7 +221,6 @@ public class UserFragment extends Fragment {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String imageUrl = snapshot.child("image").getValue(String.class);
                         String name = snapshot.child("name").getValue(String.class);
-                        //String furnitureId = snapshot.child("furniture-id").getValue(String.class);
 
                         Long furnitureIdLong = snapshot.child("furniture-id").getValue(Long.class);
                         String furnitureId = furnitureIdLong != null ? String.valueOf(furnitureIdLong) : null;
@@ -307,10 +299,8 @@ public class UserFragment extends Fragment {
                     bookmarksList.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Log.d("UserFragment", "Processing bookmark: " + snapshot.getKey());
-                        // Here 'key' is the index of the furniture item in the array
                         String key = snapshot.getKey();
                         if(snapshot.getValue(Boolean.class)){
-                            // Using the key to get the furniture item details
                             furnitureRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
 
 

@@ -69,11 +69,7 @@ public class BookmarksAdapter extends RecyclerView.Adapter<BookmarksAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int position) {
         Bookmark bookmark = bookmarksList.get(position);
         viewHolder.getTextView().setText(bookmark.getProductName());
-//        Glide.with(viewHolder.getImageView().getContext())
-//                .load(bookmark.getImageUrl())
-//                .into(viewHolder.getImageView());
         StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(bookmark.getImageUrl());
-        // Use Glide to load the image
         Glide.with(viewHolder.getImageView().getContext()).load(storageRef).into(viewHolder.imageView);
 
         viewHolder.itemView.setOnClickListener(v -> {

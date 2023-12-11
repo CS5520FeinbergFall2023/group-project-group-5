@@ -11,7 +11,7 @@ import java.util.Comparator;
 
 public class ProductItemCard implements Parcelable {
 
-    // Use the @PropertyName annotation to map the "id" field to the Firebase key
+    // Using the @PropertyName annotation to map the "id" field to the Firebase key
     @PropertyName("id")
     private String firebaseKey;
     private String name;

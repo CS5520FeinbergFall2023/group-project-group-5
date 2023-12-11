@@ -65,26 +65,24 @@ public class BrowseFragment extends Fragment {
         binding = FragmentBrowseBinding.inflate(inflater, container, false);
         root = binding.getRoot();
 
-        // hide the label bar on the top
+        // hiding the label bar on the top
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
             init(savedInstanceState);
         }
 
 
         else {
-            //when first enter the page, show recommendation products
             String[] recommendationProductIDs = new String[]{"0", "1", "2", "3", "4", "5"};
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference furnitureRef = database.getReference().child("decor-sense").child("furniture");
             itemList.clear();
             for (String id : recommendationProductIDs) {
-                final String finalId = id; // Declare a final variable
+                final String finalId = id;
                 DatabaseReference productRef = furnitureRef.child(finalId);
                 productRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            // Retrieve details
                             ProductItemCard productItemCard=dataSnapshot.getValue(ProductItemCard.class);
                             productItemCard.setFirebaseKey(dataSnapshot.getKey());
                             itemList.add(productItemCard);
@@ -153,7 +151,6 @@ public class BrowseFragment extends Fragment {
         ProductItemClickListener productItemClickListener = new ProductItemClickListener() {
             @Override
             public void onItemClicked(String productID) {
-                //opens up the corresponding product detail page
                 NavController navController = Navigation.findNavController(requireView());
                 ProductDetailFragment productDetailFragment = ProductDetailFragment.newInstance(productID);
                 navController.navigate(R.id.action_browseFragment_to_productDetailFragment,productDetailFragment.getArguments());

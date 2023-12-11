@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.FirebaseAppCheck;
@@ -34,7 +35,6 @@ public class InitialActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    // Handle the result if needed
                 }
             }
     );
@@ -42,12 +42,8 @@ public class InitialActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String> requestCameraPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    // Permission is granted, proceed to open MainActivity with scan fragment
-                    openScanFragment();
                 } else {
-                    // Permission is denied, we can show a message to the user explaining why the permission is needed
                     showCameraPermissionExplanation();
-
                 }
             });
 
@@ -67,35 +63,35 @@ public class InitialActivity extends AppCompatActivity {
             FirebaseUser user = auth.getCurrentUser();
             if(user==null) {
                 Intent intent = new Intent(InitialActivity.this, LoginActivity.class);
-//                startActivity(intent);
                 startMainActivityForResult.launch(intent);
 
             }
             else {
                 Intent intent = new Intent(InitialActivity.this, MainActivity.class);
                 intent.putExtra("SHOW_USER_FRAGMENT", true);
-//                startActivity(intent);
                 startMainActivityForResult.launch(intent);
 
             }
         });
 
-        // go to the browse fragment
         Button browseButton = (Button) findViewById(R.id.buttonBrowse);
         browseButton.setOnClickListener(v -> {
             Intent intent = new Intent(InitialActivity.this, MainActivity.class);
             startMainActivityForResult.launch(intent);
         });
 
-        Button scanButton = (Button) findViewById(R.id.buttonScan);
-        scanButton.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                // If permission is already granted, open the scan fragment
-                openScanFragment();
-            } else {
-                // Request camera permission
-                requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
-            }
+        TextView aboutUsTextView=(TextView) findViewById(R.id.textViewAboutUs);
+        aboutUsTextView.setOnClickListener(v->{
+            Intent intent = new Intent(InitialActivity.this, AboutUsActivity.class);
+            intent.putExtra("name1", "Ajay Inavolu");
+            intent.putExtra("email1", "inavolu.a@northeastern.edu");
+            intent.putExtra("name2", "Jiaming Xu");
+            intent.putExtra("email2", "xu.jiami@northeastern.edu");
+            intent.putExtra("name3", "Kiran Shatiya T R");
+            intent.putExtra("email3", "thirugnanasambanth.k@northeastern.edu");
+            intent.putExtra("name4", "Vishrutha Abbaiah Reddy");
+            intent.putExtra("email4", "abbaiahreddy.v@northeastern.edu");
+            startActivity(intent);
         });
 
     }
@@ -109,7 +105,7 @@ public class InitialActivity extends AppCompatActivity {
     private void showCameraPermissionExplanation() {
         new AlertDialog.Builder(this)
                 .setTitle("Camera Permission Needed")
-                .setMessage("Camera permission is necessary to use the scan feature. Please grant camera permission in the settings menu to continue.")
+                .setMessage("Camera permission is necessary to use the scan suggestion feature. Please grant camera permission in the settings menu to continue.")
                 .setPositiveButton("OK", (dialog, which) -> {
                     dialog.dismiss();
                 })

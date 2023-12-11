@@ -215,20 +215,16 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         });
 
 
-        // Create an ArrayAdapter using the string array and a default spinner layout.
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 getContext(),
                 R.array.sortings_array,
                 android.R.layout.simple_spinner_item
         );
-        // Specify the layout to use when the list of choices appears.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner.
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
 
-        //init filter values
-        //fetch search result
+
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_ITEM_LIST)) {
             init(savedInstanceState);
             initFilter(savedInstanceState);
@@ -263,7 +259,6 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                                     }
                                 }
                             }
-//                            rviewAdapter.notifyItemInserted(itemList.size() - 1);
                         }
                     }
                     itemList.sort(Comparator.comparing(ProductItemCard::getReviews).reversed());
@@ -356,8 +351,7 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                 createRecyclerView(applyFilter(itemList));
             }
         });
-        //Begin with all tags unchecked and all products with the keyword shown,
-        // if user check a tag, only products with the tag will be shown
+
         chipGroup.addView(chip);
     }
 
@@ -431,13 +425,11 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                     maxDepth = editTextEnd.getText().toString();
                 } else {
                 }
-                //clear list and repaint
                 popupWindow.dismiss();
                 createRecyclerView(applyFilter(itemList));
             }
         });
 
-        // Show the PopupWindow below the anchorView
         popupWindow.showAsDropDown(anchorView);
     }
 
