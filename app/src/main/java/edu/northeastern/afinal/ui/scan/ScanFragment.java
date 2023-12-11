@@ -82,10 +82,9 @@ public class ScanFragment extends Fragment {
     private static final String ARG_OBJECT_ID = "object_id";
     private String objectId = null;
     private ArFragment arFragment;
-//    private ModelRenderable cubeRenderable;
     private TextView dimensionsTextView;
     private Button captureButton;
-    private TransformableNode cubeNode; // Reference to the cube node
+    private TransformableNode cubeNode;
     private boolean dimensionsLocked = false;
     private float lockedWidth, lockedHeight, lockedDepth;
 
@@ -164,15 +163,13 @@ public class ScanFragment extends Fragment {
                     // You can now use modelWidth, modelHeight, and modelDepth as needed.
                     Button jumpButton = root.findViewById(R.id.button_jump);
                     jumpButton.setOnClickListener(v -> {
-                        // Values in inches
-                        float minWidthInInches = 0.0f; // Example minimum width
-                        float maxWidthInInches = modelWidth; // Example maximum width
-                        float minHeightInInches = 0.0f; // Example minimum height
-                        float maxHeightInInches = modelHeight; // Example maximum height
-                        float minDepthInInches = 0.0f;  // Example minimum depth
-                        float maxDepthInInches = modelDepth;  // Example maximum depth
+                        float minWidthInInches = 0.0f;
+                        float maxWidthInInches = modelWidth;
+                        float minHeightInInches = 0.0f;
+                        float maxHeightInInches = modelHeight;
+                        float minDepthInInches = 0.0f;
+                        float maxDepthInInches = modelDepth;
 
-                        // Now, you can navigate to the search fragment with min and max values in inches
                         navigateToSearchFragment(
                                 minWidthInInches, maxWidthInInches,
                                 minHeightInInches, maxHeightInInches,
@@ -183,7 +180,7 @@ public class ScanFragment extends Fragment {
 
                 @Override
                 public void onModelError(Throwable exception) {
-                    // Handle model loading error
+
                 }
             });
 
