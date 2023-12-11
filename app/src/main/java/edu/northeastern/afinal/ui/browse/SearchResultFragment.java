@@ -161,8 +161,8 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
         if (getArguments() != null) {
             keyword = getArguments().getString(ARG_KEYWORD);
             if(keyword==null || keyword.isEmpty()) {
-//                Snackbar.make(root.getContext(),root.findViewById(R.id.search_result_view), "Empty search keyword!",
-//                        Snackbar.LENGTH_LONG).show();
+                Snackbar.make(root.findViewById(R.id.search_result_view), "Empty search keyword!",
+                        Snackbar.LENGTH_LONG).show();
                 Log.e("SearchResultFragment", "keyword is null or empty.");
                 return root;
             }
@@ -516,6 +516,25 @@ public class SearchResultFragment extends Fragment implements AdapterView.OnItem
                             Chip chip = ((Chip) child);
                             chip.setChecked(checkedTagList.contains(chip.getText()));
                         }
+                    }
+                }
+            }
+        }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!tagList.isEmpty()) {
+            for (String tag : tagList) {
+                addTagChip(tag);
+            }
+            //restore tag selections
+            if(!checkedTagList.isEmpty()) {
+                for (int i = 0; i < chipGroup.getChildCount(); i++) {
+                    View child = chipGroup.getChildAt(i);
+                    if (child instanceof Chip) {
+                        Chip chip = ((Chip) child);
+                        chip.setChecked(checkedTagList.contains(chip.getText()));
                     }
                 }
             }
