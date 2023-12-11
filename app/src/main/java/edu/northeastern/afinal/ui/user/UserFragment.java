@@ -63,12 +63,6 @@ public class UserFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-        System.out.println("UserFragment Create View");
-
-        UserViewModel userViewModel =
-                new ViewModelProvider(this).get(UserViewModel.class);
-
         binding = FragmentUserBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 

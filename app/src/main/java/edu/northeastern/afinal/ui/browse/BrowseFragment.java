@@ -58,9 +58,6 @@ public class BrowseFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("BrowseFragment Create View");
-        BrowseViewModel browseViewModel =
-                new ViewModelProvider(this).get(BrowseViewModel.class);
 
         binding = FragmentBrowseBinding.inflate(inflater, container, false);
         root = binding.getRoot();
